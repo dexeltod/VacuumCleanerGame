@@ -4,12 +4,12 @@ namespace Model.Infrastructure.Services
 {
 	public class InputService : IInputService
 	{
-		public event Action<float> VerticalButtonUsed;
-		public event Action VerticalButtonCanceled;
-		public event Action AttackButtonUsed;
-		public event Action InteractButtonUsed;
-		public event Action JumpButtonUsed;
-		public event Action JumpButtonCanceled;
+		// public event Action<float> VerticalButtonUsed;
+		// public event Action VerticalButtonCanceled;
+		// public event Action AttackButtonUsed;
+		// public event Action InteractButtonUsed;
+		// public event Action JumpButtonUsed;
+		// public event Action JumpButtonCanceled;
 
 		private readonly InputSystem _inputSystem;
 

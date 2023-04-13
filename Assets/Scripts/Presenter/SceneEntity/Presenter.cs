@@ -20,7 +20,7 @@ namespace Presenter.SceneEntity
 
 			enabled = true;
 
-			OnMoved(model.Position);
+			OnMoved(model.Transform.position);
 		}
 
 		private void OnEnable()

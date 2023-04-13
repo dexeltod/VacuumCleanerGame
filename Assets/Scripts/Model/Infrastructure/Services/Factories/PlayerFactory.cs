@@ -40,22 +40,23 @@ namespace Model.Infrastructure.Services.Factories
 			_joystick = joystick;
 			_presenterFactory = presenterFactory;
 			_assetProvider.CleanUp();
-			await CreateHeroGameObject(initialPoint);
+			await Create(initialPoint);
 			CreateDependenciesAsync();
 		}
 
-		private async UniTask CreateHeroGameObject(GameObject initialPoint)
+		private async UniTask Create(GameObject initialPoint)
 		{
-			var playerPresenter = await _presenterFactory.Instantiate<PlayerPresenter>(
-				ConstantNamesConfig.Player,
-				initialPoint.transform.position);
+			var playerPresenter =
+				await _presenterFactory.Instantiate<Vacuum>(
+					ConstantNamesConfig.Player,
+					initialPoint.transform.position);
 
 			var gameObject = playerPresenter.gameObject;
 			MainCharacter = gameObject;
 
 			//TODO Need vacuum car config;
-			VacuumCar vacuumCar = new(gameObject.transform.position, gameObject.transform.rotation.z, _joystick, 0.05f);
-			playerPresenter.Init(vacuumCar);
+			VacuumModel vacuumModel = new(MainCharacter.transform, _joystick, 4f, 10f);
+			playerPresenter.Init(vacuumModel);
 		}
 
 		private void CreateDependenciesAsync()

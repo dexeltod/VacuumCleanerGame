@@ -5,18 +5,16 @@ namespace Model.SceneEntity
 {
 	public abstract class Transformable
 	{
-		public virtual Vector3 Position { get; private set; }
-		public float Rotation { get; private set; }
+		public virtual Transform Transform { get; private set; }
 		public Vector3 LookDirection { get; private set; }
 
 		public event Action<Vector3> Moved;
 		public event Action<Vector3> Looked;
 		public event Action Destroying;
 
-		public Transformable(Vector3 position, float rotation)
+		public Transformable(Transform transform)
 		{
-			Position = position;
-			Rotation = rotation;
+			Transform = transform;
 		}
 
 		public void LookAt(Vector3 direction)
@@ -27,7 +25,7 @@ namespace Model.SceneEntity
 
 		public void MoveTo(Vector3 position)
 		{
-			Position = position;
+			Transform.position = position;
 			Moved?.Invoke(position);
 		}
 
