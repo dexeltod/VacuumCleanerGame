@@ -1,4 +1,6 @@
-namespace Model
+using Model.Infrastructure.Services;
+
+namespace Model.DI
 {
 	public class ServiceLocator
 	{

@@ -1,3 +1,6 @@
+using Model.Character;
+using Model.Infrastructure;
+using Model.Infrastructure.StateMachine.GameStates;
 using UnityEngine;
 
 namespace Model

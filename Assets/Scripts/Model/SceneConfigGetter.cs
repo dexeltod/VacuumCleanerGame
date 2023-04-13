@@ -1,4 +1,6 @@
 using Cysharp.Threading.Tasks;
+using Model.DI;
+using Model.Infrastructure.Services;
 
 namespace Model
 {
