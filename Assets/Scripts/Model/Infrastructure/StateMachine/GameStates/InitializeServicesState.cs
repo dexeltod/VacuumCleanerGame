@@ -4,7 +4,6 @@ using Model.Infrastructure.Camera;
 using Model.Infrastructure.Data;
 using Model.Infrastructure.Services;
 using Model.Infrastructure.Services.Factories;
-using ViewModel.Infrastructure;
 
 namespace Model.Infrastructure.StateMachine.GameStates
 {
@@ -30,7 +29,7 @@ namespace Model.Infrastructure.StateMachine.GameStates
 
 		public void Enter()
 		{
-			_sceneLoader.Load(ConstantNamesConfig.InitialScene, OnSceneLoaded);
+			_sceneLoader.Load(ConstantNames.InitialScene, OnSceneLoaded);
 		}
 
 		private void OnSceneLoaded() =>
@@ -49,7 +48,7 @@ namespace Model.Infrastructure.StateMachine.GameStates
 			_serviceLocator.RegisterAsSingle<IPresenterFactory>(new PresenterFactory());
 			_serviceLocator.RegisterAsSingle<ISceneLoadInformer>(sceneLoadInformer);
 			_serviceLocator.RegisterAsSingle<ISceneLoad>(sceneLoadInformer);
-			_serviceLocator.RegisterAsSingle<IUIFactory>(new UIFactory());
+			
 			
 			CameraFactory cameraFactory = new CameraFactory();
 			_serviceLocator.RegisterAsSingle<ICameraFactory>(cameraFactory);

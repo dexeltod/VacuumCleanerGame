@@ -3,6 +3,8 @@ using Model.Infrastructure.Services;
 using Model.Infrastructure.Services.Factories;
 using Model.Infrastructure.StateMachine;
 using Model.Infrastructure.StateMachine.GameStates;
+using ViewModel;
+using ViewModel.Infrastructure;
 
 namespace Model.Infrastructure
 {
@@ -29,10 +31,22 @@ namespace Model.Infrastructure
 
 		private void RegisterServices()
 		{
+			_serviceLocator.RegisterAsSingle<IGameProgressViewModel>(new GameProgressViewModel());
+			CreateUI();
 			_serviceLocator.RegisterAsSingle<IInputService>(new InputService());
+			UpgradeWindowFactory upgradeWindowFactory = new();
+			_serviceLocator.RegisterAsSingle<IUpgradeWindowFactory>(upgradeWindowFactory);
+			_serviceLocator.RegisterAsSingle<IUpgradeWindowGetter>(upgradeWindowFactory);
 			_serviceLocator.RegisterAsSingle<IPlayerFactory>(
 				new PlayerFactory(_serviceLocator.GetSingle<IAssetProvider>(),
 					_serviceLocator.GetSingle<IPersistentProgressService>()));
+		}
+
+		private void CreateUI()
+		{
+			UIFactory uiFactory = new UIFactory();
+			_serviceLocator.RegisterAsSingle<IUIFactory>(uiFactory);
+			_serviceLocator.RegisterAsSingle<IUIGetter>(uiFactory);
 		}
 	}
 }

@@ -5,10 +5,10 @@ namespace Model.Infrastructure.Services.Factories
 {
 	public class GameProgressFactory
 	{
-		public async UniTask<GameProgress> CreateProgress()
+		public async UniTask<GameProgressModel> CreateProgress()
 		{
 			//TODO Need create game progress;
-			return new GameProgress();
+			return new GameProgressModel();
 		}
 	}
 }

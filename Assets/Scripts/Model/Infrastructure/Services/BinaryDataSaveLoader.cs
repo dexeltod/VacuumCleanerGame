@@ -34,7 +34,7 @@ namespace Model.Infrastructure.Services
 			}
 		}
 
-		public async UniTask<GameProgress> LoadProgress()
+		public async UniTask<GameProgressModel> LoadProgress()
 		{
 			string[] files = Directory.GetFiles(_saveDirectoryPath);
 
@@ -48,15 +48,15 @@ namespace Model.Infrastructure.Services
 			using FileStream file = File.Open(lastSaveFilePath, FileMode.Open);
 			{
 				object loadedData = new BinaryFormatter().Deserialize(file);
-				GameProgress gameProgress = (GameProgress)loadedData;
+				GameProgressModel gameProgress = (GameProgressModel)loadedData;
 				return gameProgress;
 			}
 		}
 
-		public async Task<GameProgress> CreateNewProgressByBinary()
+		public async Task<GameProgressModel> CreateNewProgressByBinary()
 		{
 			SetUniqueSaveFilePath();
-			GameProgress gameProgress = await _gameProgressFactory.CreateProgress();
+			GameProgressModel gameProgress = await _gameProgressFactory.CreateProgress();
 
 			using (FileStream saveFile = File.Create(_saveFilePath))
 			{

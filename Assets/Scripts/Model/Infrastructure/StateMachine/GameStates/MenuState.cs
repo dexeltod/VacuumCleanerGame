@@ -18,7 +18,7 @@ namespace Model.Infrastructure.StateMachine.GameStates
 
 		public void Enter()
 		{
-			_sceneLoader.Load(ConstantNamesConfig.MenuScene);
+			_sceneLoader.Load(ConstantNames.MenuScene);
 		}
 		public void Exit()
 		{

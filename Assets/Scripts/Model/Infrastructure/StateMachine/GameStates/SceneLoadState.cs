@@ -21,6 +21,7 @@ namespace Model.Infrastructure.StateMachine.GameStates
 		private GameObject _initialPoint;
 		private IPresenterFactory _presenterFactory;
 		private ICameraFactory _cameraFactory;
+		private IUpgradeWindowFactory _upgradeWindowFactory;
 
 		public SceneLoadState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain,
 			ServiceLocator serviceLocator)
@@ -33,6 +34,8 @@ namespace Model.Infrastructure.StateMachine.GameStates
 
 		public void Enter(string levelName)
 		{
+			_upgradeWindowFactory = ServiceLocator.Container.GetSingle<IUpgradeWindowFactory>();
+
 			_cameraFactory = ServiceLocator.Container.GetSingle<ICameraFactory>();
 			_playerFactory = ServiceLocator.Container.GetSingle<IPlayerFactory>();
 			_uiFactory = ServiceLocator.Container.GetSingle<IUIFactory>();
@@ -52,18 +55,18 @@ namespace Model.Infrastructure.StateMachine.GameStates
 
 		private async UniTask Load()
 		{
-			
 			await OnLoaded();
 		}
 
 		private async UniTask OnLoaded()
 		{
 			await _uiFactory.CreateUI();
-			//TODO: Need create UI
 
-			_initialPoint = GameObject.FindWithTag(ConstantNamesConfig.PlayerSpawnPointTag);
+			_initialPoint = GameObject.FindWithTag(ConstantNames.PlayerSpawnPointTag);
 			await _playerFactory.Instantiate(_initialPoint, _presenterFactory, _uiFactory.Joystick);
 			await _cameraFactory.CreateVirtualCamera();
+
+			await InstantiateUpgradeWindowAsync();
 
 			_sceneLoad.SceneLoaded += OnSceneLoaded;
 			_sceneLoad.InvokeSceneLoaded();
@@ -78,5 +81,11 @@ namespace Model.Infrastructure.StateMachine.GameStates
 
 		public void Exit() =>
 			_loadingCurtain.Hide();
+
+		private async UniTask InstantiateUpgradeWindowAsync()
+		{
+			GameObject upgradeWindow = await _upgradeWindowFactory.Create();
+			upgradeWindow.SetActive(false);
+		}
 	}
 }

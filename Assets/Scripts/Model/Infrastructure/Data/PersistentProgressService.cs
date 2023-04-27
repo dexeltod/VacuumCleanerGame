@@ -4,6 +4,6 @@ namespace Model.Infrastructure.Data
 {
 	public class PersistentProgressService : IPersistentProgressService
 	{
-		public GameProgress GameProgress { get; set; }
+		public GameProgressModel GameProgress { get; set; }
 	}
 }

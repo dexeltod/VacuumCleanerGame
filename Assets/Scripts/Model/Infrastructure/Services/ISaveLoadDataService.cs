@@ -6,7 +6,7 @@ namespace Model.Infrastructure.Services
 	public interface ISaveLoadDataService : IService
 	{
 		void SaveProgress();
-		UniTask<GameProgress> LoadProgress();
+		UniTask<GameProgressModel> LoadProgress();
 		void SetStartProgress();
 		void SaveToJson(string fileName, object data);
 		string LoadFromJson(string fileName);

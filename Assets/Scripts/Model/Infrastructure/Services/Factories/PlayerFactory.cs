@@ -14,7 +14,7 @@ namespace Model.Infrastructure.Services.Factories
 		private readonly IAssetProvider _assetProvider;
 		private readonly IPersistentProgressService _progressService;
 		private readonly IInputService _inputService;
-		private readonly GameProgress _progress;
+		private readonly GameProgressModel _progress;
 
 		private Joystick _joystick;
 		private Animator _animator;
@@ -48,23 +48,22 @@ namespace Model.Infrastructure.Services.Factories
 		{
 			var playerPresenter =
 				await _presenterFactory.Instantiate<Vacuum>(
-					ConstantNamesConfig.Player,
+					ConstantNames.Player,
 					initialPoint.transform.position);
 
 			var gameObject = playerPresenter.gameObject;
 			MainCharacter = gameObject;
+			Rigidbody rigidbody = MainCharacter.GetComponent<Rigidbody>();
 
 			//TODO Need vacuum car config;
 			VacuumModel vacuumModel = new(MainCharacter.transform, _joystick, 4f, 10f);
-			playerPresenter.Init(vacuumModel);
+			playerPresenter.Init(vacuumModel, rigidbody);
 		}
 
 		private void CreateDependenciesAsync()
 		{
 			NullifyComponents();
-
 			GetComponents();
-
 			CreatePlayerStateMachine();
 			MainCharacterCreated?.Invoke();
 		}

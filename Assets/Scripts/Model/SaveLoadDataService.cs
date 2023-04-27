@@ -15,7 +15,7 @@ namespace Model
 
 		private readonly BinaryDataSaveLoader _binaryDataSaveLoader;
 		private readonly JsonDataSaveLoader _jsonDataLoader;
-		private GameProgress _gameProgress;
+		private GameProgressModel _gameProgress;
 
 		private string _lastTime;
 		private string _saveFilePath;
@@ -48,7 +48,7 @@ namespace Model
 		public async void SetStartProgress() => 
 			_gameProgress = await _binaryDataSaveLoader.CreateNewProgressByBinary();
 
-		public async UniTask<GameProgress> LoadProgress() =>
+		public async UniTask<GameProgressModel> LoadProgress() =>
 			_gameProgress = await _binaryDataSaveLoader.LoadProgress();
 	}
 }

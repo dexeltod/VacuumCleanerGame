@@ -34,7 +34,7 @@ namespace Model.Infrastructure.Camera
 
 		private async Task<CinemachineVirtualCamera> GetVirtualCamera()
 		{
-			Collider bounds = GameObject.FindWithTag(ConstantNamesConfig.Confiner).GetComponent<Collider>();
+			Collider bounds = GameObject.FindWithTag(ConstantNames.Confiner).GetComponent<Collider>();
 
 			GameObject camera = await _assetProvider.Instantiate(VirtualCameraPath);
 			var cinemachineConfiner = camera.GetComponent<CinemachineConfiner>();
