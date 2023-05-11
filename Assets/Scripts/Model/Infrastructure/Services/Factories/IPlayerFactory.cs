@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using Model.Infrastructure.Data;
 using UnityEngine;
 
 namespace Model.Infrastructure.Services.Factories
@@ -8,6 +9,7 @@ namespace Model.Infrastructure.Services.Factories
 	{
 		GameObject MainCharacter { get; }
 		event Action MainCharacterCreated;
-		UniTask Instantiate(GameObject initialPoint, IPresenterFactory presenterFactory, Joystick joystick);
+		UniTask Instantiate(GameObject initialPoint, IPresenterFactory presenterFactory, Joystick joystick,
+			GameProgressModel progress);
 	}
 }

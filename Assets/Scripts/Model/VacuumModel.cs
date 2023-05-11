@@ -30,14 +30,12 @@ namespace Model.Character
 			Vector3 joystickDirection = new Vector3(_joystick.Direction.x, 0, _joystick.Direction.y);
 			Vector3 direction = joystickDirection * (_speed * deltaTime);
 
-			Debug.Log(direction);
 			_offset = Transform.position + direction;
 
 			if (Transform.position.y > MaxHeight)
 				_offset.y = MaxHeight;
 
-			if (direction != Vector3.zero)
-				MoveTo(_offset);
+			MoveTo(_offset);
 
 			if (joystickDirection != Vector3.zero)
 				LookAt(direction);

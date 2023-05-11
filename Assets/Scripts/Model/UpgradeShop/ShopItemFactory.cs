@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Model.DI;
 using Model.Infrastructure.Services;
+using UnityEngine;
 
 namespace Model.UpgradeShop
 {
@@ -16,7 +17,11 @@ namespace Model.UpgradeShop
 			_assetProvider = ServiceLocator.Container.GetSingle<IAssetProvider>();
 		}
 
-		private async UniTask<ShopItemList> GetItemContainer() => 
-			await _assetProvider.LoadAsyncByGUID<ShopItemList>(ShopItemList);
+		public async UniTask<ShopItemList> GetItemList()
+		{
+			GameObject gameObject = await _assetProvider.Instantiate(ShopItemList);
+			ShopItemList list = gameObject.GetComponent<ShopItemList>();
+			return list;
+		}
 	}
 }

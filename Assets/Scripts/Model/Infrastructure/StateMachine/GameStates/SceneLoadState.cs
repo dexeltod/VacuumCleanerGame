@@ -1,8 +1,11 @@
 using Cysharp.Threading.Tasks;
 using Model.DI;
+using Model.Infrastructure.Data;
 using Model.Infrastructure.Services;
 using Model.Infrastructure.Services.Factories;
+using Unity.VisualScripting;
 using UnityEngine;
+using ViewModel;
 
 namespace Model.Infrastructure.StateMachine.GameStates
 {
@@ -22,6 +25,8 @@ namespace Model.Infrastructure.StateMachine.GameStates
 		private IPresenterFactory _presenterFactory;
 		private ICameraFactory _cameraFactory;
 		private IUpgradeWindowFactory _upgradeWindowFactory;
+		private GameProgressModel _gameProgress;
+		private ISaveLoadDataService _saveLoadService;
 
 		public SceneLoadState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain,
 			ServiceLocator serviceLocator)
@@ -32,17 +37,20 @@ namespace Model.Infrastructure.StateMachine.GameStates
 			_serviceLocator = serviceLocator;
 		}
 
-		public void Enter(string levelName)
+		public async void Enter(string levelName)
 		{
-			_upgradeWindowFactory = ServiceLocator.Container.GetSingle<IUpgradeWindowFactory>();
+			
+			_saveLoadService = _serviceLocator.GetSingle<ISaveLoadDataService>();
+			_gameProgress = await _saveLoadService.LoadProgress();
 
-			_cameraFactory = ServiceLocator.Container.GetSingle<ICameraFactory>();
-			_playerFactory = ServiceLocator.Container.GetSingle<IPlayerFactory>();
-			_uiFactory = ServiceLocator.Container.GetSingle<IUIFactory>();
-			_sceneLoad = ServiceLocator.Container.GetSingle<ISceneLoad>();
-			_presenterFactory = ServiceLocator.Container.GetSingle<IPresenterFactory>();
+			_upgradeWindowFactory = _serviceLocator.GetSingle<IUpgradeWindowFactory>();
+			_cameraFactory = _serviceLocator.GetSingle<ICameraFactory>();
+			_playerFactory = _serviceLocator.GetSingle<IPlayerFactory>();
+			_uiFactory = _serviceLocator.GetSingle<IUIFactory>();
+			_sceneLoad = _serviceLocator.GetSingle<ISceneLoad>();
+			_presenterFactory = _serviceLocator.GetSingle<IPresenterFactory>();
 
-			var provider = ServiceLocator.Container.GetSingle<IAssetProvider>();
+			var provider = _serviceLocator.GetSingle<IAssetProvider>();
 			provider.CleanUp();
 			_loadingCurtain.Show();
 			_sceneLoader.Load(levelName, StartLoading);
@@ -63,7 +71,7 @@ namespace Model.Infrastructure.StateMachine.GameStates
 			await _uiFactory.CreateUI();
 
 			_initialPoint = GameObject.FindWithTag(ConstantNames.PlayerSpawnPointTag);
-			await _playerFactory.Instantiate(_initialPoint, _presenterFactory, _uiFactory.Joystick);
+			await _playerFactory.Instantiate(_initialPoint, _presenterFactory, _uiFactory.Joystick, _gameProgress);
 			await _cameraFactory.CreateVirtualCamera();
 
 			await InstantiateUpgradeWindowAsync();
@@ -82,10 +90,7 @@ namespace Model.Infrastructure.StateMachine.GameStates
 		public void Exit() =>
 			_loadingCurtain.Hide();
 
-		private async UniTask InstantiateUpgradeWindowAsync()
-		{
-			GameObject upgradeWindow = await _upgradeWindowFactory.Create();
-			upgradeWindow.SetActive(false);
-		}
+		private async UniTask InstantiateUpgradeWindowAsync() =>
+			await _upgradeWindowFactory.Create();
 	}
 }

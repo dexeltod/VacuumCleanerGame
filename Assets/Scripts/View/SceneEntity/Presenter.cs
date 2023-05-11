@@ -27,9 +27,6 @@ namespace Presenter.SceneEntity
 			OnMoved(model.Transform.position);
 		}
 
-		public void SetMoveBool(bool isMove) =>
-			_isMove = isMove;
-
 		private void OnEnable()
 		{
 			_model.MovedPhysics += OnMovedPhysics;

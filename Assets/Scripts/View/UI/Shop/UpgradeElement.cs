@@ -12,22 +12,25 @@ public class UpgradeElement : MonoBehaviour
 	[SerializeField] private Image _icon;
 	[SerializeField] private Button _buttonBuy;
 
-	public event Action BuyButtonPressed;
+	private UpgradeItemScriptableObject.Upgrade _upgradeType;
+	public event Action<UpgradeItemScriptableObject.Upgrade> BuyButtonPressed;
 
-	public void Init(UpgradeItemScriptableObject item)
+	public UpgradeElement Construct(UpgradeItemScriptableObject item)
 	{
+		_upgradeType = item.UpgradeType;
 		_title.SetText(item.Title);
 		_description.SetText(item.Description);
 		_price.SetText(item.Price.ToString());
 		_icon.sprite = item.Icon;
+		return this;
 	}
 
-	private void OnEnable() => 
+	private void OnEnable() =>
 		_buttonBuy.onClick.AddListener(OnBuyButtonPressed);
 
-	private void OnDisable() => 
+	private void OnDisable() =>
 		_buttonBuy.onClick.RemoveListener(OnBuyButtonPressed);
 
-	private void OnBuyButtonPressed() => 
-		BuyButtonPressed?.Invoke();
+	private void OnBuyButtonPressed() =>
+		BuyButtonPressed?.Invoke(_upgradeType);
 }

@@ -37,9 +37,7 @@ namespace Model.Infrastructure
 			UpgradeWindowFactory upgradeWindowFactory = new();
 			_serviceLocator.RegisterAsSingle<IUpgradeWindowFactory>(upgradeWindowFactory);
 			_serviceLocator.RegisterAsSingle<IUpgradeWindowGetter>(upgradeWindowFactory);
-			_serviceLocator.RegisterAsSingle<IPlayerFactory>(
-				new PlayerFactory(_serviceLocator.GetSingle<IAssetProvider>(),
-					_serviceLocator.GetSingle<IPersistentProgressService>()));
+			_serviceLocator.RegisterAsSingle<IPlayerFactory>(new PlayerFactory(_serviceLocator.GetSingle<IAssetProvider>()));
 		}
 
 		private void CreateUI()

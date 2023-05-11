@@ -5,6 +5,13 @@ namespace Model.Infrastructure.Data
 	[Serializable]
 	public class GameProgressModel
 	{
+		public readonly PlayerProgress PlayerProgress;
+
+		public GameProgressModel()
+		{
+			PlayerProgress = new PlayerProgress();
+		}
+
 		public int MaxFilledScore => MaxFillModifier + GameConfig.DefaultMaxFillCount;
 		public int MaxFillModifier { get; private set; } = 0;
 		public int CurrentSandCount { get; private set; } = 0;
@@ -21,5 +28,17 @@ namespace Model.Infrastructure.Data
 
 		public void DecreaseMoney(int count) =>
 			CurrentMoney -= count;
+	}
+
+	[Serializable]
+	public class PlayerProgress
+	{
+		public int Speed { get; private set; } = 3;
+		public int VacuumDistance { get; private set; } = 3;
+		public void SetSpeed(int newSpeed) =>
+			Speed = newSpeed;
+
+		public void SetVacuumDistance(int newValue) => 
+			VacuumDistance = newValue;
 	}
 }

@@ -14,7 +14,6 @@ namespace Model.Infrastructure.Services.Factories
 		private readonly IAssetProvider _assetProvider;
 		private readonly IPersistentProgressService _progressService;
 		private readonly IInputService _inputService;
-		private readonly GameProgressModel _progress;
 
 		private Joystick _joystick;
 		private Animator _animator;
@@ -22,21 +21,22 @@ namespace Model.Infrastructure.Services.Factories
 		private AnimatorFacade _animatorFacade;
 		private PlayerStatesFactory _playerStatesFactory;
 		private IPresenterFactory _presenterFactory;
-
+		private PlayerProgress _player;
+		
 		public GameObject MainCharacter { get; private set; }
 
 		public event Action MainCharacterCreated;
 
-		public PlayerFactory(IAssetProvider assetProvider, IPersistentProgressService progressService)
+		public PlayerFactory(IAssetProvider assetProvider)
 		{
 			_inputService = ServiceLocator.Container.GetSingle<IInputService>();
 			_assetProvider = assetProvider;
-			_progress = progressService.GameProgress;
 		}
 
 		public async UniTask Instantiate(GameObject initialPoint, IPresenterFactory presenterFactory,
-			Joystick joystick)
+			Joystick joystick, GameProgressModel progress)
 		{
+			_player = progress.PlayerProgress;
 			_joystick = joystick;
 			_presenterFactory = presenterFactory;
 			_assetProvider.CleanUp();
@@ -51,12 +51,11 @@ namespace Model.Infrastructure.Services.Factories
 					ConstantNames.Player,
 					initialPoint.transform.position);
 
-			var gameObject = playerPresenter.gameObject;
-			MainCharacter = gameObject;
+			var character = playerPresenter.gameObject;
+			MainCharacter = character;
 			Rigidbody rigidbody = MainCharacter.GetComponent<Rigidbody>();
 
-			//TODO Need vacuum car config;
-			VacuumModel vacuumModel = new(MainCharacter.transform, _joystick, 4f, 10f);
+			VacuumModel vacuumModel = new(MainCharacter.transform, _joystick, _player.Speed, _player.VacuumDistance);
 			playerPresenter.Init(vacuumModel, rigidbody);
 		}
 

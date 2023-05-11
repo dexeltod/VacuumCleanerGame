@@ -4,6 +4,6 @@ namespace Model.Infrastructure.Services.Factories
 {
 	public interface IUpgradeWindowGetter : IService
 	{
-		UpgradeWindow GetUpgradeWindow();
+		UpgradeWindow UpgradeWindow { get; }
 	}
 }

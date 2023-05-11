@@ -20,6 +20,7 @@ namespace ViewModel.Infrastructure
 		public GameObject This { get; private set; }
 		public Slider ScoreSlider { get; private set; }
 		public TextMeshProUGUI ScoreText { get; private set; }
+		public GameObject ProgressPanel { get; private set; }
 		public TextMeshProUGUI MoneyText { get; private set; }
 		public Joystick Joystick { get; private set; }
 
@@ -44,5 +45,6 @@ namespace ViewModel.Infrastructure
 			MoneyText = _gameInterface.ScoreText;
 			return instance;
 		}
+
 	}
 }
