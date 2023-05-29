@@ -1,9 +1,10 @@
 using Model.Character;
-using Model.Infrastructure;
-using Model.Infrastructure.StateMachine.GameStates;
 using UnityEngine;
+using View.SceneEntity;
+using ViewModel.Infrastructure;
+using ViewModel.Infrastructure.StateMachine.GameStates;
 
-namespace Model
+namespace Model.SceneEntity.PlayerStates
 {
 	public sealed class IdleState : State
 	{

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Presenter.SceneEntity
+namespace View.SceneEntity
 {
 	public class BaseTrigger : MonoBehaviour
 	{

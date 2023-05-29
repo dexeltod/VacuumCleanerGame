@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace View
 {
 	[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 	[RequireComponent(typeof(MeshCollider))]

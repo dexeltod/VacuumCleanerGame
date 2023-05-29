@@ -1,16 +1,15 @@
-using System;
 using System.Collections;
-using Model.Character;
+using Model;
 using Model.DI;
 using UnityEngine;
-using ViewModel;
+using ViewModel.Infrastructure;
 
-namespace Presenter.SceneEntity
+namespace View.SceneEntity
 {
 	public class Vacuum : Presenter
 	{
 		private VacuumModel _model;
-		private IGameProgressViewModel _progressViewModel;
+		private IPlayerProgressViewModel _progressViewModel;
 		private Coroutine _sellRoutine;
 
 		private void VacuumTerrain()
@@ -20,7 +19,7 @@ namespace Presenter.SceneEntity
 
 		private void Awake()
 		{
-			_progressViewModel = ServiceLocator.Container.GetSingle<IGameProgressViewModel>();
+			_progressViewModel = ServiceLocator.Container.GetSingle<IPlayerProgressViewModel>();
 		}
 
 		private void OnCollisionEnter(Collision collisionInfo)

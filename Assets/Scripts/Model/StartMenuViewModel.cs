@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using Model.DI;
-using Model.Infrastructure.Services;
-using Model.Infrastructure.StateMachine;
 using Model.MainMenu;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UIElements;
 using ViewModel.Infrastructure;
+using ViewModel.Infrastructure.Services;
+using ViewModel.Infrastructure.StateMachine;
 
 namespace Model
 {

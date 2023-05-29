@@ -1,9 +1,10 @@
-using Model.Infrastructure.Services;
-using Model.Infrastructure.StateMachine;
-using Model.Infrastructure.StateMachine.GameStates;
+using Model.Configs;
 using UnityEngine;
 using UnityEngine.UIElements;
 using ViewModel.Infrastructure;
+using ViewModel.Infrastructure.Services;
+using ViewModel.Infrastructure.StateMachine;
+using ViewModel.Infrastructure.StateMachine.GameStates;
 
 namespace Model.MainMenu
 {

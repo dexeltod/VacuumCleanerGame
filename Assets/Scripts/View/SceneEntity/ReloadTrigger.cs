@@ -1,11 +1,13 @@
-using Presenter.SceneEntity;
 using UnityEngine;
 
-public class ReloadTrigger : MonoBehaviour
+namespace View.SceneEntity
 {
-	private void OnTriggerStay(Collider other)
+	public class ReloadTrigger : MonoBehaviour
 	{
-		if (other.TryGetComponent(out PlayerResources playerMoney)) 
-			playerMoney.SellSand();
+		private void OnTriggerStay(Collider other)
+		{
+			if (other.TryGetComponent(out PlayerResources playerMoney)) 
+				playerMoney.SellSand();
+		}
 	}
 }

@@ -2,8 +2,11 @@ using System.Collections.Generic;
 using Model.ScriptableObjects.UpgradeItems.SO;
 using UnityEngine;
 
-public class ShopItemList : MonoBehaviour
+namespace Model.UpgradeShop
 {
-    [SerializeField] private List<UpgradeItemScriptableObject> _list;
-    public IReadOnlyList<UpgradeItemScriptableObject> Items => _list;
+    public class ShopItemList : MonoBehaviour
+    {
+        [SerializeField] private List<UpgradeItemScriptableObject> _list;
+        public IReadOnlyList<UpgradeItemScriptableObject> Items => _list;
+    }
 }

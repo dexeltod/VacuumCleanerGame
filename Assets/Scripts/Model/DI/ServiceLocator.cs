@@ -1,4 +1,4 @@
-using Model.Infrastructure.Services;
+using ViewModel.Infrastructure.Services;
 
 namespace Model.DI
 {

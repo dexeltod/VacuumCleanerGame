@@ -1,10 +1,9 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using ViewModel;
+using ViewModel.Infrastructure;
 
-namespace DefaultNamespace.Presenter
+namespace View.UI
 {
 	public class GameplayInterfaceView : MonoBehaviour
 	{
@@ -13,28 +12,40 @@ namespace DefaultNamespace.Presenter
 		[SerializeField] private TextMeshProUGUI _moneyText;
 		[SerializeField] private Joystick _joystick;
 
-		private IGameProgressViewModel _gameProgress;
+		private IPlayerProgressViewModel _playerProgress;
 		private int _maxScore;
+		private Canvas _canvas;
+		private bool _isInitialized;
 
 		public Slider ScoreSlider => _scoreSlider;
 		public TextMeshProUGUI ScoreText => _scoreText;
 		public TextMeshProUGUI MoneyText => _moneyText;
 		public Joystick Joystick => _joystick;
+		public Canvas Canvas => _canvas;
 
 		~GameplayInterfaceView()
 		{
-			_gameProgress.ScoreChanged -= OnScoreChanged;
-			_gameProgress.MoneyChanged -= OnMoneyChanged;
+			_playerProgress.ScoreChanged -= OnScoreChanged;
+			_playerProgress.MoneyChanged -= OnMoneyChanged;
 		}
 
-		public void Construct(IGameProgressViewModel gameProgress, int maxScore)
+		public void Construct(IPlayerProgressViewModel playerProgress, int maxScore)
 		{
-			_gameProgress = gameProgress;
-			_gameProgress.ScoreChanged += OnScoreChanged;
-			_gameProgress.MoneyChanged += OnMoneyChanged;
+			if (_isInitialized)
+				return;
+
+			_canvas ??= GetComponent<Canvas>();
+			_playerProgress = playerProgress;
+			
+			_moneyText.SetText(_playerProgress.Money.ToString());
+			
+			_playerProgress.ScoreChanged += OnScoreChanged;
+			_playerProgress.MoneyChanged += OnMoneyChanged;
 			_maxScore = maxScore;
 			OnScoreChanged(0);
 			enabled = true;
+			
+			_isInitialized = true;
 		}
 
 		public void UpdateMaxScore(int newMaxScore) => _maxScore = newMaxScore;

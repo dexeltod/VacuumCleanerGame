@@ -1,14 +1,17 @@
 using UnityEngine;
 
-public class UpgradeWindowView : MonoBehaviour
+namespace View.UI.Shop
 {
-    [SerializeField] private GameObject _upgradeWindows;
-
-    public void InstantiateUpgradeElements(int count)
+    public class UpgradeWindowView : MonoBehaviour
     {
-        for (int i = 0; i < count; i++)
+        [SerializeField] private GameObject _upgradeWindows;
+
+        public void InstantiateUpgradeElements(int count)
         {
+            for (int i = 0; i < count; i++)
+            {
             
+            }
         }
     }
 }

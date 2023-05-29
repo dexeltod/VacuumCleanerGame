@@ -1,8 +1,9 @@
-using Model.Infrastructure;
-using Model.Infrastructure.Services;
-using Model.Infrastructure.StateMachine.GameStates;
 using UnityEngine;
 using UnityEngine.Serialization;
+using View.UI;
+using ViewModel.Infrastructure;
+using ViewModel.Infrastructure.Services;
+using ViewModel.Infrastructure.StateMachine.GameStates;
 
 namespace Model
 {

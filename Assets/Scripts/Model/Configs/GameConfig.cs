@@ -1,4 +1,4 @@
-namespace Model
+namespace Model.Configs
 {
 	public static class GameConfig
 	{

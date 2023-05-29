@@ -1,7 +1,6 @@
-using Model.Infrastructure.Data;
 using Model.MainMenu;
 
-namespace Model
+namespace Model.Configs
 {
 	public static class ConstantNames
 	{

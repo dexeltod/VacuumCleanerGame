@@ -1,9 +1,9 @@
 using Model.DI;
-using Model.Infrastructure.Services;
-using Model.Infrastructure.Services.Factories;
 using UnityEngine;
+using ViewModel.Infrastructure.Services;
+using ViewModel.Infrastructure.Services.Factories;
 
-namespace Presenter.SceneEntity
+namespace View.SceneEntity.Triggers
 {
 	public class UpgradeTrigger : MonoBehaviour
 	{
@@ -14,8 +14,7 @@ namespace Presenter.SceneEntity
 		private void Start()
 		{
 			_sceneLoadInformer = ServiceLocator.Container.GetSingle<ISceneLoadInformer>();
-			_sceneLoadInformer.SceneLoaded += OnLoaded;
-			
+			_sceneLoadInformer.SceneLoaded += OnLoaded;			
 		}
 
 		private void OnLoaded()

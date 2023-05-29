@@ -1,7 +1,7 @@
 using Model.SceneEntity;
 using UnityEngine;
 
-namespace Model.Character
+namespace Model
 {
 	public class VacuumModel : Transformable, IUpdatable
 	{

@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using Model.DI;
 using UnityEngine;
-using ViewModel;
+using ViewModel.Infrastructure;
 
-namespace Presenter.SceneEntity
+namespace View.SceneEntity
 {
 	public class MeshModificator : MonoBehaviour
 	{
@@ -14,17 +13,17 @@ namespace Presenter.SceneEntity
 
 		private Mesh _mesh;
 		private List<Vector3> _newVertices;
-		private IGameProgressViewModel _gameProgressViewModel;
+		private IPlayerProgressViewModel _playerProgressViewModel;
 
 		private void Start()
 		{
 			_mesh = GetComponent<MeshFilter>().mesh;
-			_gameProgressViewModel = ServiceLocator.Container.GetSingle<IGameProgressViewModel>();
+			_playerProgressViewModel = ServiceLocator.Container.GetSingle<IPlayerProgressViewModel>();
 		}
 
 		private void OnCollisionEnter(Collision collision)
 		{
-			if (_gameProgressViewModel.CheckMaxScore() == false)
+			if (_playerProgressViewModel.CheckMaxScore() == false)
 				return;
 
 			if (collision.collider.TryGetComponent(out VacuumTool _))
@@ -54,7 +53,7 @@ namespace Presenter.SceneEntity
 					_mesh.RecalculateNormals();
 					_mesh.RecalculateBounds();
 					GetComponent<MeshCollider>().sharedMesh = _mesh;
-					_gameProgressViewModel.AddSand(SendScoreCount);
+					_playerProgressViewModel.AddSand(SendScoreCount);
 				}
 			}
 		}

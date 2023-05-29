@@ -1,7 +1,7 @@
 using Model.SceneEntity;
 using UnityEngine;
 
-namespace Presenter.SceneEntity
+namespace View.SceneEntity
 {
 	[RequireComponent(typeof(Rigidbody))]
 	public abstract class Presenter : MonoBehaviour
