@@ -23,35 +23,37 @@ namespace View.UI.Shop
 		[SerializeField] private Image _icon;
 		[SerializeField] private Button _buttonBuy;
 
-		private List<Image> _pointsColors = new();
+		private readonly List<Image> _pointsColors = new();
 
 		private UpgradeItemScriptableObject.Upgrade _upgradeType;
 		private int _boughtPoints;
+		private bool _isInit;
 
-		public string Title { get; private set; }
-		public int Price { get; private set; }
+		public UpgradeItemScriptableObject ItemData { get; private set; }
 		public event Action<UpgradeItemScriptableObject.Upgrade> BuyButtonPressed;
 
 		public UpgradeElementView Construct(UpgradeItemScriptableObject item, int boughtPoints)
 		{
-			item.Construct();
+			if (_isInit)
+				throw new InvalidOperationException("Item view is already constructed");
+			
 			_boughtPoints = boughtPoints;
 			_upgradeType = item.UpgradeType;
-		
-			Title = item.Name;
+
+			ItemData = item;
 			_title.SetText(item.Title);
 
-			Price = item.Price;
 			_price.SetText(item.Price.ToString());
-		
+
 			_description.SetText(item.Description);
 			_icon.sprite = item.Icon;
 
 			InstantiatePoints();
+			_isInit = true;
 			return this;
 		}
 
-		public void AddPoint(int count) =>
+		public void AddProgressPointColor(int count) =>
 			ChangePointsColor(count);
 
 		private void OnEnable() =>
@@ -67,12 +69,12 @@ namespace View.UI.Shop
 		{
 			if (_boughtPoints + count > _maxPoints)
 				return;
-		
+
 			_boughtPoints += count;
 
 			for (int i = 0; i < _boughtPoints; i++)
 				_pointsColors[i].color = _boughtPointColor;
-		
+
 			for (int i = _boughtPoints; i < _maxPoints; i++)
 				_pointsColors[i].color = _notBoughtPointColor;
 		}

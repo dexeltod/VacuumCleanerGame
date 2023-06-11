@@ -10,7 +10,6 @@ namespace View.UI.Shop
 
         public void Enable()
         {
-            Debug.Log("yes click");
             _upgradeDiv.SetActive(true);
             _upgradeCanvas.enabled = true;
         }

@@ -16,11 +16,13 @@ namespace ViewModel.Infrastructure.Services.Factories
 		private readonly List<UpgradeElementView> _buttonElements;
 		private readonly List<string> _buttonNames;
 		private readonly IPlayerProgressViewModel _playerProgress;
+		private readonly IShopProgressViewModel _shopProgress;
 
 		public ShopPurchaseController(UpgradeWindow upgradeWindow, List<UpgradeElementView> upgradeElements,
 			List<string> buttonNames)
 		{
 			_playerProgress = ServiceLocator.Container.GetSingle<IPlayerProgressViewModel>();
+			_shopProgress = ServiceLocator.Container.GetSingle<IShopProgressViewModel>();
 
 			_upgradeWindow = upgradeWindow;
 			_buttonElements = upgradeElements;
@@ -62,7 +64,7 @@ namespace ViewModel.Infrastructure.Services.Factories
 
 			if (_buttonNames.Contains(buttonName))
 				foreach (UpgradeElementView button in _buttonElements)
-					if (button.Title == buttonName)
+					if (button.ItemData.GetProgressName() == buttonName)
 					{
 						TryBuyUpgrade(button);
 						return;
@@ -71,12 +73,12 @@ namespace ViewModel.Infrastructure.Services.Factories
 
 		private void TryBuyUpgrade(UpgradeElementView upgradeElement)
 		{
-			Debug.Log(_playerProgress.Money);
-			if (_playerProgress.Money - upgradeElement.Price < 0)
+			if (_playerProgress.Money - upgradeElement.ItemData.Price < 0)
 				return;
 
-			_playerProgress.DecreaseMoney(upgradeElement.Price);
-			upgradeElement.AddPoint(PointCount);
+			_playerProgress.DecreaseMoney(upgradeElement.ItemData.Price);
+			_shopProgress.AddProgressPoint(upgradeElement.ItemData.GetProgressName());
+			upgradeElement.AddProgressPointColor(PointCount);
 		}
 	}
 }

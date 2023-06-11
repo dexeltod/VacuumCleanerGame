@@ -24,8 +24,7 @@ namespace Model.ScriptableObjects.UpgradeItems.SO
 		[SerializeField] private Sprite _icon;
 		[SerializeField] private Upgrade _upgradeType;
 
-		private int _currentUpgradePoint;
-		private bool _isConstructed = false;
+		private string _progressName;
 
 		public UpgradeElementView UpgradeElementView => _upgradeElementView;
 		public Upgrade UpgradeType => _upgradeType;
@@ -33,15 +32,11 @@ namespace Model.ScriptableObjects.UpgradeItems.SO
 		public string Description => _description;
 		public int Price => _price;
 		public Sprite Icon => _icon;
-		public  string Name { get; private set; }
 
-		public void Construct()
+		public string GetProgressName()
 		{
-			if (_isConstructed)
-				return;
-			
-			Name = Enum.GetName(typeof(Upgrade), _upgradeType);
-			_isConstructed = true;
+			_progressName ??= Enum.GetName(typeof(Upgrade), UpgradeType);
+			return _progressName;
 		}
 	}
 }

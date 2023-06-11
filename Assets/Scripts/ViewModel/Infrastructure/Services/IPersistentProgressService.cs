@@ -4,6 +4,7 @@ namespace ViewModel.Infrastructure.Services
 {
 	public interface IPersistentProgressService : IService
 	{
-		GameProgressModel GameProgress { get; set; }
+		GameProgressModel GameProgress { get; }
+		void Construct(GameProgressModel progress);
 	}
 }

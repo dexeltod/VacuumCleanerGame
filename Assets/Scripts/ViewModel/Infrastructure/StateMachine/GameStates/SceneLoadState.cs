@@ -40,10 +40,8 @@ namespace ViewModel.Infrastructure.StateMachine.GameStates
 		}
 
 		public async void Enter(string levelName)
-		{			
-			_saveLoadService = _serviceLocator.GetSingle<ISaveLoadDataService>();
-			_gameProgress = await _saveLoadService.LoadProgress();
-
+		{
+			_gameProgress = _serviceLocator.GetSingle<IPersistentProgressService>().GameProgress;
 			_upgradeWindowFactory = _serviceLocator.GetSingle<IUpgradeWindowFactory>();
 			_cameraFactory = _serviceLocator.GetSingle<ICameraFactory>();
 			_playerFactory = _serviceLocator.GetSingle<IPlayerFactory>();

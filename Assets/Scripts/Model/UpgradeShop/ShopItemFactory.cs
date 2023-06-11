@@ -32,7 +32,7 @@ namespace Model.UpgradeShop
 			List<string> shopItemNames = new List<string>();
 
 			foreach (var item in list.Items)
-				shopItemNames.Add(item.Name);
+				shopItemNames.Add(item.GetProgressName());
 
 			shopProgress.InitializeProgress(shopItemNames);
 		}

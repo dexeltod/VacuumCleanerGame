@@ -41,7 +41,7 @@ namespace ViewModel.Infrastructure.StateMachine.GameStates
 			_serviceLocator.RegisterAsSingle<IGameStateMachine>(_gameStateMachine);
 			_serviceLocator.RegisterAsSingle<IPersistentProgressService>(new PersistentProgressService());
 			_serviceLocator.RegisterAsSingle<IAssetProvider>(new AssetProvider());
-			_serviceLocator.RegisterAsSingle<ISaveLoadDataService>(new SaveLoadDataService(new GameProgressFactory()));
+			
 			_serviceLocator.RegisterAsSingle<IMusicService>(new MusicService(_musicSetter, _serviceLocator.GetSingle<IAssetProvider>()));
 			
 			SceneLoadInformer sceneLoadInformer = new SceneLoadInformer();
@@ -55,6 +55,8 @@ namespace ViewModel.Infrastructure.StateMachine.GameStates
 			_serviceLocator.RegisterAsSingle<ICameraFactory>(cameraFactory);
 			_serviceLocator.RegisterAsSingle<ICamera>(cameraFactory);
 			_serviceLocator.RegisterAsSingle<ISceneConfigGetter>(new SceneConfigGetter());
+			
+			_serviceLocator.RegisterAsSingle<ISaveLoadDataService>(new SaveLoadDataService());
 		}
 	}
 }

@@ -31,11 +31,13 @@ namespace View.SceneEntity
 
 		private void OnDisable()
 		{
-			_gameplayInterface.Canvas.enabled = true;
+			if (_gameplayInterface.Canvas != null)
+				_gameplayInterface.Canvas.enabled = true;
+			
 			ActiveChanged?.Invoke(false);
 		}
 
-		private void OnDestroy() => 
+		private void OnDestroy() =>
 			Destroyed?.Invoke();
 
 		~UpgradeWindow()

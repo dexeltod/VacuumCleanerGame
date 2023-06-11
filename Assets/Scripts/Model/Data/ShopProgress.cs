@@ -1,17 +1,17 @@
 using System;
 using System.Collections.Generic;
+using Model.DI;
+using ViewModel.Infrastructure.Services;
 
 namespace Model.Infrastructure.Data
 {
 	[Serializable]
 	public class ShopProgress
 	{
-		private List<string> _progressNames = new();
+		public readonly int MaxPointCount = 6;
 
+		private List<string> _progressNames;
 		private List<int> _progressValues;
-
-		public int BoughtSpeedPoints { get; private set; } = 1;
-
 		private bool _namesInitialized;
 
 		public ShopProgress()
@@ -24,21 +24,19 @@ namespace Model.Infrastructure.Data
 			if (_namesInitialized)
 				return;
 
-			_progressNames.Clear();
-			
 			_progressValues = new List<int>();
-			
+			_progressNames = new List<string>();
 
 			for (int i = 0; i < progressNames.Count; i++)
 			{
 				_progressNames.Add(progressNames[i]);
 				_progressValues.Add(0);
 			}
-
+			
 			_namesInitialized = true;
 		}
 
-		public List<Tuple<string, int>> LoadProgress()
+		public List<Tuple<string, int>> GetAllProgress()
 		{
 			List<Tuple<string, int>> progress = new();
 
@@ -48,17 +46,29 @@ namespace Model.Infrastructure.Data
 			return progress;
 		}
 
-		public void SetBoughtSpeedPoints(int newBoughtSpeedPoints) => BoughtSpeedPoints = newBoughtSpeedPoints;
+		public Tuple<string, int> GetProgressByName(string name)
+		{
+			if (_progressNames == null || _progressNames.Count == 0)
+				throw new NullReferenceException("Progress is not initialized");
+			
+			for (int i = 0; i < _progressNames.Count; i++)
+			{
+				if (_progressNames[i] == name)
+					return new Tuple<string, int>(_progressNames[i], _progressValues[i]);
+			}
+
+			throw new InvalidOperationException("Invalid progress name: " + name);
+		}
 
 		public void ChangeProgressValue(string progressName, int progressValue)
 		{
 			if (_progressNames.Contains(progressName) == false)
 				return;
 
-			int index = _progressNames.FindIndex(x => x == progressName);
+			int nameIndex = _progressNames.FindIndex(x => x == progressName);
 
-			if (index >= 0)
-				_progressValues[index] = progressValue;
+			if (nameIndex >= 0)
+				_progressValues[nameIndex] = progressValue;
 		}
 	}
 }

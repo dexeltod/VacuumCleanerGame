@@ -1,21 +1,25 @@
 using System;
 using Cysharp.Threading.Tasks;
+using Model;
+using Model.DI;
+using Model.Infrastructure.Data;
 using ViewModel.Infrastructure.Services;
+using ViewModel.Infrastructure.Services.Factories;
 
 namespace ViewModel.Infrastructure.StateMachine.GameStates
 {
 	public class LoadProgressState : IGameState
 	{
 		private readonly GameStateMachine _gameStateMachine;
-		private readonly IPersistentProgressService _progressService;
-		private readonly ISaveLoadDataService _saveLoadDataService;
+		private readonly ServiceLocator _serviceLocator;
+		private readonly ISaveLoadDataService _saveLoadService;
+		private GameProgressModel _gameProgress;
 
-		public LoadProgressState(GameStateMachine gameStateMachine, IPersistentProgressService progressService,
-			ISaveLoadDataService saveLoadDataService)
+		public LoadProgressState(GameStateMachine gameStateMachine, ServiceLocator serviceLocator)
 		{
+			_saveLoadService = ServiceLocator.Container.GetSingle<ISaveLoadDataService>();
 			_gameStateMachine = gameStateMachine;
-			_progressService = progressService;
-			_saveLoadDataService = saveLoadDataService;
+			_serviceLocator = serviceLocator;
 		}
 
 		public async void Enter()
@@ -34,7 +38,7 @@ namespace ViewModel.Infrastructure.StateMachine.GameStates
 
 		private async UniTask LoadProgressOrInitNew(Action progressLoaded)
 		{
-			_progressService.GameProgress = await _saveLoadDataService.LoadProgress();
+			await _saveLoadService.LoadProgress();
 			progressLoaded.Invoke();
 		}
 	}

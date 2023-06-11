@@ -2,176 +2,34 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e72b9b77-a85b-4195-b3c2-5f5bad8d4534" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data/GameProgressModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data/PlayerProgress.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data/ShopProgress.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data/ShopProgress.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/PlayerProgressViewModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/Player.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/ShopElementFactory.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/ShopElementFactory.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/ShopPurchaseController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/ShopPurchaseController.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/UpgradeWindowFactory.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/IShopProgressViewModel.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/IShopProgressViewModel.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/ShopProgressViewModel.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/ShopProgressViewModel.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources_moved/UI/GameplayInterface.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources_moved/UI/GameplayInterface.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Resources_moved/UI/Shop/ShopItemList/UpgradeCanvas.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources_moved/UI/Shop/ShopItemList/UpgradeCanvas.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources_moved/UI/Shop/ShopItemList/UpgradeElement/UpgradeElement.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources_moved/UI/Shop/ShopItemList/UpgradeElement/UpgradeElement.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Game.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Game.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Bootstrapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Bootstrapper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Configs/ConstantNames.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Configs/ConstantNames.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Configs/GameConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Configs/GameConfig.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Configs/SceneConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Configs/SceneConfig.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Configs/UiElementNames.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Configs/UiElementNames.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/DI/ServiceLocator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/DI/ServiceLocator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Camera.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Camera.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Camera/CameraFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Camera/CameraFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Camera/CameraFactory.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Camera/CameraFactory.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Data.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Data/GameProgressModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data/PlayerProgress.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Data/GameProgressModel.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data/GameProgressModel.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Data/PersistentProgressService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data/PersistentProgressService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Data/PersistentProgressService.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data/PersistentProgressService.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Data/PlayerProgressData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data/PlayerProgressData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Data/PlayerProgressData.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data/PlayerProgressData.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Data/ProgressNames.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data/ProgressNames.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Data/ProgressNames.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data/ProgressNames.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Game.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Game.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Game.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Game.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/GameRunner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/GameRunner.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/GameRunner.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/GameRunner.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/IInputService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/IInputService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/IInputService.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/IInputService.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/InitializeServicesWithProgressState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/InitializeServicesWithProgressState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/InitializeServicesWithProgressState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/InitializeServicesWithProgressState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/JsonDataSaveLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/JsonDataSaveLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/JsonDataSaveLoader.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/JsonDataSaveLoader.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/AssetProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/AssetProvider.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/AssetProvider.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/AssetProvider.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/BinaryDataSaveLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/BinaryDataSaveLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/BinaryDataSaveLoader.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/BinaryDataSaveLoader.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/GameProgressFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/GameProgressFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/GameProgressFactory.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/GameProgressFactory.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/ICamera.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/ICamera.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/ICamera.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/ICamera.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/ICameraFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/ICameraFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/ICameraFactory.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/ICameraFactory.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/IPlayerFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/Player/IPlayerFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/IPlayerFactory.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/Player/IPlayerFactory.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/IPresenterFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/IPresenterFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/IPresenterFactory.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/IPresenterFactory.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/IUIFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/IUIFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/IUIFactory.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/IUIFactory.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/IUIGetter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/IUIGetter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/IUIGetter.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/IUIGetter.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/IUpgradeWindowFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/IUpgradeWindowFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/IUpgradeWindowFactory.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/IUpgradeWindowFactory.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/IUpgradeWindowGetter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/IUpgradeWindowGetter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/IUpgradeWindowGetter.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/IUpgradeWindowGetter.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/PlayerFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/Player/PlayerFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/PlayerFactory.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/Player/PlayerFactory.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/PlayerStatesFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/Player/PlayerStatesFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/PlayerStatesFactory.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/Player/PlayerStatesFactory.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/PresenterFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/PresenterFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/PresenterFactory.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/PresenterFactory.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/UpgradeWindowFactory.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/Factories/UpgradeWindowFactory.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/UpgradeWindowFactory.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/IAssetProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/IAssetProvider.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/IAssetProvider.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/IAssetProvider.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/ICoroutineRunner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/ICoroutineRunner.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/ICoroutineRunner.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/ICoroutineRunner.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/IMusicService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/IMusicService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/IMusicService.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/IMusicService.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/IPersistentProgressService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/IPersistentProgressService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/IPersistentProgressService.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/IPersistentProgressService.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/ISaveLoadDataService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/ISaveLoadDataService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/ISaveLoadDataService.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/ISaveLoadDataService.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/ISceneConfigGetter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/ISceneConfigGetter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/ISceneConfigGetter.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/ISceneConfigGetter.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/ISceneLoad.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/ISceneLoad.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/ISceneLoad.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/ISceneLoad.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/ISceneLoadInformer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/ISceneLoadInformer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/ISceneLoadInformer.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/ISceneLoadInformer.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/IService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/IService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/IService.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/IService.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/InputService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/InputService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/InputService.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/InputService.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/MusicService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/MusicService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/MusicService.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/MusicService.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/MusicSetter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/MusicSetter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/MusicSetter.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/MusicSetter.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/SceneConfigGetter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/SceneConfigGetter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/Services/SceneConfigGetter.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/SceneConfigGetter.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStateMachine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStateMachine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStateMachine.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStateMachine.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/GameLoopState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/GameLoopState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/GameLoopState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/GameLoopState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/IExitState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/IExitState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/IExitState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/IExitState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/IStateTransition.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/IStateTransition.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/IStateTransition.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/IStateTransition.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/InitializeServicesState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/InitializeServicesState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/InitializeServicesState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/InitializeServicesState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/LoadProgressState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/LoadProgressState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/LoadProgressState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/LoadProgressState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/MenuState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/MenuState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/MenuState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/MenuState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/SceneLoadInformer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/SceneLoadInformer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/SceneLoadInformer.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/SceneLoadInformer.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/SceneLoadState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/SceneLoadState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/SceneLoadState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/SceneLoadState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/SceneLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/SceneLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/SceneLoader.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/SceneLoader.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/State.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/State.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/State.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/State.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/StateMachine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/StateMachine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/StateMachine.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/StateMachine.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/StateService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/StateService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/GameStates/StateService.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/StateService.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/IGameState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/IGameState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/IGameState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/IGameState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/IGameStateMachine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/IGameStateMachine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/IGameStateMachine.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/IGameStateMachine.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/IPayloadState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/IPayloadState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/IPayloadState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/IPayloadState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/IState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/IState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Infrastructure/StateMachine/IState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/IState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/MainMenu/MainMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/MainMenu/MainMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Data/PersistentProgressService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data/PersistentProgressService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Data/PlayerProgress.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data/PlayerProgress.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/Data/ShopProgress.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/Data/ShopProgress.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/SaveLoadDataService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/SaveLoadDataService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/SceneEntity/PlayerStates/IdleState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/SceneEntity/PlayerStates/IdleState.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/ScriptableObjects/UpgradeItems/SO/UpgradeItemScriptableObject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/ScriptableObjects/UpgradeItems/SO/UpgradeItemScriptableObject.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/StartMenuViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/StartMenuViewModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/UpgradeShop/ShopItemFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/UpgradeShop/ShopItemFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/UpgradeShop/ShopItemList.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/UpgradeShop/ShopItemList.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Model/VacuumModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Model/VacuumModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/SandGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/SandGenerator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/AnimatorFacade.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/AnimatorFacade.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/BaseTrigger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/BaseTrigger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/MeshModificator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/MeshModificator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/PlayerResources.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/PlayerResources.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/Presenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/Presenter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/ReloadTrigger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/ReloadTrigger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/Sand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/Sand.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/Triggers/UpgradeTrigger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/Triggers/UpgradeTrigger.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/UpgradeWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/UpgradeWindow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/Vacuum.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/Vacuum.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/VacuumColliderDisabler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/VacuumColliderDisabler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/VacuumTool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/VacuumTool.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/UI/GameplayInterfaceView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/UI/GameplayInterfaceView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/UI/LoadingCurtain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/UI/LoadingCurtain.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/UI/Shop/UpgradeElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/UI/Shop/UpgradeElementView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/UI/Shop/UpgradeElement.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/UI/Shop/UpgradeElementView.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/UI/Shop/UpgradeWindowView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/UI/Shop/UpgradeWindowView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/GameProgressViewModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/GameProgressViewModel.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/PlayerProgressViewModel.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/IGameProgressViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/IPlayerProgressViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/IGameProgressViewModel.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/IPlayerProgressViewModel.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/UIFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/UIFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/UI/Shop/UpgradeElementView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/UI/Shop/UpgradeElementView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/View/UI/Shop/UpgradeWindowEnabler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/View/UI/Shop/UpgradeWindowEnabler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/InitializeServicesWithProgressState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/InitializeServicesWithProgressState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/BinaryDataSaveLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/BinaryDataSaveLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/GameProgressFactory.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/GameProgressFactory.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/ShopElementFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/ShopElementFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/ShopPurchaseController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/ShopPurchaseController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/UpgradeWindowFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/UpgradeWindowFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/IPersistentProgressService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/IPersistentProgressService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/ISaveLoadDataService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/ISaveLoadDataService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStateMachine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStateMachine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/InitializeServicesState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/InitializeServicesState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/LoadProgressState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/LoadProgressState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/SceneLoadState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/StateMachine/GameStates/SceneLoadState.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -182,6 +40,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/171d8a8f3bd84fa7b9eb1f330018a78912ae00/cf/ef0949da/UxmlFactory`2.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5a41d6b7189842eca409fd0b1c3e3dcf17bf78/1e/b198a159/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8b3224ca9e2a4e50bae803c09cae4aaf45000/78/fc2d7d5a/IPointerDownHandler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b32fc9256653475fa703f6fa4b6d42111a200/f7/97c19932/GameProgressFactory.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bae255e3e08e46f7bc2fbd23dde96338158800/37/13e09fe2/Mesh.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d6232873609549b8a045fa15811a5bd346a800/36/1b207121/AwaitTaskContinuation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/dc1a135d72304bd5b26536e59cf3a0c845000/56/53b25c9b/IPointerDownHandler.cs" root0="SKIP_HIGHLIGHTING" />
@@ -193,7 +52,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Model/Data/PersistentProgressService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Model/Data/PlayerProgress.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Model/Data/ProgressNames.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Model/Data/ShopProgress.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Model/Data/ShopProgress.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Model/UpgradeShop/ShopItemList.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/ReloadTrigger.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/View/SceneEntity/Triggers/UpgradeTrigger.cs" root0="FORCE_HIGHLIGHTING" />
@@ -202,10 +61,12 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/View/UI/Shop/UpgradeWindowEnabler.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.cysharp.unitask@73d86259ce/Runtime/CompilerServices/AsyncUniTaskMethodBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.cysharp.unitask@73d86259ce/Runtime/External/Addressables/AddressablesAsyncExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.cysharp.unitask@73d86259ce/Runtime/UniTask.Factory.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.addressables@1.19.19/Runtime/ResourceManager/ResourceProviders/AssetDatabaseProvider.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.inputsystem@1.4.4/InputSystem/InputSystem.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.polybrush@1.1.4/Runtime/Scripts/MonoBehaviour/ZoomOverride.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.polybrush@1.1.4/Runtime/Scripts/MonoBehaviour/z_AdditionalVertexStreams.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/ExecuteEvents.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -271,10 +132,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="14468">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" />
+      <option name="pid" value="14468" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -327,7 +188,15 @@
       <workItem from="1685186395186" duration="6790000" />
       <workItem from="1685272028666" duration="1054000" />
       <workItem from="1685276575925" duration="10963000" />
-      <workItem from="1685356215648" duration="2578000" />
+      <workItem from="1685356215648" duration="7618000" />
+      <workItem from="1685445167465" duration="19207000" />
+      <workItem from="1685528364871" duration="1200000" />
+      <workItem from="1685562444321" duration="2867000" />
+      <workItem from="1685660978633" duration="1377000" />
+      <workItem from="1685701768055" duration="4753000" />
+      <workItem from="1685726707463" duration="5635000" />
+      <workItem from="1686161143523" duration="3339000" />
+      <workItem from="1686379201183" duration="21417000" />
     </task>
     <servers />
   </component>
@@ -343,17 +212,95 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Scripts/View/UI/Shop/UpgradeWindowEnabler.cs</url>
-          <line>11</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Scripts\View\UI\Shop\UpgradeWindowEnabler.cs" initialLine="11" containingFunctionPresentation="method 'Enable'">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/BinaryDataSaveLoader.cs</url>
+          <line>25</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Scripts\ViewModel\Infrastructure\Services\BinaryDataSaveLoader.cs" initialLine="25" containingFunctionPresentation="method 'Save'">
             <startOffsets>
-              <option value="287" />
+              <option value="729" />
             </startOffsets>
             <endOffsets>
-              <option value="288" />
+              <option value="777" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="1" />
+          <option name="timeStamp" value="57" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/Model/SaveLoadDataService.cs</url>
+          <line>42</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Scripts\Model\SaveLoadDataService.cs" initialLine="40" containingFunctionPresentation="method 'SaveProgress'">
+            <startOffsets>
+              <option value="1278" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1319" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="58" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/Model/SaveLoadDataService.cs</url>
+          <line>47</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Scripts\Model\SaveLoadDataService.cs" initialLine="47" containingFunctionPresentation="method 'LoadProgress'">
+            <startOffsets>
+              <option value="1449" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1494" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="59" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/BinaryDataSaveLoader.cs</url>
+          <line>22</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Scripts\ViewModel\Infrastructure\Services\BinaryDataSaveLoader.cs" initialLine="22" containingFunctionPresentation="method 'Save'">
+            <startOffsets>
+              <option value="658" />
+            </startOffsets>
+            <endOffsets>
+              <option value="659" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="61" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/ShopProgressViewModel.cs</url>
+          <line>33</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Scripts\ViewModel\Infrastructure\ShopProgressViewModel.cs" initialLine="33" containingFunctionPresentation="method 'AddProgressPoint'">
+            <startOffsets>
+              <option value="1036" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1068" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="62" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/Model/Data/PersistentProgressService.cs</url>
+          <line>14</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Scripts\Model\Data\PersistentProgressService.cs" initialLine="14" containingFunctionPresentation="method 'Construct'">
+            <startOffsets>
+              <option value="334" />
+            </startOffsets>
+            <endOffsets>
+              <option value="362" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="63" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/ViewModel/Infrastructure/Services/Factories/Player/PlayerFactory.cs</url>
+          <line>40</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Scripts\ViewModel\Infrastructure\Services\Factories\Player\PlayerFactory.cs" initialLine="40" containingFunctionPresentation="method 'Instantiate'">
+            <startOffsets>
+              <option value="1219" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1253" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="64" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

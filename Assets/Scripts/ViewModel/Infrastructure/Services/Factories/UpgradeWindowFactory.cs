@@ -16,7 +16,7 @@ namespace ViewModel.Infrastructure.Services.Factories
 	public class UpgradeWindowFactory : IUpgradeWindowFactory
 	{
 		private readonly IAssetProvider _assetProvider;
-		private readonly ISaveLoadDataService _progress;
+		private readonly GameProgressModel _progress;
 
 		private bool _isInitialized;
 		private ShopElementFactory _shopElementFactory;
@@ -30,16 +30,8 @@ namespace ViewModel.Infrastructure.Services.Factories
 		public UpgradeWindowFactory()
 		{
 			_isInitialized = false;
-			_progress = ServiceLocator.Container.GetSingle<ISaveLoadDataService>();
+			_progress = ServiceLocator.Container.GetSingle<IPersistentProgressService>().GameProgress;
 			_assetProvider = ServiceLocator.Container.GetSingle<IAssetProvider>();
-		}
-
-		public UpgradeWindow GetUpgradeWindow()
-		{
-			if (_upgradeWindow != null)
-				return _upgradeWindow.GetComponent<UpgradeWindow>();
-
-			throw new InvalidOperationException();
 		}
 
 		public async UniTask<GameObject> Create()
@@ -57,10 +49,10 @@ namespace ViewModel.Infrastructure.Services.Factories
 			return _upgradeWindow;
 		}
 
-		private async Task InitButtons()
+		private async UniTask InitButtons()
 		{
 			_buttonElements = await _shopElementFactory.InstantiateElements(UpgradeWindow.UpgradeElementsTransform);
-			_buttonNames = _buttonElements.Select(x => x.Title).ToList();
+			_buttonNames = _buttonElements.Select(x => x.ItemData.GetProgressName()).ToList();
 		}
 
 		private void ConstructWindow()
@@ -71,15 +63,8 @@ namespace ViewModel.Infrastructure.Services.Factories
 
 		private async Task InstantiateWindow()
 		{
-			ShopProgress shopProgress = await LoadUpgradeDataAsync(_progress);
-			_shopElementFactory ??= new ShopElementFactory(shopProgress);
+			_shopElementFactory ??= new ShopElementFactory(_progress.ShopProgress);
 			_upgradeWindow = await _assetProvider.Instantiate(ConstantNames.UIElementNames.UpgradeWindow);
-		}
-
-		private async Task<ShopProgress> LoadUpgradeDataAsync(ISaveLoadDataService saveLoadDataService)
-		{
-			GameProgressModel result = await saveLoadDataService.LoadProgress();
-			return result.ShopProgress;
 		}
 	}
 }

@@ -26,7 +26,7 @@ namespace ViewModel.Infrastructure.Services.Factories
 			List<UpgradeElementView> buttons = new();
 			ShopItemList items = await _shopFactory.InitializeItemsList(_shopProgress);
 
-			List<Tuple<string, int>> progress = _shopProgress.LoadProgress();
+			List<Tuple<string, int>> progress = _shopProgress.GetAllProgress();
 
 			Instantiate(transform, items, buttons, progress);
 			return buttons;
