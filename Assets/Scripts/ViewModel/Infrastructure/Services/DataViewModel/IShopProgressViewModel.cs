@@ -1,4 +1,4 @@
-namespace ViewModel.Infrastructure.Services
+namespace ViewModel.Infrastructure.Services.DataViewModel
 {
 	public interface IShopProgressViewModel : IService
 	{

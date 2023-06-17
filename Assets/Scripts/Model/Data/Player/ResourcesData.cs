@@ -1,23 +1,21 @@
 using System;
 using Model.Configs;
 
-namespace Model.Infrastructure.Data
+namespace Model.Data.Player
 {
 	[Serializable]
-	public class PlayerProgress
+	public class ResourcesData
 	{
-		public int Speed { get; private set; } = 4;
-		public int VacuumDistance { get; private set; } = 3;
-
+		public int Money { get; private set; }
 		public int MaxFilledScore => MaxFillModifier + GameConfig.DefaultMaxFillCount;
 		public int MaxFillModifier { get; private set; } = 0;
 		public int CurrentSandCount { get; private set; } = 0;
-		public int Money { get; private set; } = 100;
 
-		public void SetSpeed(int newSpeed) => Speed = newSpeed;
-
-		public void SetVacuumDistance(int newValue) => VacuumDistance = newValue;
-
+		public ResourcesData(int money)
+		{
+			Money = money;	
+		}
+		
 		public void AddSand(int count) =>
 			CurrentSandCount += count;
 

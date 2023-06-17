@@ -3,8 +3,9 @@ using Cysharp.Threading.Tasks;
 using Model;
 using Model.Character;
 using Model.Configs;
+using Model.Data;
+using Model.Data.Player;
 using Model.DI;
-using Model.Infrastructure.Data;
 using UnityEngine;
 using View.SceneEntity;
 
@@ -17,17 +18,18 @@ namespace ViewModel.Infrastructure.Services.Factories.Player
 		private readonly IPersistentProgressService _progressService;
 		private readonly IInputService _inputService;
 
+		private IPresenterFactory _presenterFactory;
+		
 		private Joystick _joystick;
 		private Animator _animator;
 		private AnimationHasher _animationHasher;
 		private AnimatorFacade _animatorFacade;
 		private PlayerStatesFactory _playerStatesFactory;
-		private IPresenterFactory _presenterFactory;
 		private PlayerProgress _player;
 		
-		public GameObject MainCharacter { get; private set; }
+		public GameObject Player { get; private set; }
 
-		public event Action MainCharacterCreated;
+		public event Action PlayerCreated;
 
 		public PlayerFactory(IAssetProvider assetProvider)
 		{
@@ -54,10 +56,10 @@ namespace ViewModel.Infrastructure.Services.Factories.Player
 					initialPoint.transform.position);
 
 			var character = playerPresenter.gameObject;
-			MainCharacter = character;
-			Rigidbody rigidbody = MainCharacter.GetComponent<Rigidbody>();
+			Player = character;
+			Rigidbody rigidbody = Player.GetComponent<Rigidbody>();
 
-			VacuumModel vacuumModel = new(MainCharacter.transform, _joystick, _player.Speed, _player.VacuumDistance);
+			VacuumModel vacuumModel = new(Player.transform, _joystick, _player);
 			playerPresenter.Init(vacuumModel, rigidbody);
 		}
 
@@ -66,14 +68,14 @@ namespace ViewModel.Infrastructure.Services.Factories.Player
 			NullifyComponents();
 			GetComponents();
 			CreatePlayerStateMachine();
-			MainCharacterCreated?.Invoke();
+			PlayerCreated?.Invoke();
 		}
 
 		private void GetComponents()
 		{
-			_animator = MainCharacter.GetComponent<Animator>();
-			_animationHasher = MainCharacter.GetComponent<AnimationHasher>();
-			_animatorFacade = MainCharacter.GetComponent<AnimatorFacade>();
+			_animator = Player.GetComponent<Animator>();
+			_animationHasher = Player.GetComponent<AnimationHasher>();
+			_animatorFacade = Player.GetComponent<AnimatorFacade>();
 		}
 
 		private void NullifyComponents()

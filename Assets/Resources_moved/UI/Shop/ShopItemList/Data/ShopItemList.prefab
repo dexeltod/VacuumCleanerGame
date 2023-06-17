@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7818346109939763957}
-  - component: {fileID: 4560134891036277157}
   m_Layer: 0
   m_Name: ShopItemList
   m_TagString: Untagged
@@ -32,18 +31,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4560134891036277157
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7377504065202046781}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eaf4d92c9f60d5d4189a1b2b9b8ba20a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _list:
-  - {fileID: 11400000, guid: b860f5f48e8c99c43a1e77f50a313096, type: 2}
-  - {fileID: 11400000, guid: de630652386eae446b628c7ddaa51428, type: 2}

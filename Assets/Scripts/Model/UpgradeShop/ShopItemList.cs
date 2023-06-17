@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace Model.UpgradeShop
 {
-    public class ShopItemList : MonoBehaviour
+    [CreateAssetMenu(fileName = "ShopItems", menuName = "Data/Shop/Upgrade/ItemsList")]
+    public class ShopItemList : ScriptableObject
     {
         [SerializeField] private List<UpgradeItemScriptableObject> _list;
         public IReadOnlyList<UpgradeItemScriptableObject> Items => _list;

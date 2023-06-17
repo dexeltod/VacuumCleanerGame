@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using Model.DI;
-using Model.Infrastructure.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using View.UI;
 using ViewModel.Infrastructure.Services;
+using ViewModel.Infrastructure.Services.DataViewModel;
 using ViewModel.Infrastructure.Services.Factories;
 
 namespace ViewModel.Infrastructure
@@ -14,8 +14,8 @@ namespace ViewModel.Infrastructure
 	{
 		private const string UserInterface = "UI";
 		private readonly IAssetProvider _assetProvider;
-		private readonly IPlayerProgressViewModel _playerProgressViewModel;
-		private readonly PlayerProgress _gameProgress;
+		private readonly IResourcesProgressViewModel _resourcesProgressViewModel;
+		private readonly IPersistentProgressService _gameProgress;
 		private GameplayInterfaceView _gameInterface;
 		public GameObject GameObject { get; private set; }
 		public Canvas Canvas { get; private set; }
@@ -28,8 +28,8 @@ namespace ViewModel.Infrastructure
 		public UIFactory()
 		{
 			_assetProvider = ServiceLocator.Container.GetSingle<IAssetProvider>();
-			_playerProgressViewModel = ServiceLocator.Container.GetSingle<IPlayerProgressViewModel>();
-			_gameProgress = ServiceLocator.Container.GetSingle<IPersistentProgressService>().GameProgress.PlayerProgress;
+			_resourcesProgressViewModel = ServiceLocator.Container.GetSingle<IResourcesProgressViewModel>();
+			_gameProgress = ServiceLocator.Container.GetSingle<IPersistentProgressService>();
 		}
 
 		public async Task<GameObject> CreateUI()
@@ -37,7 +37,7 @@ namespace ViewModel.Infrastructure
 			GameObject instance = await _assetProvider.Instantiate(UserInterface);
 			_gameInterface = instance.GetComponent<GameplayInterfaceView>();
 			
-			_gameInterface.Construct(_playerProgressViewModel, _gameProgress.MaxFilledScore);
+			_gameInterface.Construct(_resourcesProgressViewModel, _gameProgress.GameProgress.ResourcesData.MaxFilledScore);
 
 			Canvas = _gameInterface.Canvas;
 			GameObject = _gameInterface.gameObject;

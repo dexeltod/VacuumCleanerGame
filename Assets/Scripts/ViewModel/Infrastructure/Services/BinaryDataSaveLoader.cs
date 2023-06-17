@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using Cysharp.Threading.Tasks;
-using Model.Infrastructure.Data;
+using Model.Data;
 using UnityEngine;
 
 namespace ViewModel.Infrastructure.Services
@@ -32,15 +32,21 @@ namespace ViewModel.Infrastructure.Services
 
 		private void DeleteSaves()
 		{
-			File.Delete(_saveFilePath);
+			string[] files = Directory.GetFiles(_directorySavePath);
+
+			if(files.Length == 0)
+				return;
+			
+			foreach (string file in files) 
+				File.Delete(file);
 		}
 
-		public async UniTask<GameProgressModel> LoadProgress()
+		public GameProgressModel LoadProgress()
 		{
 			string[] files = Directory.GetFiles(_directorySavePath);
 
 			if (files.Length <= 0)
-				await CreateNewProgressByBinary();
+				return null;
 
 			files = Directory.GetFiles(_directorySavePath);
 
@@ -52,19 +58,6 @@ namespace ViewModel.Infrastructure.Services
 				GameProgressModel gameProgress = (GameProgressModel)loadedData;
 				return gameProgress;
 			}
-		}
-
-		public async UniTask CreateNewProgressByBinary()
-		{
-			SetUniqueSaveFilePath();
-			GameProgressModel gameProgress = new();
-
-			using (FileStream saveFile = File.Create(_saveFilePath))
-			{
-				new BinaryFormatter().Serialize(saveFile, gameProgress);
-			}
-			
-			Debug.Log("new progress created");
 		}
 
 		private void SetUniqueSaveFilePath()

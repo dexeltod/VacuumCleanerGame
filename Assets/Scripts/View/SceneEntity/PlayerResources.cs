@@ -1,19 +1,20 @@
 using Model.DI;
 using UnityEngine;
 using ViewModel.Infrastructure;
+using ViewModel.Infrastructure.Services.DataViewModel;
 
 namespace View.SceneEntity
 {
 	public class PlayerResources : MonoBehaviour
 	{
-		private IPlayerProgressViewModel _playerProgress;
+		private IResourcesProgressViewModel _resourcesProgress;
 
 		private void Awake()
 		{
-			_playerProgress = ServiceLocator.Container.GetSingle<IPlayerProgressViewModel>();
+			_resourcesProgress = ServiceLocator.Container.GetSingle<IResourcesProgressViewModel>();
 		}
 
 		public void SellSand() =>
-			_playerProgress.SellSand();
+			_resourcesProgress.SellSand();
 	}
 }

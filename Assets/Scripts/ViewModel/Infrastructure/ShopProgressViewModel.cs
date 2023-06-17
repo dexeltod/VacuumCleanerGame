@@ -1,7 +1,8 @@
 using System;
+using Model.Data;
 using Model.DI;
-using Model.Infrastructure.Data;
 using ViewModel.Infrastructure.Services;
+using ViewModel.Infrastructure.Services.DataViewModel;
 
 namespace ViewModel.Infrastructure
 {
@@ -17,19 +18,19 @@ namespace ViewModel.Infrastructure
 			_saveLoadService = ServiceLocator.Container.GetSingle<ISaveLoadDataService>();
 			_shopProgress = gameProgress.ShopProgress;
 		}
-		
+
 		public void AddProgressPoint(string progressName)
 		{
-			Tuple<string, int> progress  = _shopProgress.GetProgressByName(progressName);
+			Tuple<string, int> progress = _shopProgress.GetProgressByName(progressName);
 
 			if (progress == null)
 				throw new NullReferenceException("Progress is null");
-			
+
 			int newProgressPoint = progress.Item2 + Point;
 
 			if (newProgressPoint > _shopProgress.MaxPointCount)
 				return;
-			
+
 			_shopProgress.ChangeProgressValue(progressName, newProgressPoint);
 			_saveLoadService.SaveProgress();
 		}

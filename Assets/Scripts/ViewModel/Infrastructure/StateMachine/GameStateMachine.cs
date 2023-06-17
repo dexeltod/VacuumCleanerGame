@@ -24,7 +24,7 @@ namespace ViewModel.Infrastructure.StateMachine
 				[typeof(InitializeServicesState)] =
 					new InitializeServicesState(this, serviceLocator, musicSetter, sceneLoader),
 
-				[typeof(LoadProgressState)] = new LoadProgressState(this, serviceLocator),
+				[typeof(LoadProgressState)] = new LoadProgressState(this),
 
 				[typeof(InitializeServicesWithProgressState)] =
 					new InitializeServicesWithProgressState(this, serviceLocator),

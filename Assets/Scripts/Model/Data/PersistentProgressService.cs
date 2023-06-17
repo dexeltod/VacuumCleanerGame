@@ -1,7 +1,6 @@
-using System;
 using ViewModel.Infrastructure.Services;
 
-namespace Model.Infrastructure.Data
+namespace Model.Data
 {
 	public class PersistentProgressService : IPersistentProgressService
 	{

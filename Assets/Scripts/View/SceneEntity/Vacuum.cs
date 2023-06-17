@@ -3,13 +3,14 @@ using Model;
 using Model.DI;
 using UnityEngine;
 using ViewModel.Infrastructure;
+using ViewModel.Infrastructure.Services.DataViewModel;
 
 namespace View.SceneEntity
 {
 	public class Vacuum : Presenter
 	{
 		private VacuumModel _model;
-		private IPlayerProgressViewModel _progressViewModel;
+		private IResourcesProgressViewModel _progressViewModel;
 		private Coroutine _sellRoutine;
 
 		private void VacuumTerrain()
@@ -19,7 +20,7 @@ namespace View.SceneEntity
 
 		private void Awake()
 		{
-			_progressViewModel = ServiceLocator.Container.GetSingle<IPlayerProgressViewModel>();
+			_progressViewModel = ServiceLocator.Container.GetSingle<IResourcesProgressViewModel>();
 		}
 
 		private void OnCollisionEnter(Collision collisionInfo)

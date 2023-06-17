@@ -1,3 +1,4 @@
+using Model.Data.Player;
 using Model.SceneEntity;
 using UnityEngine;
 
@@ -14,12 +15,11 @@ namespace Model
 
 		public float VacuumDistance { get; private set; }
 
-		public VacuumModel(Transform transform, Joystick joystick, float speed,
-			float vacuumDistance) : base(transform)
+		public VacuumModel(Transform transform, Joystick joystick, PlayerProgress progress) : base(transform)
 		{
-			_speed = speed;
+			_speed = progress.Speed;
+			VacuumDistance = progress.VacuumDistance;
 			_joystick = joystick;
-			VacuumDistance = vacuumDistance;
 		}
 
 		public void Update(float deltaTime) =>

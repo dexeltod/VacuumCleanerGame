@@ -1,7 +1,7 @@
 using Model;
 using Model.Configs;
+using Model.Data;
 using Model.DI;
-using Model.Infrastructure.Data;
 using ViewModel.Infrastructure.Camera;
 using ViewModel.Infrastructure.Services;
 using ViewModel.Infrastructure.Services.Factories;

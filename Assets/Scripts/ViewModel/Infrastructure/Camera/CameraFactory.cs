@@ -28,7 +28,7 @@ namespace ViewModel.Infrastructure.Camera
 		public async Task<CinemachineVirtualCamera> CreateVirtualCamera()
 		{
 			_playerFactory = ServiceLocator.Container.GetSingle<IPlayerFactory>();
-			_characterObject = _playerFactory.MainCharacter;
+			_characterObject = _playerFactory.Player;
 			GameObject camera = await _assetProvider.Instantiate(MainCameraPath);
 			Camera = camera.GetComponent<UnityEngine.Camera>();
 

@@ -1,3 +1,4 @@
+using Model.Data;
 using Model.MainMenu;
 
 namespace Model.Configs
@@ -11,10 +12,8 @@ namespace Model.Configs
 
 		public const string PlayerSpawnPointTag = "InitialPoint";
 		public const string Player = "Player";
-		public const string FirstLevel = "Level_1";
 		public const string InitialScene = "Init";
 		public const string MenuScene = "MainMenu";
 		public const string Confiner = "Confiner";
-		public const string PlayerPrefabPath = "Prebafs/Game/Characters/MainCharacter/Hugo";
 	}
 }

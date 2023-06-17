@@ -1,10 +1,10 @@
-using Model.Infrastructure.Data;
+using Model.Data;
 
 namespace ViewModel.Infrastructure.Services
 {
 	public interface IPersistentProgressService : IService
 	{
 		GameProgressModel GameProgress { get; }
-		void Construct(GameProgressModel progress);
+		void Construct(GameProgressModel gameProgressModel);
 	}
 }

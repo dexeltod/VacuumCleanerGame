@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Model.DI;
 using UnityEngine;
 using ViewModel.Infrastructure;
+using ViewModel.Infrastructure.Services.DataViewModel;
 
 namespace View.SceneEntity
 {
@@ -13,17 +14,17 @@ namespace View.SceneEntity
 
 		private Mesh _mesh;
 		private List<Vector3> _newVertices;
-		private IPlayerProgressViewModel _playerProgressViewModel;
+		private IResourcesProgressViewModel _resourcesProgressViewModel;
 
 		private void Start()
 		{
 			_mesh = GetComponent<MeshFilter>().mesh;
-			_playerProgressViewModel = ServiceLocator.Container.GetSingle<IPlayerProgressViewModel>();
+			_resourcesProgressViewModel = ServiceLocator.Container.GetSingle<IResourcesProgressViewModel>();
 		}
 
 		private void OnCollisionEnter(Collision collision)
 		{
-			if (_playerProgressViewModel.CheckMaxScore() == false)
+			if (_resourcesProgressViewModel.CheckMaxScore() == false)
 				return;
 
 			if (collision.collider.TryGetComponent(out VacuumTool _))
@@ -53,7 +54,7 @@ namespace View.SceneEntity
 					_mesh.RecalculateNormals();
 					_mesh.RecalculateBounds();
 					GetComponent<MeshCollider>().sharedMesh = _mesh;
-					_playerProgressViewModel.AddSand(SendScoreCount);
+					_resourcesProgressViewModel.AddSand(SendScoreCount);
 				}
 			}
 		}

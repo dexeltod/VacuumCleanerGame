@@ -1,17 +1,22 @@
 using System;
+using Model.Data.Player;
 
-namespace Model.Infrastructure.Data
+namespace Model.Data
 {
 	[Serializable]
 	public class GameProgressModel
 	{
+		public readonly ResourcesData ResourcesData;
+
 		public readonly PlayerProgress PlayerProgress;
+
 		public readonly ShopProgress ShopProgress;
 
-		public GameProgressModel()
+		public GameProgressModel(ResourcesData resourcesData, PlayerProgress playerProgress, ShopProgress shopProgress)
 		{
-			ShopProgress = new ShopProgress();
-			PlayerProgress = new PlayerProgress();
+			ResourcesData = resourcesData;
+			PlayerProgress = playerProgress;
+			ShopProgress = shopProgress;
 		}
 	}
 }

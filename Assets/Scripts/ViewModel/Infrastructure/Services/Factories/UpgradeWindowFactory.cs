@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Model;
 using Model.Configs;
+using Model.Data;
 using Model.DI;
-using Model.Infrastructure.Data;
 using UnityEngine;
 using View.SceneEntity;
 using View.UI.Shop;
@@ -43,10 +43,16 @@ namespace ViewModel.Infrastructure.Services.Factories
 			ConstructWindow();
 			await InitButtons();
 
-			new ShopPurchaseController(UpgradeWindow, _buttonElements, _buttonNames);
+			var shopPurchaseController = new ShopPurchaseController(UpgradeWindow, _buttonElements, _buttonNames);
 
 			_isInitialized = true;
 			return _upgradeWindow;
+		}
+
+		private async Task InstantiateWindow()
+		{
+			_shopElementFactory ??= new ShopElementFactory(_progress.ShopProgress);
+			_upgradeWindow = await _assetProvider.Instantiate(ConstantNames.UIElementNames.UpgradeWindow);
 		}
 
 		private async UniTask InitButtons()
@@ -59,12 +65,6 @@ namespace ViewModel.Infrastructure.Services.Factories
 		{
 			UpgradeWindow = _upgradeWindow.GetComponent<UpgradeWindow>();
 			UpgradeWindow.Construct();
-		}
-
-		private async Task InstantiateWindow()
-		{
-			_shopElementFactory ??= new ShopElementFactory(_progress.ShopProgress);
-			_upgradeWindow = await _assetProvider.Instantiate(ConstantNames.UIElementNames.UpgradeWindow);
 		}
 	}
 }

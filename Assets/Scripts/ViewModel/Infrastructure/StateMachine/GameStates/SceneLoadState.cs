@@ -1,8 +1,8 @@
 using Cysharp.Threading.Tasks;
 using Model;
 using Model.Configs;
+using Model.Data;
 using Model.DI;
-using Model.Infrastructure.Data;
 using UnityEngine;
 using View.UI;
 using ViewModel.Infrastructure.Services;

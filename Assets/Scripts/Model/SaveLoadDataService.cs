@@ -1,7 +1,7 @@
 using System.IO;
 using Cysharp.Threading.Tasks;
+using Model.Data;
 using Model.DI;
-using Model.Infrastructure.Data;
 using UnityEngine;
 using ViewModel.Infrastructure;
 using ViewModel.Infrastructure.Services;
@@ -40,12 +40,11 @@ namespace Model
 			_jsonDataLoader.Load<T>(fileName);
 
 		public void SaveProgress() =>
-			_binaryDataSaveLoader.Save(_gameProgress);
+			_binaryDataSaveLoader.Save(_persistentProgress.GameProgress);
 
-		public async UniTask<GameProgressModel> LoadProgress()
+		public GameProgressModel LoadProgress()
 		{
-			_gameProgress = await _binaryDataSaveLoader.LoadProgress();
-			_persistentProgress.Construct(_gameProgress);
+			_gameProgress = _binaryDataSaveLoader.LoadProgress();
 			return _gameProgress;
 		}
 	}

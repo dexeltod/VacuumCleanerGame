@@ -1,11 +1,10 @@
 using System;
-using ViewModel.Infrastructure.Services;
 
-namespace ViewModel.Infrastructure
+namespace ViewModel.Infrastructure.Services.DataViewModel
 {
-	public interface IPlayerProgressViewModel : IService
+	public interface IResourcesProgressViewModel : IService
 	{
-		int Money { get;  }
+		int Money { get; }
 		event Action<int> ScoreChanged;
 		event Action<int> MoneyChanged;
 		bool CheckMaxScore();

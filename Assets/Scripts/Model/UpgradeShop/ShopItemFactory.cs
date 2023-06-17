@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using Model.Data;
 using Model.DI;
-using Model.Infrastructure.Data;
+using Model.ScriptableObjects.UpgradeItems.SO;
 using UnityEngine;
 using ViewModel.Infrastructure.Services;
 
@@ -20,27 +22,16 @@ namespace Model.UpgradeShop
 			_assetProvider = ServiceLocator.Container.GetSingle<IAssetProvider>();
 		}
 
-		public async UniTask<ShopItemList> InitializeItemsList(ShopProgress shopProgress)
+		public async UniTask<ShopItemList> LoadItems()
 		{
-			ShopItemList list = await GetItems();
-			InitializeProgress(list, shopProgress);
+			ShopItemList list = await GetShopItemList();
 			return list;
 		}
 
-		private void InitializeProgress(ShopItemList list, ShopProgress shopProgress)
+		private async Task<ShopItemList> GetShopItemList()
 		{
-			List<string> shopItemNames = new List<string>();
-
-			foreach (var item in list.Items)
-				shopItemNames.Add(item.GetProgressName());
-
-			shopProgress.InitializeProgress(shopItemNames);
-		}
-
-		private async Task<ShopItemList> GetItems()
-		{
-			GameObject gameObject = await _assetProvider.Instantiate(ShopItemList);
-			ShopItemList list = gameObject.GetComponent<ShopItemList>();
+			var @object = await _assetProvider.LoadAsync<ShopItemList>(ShopItemList);
+			ShopItemList list = @object;
 			return list;
 		}
 	}

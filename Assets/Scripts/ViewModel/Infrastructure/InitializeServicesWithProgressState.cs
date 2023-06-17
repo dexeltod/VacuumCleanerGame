@@ -1,6 +1,6 @@
-using Model;
 using Model.DI;
 using ViewModel.Infrastructure.Services;
+using ViewModel.Infrastructure.Services.DataViewModel;
 using ViewModel.Infrastructure.Services.Factories;
 using ViewModel.Infrastructure.Services.Factories.Player;
 using ViewModel.Infrastructure.StateMachine;
@@ -31,22 +31,23 @@ namespace ViewModel.Infrastructure
 
 		private void RegisterServices()
 		{
-			
 			_serviceLocator.RegisterAsSingle<IPlayerProgressViewModel>(new PlayerProgressViewModel());
+			_serviceLocator.RegisterAsSingle<IResourcesProgressViewModel>(new ResourcesProgressViewModel());
 			_serviceLocator.RegisterAsSingle<IShopProgressViewModel>(new ShopProgressViewModel());
-			
-			CreateUI();
-			
+
+			CreateUIServices();
+
 			_serviceLocator.RegisterAsSingle<IInputService>(new InputService());
 
 			UpgradeWindowFactory upgradeWindowFactory = new();
-			
+
 			_serviceLocator.RegisterAsSingle<IUpgradeWindowFactory>(upgradeWindowFactory);
 			_serviceLocator.RegisterAsSingle<IUpgradeWindowGetter>(upgradeWindowFactory);
-			_serviceLocator.RegisterAsSingle<IPlayerFactory>(new PlayerFactory(_serviceLocator.GetSingle<IAssetProvider>()));
+			_serviceLocator.RegisterAsSingle<IPlayerFactory>(
+				new PlayerFactory(_serviceLocator.GetSingle<IAssetProvider>()));
 		}
 
-		private void CreateUI()
+		private void CreateUIServices()
 		{
 			UIFactory uiFactory = new UIFactory();
 			_serviceLocator.RegisterAsSingle<IUIFactory>(uiFactory);

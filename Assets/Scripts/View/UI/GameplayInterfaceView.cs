@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using ViewModel.Infrastructure;
+using ViewModel.Infrastructure.Services.DataViewModel;
 
 namespace View.UI
 {
@@ -12,7 +13,7 @@ namespace View.UI
 		[SerializeField] private TextMeshProUGUI _moneyText;
 		[SerializeField] private Joystick _joystick;
 
-		private IPlayerProgressViewModel _playerProgress;
+		private IResourcesProgressViewModel _resourcesProgress;
 		private int _maxScore;
 		private Canvas _canvas;
 		private bool _isInitialized;
@@ -25,22 +26,22 @@ namespace View.UI
 
 		~GameplayInterfaceView()
 		{
-			_playerProgress.ScoreChanged -= OnScoreChanged;
-			_playerProgress.MoneyChanged -= OnMoneyChanged;
+			_resourcesProgress.ScoreChanged -= OnScoreChanged;
+			_resourcesProgress.MoneyChanged -= OnMoneyChanged;
 		}
 
-		public void Construct(IPlayerProgressViewModel playerProgress, int maxScore)
+		public void Construct(IResourcesProgressViewModel resourcesProgress, int maxScore)
 		{
 			if (_isInitialized)
 				return;
 
 			_canvas ??= GetComponent<Canvas>();
-			_playerProgress = playerProgress;
+			_resourcesProgress = resourcesProgress;
 			
-			_moneyText.SetText(_playerProgress.Money.ToString());
+			_moneyText.SetText(_resourcesProgress.Money.ToString());
 			
-			_playerProgress.ScoreChanged += OnScoreChanged;
-			_playerProgress.MoneyChanged += OnMoneyChanged;
+			_resourcesProgress.ScoreChanged += OnScoreChanged;
+			_resourcesProgress.MoneyChanged += OnMoneyChanged;
 			_maxScore = maxScore;
 			OnScoreChanged(0);
 			enabled = true;

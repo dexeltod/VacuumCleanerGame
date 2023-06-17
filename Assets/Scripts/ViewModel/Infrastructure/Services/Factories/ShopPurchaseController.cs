@@ -5,6 +5,7 @@ using Model.ScriptableObjects.UpgradeItems.SO;
 using UnityEngine;
 using View.SceneEntity;
 using View.UI.Shop;
+using ViewModel.Infrastructure.Services.DataViewModel;
 
 namespace ViewModel.Infrastructure.Services.Factories
 {
@@ -15,14 +16,16 @@ namespace ViewModel.Infrastructure.Services.Factories
 		private readonly UpgradeWindow _upgradeWindow;
 		private readonly List<UpgradeElementView> _buttonElements;
 		private readonly List<string> _buttonNames;
-		private readonly IPlayerProgressViewModel _playerProgress;
+		private readonly IResourcesProgressViewModel _resourcesProgress;
 		private readonly IShopProgressViewModel _shopProgress;
+		private readonly IPlayerProgressViewModel _playerProgress;
 
 		public ShopPurchaseController(UpgradeWindow upgradeWindow, List<UpgradeElementView> upgradeElements,
 			List<string> buttonNames)
 		{
-			_playerProgress = ServiceLocator.Container.GetSingle<IPlayerProgressViewModel>();
+			_resourcesProgress = ServiceLocator.Container.GetSingle<IResourcesProgressViewModel>();
 			_shopProgress = ServiceLocator.Container.GetSingle<IShopProgressViewModel>();
+			_playerProgress = ServiceLocator.Container.GetSingle<IPlayerProgressViewModel>();
 
 			_upgradeWindow = upgradeWindow;
 			_buttonElements = upgradeElements;
@@ -73,11 +76,12 @@ namespace ViewModel.Infrastructure.Services.Factories
 
 		private void TryBuyUpgrade(UpgradeElementView upgradeElement)
 		{
-			if (_playerProgress.Money - upgradeElement.ItemData.Price < 0)
+			if (_resourcesProgress.Money - upgradeElement.ItemData.Price < 0)
 				return;
 
-			_playerProgress.DecreaseMoney(upgradeElement.ItemData.Price);
+			_resourcesProgress.DecreaseMoney(upgradeElement.ItemData.Price);
 			_shopProgress.AddProgressPoint(upgradeElement.ItemData.GetProgressName());
+			_playerProgress.SetProgress(upgradeElement.ItemData.GetProgressName());
 			upgradeElement.AddProgressPointColor(PointCount);
 		}
 	}
