@@ -1,12 +1,14 @@
 using System.Threading.Tasks;
-using Application.Configs;
-using Application.DI;
 using Cinemachine;
-using Infrastructure.Factories.Player;
-using InfrastructureInterfaces;
+using Sources.Core.DI;
+using Sources.Core.Utils.Configs;
+using Sources.Infrastructure.Factories.Player;
+using Sources.Infrastructure.InfrastructureInterfaces;
+using Sources.Infrastructure.InfrastructureInterfaces.Scene;
+using Sources.Infrastructure.Services.Interfaces;
 using UnityEngine;
 
-namespace Infrastructure.Factories
+namespace Sources.Infrastructure.Factories
 {
 	public class CameraFactory : ICameraFactory
 	{

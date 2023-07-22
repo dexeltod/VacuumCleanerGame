@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Application.DI;
-using InfrastructureInterfaces;
+using Sources.Core.DI;
+using Sources.Infrastructure.InfrastructureInterfaces;
 using UnityEngine;
 
-namespace View.SceneEntity
+namespace Sources.View.SceneEntity
 {
 	public class MeshModificator : MonoBehaviour
 	{

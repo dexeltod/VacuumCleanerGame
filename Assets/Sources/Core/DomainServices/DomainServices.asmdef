@@ -1,0 +1,18 @@
+{
+    "name": "DomainServices",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2150d3a8cf087ac428995ec2b2e22d5c",
+        "GUID:9be9b0481bef5e74b995a6ecec47c0ed",
+        "GUID:584e7bfddf8a8ff46b568e597d22b628"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

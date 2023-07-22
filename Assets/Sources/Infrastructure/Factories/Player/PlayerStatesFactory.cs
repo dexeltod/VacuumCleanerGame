@@ -1,11 +1,11 @@
-using Application.Character;
-using Domain.Scene.PlayerStates;
-using Infrastructure.Services;
-using Infrastructure.StateMachine.GameStates;
+using Sources.Core.Application.StateMachine;
+using Sources.Core.Application.StateMachine.GameStates;
+using Sources.Infrastructure.Services;
+using Sources.View.Services;
+using Sources.View.Services.Character;
 using UnityEngine;
-using View.SceneEntity;
 
-namespace Infrastructure.Factories.Player
+namespace Sources.Infrastructure.Factories.Player
 {
 	public class PlayerStatesFactory
 	{
@@ -30,7 +30,7 @@ namespace Infrastructure.Factories.Player
 		}
 
 		public void CreateStateMachineAndSetState() =>
-			new StateMachine.GameStates.StateMachine(_stateService.Get<IdleState>());
+			new StateMachine(new StartState());
 
 		public void CreateTransitions()
 		{
@@ -38,7 +38,6 @@ namespace Infrastructure.Factories.Player
 
 		public void CreateStates()
 		{
-			_stateService.Register(new IdleState(_animator, _animationHasher, _animatorFacade, new IStateTransition[]{}));
 		}
 	}
 }

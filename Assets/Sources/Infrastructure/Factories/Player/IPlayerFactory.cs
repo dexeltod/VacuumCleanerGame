@@ -1,9 +1,10 @@
 using Cysharp.Threading.Tasks;
-using Infrastructure.Services;
-using InfrastructureInterfaces;
+using Sources.Core;
+using Sources.Infrastructure.InfrastructureInterfaces;
+using Sources.Infrastructure.Services;
 using UnityEngine;
 
-namespace Infrastructure.Factories.Player
+namespace Sources.Infrastructure.Factories.Player
 {
 	public interface IPlayerFactory : IService
 	{

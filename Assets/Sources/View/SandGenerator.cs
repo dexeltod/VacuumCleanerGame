@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace View
+namespace Sources.View
 {
 	[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 	[RequireComponent(typeof(MeshCollider))]

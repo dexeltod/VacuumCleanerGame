@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace View.SceneEntity
+namespace Sources.View.SceneEntity
 {
 	public class VacuumTool : MonoBehaviour
 	{

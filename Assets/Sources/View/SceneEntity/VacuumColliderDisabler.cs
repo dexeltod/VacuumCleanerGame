@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace View.SceneEntity
+namespace Sources.View.SceneEntity
 {
 	public class VacuumColliderDisabler : MonoBehaviour
 	{

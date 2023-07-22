@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
-using Application.DI;
-using Application.ScriptableObjects.UpgradeItems.SO;
-using Application.UpgradeShop;
 using Cysharp.Threading.Tasks;
-using Domain.Progress;
-using InfrastructureInterfaces;
+using Sources.Core.Application.UpgradeShop;
+using Sources.Core.DI;
+using Sources.Core.Domain.Progress;
+using Sources.Infrastructure.Services.Interfaces;
+using Sources.View.ScriptableObjects.UpgradeItems.SO;
+using Sources.View.UI.Shop;
 using UnityEngine;
-using View.UI.Shop;
 using Object = UnityEngine.Object;
 
-namespace Infrastructure.Factories
+namespace Sources.Infrastructure.Factories
 {
 	public class ShopElementFactory
 	{

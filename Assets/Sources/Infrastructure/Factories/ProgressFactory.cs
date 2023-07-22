@@ -1,12 +1,13 @@
 using System.Collections.Generic;
-using Application.UpgradeShop;
 using Cysharp.Threading.Tasks;
-using Domain.Progress;
-using Domain.Progress.Player;
-using Domain.Progress.ResourcesData;
-using InfrastructureInterfaces;
+using Sources.Core.Application.UpgradeShop;
+using Sources.Core.Domain.Progress;
+using Sources.Core.Domain.Progress.Player;
+using Sources.Core.Domain.Progress.ResourcesData;
+using Sources.DomainServices;
+using Sources.DomainServices.Interfaces;
 
-namespace Infrastructure.Factories
+namespace Sources.Infrastructure.Factories
 {
 	public class ProgressFactory
 	{
@@ -24,7 +25,7 @@ namespace Infrastructure.Factories
 			_shopFactory = new ShopItemFactory();
 		}
 
-		public async UniTask UpdateProgress()
+		public async UniTask InitProgress()
 		{
 			GameProgressModel loadedProgress = _saveLoadService.LoadProgress();
 			await Init(loadedProgress);
@@ -45,7 +46,7 @@ namespace Infrastructure.Factories
 		{
 			UpgradeItemList itemsList = await _shopFactory.LoadItems();
 
-			List<string> itemsNames = LoadNewProgress(itemsList);
+			List<string> itemsNames =  LoadNewProgress(itemsList);
 
 			GameProgressModel newProgress = CreateProgress(itemsList, itemsNames);
 

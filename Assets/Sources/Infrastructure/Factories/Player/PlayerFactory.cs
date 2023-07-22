@@ -1,16 +1,20 @@
+
+
 using System;
 using System.Collections.Generic;
-using Application.Character;
-using Application.Configs;
-using Application.DI;
 using Cysharp.Threading.Tasks;
-using Domain.Scene;
-using Infrastructure.Services;
-using InfrastructureInterfaces;
+using Sources.Core.DI;
+using Sources.Core.Utils.Configs;
+using Sources.DomainServices.Interfaces;
+using Sources.Infrastructure.InfrastructureInterfaces;
+using Sources.Infrastructure.Scene;
+using Sources.Infrastructure.Services;
+using Sources.Infrastructure.Services.Interfaces;
+using Sources.View.Services;
+using Sources.View.Services.Character;
 using UnityEngine;
-using View.SceneEntity;
 
-namespace Infrastructure.Factories.Player
+namespace Sources.Infrastructure.Factories.Player
 {
 	public class PlayerFactory : IPlayerFactory
 	{

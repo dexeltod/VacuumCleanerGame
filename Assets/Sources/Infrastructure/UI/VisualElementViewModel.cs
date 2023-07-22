@@ -1,6 +1,6 @@
 using UnityEngine.UIElements;
 
-namespace Infrastructure.UI
+namespace Sources.Infrastructure.UI
 {
 	public class VisualElementViewModel
 	{

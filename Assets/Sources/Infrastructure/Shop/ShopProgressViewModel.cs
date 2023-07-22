@@ -1,9 +1,11 @@
 using System;
-using Application.DI;
-using Domain.Progress;
-using InfrastructureInterfaces;
+using Sources.Core.DI;
+using Sources.Core.Domain.Progress;
+using Sources.DomainServices;
+using Sources.DomainServices.Interfaces;
+using Sources.Infrastructure.InfrastructureInterfaces;
 
-namespace Infrastructure.Shop
+namespace Sources.Infrastructure.Shop
 {
 	public class ShopProgressViewModel : IShopProgressViewModel
 	{

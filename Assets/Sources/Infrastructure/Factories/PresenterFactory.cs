@@ -1,9 +1,10 @@
-using Application.DI;
 using Cysharp.Threading.Tasks;
-using InfrastructureInterfaces;
+using Sources.Core.DI;
+using Sources.Infrastructure.InfrastructureInterfaces;
+using Sources.Infrastructure.Services.Interfaces;
 using UnityEngine;
 
-namespace Infrastructure.Factories
+namespace Sources.Infrastructure.Factories
 {
 	public class PresenterFactory : IPresenterFactory
 	{

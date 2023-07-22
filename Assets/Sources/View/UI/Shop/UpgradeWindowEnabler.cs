@@ -1,7 +1,7 @@
+using Sources.View.SceneEntity;
 using UnityEngine;
-using View.SceneEntity;
 
-namespace View.UI.Shop
+namespace Sources.View.UI.Shop
 {
     public class UpgradeWindowEnabler : MonoBehaviour
     {
