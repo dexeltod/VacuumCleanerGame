@@ -19,7 +19,7 @@ namespace Sources.View.SceneEntity
 
 		private void Awake()
 		{
-			_progressViewModel = ServiceLocator.Container.GetSingle<IResourcesProgressViewModel>();
+			_progressViewModel = ServiceLocator.Container.Get<IResourcesProgressViewModel>();
 		}
 
 		private void OnCollisionEnter(Collision collisionInfo)

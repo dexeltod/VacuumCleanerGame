@@ -37,39 +37,45 @@ namespace Sources.Core.Application.StateMachine.GameStates
 
 		private async UniTask RegisterServices()
 		{
-			await InitProgress(_serviceLocator.GetSingle<ISaveLoadDataService>(), _serviceLocator.GetSingle<IPersistentProgressService>());
-			
-			_serviceLocator.RegisterAsSingle<IPlayerStatsService>(new PlayerStats());
-			_serviceLocator.RegisterAsSingle<IPlayerProgressViewModel>(new PlayerProgressViewModel());
-			_serviceLocator.RegisterAsSingle<IResourcesProgressViewModel>(new ResourcesViewModel());
-			_serviceLocator.RegisterAsSingle<IShopProgressViewModel>(new ShopProgressViewModel());
+			await InitProgress(
+				_serviceLocator.Get<ISaveLoadDataService>(),
+				_serviceLocator.Get<IPersistentProgressService>()
+			);
+
+			_serviceLocator.Register<IPlayerStatsService>(
+				new PlayerStats(_serviceLocator.Get<IPersistentProgressService>()));
+			_serviceLocator.Register<IPlayerProgressViewModel>(new PlayerProgressViewModel());
+			_serviceLocator.Register<IResourcesProgressViewModel>(new ResourcesViewModel());
+			_serviceLocator.Register<IShopProgressViewModel>(new ShopProgressViewModel());
 
 			CreateUIServices();
 
 			UpgradeWindowFactory upgradeWindowFactory = new();
 
-			_serviceLocator.RegisterAsSingle<IUpgradeWindowFactory>(upgradeWindowFactory);
-			_serviceLocator.RegisterAsSingle<IUpgradeWindowGetter>(upgradeWindowFactory);
-			_serviceLocator.RegisterAsSingle<IPlayerFactory>(
-				new PlayerFactory(_serviceLocator.GetSingle<IAssetProvider>()));
+			_serviceLocator.Register<IUpgradeWindowFactory>(upgradeWindowFactory);
+			_serviceLocator.Register<IUpgradeWindowGetter>(upgradeWindowFactory);
+			_serviceLocator.Register<IPlayerFactory>(
+				new PlayerFactory(_serviceLocator.Get<IAssetProvider>()));
 		}
 
-		private async UniTask InitProgressAsync(ISaveLoadDataService saveLoadService, IPersistentProgressService persistentProgressService)
+		private async UniTask InitProgressAsync(ISaveLoadDataService saveLoadService,
+			IPersistentProgressService persistentProgressService)
 		{
 			var progressFactory = new ProgressFactory(saveLoadService, persistentProgressService);
 			await progressFactory.InitProgress();
 		}
 
-		private async UniTask InitProgress(ISaveLoadDataService saveLoadService, IPersistentProgressService persistentProgressService)
+		private async UniTask InitProgress(ISaveLoadDataService saveLoadService,
+			IPersistentProgressService persistentProgressService)
 		{
 			await InitProgressAsync(saveLoadService, persistentProgressService);
 		}
-		
+
 		private void CreateUIServices()
 		{
 			UIFactory uiFactory = new UIFactory();
-			_serviceLocator.RegisterAsSingle<IUIFactory>(uiFactory);
-			_serviceLocator.RegisterAsSingle<IUIGetter>(uiFactory);
+			_serviceLocator.Register<IUIFactory>(uiFactory);
+			_serviceLocator.Register<IUIGetter>(uiFactory);
 		}
 	}
 }

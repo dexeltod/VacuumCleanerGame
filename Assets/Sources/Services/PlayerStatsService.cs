@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Sources.Core;
+using System.Linq;
+using Sources.DomainServices.Interfaces;
+using Sources.Services;
 
 namespace Sources.Infrastructure.Services
 {
@@ -9,13 +11,25 @@ namespace Sources.Infrastructure.Services
 		private const int StartPlayerSpeed = 4;
 
 		private readonly ShopPointsToStatsConverter _converter;
+		private readonly Dictionary<string, IStat> _stats;
+
 		private bool _isInit = false;
 		public int Speed { get; private set; }
 		public int VacuumDistance { get; private set; }
 
-		public PlayerStats()
+		public PlayerStats(IPersistentProgressService progressService)
 		{
-			_converter = new ShopPointsToStatsConverter(StartPlayerSpeed);
+			List<Tuple<string, int>> progress = progressService.GameProgress.PlayerProgress.GetAll();
+			
+			_stats = new();
+
+			foreach (var element in progress)
+			{
+				
+				_stats.Add(element.Item1, element.Item2);
+			} 
+
+			_converter = new ShopPointsToStatsConverter(_stats);
 		}
 
 		public void Initialize(List<Tuple<string, int>> stats)
@@ -31,7 +45,12 @@ namespace Sources.Infrastructure.Services
 
 		public void Set(string progressName, int value)
 		{
-			CheckNames(progressName, value);
+			if (_stats.ContainsKey(progressName) == false)
+				throw new InvalidOperationException("The progress name " + progressName + "not exists");
+			
+			KeyValuePair<string, int> progress = _stats.FirstOrDefault(elem => elem.Key == progressName);
+			
+			_converter.Convert(progress);
 		}
 
 		private void CheckNames(string name, int value)
@@ -41,15 +60,5 @@ namespace Sources.Infrastructure.Services
 			else if (name == "Radius")
 				VacuumDistance = value;
 		}
-	}
-
-	public interface IPlayerStatsService : IService
-	{
-		public int Speed { get; }
-		public int VacuumDistance { get; }
-
-		void Set(string name, int value);
-
-		public void Initialize(List<Tuple<string, int>> stats);
 	}
 }

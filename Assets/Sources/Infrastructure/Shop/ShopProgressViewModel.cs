@@ -15,8 +15,8 @@ namespace Sources.Infrastructure.Shop
 
 		public ShopProgressViewModel()
 		{
-			var gameProgress = ServiceLocator.Container.GetSingle<IPersistentProgressService>().GameProgress;
-			_saveLoadService = ServiceLocator.Container.GetSingle<ISaveLoadDataService>();
+			var gameProgress = ServiceLocator.Container.Get<IPersistentProgressService>().GameProgress;
+			_saveLoadService = ServiceLocator.Container.Get<ISaveLoadDataService>();
 			_shopProgress = gameProgress.ShopProgress;
 		}
 		

@@ -29,32 +29,29 @@ namespace Sources.Infrastructure.Factories.Player
 		private AnimationHasher _animationHasher;
 		private AnimatorFacade _animatorFacade;
 		private PlayerStatesFactory _playerStatesFactory;
-		private IPlayerStatsService _player;
+		private IPlayerStatsService _playerStats;
 
 		public GameObject Player { get; private set; }
 
 		public PlayerFactory(IAssetProvider assetProvider)
 		{
-			_progressService = ServiceLocator.Container.GetSingle<IPersistentProgressService>();
+			_progressService = ServiceLocator.Container.Get<IPersistentProgressService>();
 			_assetProvider = assetProvider;
 		}
 
 		public async UniTask Instantiate(GameObject initialPoint, IPresenterFactory presenterFactory,
 			Joystick joystick, IPlayerStatsService stats)
 		{
-			_player = stats;
+			_playerStats = stats;
 			_joystick = joystick;
 			_presenterFactory = presenterFactory;
 			_assetProvider.CleanUp();
 			await Create(initialPoint);
-			CreateDependenciesAsync();
+			// CreateDependenciesAsync();
 		}
 
 		private async UniTask Create(GameObject initialPoint)
 		{
-			List<Tuple<string, int>> shopProgress = _progressService.GameProgress.ShopProgress.GetAll();
-			_player.Initialize(shopProgress);
-			
 			var playerPresenter =
 				await _presenterFactory.Instantiate<View.SceneEntity.Player>(
 					ConstantNames.Player,
@@ -64,7 +61,7 @@ namespace Sources.Infrastructure.Factories.Player
 			Player = character;
 			Rigidbody rigidbody = Player.GetComponent<Rigidbody>();
 
-			PlayerTransformable playerTransformable = new(Player.transform, _joystick, _player);
+			PlayerTransformable playerTransformable = new(Player.transform, _joystick, _playerStats);
 			playerPresenter.Init(playerTransformable, rigidbody);
 		}
 
@@ -72,7 +69,7 @@ namespace Sources.Infrastructure.Factories.Player
 		{
 			NullifyComponents();
 			GetComponents();
-			CreatePlayerStateMachine();
+			// CreatePlayerStateMachine();
 		}
 
 		private void GetComponents()

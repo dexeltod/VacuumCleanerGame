@@ -28,9 +28,9 @@ namespace Sources.Infrastructure.Services
 
 		public UIFactory()
 		{
-			_assetProvider = ServiceLocator.Container.GetSingle<IAssetProvider>();
-			_resourcesProgressViewModel = ServiceLocator.Container.GetSingle<IResourcesProgressViewModel>();
-			_gameProgress = ServiceLocator.Container.GetSingle<IPersistentProgressService>();
+			_assetProvider = ServiceLocator.Container.Get<IAssetProvider>();
+			_resourcesProgressViewModel = ServiceLocator.Container.Get<IResourcesProgressViewModel>();
+			_gameProgress = ServiceLocator.Container.Get<IPersistentProgressService>();
 		}
 
 		public async Task<GameObject> CreateUI()

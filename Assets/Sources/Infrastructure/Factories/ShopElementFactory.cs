@@ -22,7 +22,7 @@ namespace Sources.Infrastructure.Factories
 		public ShopElementFactory(ShopProgress shopProgress)
 		{
 			_shopProgress = shopProgress;
-			_assetProvider = ServiceLocator.Container.GetSingle<IAssetProvider>();
+			_assetProvider = ServiceLocator.Container.Get<IAssetProvider>();
 		}
 
 		public async UniTask<List<UpgradeElementView>> InstantiateElements(Transform transform)

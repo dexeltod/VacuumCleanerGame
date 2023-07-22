@@ -18,7 +18,7 @@ namespace Sources.View.SceneEntity
 		private void Start()
 		{
 			_mesh = GetComponent<MeshFilter>().mesh;
-			_resourcesProgressViewModel = ServiceLocator.Container.GetSingle<IResourcesProgressViewModel>();
+			_resourcesProgressViewModel = ServiceLocator.Container.Get<IResourcesProgressViewModel>();
 		}
 
 		private void OnCollisionEnter(Collision collision)

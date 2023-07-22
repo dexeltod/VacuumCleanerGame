@@ -13,7 +13,7 @@ namespace Sources.Core.Application.UpgradeShop
 
 		public ShopItemFactory()
 		{
-			_assetProvider = ServiceLocator.Container.GetSingle<IAssetProvider>();
+			_assetProvider = ServiceLocator.Container.Get<IAssetProvider>();
 		}
 
 		public async UniTask<UpgradeItemList> LoadItems() =>

@@ -32,8 +32,8 @@ namespace Sources.Infrastructure.Factories
 		public UpgradeWindowFactory()
 		{
 			_isInitialized = false;
-			_progress = ServiceLocator.Container.GetSingle<IPersistentProgressService>().GameProgress;
-			_assetProvider = ServiceLocator.Container.GetSingle<IAssetProvider>();
+			_progress = ServiceLocator.Container.Get<IPersistentProgressService>().GameProgress;
+			_assetProvider = ServiceLocator.Container.Get<IAssetProvider>();
 		}
 
 		public async UniTask<GameObject> Create()

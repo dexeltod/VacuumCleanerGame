@@ -25,7 +25,7 @@ namespace Sources.DomainServices
 
 			_jsonDataLoader = new JsonDataSaveLoader();
 			_binaryDataSaveLoader = new BinaryDataSaveLoader();
-			_persistentProgress = ServiceLocator.Container.GetSingle<IPersistentProgressService>();
+			_persistentProgress = ServiceLocator.Container.Get<IPersistentProgressService>();
 		}
 
 		public void SaveToJson(string fileName, object data) =>

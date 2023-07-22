@@ -21,7 +21,7 @@ namespace Sources.Infrastructure.DataViewModel
 
 		public ResourcesViewModel()
 		{
-			_resourcesData = ServiceLocator.Container.GetSingle<IPersistentProgressService>();
+			_resourcesData = ServiceLocator.Container.Get<IPersistentProgressService>();
 		}
 
 		public bool CheckMaxScore()

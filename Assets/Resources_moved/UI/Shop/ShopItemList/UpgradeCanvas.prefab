@@ -1672,7 +1672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea65d0d2f2eb4f50895652aaec672ccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _content: {fileID: 0}
+  _content: {fileID: 8019734606496950766}
   _closeMenuButton: {fileID: 6720603335193613160}
   _noButton: {fileID: 5835463110273751551}
   _yesNoButtons: {fileID: 8142371157510955385}

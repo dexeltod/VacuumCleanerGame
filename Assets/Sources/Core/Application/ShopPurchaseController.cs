@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Sources.Core.DI;
 using Sources.Infrastructure.InfrastructureInterfaces;
+using Sources.Infrastructure.Services;
 using Sources.View.Interfaces;
 using Sources.View.SceneEntity;
 using Sources.View.ScriptableObjects.UpgradeItems.SO;
@@ -19,13 +20,12 @@ namespace Sources.Infrastructure.Factories
 		private readonly IResourcesProgressViewModel _resourcesProgress;
 		private readonly IShopProgressViewModel _shopProgressViewModel;
 		private readonly IPlayerProgressViewModel _playerProgress;
-
 		public ShopPurchaseController(IUpgradeWindow upgradeWindow, List<UpgradeElementView> upgradeElements,
 			List<string> buttonNames)
 		{
-			_resourcesProgress = ServiceLocator.Container.GetSingle<IResourcesProgressViewModel>();
-			_shopProgressViewModel = ServiceLocator.Container.GetSingle<IShopProgressViewModel>();
-			_playerProgress = ServiceLocator.Container.GetSingle<IPlayerProgressViewModel>();
+			_resourcesProgress = ServiceLocator.Container.Get<IResourcesProgressViewModel>();
+			_shopProgressViewModel = ServiceLocator.Container.Get<IShopProgressViewModel>();
+			_playerProgress = ServiceLocator.Container.Get<IPlayerProgressViewModel>();
 
 			_upgradeWindow = upgradeWindow;
 			_buttonElements = upgradeElements;
@@ -66,37 +66,38 @@ namespace Sources.Infrastructure.Factories
 			string buttonName = Enum.GetName(typeof(UpgradeItemScriptableObject.Upgrade), type);
 
 			if (_buttonNames.Contains(buttonName))
-				foreach (UpgradeElementView button in _buttonElements)
-					if (button.ItemData.GetProgressName() == buttonName)
+				foreach (UpgradeElementView upgradeElement in _buttonElements)
+					if (upgradeElement.ItemData.GetProgressName() == buttonName)
 					{
-						TryBuyUpgrade(button);
+						bool canUpgrade = CheckExceptions(upgradeElement);
+
+						if (canUpgrade)
+						{
+							string progressName = upgradeElement.ItemData.GetProgressName();
+
+							_resourcesProgress.DecreaseMoney(upgradeElement.ItemData.Price);
+							int newLevel = upgradeElement.ItemData.UpgradeLevel + Point;
+							upgradeElement.ItemData.SetUpgradeLevel(newLevel);
+
+							_shopProgressViewModel.AddProgressPoint(progressName);
+							upgradeElement.AddProgressPointColor(Point);
+							
+							_playerProgress.SetProgress(progressName);
+						}
+
 						return;
 					}
 		}
 
-		private void TryBuyUpgrade(UpgradeElementView upgradeElement)
-		{
-			TryShowExceptions(upgradeElement);
-
-			string progressName = upgradeElement.ItemData.GetProgressName();
-			
-			int newLevel = upgradeElement.ItemData.UpgradeLevel + Point;
-			upgradeElement.ItemData.SetUpgradeLevel(newLevel);
-			
-			_resourcesProgress.DecreaseMoney(upgradeElement.ItemData.Price);
-			_playerProgress.SetProgress(progressName);
-			_shopProgressViewModel.AddProgressPoint(progressName);
-
-			upgradeElement.AddProgressPointColor(Point);
-		}
-
-		private void TryShowExceptions(UpgradeElementView upgradeElement)
+		private bool CheckExceptions(UpgradeElementView upgradeElement)
 		{
 			if (_resourcesProgress.SoftCurrency.Count - upgradeElement.ItemData.Price < 0)
 				throw new InvalidOperationException("Not enough money");
 
 			if (upgradeElement.ItemData.UpgradeLevel >= 6)
 				throw new InvalidOperationException("Maximum upgrade level");
+
+			return true;
 		}
 	}
 }

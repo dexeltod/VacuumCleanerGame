@@ -10,7 +10,7 @@ namespace Sources.View.SceneEntity
 
 		private void Awake()
 		{
-			_resourcesProgress = ServiceLocator.Container.GetSingle<IResourcesProgressViewModel>();
+			_resourcesProgress = ServiceLocator.Container.Get<IResourcesProgressViewModel>();
 		}
 
 		public void SellSand() =>

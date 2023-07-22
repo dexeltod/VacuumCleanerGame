@@ -19,7 +19,8 @@ namespace Sources.Core.Application.StateMachine.GameStates
 		private readonly SceneLoader _sceneLoader;
 		private readonly MusicSetter _musicSetter;
 
-		public InitializeServicesAndProgressState(GameStateMachine gameStateMachine, ServiceLocator serviceLocator, SceneLoader sceneLoader)
+		public InitializeServicesAndProgressState(GameStateMachine gameStateMachine, ServiceLocator serviceLocator,
+			SceneLoader sceneLoader)
 		{
 			_sceneLoader = sceneLoader;
 			_gameStateMachine = gameStateMachine;
@@ -36,39 +37,28 @@ namespace Sources.Core.Application.StateMachine.GameStates
 			_sceneLoader.Load(ConstantNames.InitialScene, OnSceneLoaded);
 		}
 
-		private void OnSceneLoaded() => 
-			 _gameStateMachine.Enter<InitializeServicesWithProgressState>();
+		private void OnSceneLoaded() =>
+			_gameStateMachine.Enter<InitializeServicesWithProgressState>();
 
-		private async void InitServices()
+		private void InitServices()
 		{
-			_serviceLocator.RegisterAsSingle<IGameStateMachine>(_gameStateMachine);
-			IPersistentProgressService persistentProgress =
-				_serviceLocator.RegisterAsSingle<IPersistentProgressService>(new PersistentProgressService());
-			_serviceLocator.RegisterAsSingle<IAssetProvider>(new AssetProvider());
+			_serviceLocator.Register<IGameStateMachine>(_gameStateMachine);
 
-			// _serviceLocator.RegisterAsSingle<IMusicService>(new MusicService(_musicSetter,
-			// 	_serviceLocator.GetSingle<IAssetProvider>()));
+			_serviceLocator.Register<IPersistentProgressService>(new PersistentProgressService());
+			_serviceLocator.Register<IAssetProvider>(new AssetProvider());
 
 			SceneLoadInformer sceneLoadInformer = new SceneLoadInformer();
 
-			_serviceLocator.RegisterAsSingle<IPresenterFactory>(new PresenterFactory());
-			_serviceLocator.RegisterAsSingle<ISceneLoadInformer>(sceneLoadInformer);
-			_serviceLocator.RegisterAsSingle<ISceneLoad>(sceneLoadInformer);
+			_serviceLocator.Register<IPresenterFactory>(new PresenterFactory());
+			_serviceLocator.Register<ISceneLoadInformer>(sceneLoadInformer);
+			_serviceLocator.Register<ISceneLoad>(sceneLoadInformer);
 
 			CameraFactory cameraFactory = new CameraFactory();
-			_serviceLocator.RegisterAsSingle<ICameraFactory>(cameraFactory);
-			_serviceLocator.RegisterAsSingle<ICamera>(cameraFactory);
-			_serviceLocator.RegisterAsSingle<ISceneConfigGetter>(new SceneConfigGetter());
+			_serviceLocator.Register<ICameraFactory>(cameraFactory);
+			_serviceLocator.Register<ICamera>(cameraFactory);
+			_serviceLocator.Register<ISceneConfigGetter>(new SceneConfigGetter());
 
-			ISaveLoadDataService saveLoadService =
-				_serviceLocator.RegisterAsSingle<ISaveLoadDataService>(new SaveLoadDataService());
-
-			//===================================================================================================//
-			//Loading after initialization saveLoadService
-
-			
+			_serviceLocator.Register<ISaveLoadDataService>(new SaveLoadDataService());
 		}
-
-		
 	}
 }

@@ -15,10 +15,10 @@ namespace Sources.Infrastructure.DataViewModel
 
 		public PlayerProgressViewModel()
 		{
-			_playerProgress = ServiceLocator.Container.GetSingle<IPersistentProgressService>().GameProgress
+			_playerProgress = ServiceLocator.Container.Get<IPersistentProgressService>().GameProgress
 				.PlayerProgress;
 
-			_playerStats = ServiceLocator.Container.GetSingle<IPlayerStatsService>();
+			_playerStats = ServiceLocator.Container.Get<IPlayerStatsService>();
 		}
 
 		public void SetProgress(string progressName)

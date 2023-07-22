@@ -12,7 +12,7 @@ namespace Sources.Infrastructure.Factories
 
 		public PresenterFactory()
 		{
-			_assetProvider = ServiceLocator.Container.GetSingle<IAssetProvider>();
+			_assetProvider = ServiceLocator.Container.Get<IAssetProvider>();
 		}
 
 		public async UniTask<T> Instantiate<T>(string name, Vector3 position)

@@ -44,15 +44,15 @@ namespace Sources.Core.Application.StateMachine.GameStates
 
 		public void Enter(string levelName)
 		{
-			_upgradeWindowFactory = _serviceLocator.GetSingle<IUpgradeWindowFactory>();
-			_cameraFactory = _serviceLocator.GetSingle<ICameraFactory>();
-			_playerFactory = _serviceLocator.GetSingle<IPlayerFactory>();
-			_uiFactory = _serviceLocator.GetSingle<IUIFactory>();
-			_sceneLoad = _serviceLocator.GetSingle<ISceneLoad>();
-			_presenterFactory = _serviceLocator.GetSingle<IPresenterFactory>();
-			_playerStats = _serviceLocator.GetSingle<IPlayerStatsService>();
+			_upgradeWindowFactory = _serviceLocator.Get<IUpgradeWindowFactory>();
+			_cameraFactory = _serviceLocator.Get<ICameraFactory>();
+			_playerFactory = _serviceLocator.Get<IPlayerFactory>();
+			_uiFactory = _serviceLocator.Get<IUIFactory>();
+			_sceneLoad = _serviceLocator.Get<ISceneLoad>();
+			_presenterFactory = _serviceLocator.Get<IPresenterFactory>();
+			_playerStats = _serviceLocator.Get<IPlayerStatsService>();
 
-			var provider = _serviceLocator.GetSingle<IAssetProvider>();
+			var provider = _serviceLocator.Get<IAssetProvider>();
 			provider.CleanUp();
 			_loadingCurtain.Show();
 			_sceneLoader.Load(levelName, StartLoading);

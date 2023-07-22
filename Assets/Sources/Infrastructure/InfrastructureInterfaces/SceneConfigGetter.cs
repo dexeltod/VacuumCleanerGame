@@ -11,7 +11,7 @@ namespace Sources.Infrastructure.InfrastructureInterfaces
 
 		public SceneConfigGetter()
 		{
-			_assetProvider = ServiceLocator.Container.GetSingle<IAssetProvider>();
+			_assetProvider = ServiceLocator.Container.Get<IAssetProvider>();
 		}
 
 		public async UniTask<SceneConfig> GetSceneConfig(string sceneConfigName) => 

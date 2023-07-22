@@ -31,8 +31,8 @@ namespace Sources.Core.Application
 
 		private void Start()
 		{
-			_gameStateMachine = ServiceLocator.Container.GetSingle<IGameStateMachine>();
-			_sceneConfigGetter = ServiceLocator.Container.GetSingle<ISceneConfigGetter>();
+			_gameStateMachine = ServiceLocator.Container.Get<IGameStateMachine>();
+			_sceneConfigGetter = ServiceLocator.Container.Get<ISceneConfigGetter>();
 			_uiElementGetter = GetComponent<UIElementGetterFacade>();
 			_visualElementSwitcher = new VisualElementViewModel();
 

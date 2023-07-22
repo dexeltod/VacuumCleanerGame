@@ -22,12 +22,12 @@ namespace Sources.Infrastructure.Factories
 
 		public CameraFactory()
 		{
-			_assetProvider = ServiceLocator.Container.GetSingle<IAssetProvider>();
+			_assetProvider = ServiceLocator.Container.Get<IAssetProvider>();
 		}
 
 		public async Task<CinemachineVirtualCamera> CreateVirtualCamera()
 		{
-			_playerFactory = ServiceLocator.Container.GetSingle<IPlayerFactory>();
+			_playerFactory = ServiceLocator.Container.Get<IPlayerFactory>();
 			_characterObject = _playerFactory.Player;
 			GameObject camera = await _assetProvider.Instantiate(MainCameraPath);
 			Camera = camera.GetComponent<UnityEngine.Camera>();

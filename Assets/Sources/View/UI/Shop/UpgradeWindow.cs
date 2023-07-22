@@ -10,6 +10,7 @@ using UnityEngine.UI;
 
 namespace Sources.View.SceneEntity
 {
+	[RequireComponent(typeof(UpgradeWindow))]
 	public class UpgradeWindow : MonoBehaviour, IUpgradeWindow
 	{
 		[SerializeField] private GameObject _content;
@@ -57,7 +58,7 @@ namespace Sources.View.SceneEntity
 
 		public void Construct()
 		{
-			_gameplayInterface = ServiceLocator.Container.GetSingle<IUIGetter>();
+			_gameplayInterface = ServiceLocator.Container.Get<IUIGetter>();
 			_money.text = "";
 			_closeMenuButton.onClick.AddListener(OnEnableJoystick);
 			_noButton.onClick.AddListener(OnEnableJoystick);
