@@ -1,8 +1,8 @@
-using Sources.Core.DI;
-using Sources.Infrastructure.InfrastructureInterfaces;
+using Sources.DIService;
+using Sources.ServicesInterfaces;
 using UnityEngine;
 
-namespace Sources.View.SceneEntity
+namespace Sources.Services.PlayerServices
 {
 	public class PlayerResources : MonoBehaviour
 	{
@@ -10,7 +10,7 @@ namespace Sources.View.SceneEntity
 
 		private void Awake()
 		{
-			_resourcesProgress = ServiceLocator.Container.Get<IResourcesProgressViewModel>();
+			_resourcesProgress = GameServices.Container.Get<IResourcesProgressViewModel>();
 		}
 
 		public void SellSand() =>

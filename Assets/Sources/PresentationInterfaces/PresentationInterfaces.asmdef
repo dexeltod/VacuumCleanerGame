@@ -1,0 +1,16 @@
+{
+    "name": "PresentationInterfaces",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e75ebd4ddedebcc4196d3ac949e2a3fd"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

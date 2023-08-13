@@ -20911,6 +20911,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 642f47ee83c64db44973021a952032fd, type: 3}
+--- !u!1 &1846936434 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8163869017239469001, guid: 642f47ee83c64db44973021a952032fd, type: 3}
+  m_PrefabInstance: {fileID: 1846936433}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1846936435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1846936434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf61f45282137eb4aa9be9002ec3a4d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ReferenceWithAttributeArray: []
+  ReferenceArray: []
+  ReferenceWithAttributeList: []
+  ReferenceList: []
+  ReferenceRestrictedToScriptableObject:
+    _underlyingValue: {fileID: 0}
+  ReferenceRestrictedToMonoBehaviour:
+    _underlyingValue: {fileID: 0}
+  AttributeRestrictedToScriptableObject: {fileID: 0}
+  AttributeRestrictedToMonoBehaviour: {fileID: 0}
 --- !u!1001 &1851452480
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21233,7 +21260,6 @@ MonoBehaviour:
   _zSize: 100
   _slopeLenght: 3
   _middleHeight: 5
-  _isDebug: 1
 --- !u!114 &1866752238
 MonoBehaviour:
   m_ObjectHideFlags: 0

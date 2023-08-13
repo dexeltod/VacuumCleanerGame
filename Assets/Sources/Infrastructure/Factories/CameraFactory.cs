@@ -1,11 +1,9 @@
-using System.Threading.Tasks;
 using Cinemachine;
-using Sources.Core.DI;
-using Sources.Core.Utils.Configs;
+using Sources.Application.Utils.Configs;
+using Sources.DIService;
 using Sources.Infrastructure.Factories.Player;
-using Sources.Infrastructure.InfrastructureInterfaces;
-using Sources.Infrastructure.InfrastructureInterfaces.Scene;
-using Sources.Infrastructure.Services.Interfaces;
+using Sources.InfrastructureInterfaces.Scene;
+using Sources.ServicesInterfaces;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Factories
@@ -14,32 +12,31 @@ namespace Sources.Infrastructure.Factories
 	{
 		private const string MainCameraPath = "MainCamera";
 		private const string VirtualCameraPath = "VirtualCamera";
-		private readonly IAssetProvider _assetProvider;
+		private readonly IResourceProvider _assetProvider;
 		private IPlayerFactory _playerFactory;
 
 		private GameObject _characterObject;
-		public UnityEngine.Camera Camera { get; private set; }
+		public Camera Camera { get; private set; }
 
 		public CameraFactory()
 		{
-			_assetProvider = ServiceLocator.Container.Get<IAssetProvider>();
+			_assetProvider = GameServices.Container.Get<IResourceProvider>();
 		}
 
-		public async Task<CinemachineVirtualCamera> CreateVirtualCamera()
+		public CinemachineVirtualCamera CreateVirtualCamera()
 		{
-			_playerFactory = ServiceLocator.Container.Get<IPlayerFactory>();
+			_playerFactory = GameServices.Container.Get<IPlayerFactory>();
 			_characterObject = _playerFactory.Player;
-			GameObject camera = await _assetProvider.Instantiate(MainCameraPath);
-			Camera = camera.GetComponent<UnityEngine.Camera>();
+			Camera = _assetProvider.InstantiateAndGetComponent<Camera>(ResourcesAssetPath.Scene.MainCamera);
 
-			return await GetVirtualCamera();
+			return GetVirtualCamera();
 		}
 
-		private async Task<CinemachineVirtualCamera> GetVirtualCamera()
+		private CinemachineVirtualCamera GetVirtualCamera()
 		{
 			Collider bounds = GameObject.FindWithTag(ConstantNames.Confiner).GetComponent<Collider>();
 
-			GameObject camera = await _assetProvider.Instantiate(VirtualCameraPath);
+			GameObject camera = _assetProvider.Instantiate(ResourcesAssetPath.Scene.CinemachineVirtualCamera);
 			var cinemachineConfiner = camera.GetComponent<CinemachineConfiner>();
 			
 			var virtualCamera = SetCameraBounds(cinemachineConfiner, bounds, camera);

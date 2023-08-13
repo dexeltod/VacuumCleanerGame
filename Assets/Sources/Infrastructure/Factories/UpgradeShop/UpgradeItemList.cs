@@ -1,13 +1,13 @@
-using System.Collections.Generic;
-using Sources.View.ScriptableObjects.UpgradeItems.SO;
+using Sources.Infrastructure.ScriptableObjects;
+using Sources.InfrastructureInterfaces;
 using UnityEngine;
 
-namespace Sources.Core.Application.UpgradeShop
+namespace Sources.Infrastructure.Factories.UpgradeShop
 {
     [CreateAssetMenu(fileName = "ShopItems", menuName = "Data/Shop/Upgrade/ItemsList")]
-    public class UpgradeItemList : ScriptableObject
+    public class UpgradeItemList : ScriptableObject, IUpgradeItemList<UpgradeItemViewData>
     {
-        [SerializeField] private List<UpgradeItemScriptableObject> _list;
-        public IReadOnlyList<UpgradeItemScriptableObject> Items => _list;
+        [SerializeField] private UpgradeItemViewData[] _list;
+        public UpgradeItemViewData[] Items => _list;
     }
 }

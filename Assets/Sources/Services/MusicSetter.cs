@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Sources.Infrastructure.Services
+namespace Sources.Services
 {
 	[RequireComponent(typeof(AudioSource))]
 	public class MusicSetter : MonoBehaviour

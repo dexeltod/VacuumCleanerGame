@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Sources.Core.DI;
-using Sources.Infrastructure.InfrastructureInterfaces;
+using Sources.DIService;
+using Sources.ServicesInterfaces;
 using UnityEngine;
 
 namespace Sources.View.SceneEntity
@@ -18,7 +18,7 @@ namespace Sources.View.SceneEntity
 		private void Start()
 		{
 			_mesh = GetComponent<MeshFilter>().mesh;
-			_resourcesProgressViewModel = ServiceLocator.Container.Get<IResourcesProgressViewModel>();
+			_resourcesProgressViewModel = GameServices.Container.Get<IResourcesProgressViewModel>();
 		}
 
 		private void OnCollisionEnter(Collision collision)

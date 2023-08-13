@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Sources.Infrastructure.Scene
+namespace Sources.Services.Scene
 {
 	public abstract class Transformable
 	{

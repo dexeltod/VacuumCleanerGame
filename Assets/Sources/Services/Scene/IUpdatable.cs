@@ -1,4 +1,4 @@
-namespace Sources.Infrastructure.Scene
+namespace Sources.Services.Scene
 {
 	public interface IUpdatable
 	{

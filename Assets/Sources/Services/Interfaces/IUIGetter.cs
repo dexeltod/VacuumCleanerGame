@@ -1,9 +1,10 @@
-using Sources.Core;
+using Sources.DIService;
+using Sources.ServicesInterfaces;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Sources.View.Services.UI
+namespace Sources.Services.Interfaces
 {
 	public interface IUIGetter : IService
 	{

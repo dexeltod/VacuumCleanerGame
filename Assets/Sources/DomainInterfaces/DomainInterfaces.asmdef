@@ -1,0 +1,17 @@
+{
+    "name": "DomainInterfaces",
+    "rootNamespace": "",
+    "references": [
+        "GUID:9be9b0481bef5e74b995a6ecec47c0ed",
+        "GUID:2fc78415e4626ba46845ad3d6e14b52f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

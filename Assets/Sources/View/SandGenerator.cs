@@ -11,7 +11,6 @@ namespace Sources.View
 		[SerializeField] private int _zSize;
 		[SerializeField] private int _slopeLenght;
 		[SerializeField] private float _middleHeight;
-		[SerializeField] private bool _isDebug;
 
 		private Mesh _mesh;
 		private MeshFilter _meshFilter;
@@ -71,7 +70,8 @@ namespace Sources.View
 
 		private float SetHeight(int x, int z)
 		{
-			float y = 0;
+			float y;
+			
 			if (x < _slopeLenght || z < _slopeLenght || z > _zSize - _slopeLenght ||
 			    x > _xSize - _slopeLenght)
 				y = 0;

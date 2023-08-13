@@ -1,22 +1,29 @@
-using Cysharp.Threading.Tasks;
-using Sources.Core.DI;
-using Sources.Infrastructure.Services.Interfaces;
+using Sources.Application.Utils.Configs;
+using Sources.DIService;
+using Sources.Infrastructure.ScriptableObjects;
+using Sources.InfrastructureInterfaces;
+using Sources.ServicesInterfaces;
 
-namespace Sources.Core.Application.UpgradeShop
+namespace Sources.Infrastructure.Factories.UpgradeShop
 {
-	public class ShopItemFactory
+	public class ShopItemFactory : IShopItemFactory
 	{
-		private const string ShopItemList = "ShopItemList";
-		private readonly IAssetProvider _assetProvider;
+		private readonly IResourceProvider _assetProvider;
 
 		private UpgradeItemList _items;
 
 		public ShopItemFactory()
 		{
-			_assetProvider = ServiceLocator.Container.Get<IAssetProvider>();
+			_assetProvider = GameServices.Container.Get<IResourceProvider>();
 		}
 
-		public async UniTask<UpgradeItemList> LoadItems() =>
-			await _assetProvider.LoadAsync<UpgradeItemList>(ShopItemList);
+		public IUpgradeItemList LoadItems()
+		{
+			if (_items != null)
+				return _items;
+
+			_items = _assetProvider.Load<UpgradeItemList>(ResourcesAssetPath.ShopConfig.ShopItems);
+			return _items;
+		}
 	}
 }

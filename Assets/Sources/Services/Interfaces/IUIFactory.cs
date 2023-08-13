@@ -1,10 +1,9 @@
-using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Sources.View.Services.UI
+namespace Sources.Services.Interfaces
 {
 	public interface IUIFactory : IUIGetter
 	{
-		Task<GameObject> CreateUI();
+		GameObject CreateUI();
 	}
 }

@@ -1,7 +1,7 @@
-using Sources.Infrastructure.Scene;
+using Sources.Services.Scene;
 using UnityEngine;
 
-namespace Sources.View.SceneEntity
+namespace Sources.Services
 {
 	[RequireComponent(typeof(Rigidbody))]
 	public abstract class Presenter : MonoBehaviour
@@ -36,11 +36,6 @@ namespace Sources.View.SceneEntity
 
 		protected void DestroyCompose() =>
 			_model.Destroy();
-
-		private void OnMovedPhysics(Vector3 obj)
-		{
-			throw new System.NotImplementedException();
-		}
 
 		private void OnDisable()
 		{

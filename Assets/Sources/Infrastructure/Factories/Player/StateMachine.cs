@@ -1,6 +1,6 @@
-using Sources.Core.Domain.DomainInterfaces.DomainServicesInterfaces;
+using Sources.ServicesInterfaces.StateMachine;
 
-namespace Sources.Core.Application.StateMachine.GameStates
+namespace Sources.Infrastructure.Factories.Player
 {
 	public class StateMachine
 	{

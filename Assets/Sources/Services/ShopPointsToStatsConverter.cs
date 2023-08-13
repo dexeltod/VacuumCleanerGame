@@ -1,35 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace Sources.Infrastructure.Services
+namespace Sources.Services
 {
-	
-	
 	public class ShopPointsToStatsConverter
 	{
 		private readonly List<int> _speedStats;
-		private int _currentSpeedPoint;
-		private readonly Dictionary<string,int> _stats;
-		
+		private readonly Dictionary<string, int[]> _stats;
 
-		//TODO: Need to create speed balance class;
-		public ShopPointsToStatsConverter(Dictionary<string, int> stats)
+		private int _currentSpeedPoint;
+
+		public ShopPointsToStatsConverter(Dictionary<string, int[]> stats)
 		{
 			_stats = stats;
-			_speedStats = new List<int>(7) { 2, 5, 7, 8, 10, 12, 15 };
 		}
 
-		public int ConvertSpeedByPoint(int currentSpeedPoint)
+		public int GetConverted(string name, int value)
 		{
-			if (currentSpeedPoint > _speedStats.Count)
-				throw new ArgumentOutOfRangeException();
+			if (_stats.ContainsKey(name) == false)
+				throw new ArgumentException("Name is not existing");
 
-			return _speedStats[currentSpeedPoint];
-		}
+			int[] convertedValues = _stats.FirstOrDefault(element => element.Key == name).Value;
 
-		public int Convert(KeyValuePair<string, int> progress)
-		{
+			if (value < 0 || value > convertedValues.Length)
+				throw new ArgumentOutOfRangeException("Value out of range for " + name);
 			
+			return convertedValues[value];
 		}
 	}
 }

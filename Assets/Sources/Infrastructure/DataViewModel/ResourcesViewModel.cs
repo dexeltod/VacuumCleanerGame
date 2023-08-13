@@ -1,9 +1,9 @@
 using System;
-using Sources.Core.DI;
-using Sources.Core.Domain.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Core.Domain.Progress.Player;
-using Sources.DomainServices.Interfaces;
-using Sources.Infrastructure.InfrastructureInterfaces;
+using Sources.DIService;
+using Sources.Domain.Progress.Player;
+using Sources.DomainInterfaces;
+using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.ServicesInterfaces;
 using UnityEngine;
 
 namespace Sources.Infrastructure.DataViewModel
@@ -17,11 +17,11 @@ namespace Sources.Infrastructure.DataViewModel
 		public event Action<int> ScoreChanged;
 		public event Action<int> MoneyChanged;
 
-		private ResourcesData Data => _resourcesData.GameProgress.ResourcesData;
+		private IResourcesData Data => _resourcesData.GameProgress.ResourcesData;
 
 		public ResourcesViewModel()
 		{
-			_resourcesData = ServiceLocator.Container.Get<IPersistentProgressService>();
+			_resourcesData = GameServices.Container.Get<IPersistentProgressService>();
 		}
 
 		public bool CheckMaxScore()

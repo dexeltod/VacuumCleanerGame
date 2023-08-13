@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Sources.Infrastructure.Services
+namespace Sources.Services
 {
 	public class UIElementGetterFacade : MonoBehaviour
 	{

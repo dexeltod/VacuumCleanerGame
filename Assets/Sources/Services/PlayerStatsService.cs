@@ -1,64 +1,65 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sources.DomainServices.Interfaces;
-using Sources.Services;
+using Sources.DomainInterfaces;
+using Sources.InfrastructureInterfaces;
+using Sources.ServicesInterfaces;
+using UnityEngine;
 
-namespace Sources.Infrastructure.Services
+namespace Sources.Services
 {
-	public class PlayerStats : IPlayerStatsService
+	public class PlayerStatsService : IPlayerStatsService
 	{
-		private const int StartPlayerSpeed = 4;
-
 		private readonly ShopPointsToStatsConverter _converter;
-		private readonly Dictionary<string, IStat> _stats;
+		private readonly List<IUpgradeProgressData> _progress;
+		private readonly string[] _statNames;
 
-		private bool _isInit = false;
-		public int Speed { get; private set; }
-		public int VacuumDistance { get; private set; }
-
-		public PlayerStats(IPersistentProgressService progressService)
+		public PlayerStatsService(IPersistentProgressService progressService, IShopItemFactory itemFactory)
 		{
-			List<Tuple<string, int>> progress = progressService.GameProgress.PlayerProgress.GetAll();
-			
-			_stats = new();
+			_progress = progressService.GameProgress.PlayerProgress.GetAll();
 
-			foreach (var element in progress)
-			{
-				
-				_stats.Add(element.Item1, element.Item2);
-			} 
+			_statNames = new string[_progress.Count];
+			Dictionary<string, int[]> dada = new();
+ 
+			for (int i = 0; i < _progress.Count; i++)
+				_statNames[i] = _progress[i].Name;
 
-			_converter = new ShopPointsToStatsConverter(_stats);
+			IReadOnlyList<int> speedStats = new List<int>(7) { 2, 5, 7, 8, 10, 12, 15 };
+
+			_converter = new ShopPointsToStatsConverter();
 		}
 
-		public void Initialize(List<Tuple<string, int>> stats)
+		public int GetConvertedProgressValue(string progressName)
 		{
-			if (_isInit)
-				return;
+			if (_statNames.Contains(progressName) == false)
+				throw new InvalidOperationException("The progress name " + progressName + "not exists");
 
-			foreach (var item in stats)
-				CheckNames(item.Item1, item.Item2);
+			IUpgradeProgressData progress = _progress.FirstOrDefault(elem => elem.Name == progressName);
 
-			_isInit = false;
+			return _converter.GetConverted(progress.Name, progress.Value);
 		}
 
 		public void Set(string progressName, int value)
 		{
-			if (_stats.ContainsKey(progressName) == false)
+			if (_statNames.Contains(progressName) == false)
 				throw new InvalidOperationException("The progress name " + progressName + "not exists");
-			
-			KeyValuePair<string, int> progress = _stats.FirstOrDefault(elem => elem.Key == progressName);
-			
-			_converter.Convert(progress);
-		}
 
-		private void CheckNames(string name, int value)
-		{
-			if (name == "Speed")
-				Speed = _converter.ConvertSpeedByPoint(value);
-			else if (name == "Radius")
-				VacuumDistance = value;
+			IUpgradeProgressData changeableProgress = _progress.FirstOrDefault(elem => elem.Name == progressName);
+
+			changeableProgress.Value = value;
 		}
+	}
+
+	[Serializable]
+	public class Stats
+	{
+		[SerializeField] public string Name;
+		[SerializeField] public List<int> Points;
+	}
+
+	[Serializable]
+	public class StatsConfig
+	{
+		[SerializeField] public List<Stats> Collection;
 	}
 }

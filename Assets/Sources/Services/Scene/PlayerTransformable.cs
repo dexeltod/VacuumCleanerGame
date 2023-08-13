@@ -1,23 +1,26 @@
-using Sources.Infrastructure.Services;
+using Sources.Domain.Progress;
+using Sources.DomainInterfaces;
+using Sources.Services.Interfaces;
+using Sources.ServicesInterfaces;
 using UnityEngine;
 
-namespace Sources.Infrastructure.Scene
+namespace Sources.Services.Scene
 {
 	public class PlayerTransformable : Transformable, IUpdatable
 	{
 		private const float MaxMoveHeight = 2f;
-		
+
 		public readonly float VacuumDistance;
 
 		private readonly Joystick _joystick;
 		private readonly float _speed;
 		private Vector3 _offset;
 
-
 		public PlayerTransformable(Transform transform, Joystick joystick, IPlayerStatsService stats) : base(transform)
 		{
-			_speed = stats.Speed;
-			VacuumDistance = stats.VacuumDistance;
+			int speed = stats.GetConvertedProgressValue("Speed");
+			//TODO: Need to implement vacuum distance
+			_speed = speed;
 			_joystick = joystick;
 		}
 

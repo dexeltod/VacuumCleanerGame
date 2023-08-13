@@ -1,29 +1,28 @@
-using Cysharp.Threading.Tasks;
-using Sources.Core.DI;
-using Sources.Infrastructure.InfrastructureInterfaces;
-using Sources.Infrastructure.Services.Interfaces;
+using Sources.DIService;
+using Sources.InfrastructureInterfaces;
+using Sources.ServicesInterfaces;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Factories
 {
 	public class PresenterFactory : IPresenterFactory
 	{
-		private readonly IAssetProvider _assetProvider;
+		private readonly IResourceProvider _assetProvider;
 
 		public PresenterFactory()
 		{
-			_assetProvider = ServiceLocator.Container.Get<IAssetProvider>();
+			_assetProvider = GameServices.Container.Get<IResourceProvider>();
 		}
 
-		public async UniTask<T> Instantiate<T>(string name, Vector3 position)
+		public T Instantiate<T>(string name, Vector3 position)
 		{
-			var gameObject = await _assetProvider.Instantiate(name, position);
+			var gameObject = _assetProvider.Instantiate(name, position);
 			return gameObject.GetComponent<T>();
 		}
 
-		public async UniTask<T> Instantiate<T>(string name)
+		public T Instantiate<T>(string name)
 		{
-			var gameObject = await _assetProvider.Instantiate(name);
+			var gameObject = _assetProvider.Instantiate(name);
 			return gameObject.GetComponent<T>();
 		}
 	}

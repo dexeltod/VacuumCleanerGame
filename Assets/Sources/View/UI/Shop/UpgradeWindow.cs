@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Sources.Core.DI;
-using Sources.View.Interfaces;
-using Sources.View.Services.UI;
-using Sources.View.UI.Shop;
+using Sources.DIService;
+using Sources.Services.Interfaces;
+using Sources.ServicesInterfaces.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Sources.View.SceneEntity
+namespace Sources.View.UI.Shop
 {
 	[RequireComponent(typeof(UpgradeWindow))]
 	public class UpgradeWindow : MonoBehaviour, IUpgradeWindow
@@ -22,13 +21,13 @@ namespace Sources.View.SceneEntity
 
 		private IUIGetter _gameplayInterface;
 		private List<UpgradeElementView> _buttons;
-		public Transform UpgradeElementsTransform => _content.transform;
+		public Transform ContainerTransform => _content.transform;
 
 		public event Action<bool> ActiveChanged;
 		public event Action Destroyed;
 
 		private void Awake() => 
-			GetComponent<UpgradeWindow>().enabled = false;
+			enabled = false;
 
 		public void OnEnable()
 		{
@@ -58,7 +57,7 @@ namespace Sources.View.SceneEntity
 
 		public void Construct()
 		{
-			_gameplayInterface = ServiceLocator.Container.Get<IUIGetter>();
+			_gameplayInterface = GameServices.Container.Get<IUIGetter>();
 			_money.text = "";
 			_closeMenuButton.onClick.AddListener(OnEnableJoystick);
 			_noButton.onClick.AddListener(OnEnableJoystick);

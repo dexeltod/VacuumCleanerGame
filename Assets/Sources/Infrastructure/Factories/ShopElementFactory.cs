@@ -1,61 +1,59 @@
-using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using Sources.Core.Application.UpgradeShop;
-using Sources.Core.DI;
-using Sources.Core.Domain.Progress;
-using Sources.Infrastructure.Services.Interfaces;
-using Sources.View.ScriptableObjects.UpgradeItems.SO;
-using Sources.View.UI.Shop;
+using Sources.Application.Utils.Configs;
+using Sources.DIService;
+using Sources.DomainInterfaces;
+using Sources.Infrastructure.Factories.UpgradeShop;
+using Sources.Infrastructure.ScriptableObjects;
+using Sources.InfrastructureInterfaces;
+using Sources.PresetrationInterfaces;
+using Sources.ServicesInterfaces;
+using Sources.ServicesInterfaces.UI;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Sources.Infrastructure.Factories
 {
 	public class ShopElementFactory
 	{
-		private const string ShopItemList = "ShopItemList";
-		
-		private readonly ShopProgress _shopProgress;
-		private readonly IAssetProvider _assetProvider;
+		private readonly IGameProgress _shopProgress;
+		private readonly IResourceProvider _assetProvider;
 
-		public ShopElementFactory(ShopProgress shopProgress)
+		public ShopElementFactory(IGameProgress shopProgress)
 		{
 			_shopProgress = shopProgress;
-			_assetProvider = ServiceLocator.Container.Get<IAssetProvider>();
+			_assetProvider = GameServices.Container.Get<IResourceProvider>();
 		}
 
-		public async UniTask<List<UpgradeElementView>> InstantiateElements(Transform transform)
+		public List<IUpgradeElementView> InstantiateElements(Transform transform)
 		{
-			List<UpgradeElementView> buttons = new();
+			List<IUpgradeElementView> buttons = new();
 
-			List<Tuple<string, int>> progress = _shopProgress.GetAll();
+			List<IUpgradeProgressData> progress = _shopProgress.GetAll();
 
-			UpgradeItemList items = await _assetProvider.LoadAsync<UpgradeItemList>(ShopItemList);
+			UpgradeItemList items = _assetProvider.Load<UpgradeItemList>(ResourcesAssetPath.ShopConfig.ShopItems);
 
 			InitItems(progress, items);
-			
-			Instantiate(transform,  items, buttons, progress);
+
+			Instantiate(transform, items, buttons, progress);
 			return buttons;
 		}
 
-		private void InitItems(List<Tuple<string, int>> progress, UpgradeItemList upgradeItems)
+		private void InitItems(List<IUpgradeProgressData> progress, UpgradeItemList upgradeItems)
 		{
-			for (var i = 0; i < upgradeItems.Items.Count; i++)
+			for (var i = 0; i < upgradeItems.Items.Length; i++)
 			{
-				UpgradeItemScriptableObject item = upgradeItems.Items[i];
-				item.SetUpgradeLevel(progress[i].Item2);
+				IUpgradeItem item = upgradeItems.Items[i];
+				item.SetUpgradeLevel(progress[i].Value);
 			}
 		}
 
-		private void Instantiate(Transform transform, UpgradeItemList items, List<UpgradeElementView> buttons,
-			List<Tuple<string, int>> progress)
+		private void Instantiate(Transform transform, UpgradeItemList items, List<IUpgradeElementView> buttons,
+			List<IUpgradeProgressData> progress)
 		{
 			for (int i = 0; i < progress.Count; i++)
 			{
-				var button = Object.Instantiate(items.Items[i].UpgradeElementView, transform.transform)
-					.Construct(items.Items[i], progress[i].Item2);
-				
+				var button = Object.Instantiate(items.Items[i].UpgradeElementView, transform.transform);
+				button.Construct(items.Items[i], progress[i].Value);
+
 				buttons.Add(button);
 			}
 		}

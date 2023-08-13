@@ -1,9 +1,9 @@
-using Sources.Infrastructure.InfrastructureInterfaces;
+using Sources.ServicesInterfaces;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Sources.View.UI
+namespace Sources.Services
 {
 	public class GameplayInterfaceView : MonoBehaviour
 	{

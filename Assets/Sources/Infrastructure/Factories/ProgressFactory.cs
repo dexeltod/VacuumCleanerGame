@@ -1,54 +1,55 @@
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using Sources.Core.Application.UpgradeShop;
-using Sources.Core.Domain.Progress;
-using Sources.Core.Domain.Progress.Player;
-using Sources.Core.Domain.Progress.ResourcesData;
-using Sources.DomainServices;
-using Sources.DomainServices.Interfaces;
+using Sources.Application.Utils;
+using Sources.Domain.Progress;
+using Sources.Domain.Progress.Player;
+using Sources.Domain.Progress.ResourcesData;
+using Sources.DomainInterfaces;
+using Sources.Infrastructure.ScriptableObjects;
+using Sources.InfrastructureInterfaces;
+using Sources.ServicesInterfaces;
+using Sources.ServicesInterfaces.UI;
 
 namespace Sources.Infrastructure.Factories
 {
 	public class ProgressFactory
 	{
 		private const int StartMoneyCount = 1000;
+		private const string SpeedProgressName = "Speed";
 
 		private readonly ISaveLoadDataService _saveLoadService;
 		private readonly IPersistentProgressService _persistentProgressService;
-		private readonly ShopItemFactory _shopFactory;
+		private readonly IShopItemFactory _shopFactory;
 
 		public ProgressFactory(ISaveLoadDataService saveLoadService,
-			IPersistentProgressService persistentProgressService)
+			IPersistentProgressService persistentProgressService, IShopItemFactory shopItemFactory)
 		{
 			_saveLoadService = saveLoadService;
 			_persistentProgressService = persistentProgressService;
-			_shopFactory = new ShopItemFactory();
+			_shopFactory = shopItemFactory;
 		}
 
-		public async UniTask InitProgress()
+		public void InitProgress()
 		{
-			GameProgressModel loadedProgress = _saveLoadService.LoadProgress();
-			await Init(loadedProgress);
+			IGameProgressModel loadedProgress = _saveLoadService.LoadProgress();
+			Init(loadedProgress);
 		}
 
-		private async UniTask Init(GameProgressModel loadedProgress)
+		private void Init(IGameProgressModel loadedProgress)
 		{
 			if (loadedProgress == null)
 			{
-				var newProgress = await CreateNewProgress();
+				var newProgress = CreateNewProgress();
 				loadedProgress = newProgress;
 			}
 
 			_persistentProgressService.Construct(loadedProgress);
 		}
 
-		private async UniTask<GameProgressModel> CreateNewProgress()
+		private GameProgressModel CreateNewProgress()
 		{
-			UpgradeItemList itemsList = await _shopFactory.LoadItems();
+			IUpgradeItemList itemsList =  _shopFactory.LoadItems();
 
-			List<string> itemsNames =  LoadNewProgress(itemsList);
-
-			GameProgressModel newProgress = CreateProgress(itemsList, itemsNames);
+			GameProgressModel newProgress = CreateProgress(itemsList);
 
 			_persistentProgressService.Construct(newProgress);
 			_saveLoadService.SaveProgress();
@@ -56,32 +57,13 @@ namespace Sources.Infrastructure.Factories
 			return newProgress;
 		}
 
-		private List<int> GetZeroPoints(UpgradeItemList itemsList)
-		{
-			List<int> points = new List<int>(itemsList.Items.Count);
-
-			for (int i = 0; i < points.Capacity; i++)
-				points.Add(0);
-
-			return points;
-		}
-
-		private List<string> LoadNewProgress(UpgradeItemList itemsList)
-		{
-			List<string> progressNames = new List<string>();
-
-			foreach (var item in itemsList.Items)
-				progressNames.Add(item.GetProgressName());
-
-			return progressNames;
-		}
-
-		private GameProgressModel CreateProgress(UpgradeItemList itemsList, List<string> itemsNames)
+		private GameProgressModel CreateProgress(IUpgradeItemList itemsList)
 		{
 			ResourcesData resourcesData = new ResourcesData(new Resource(ResourceType.Soft), StartMoneyCount);
 
-			PlayerProgress playerProgressModel = new PlayerProgress(GetZeroPoints(itemsList), itemsNames);
-			ShopProgress shopProgressModel = new(GetZeroPoints(itemsList), itemsNames, new List<int>());
+			PlayerProgress playerProgressModel = new PlayerProgress(CreateNewUpgradeProgressData(itemsList));
+
+			ShopProgress shopProgressModel = new(CreateNewUpgradeProgressData(itemsList), new List<int>());
 
 			GameProgressModel newProgress = new GameProgressModel
 			(
@@ -91,6 +73,19 @@ namespace Sources.Infrastructure.Factories
 			);
 
 			return newProgress;
+		}
+
+		private List<IUpgradeProgressData> CreateNewUpgradeProgressData(IUpgradeItemList itemsList)
+		{
+			List<IUpgradeProgressData> data = new List<IUpgradeProgressData>();
+
+			foreach (var item in itemsList.Items)
+			{
+				data.Add(new ProgressUpgradeData(item.Name, item.PointLevel));
+				item.SetUpgradeLevel(0);
+			}
+
+			return data;
 		}
 	}
 }

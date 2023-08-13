@@ -1,8 +1,5 @@
-using Sources.Core.Application.StateMachine;
-using Sources.Core.Application.StateMachine.GameStates;
-using Sources.Infrastructure.Services;
-using Sources.View.Services;
-using Sources.View.Services.Character;
+using Sources.Services;
+using Sources.Services.Character;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Factories.Player

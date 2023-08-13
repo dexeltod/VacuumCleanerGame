@@ -1,10 +1,10 @@
-using Sources.Core.DI;
-using Sources.Infrastructure.InfrastructureInterfaces;
-using Sources.View.Interfaces;
-using Sources.View.Services.UI;
+using Sources.DIService;
+using Sources.InfrastructureInterfaces;
+using Sources.Services.PlayerServices;
+using Sources.ServicesInterfaces.UI;
 using UnityEngine;
 
-namespace Sources.View.SceneEntity.Triggers
+namespace Sources.View
 {
 	public class UpgradeTrigger : MonoBehaviour
 	{
@@ -14,13 +14,13 @@ namespace Sources.View.SceneEntity.Triggers
 
 		private void Start()
 		{
-			_sceneLoadInformer = ServiceLocator.Container.Get<ISceneLoadInformer>();
+			_sceneLoadInformer = GameServices.Container.Get<ISceneLoadInformer>();
 			_sceneLoadInformer.SceneLoaded += OnLoaded;			
 		}
 
 		private void OnLoaded()
 		{
-			_upgradeWindowGetter = ServiceLocator.Container.Get<IUpgradeWindowGetter>();
+			_upgradeWindowGetter = GameServices.Container.Get<IUpgradeWindowGetter>();
 			_upgradeWindow = _upgradeWindowGetter.UpgradeWindow;
 			_sceneLoadInformer.SceneLoaded -= OnLoaded;
 		}

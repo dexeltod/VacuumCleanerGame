@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Sources.View.Services
+namespace Sources.Services
 {
 	public class AnimatorFacade : MonoBehaviour
 	{

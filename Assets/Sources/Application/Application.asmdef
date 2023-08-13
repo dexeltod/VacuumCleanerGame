@@ -1,0 +1,30 @@
+{
+    "name": "Application",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2150d3a8cf087ac428995ec2b2e22d5c",
+        "GUID:9be9b0481bef5e74b995a6ecec47c0ed",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:7ffb432ff5e81284e80f9e678812e6b9",
+        "GUID:46413b1fac2b99a488b42859440b0707",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:124d50db4e257fb43b814badf2ac648e",
+        "GUID:4307f53044263cf4b835bd812fc161a4",
+        "GUID:c5659d65033c81143a1294cc5cc2e6a8",
+        "GUID:31976cc9e85bdd9459e856fcb40d0d50",
+        "GUID:51d21c2ab7b57024db68e31f2558cb12",
+        "GUID:e75ebd4ddedebcc4196d3ac949e2a3fd",
+        "GUID:2e1e7a8a594b8bc40be67d87dd026650",
+        "GUID:2fc78415e4626ba46845ad3d6e14b52f",
+        "GUID:9c083e14e5b544e48bf0facb20289e9b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,38 +1,38 @@
 using System;
-using Sources.Core.DI;
-using Sources.Core.Domain.Progress;
-using Sources.DomainServices;
-using Sources.DomainServices.Interfaces;
-using Sources.Infrastructure.InfrastructureInterfaces;
+using Sources.DIService;
+using Sources.Domain.Progress;
+using Sources.DomainInterfaces;
+using Sources.InfrastructureInterfaces;
+using Sources.ServicesInterfaces;
 
 namespace Sources.Infrastructure.Shop
 {
 	public class ShopProgressViewModel : IShopProgressViewModel
 	{
 		private const int Point = 1;
-		private readonly ShopProgress _shopProgress;
+		private readonly IGameProgress _shopProgress;
 		private readonly ISaveLoadDataService _saveLoadService;
 
 		public ShopProgressViewModel()
 		{
-			var gameProgress = ServiceLocator.Container.Get<IPersistentProgressService>().GameProgress;
-			_saveLoadService = ServiceLocator.Container.Get<ISaveLoadDataService>();
+			var gameProgress = GameServices.Container.Get<IPersistentProgressService>().GameProgress;
+			_saveLoadService = GameServices.Container.Get<ISaveLoadDataService>();
 			_shopProgress = gameProgress.ShopProgress;
 		}
-		
+
 		public void AddProgressPoint(string progressName)
 		{
-			Tuple<string, int> progress = _shopProgress.GetByName(progressName);
+			IUpgradeProgressData upgradeProgress = _shopProgress.GetByName(progressName);
 
-			if (progress == null)
+			if (upgradeProgress == null)
 				throw new NullReferenceException("Progress is null");
 
-			int newProgressPoint = progress.Item2 + Point;
+			int newProgressPoint = upgradeProgress.Value + Point;
 
 			if (newProgressPoint > _shopProgress.MaxPointCount)
 				return;
 
-			_shopProgress.ChangeValue(progressName, newProgressPoint);
+			_shopProgress.SetProgress(progressName, newProgressPoint);
 			_saveLoadService.SaveProgress();
 		}
 	}

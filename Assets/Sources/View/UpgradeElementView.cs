@@ -1,0 +1,127 @@
+using System;
+using System.Collections.Generic;
+using Sources.InfrastructureInterfaces;
+using Sources.PresetrationInterfaces;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Sources.View
+{
+	public class UpgradeElementView : MonoBehaviour, IUpgradeElementView, IUpgradeInteractable
+	{
+		[Header("Points")] [SerializeField] private int _maxPoints = 6;
+
+		[SerializeField] private Color _notBoughtPointColor;
+		[SerializeField] private Color _boughtPointColor;
+		[SerializeField] private Transform _pointsContainer;
+		[SerializeField] private GameObject _pointElement;
+
+		[Header("Upgrade window")] [SerializeField]
+		private TextMeshProUGUI _title;
+
+		[SerializeField] private TextMeshProUGUI _description;
+		[SerializeField] private TextMeshProUGUI _price;
+		[SerializeField] private Image _icon;
+		[SerializeField] private Button _buttonBuy;
+
+		private readonly List<Image> _pointsColors = new();
+
+		private int _boughtPoints;
+		private bool _isInit;
+
+		public IUpgradeItemView ItemData { get; private set; }
+		public event Action<IUpgradeItemView> BuyButtonPressed;
+
+		public IUpgradeElementView Construct(IUpgradeItem item, IUpgradeItemView viewInfo)
+		{
+			if (_isInit)
+				throw new InvalidOperationException("Item view is already constructed");
+
+			_boughtPoints = item.PointLevel;
+
+			ItemData = item;
+
+			// _title.SetText(item.Title);
+			_title.SetText(title);
+
+			// _price.SetText(item.Price.ToString());
+			_price.SetText(price.ToString());
+
+			// _description.SetText(item.Description);
+			_description.SetText(description);
+
+			_icon.sprite = item.Icon;
+			_icon.sprite = icon;
+
+			InstantiatePoints();
+			item.PriceChanged += OnPriceChanged;
+			_isInit = true;
+
+			return this;
+		}
+
+		event Action IUpgradeElementView.BuyButtonPressed
+		{
+			add => throw new NotImplementedException();
+			remove => throw new NotImplementedException();
+		}
+
+		public IUpgradeElementView Construct()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void AddProgressPointColor(int count) =>
+			ChangePointsColor(count);
+
+		private void OnEnable() =>
+			_buttonBuy.onClick.AddListener(OnBuyButtonPressed);
+
+		private void OnDisable() =>
+			_buttonBuy.onClick.RemoveListener(OnBuyButtonPressed);
+
+		private void OnDestroy() =>
+			_item.PriceChanged -= OnPriceChanged;
+
+		private void OnBuyButtonPressed() =>
+			BuyButtonPressed?.Invoke(_item);
+
+		private void OnPriceChanged(int value) =>
+			_price.SetText(value.ToString());
+
+		private void ChangePointsColor(int count)
+		{
+			if (_boughtPoints + count > _maxPoints)
+				return;
+
+			_boughtPoints += count;
+
+			for (int i = 0; i < _boughtPoints; i++)
+				_pointsColors[i].color = _boughtPointColor;
+
+			for (int i = _boughtPoints; i < _maxPoints; i++)
+				_pointsColors[i].color = _notBoughtPointColor;
+		}
+
+		private void InstantiatePoints()
+		{
+			InstantiatePoints(0, _boughtPoints, _boughtPointColor);
+			InstantiatePoints(_boughtPoints, _maxPoints, _notBoughtPointColor);
+		}
+
+		private void InstantiatePoints(int startIndex, int end, Color color)
+		{
+			if (startIndex < 0) throw new ArgumentOutOfRangeException(nameof(startIndex));
+
+			for (int i = startIndex; i < end; i++)
+			{
+				GameObject @object = Instantiate(_pointElement, _pointsContainer);
+
+				var image = @object.GetComponent<Image>();
+				image.color = color;
+				_pointsColors.Add(image);
+			}
+		}
+	}
+}

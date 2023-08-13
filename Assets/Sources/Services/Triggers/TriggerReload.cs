@@ -1,6 +1,7 @@
+using Sources.Services.PlayerServices;
 using UnityEngine;
 
-namespace Sources.View.SceneEntity
+namespace Sources.Services.Triggers
 {
 	public class TriggerReload : MonoBehaviour
 	{

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Sources.View.Services.Character
+namespace Sources.Services.Character
 {
 	public class AnimationHasher : MonoBehaviour
 	{
