@@ -20,7 +20,7 @@ namespace Sources.View.UI.Shop
 		[SerializeField] private TextMeshProUGUI _money;
 
 		private IUIGetter _gameplayInterface;
-		private List<UpgradeElementView> _buttons;
+		private List<UpgradeElementPrefab> _buttons;
 		public Transform ContainerTransform => _content.transform;
 
 		public event Action<bool> ActiveChanged;

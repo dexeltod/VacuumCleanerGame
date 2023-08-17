@@ -1,10 +1,10 @@
 using System;
-using Sources.PresetrationInterfaces;
+using Sources.InfrastructureInterfaces;
 
-namespace Sources.View
+namespace Sources.PresentationInterfaces
 {
 	public interface IUpgradeInteractable
 	{
-		event Action<IUpgradeItemView> BuyButtonPressed;
+		event Action<IUpgradeItemData> BuyButtonPressed;
 	}
 }

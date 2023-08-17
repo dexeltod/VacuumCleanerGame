@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sources.DIService;
 using Sources.InfrastructureInterfaces;
-using Sources.PresetrationInterfaces;
+using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
 using Sources.View;
@@ -14,18 +14,22 @@ namespace Sources.Application
 	{
 		private const int Point = 1;
 
-		private readonly IReadOnlyList<IUpgradeItem> _items;
-		private readonly List<IUpgradeElementView> _buttonElements;
-		
+		private readonly IUpgradeItemPrefabData[] _items;
+		private readonly List<UpgradeElementPrefab> _upgradeElements;
+
 		private readonly IUpgradeWindow _upgradeWindow;
 		private readonly IResourcesProgressViewModel _resourcesProgress;
 		private readonly IShopProgressViewModel _shopProgressViewModel;
 		private readonly IPlayerProgressViewModel _playerProgress;
 
-		public ShopPurchaseController(
-			IReadOnlyList<IUpgradeItem> items,
+		private readonly Dictionary<string, UpgradeElementPrefab> _prefabsByNames =
+			new Dictionary<string, UpgradeElementPrefab>();
+
+		public ShopPurchaseController
+		(
+			IUpgradeItemPrefabData[] items,
 			IUpgradeWindow upgradeWindow,
-			List<IUpgradeElementView> upgradeElements
+			List<UpgradeElementPrefab> upgradeElements
 		)
 
 		{
@@ -35,10 +39,10 @@ namespace Sources.Application
 
 			_items = items;
 			_upgradeWindow = upgradeWindow;
+			_upgradeElements = upgradeElements;
 
-			Dictionary<string, int> upgrades = new();
-
-			_buttonElements = upgradeElements;
+			foreach (UpgradeElementPrefab element in _upgradeElements)
+				_prefabsByNames.Add(element.IdName, element);
 
 			_upgradeWindow.ActiveChanged += OnActiveChanged;
 			_upgradeWindow.Destroyed += OnDestroyed;
@@ -47,9 +51,9 @@ namespace Sources.Application
 		private void OnActiveChanged(bool isActive)
 		{
 			if (isActive == true)
-				SubscribeOnButtons(_buttonElements);
+				SubscribeOnButtons(_upgradeElements);
 			else
-				UnsubscribeFromButtons(_buttonElements);
+				UnsubscribeFromButtons(_upgradeElements);
 		}
 
 		private void OnDestroyed()
@@ -58,66 +62,53 @@ namespace Sources.Application
 			_upgradeWindow.ActiveChanged -= OnActiveChanged;
 		}
 
-		private void SubscribeOnButtons(List<UpgradeElementView> elements)
+		private void SubscribeOnButtons(List<UpgradeElementPrefab> elements)
 		{
 			foreach (var element in elements)
 				element.BuyButtonPressed += OnButtonPressed;
 		}
 
-		private void UnsubscribeFromButtons(List<UpgradeElementView> elements)
+		private void UnsubscribeFromButtons(List<UpgradeElementPrefab> elements)
 		{
 			foreach (var element in elements)
 				element.BuyButtonPressed -= OnButtonPressed;
 		}
 
-		private void OnButtonPressed(IUpgradeItemView type)
+		private void OnButtonPressed(IUpgradeItemData data)
 		{
-			if (_buttonElements.Contains((UpgradeElementView)type))
-			{
-				var a = _buttonElements.FirstOrDefault(x => x == type);
-				
-			}
+			if (IsHaveExceptions(data) == false)
+				return;
 
-			
-
-			foreach (UpgradeElementView upgradeElement in _buttonElements)
-			{
-				if (upgradeElement.ItemData == type)
-				{
-					bool canUpgrade = CheckExceptions(upgradeElement);
-					SetProgress(canUpgrade, upgradeElement);
-					return;
-				}
-			}
+			SetProgress(data);
+			ChangeColor(data);
 		}
 
-		private void SetProgress(bool canUpgrade, IUpgradeItem upgradeElement)
+		private void ChangeColor(IUpgradeItemData upgradeItemData)
 		{
-			if (canUpgrade)
-			{
-				string progressName = upgradeElement.Name;
-
-				_resourcesProgress.DecreaseMoney(upgradeElement.Price);
-				SetUpgradeLevel(upgradeElement);
-				AddProgressPoints(upgradeElement, progressName);
-
-				_playerProgress.SetProgress(progressName);
-			}
+			IColorChangeable color  = _prefabsByNames.FirstOrDefault(element => element.Key == upgradeItemData.IdName).Value;
+			color.AddProgressPointColor(upgradeItemData.PointLevel);
 		}
 
-		private void SetUpgradeLevel(IUpgradeItem upgradeElement)
+		private void SetProgress(IUpgradeItemData upgradeElement)
+		{
+			_resourcesProgress.DecreaseMoney(upgradeElement.Price);
+			SetUpgradeLevel(upgradeElement);
+			_playerProgress.SetProgress(upgradeElement.IdName);
+		}
+
+		private void SetUpgradeLevel(IUpgradeItemData upgradeElement)
 		{
 			int newLevel = upgradeElement.PointLevel + Point;
 			upgradeElement.SetUpgradeLevel(newLevel);
 		}
 
-		private void AddProgressPoints(IUpgradeItem upgradeElement, string progressName)
+		private void AddProgressPoints(IColorChangeable upgradeElement, string progressName)
 		{
 			_shopProgressViewModel.AddProgressPoint(progressName);
 			upgradeElement.AddProgressPointColor(Point);
 		}
 
-		private bool CheckExceptions(IUpgradeItem upgradeElement)
+		private bool IsHaveExceptions(IUpgradeItemData upgradeElement)
 		{
 			if (_resourcesProgress.SoftCurrency.Count - upgradeElement.Price < 0)
 				throw new InvalidOperationException("Not enough money");

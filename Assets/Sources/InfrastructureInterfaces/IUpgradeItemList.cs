@@ -1,7 +1,9 @@
+using Sources.PresentationInterfaces;
+
 namespace Sources.InfrastructureInterfaces
 {
 	public interface IUpgradeItemList
 	{
-		IUpgradeItem[] Items { get; }
+		IUpgradeItemPrefabData[] Items { get; }
 	}
 }

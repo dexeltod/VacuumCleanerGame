@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Sources.Infrastructure.ScriptableObjects.Shop
 {
-	public class ProgressItem : ScriptableObject, IUpgradeItem
+	public class ProgressItemData : ScriptableObject, IUpgradeItemData
 	{
 		private const int MaxPoints = 6;
 
@@ -17,7 +17,7 @@ namespace Sources.Infrastructure.ScriptableObjects.Shop
 		public int PointLevel { get; }
 		public event Action<int> PriceChanged;
 
-		public string Name { get; }
+		public string IdName => name;
 
 		public string Title => _title;
 

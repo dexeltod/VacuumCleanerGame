@@ -3,11 +3,9 @@ using Sources.Application.Utils.Configs;
 using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.UpgradeShop;
-using Sources.Infrastructure.ScriptableObjects;
 using Sources.InfrastructureInterfaces;
-using Sources.PresetrationInterfaces;
 using Sources.ServicesInterfaces;
-using Sources.ServicesInterfaces.UI;
+using Sources.View;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Factories
@@ -23,9 +21,9 @@ namespace Sources.Infrastructure.Factories
 			_assetProvider = GameServices.Container.Get<IResourceProvider>();
 		}
 
-		public List<IUpgradeElementView> InstantiateElements(Transform transform)
+		public List<UpgradeElementPrefab> InstantiateElementPrefabs(Transform transform)
 		{
-			List<IUpgradeElementView> buttons = new();
+			List<UpgradeElementPrefab> buttons = new();
 
 			List<IUpgradeProgressData> progress = _shopProgress.GetAll();
 
@@ -41,12 +39,12 @@ namespace Sources.Infrastructure.Factories
 		{
 			for (var i = 0; i < upgradeItems.Items.Length; i++)
 			{
-				IUpgradeItem item = upgradeItems.Items[i];
-				item.SetUpgradeLevel(progress[i].Value);
+				IUpgradeItemData itemData = upgradeItems.Items[i];
+				itemData.SetUpgradeLevel(progress[i].Value);
 			}
 		}
 
-		private void Instantiate(Transform transform, UpgradeItemList items, List<IUpgradeElementView> buttons,
+		private void Instantiate(Transform transform, UpgradeItemList items, List<UpgradeElementPrefab> buttons,
 			List<IUpgradeProgressData> progress)
 		{
 			for (int i = 0; i < progress.Count; i++)

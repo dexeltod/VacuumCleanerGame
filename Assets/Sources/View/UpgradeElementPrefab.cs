@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using Sources.InfrastructureInterfaces;
-using Sources.PresetrationInterfaces;
+using Sources.PresentationInterfaces;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Sources.View
 {
-	public class UpgradeElementView : MonoBehaviour, IUpgradeElementView, IUpgradeInteractable
+	public class UpgradeElementPrefab : MonoBehaviour, IUpgradeElementConstructable, IUpgradeInteractable, IColorChangeable
 	{
 		[Header("Points")] [SerializeField] private int _maxPoints = 6;
 
@@ -27,49 +27,31 @@ namespace Sources.View
 
 		private readonly List<Image> _pointsColors = new();
 
+		private IUpgradeItemData _itemData;
 		private int _boughtPoints;
 		private bool _isInit;
+		public string IdName => _itemData.IdName;
+		public event Action<IUpgradeItemData> BuyButtonPressed;
 
-		public IUpgradeItemView ItemData { get; private set; }
-		public event Action<IUpgradeItemView> BuyButtonPressed;
-
-		public IUpgradeElementView Construct(IUpgradeItem item, IUpgradeItemView viewInfo)
+		public IUpgradeElementConstructable Construct(IUpgradeItemData itemData, IUpgradeItemPrefabData viewInfo)
 		{
 			if (_isInit)
 				throw new InvalidOperationException("Item view is already constructed");
 
-			_boughtPoints = item.PointLevel;
+			_boughtPoints = itemData.PointLevel;
 
-			ItemData = item;
+			_itemData = itemData;
 
-			// _title.SetText(item.Title);
-			_title.SetText(title);
-
-			// _price.SetText(item.Price.ToString());
-			_price.SetText(price.ToString());
-
-			// _description.SetText(item.Description);
-			_description.SetText(description);
-
-			_icon.sprite = item.Icon;
-			_icon.sprite = icon;
+			_title.SetText(itemData.Title);
+			_price.SetText(itemData.Price.ToString());
+			_description.SetText(itemData.Description);
+			_icon.sprite = viewInfo.Icon;
 
 			InstantiatePoints();
-			item.PriceChanged += OnPriceChanged;
+			itemData.PriceChanged += OnPriceChanged;
 			_isInit = true;
 
 			return this;
-		}
-
-		event Action IUpgradeElementView.BuyButtonPressed
-		{
-			add => throw new NotImplementedException();
-			remove => throw new NotImplementedException();
-		}
-
-		public IUpgradeElementView Construct()
-		{
-			throw new NotImplementedException();
 		}
 
 		public void AddProgressPointColor(int count) =>
@@ -82,10 +64,10 @@ namespace Sources.View
 			_buttonBuy.onClick.RemoveListener(OnBuyButtonPressed);
 
 		private void OnDestroy() =>
-			_item.PriceChanged -= OnPriceChanged;
+			_itemData.PriceChanged -= OnPriceChanged;
 
 		private void OnBuyButtonPressed() =>
-			BuyButtonPressed?.Invoke(_item);
+			BuyButtonPressed?.Invoke(_itemData);
 
 		private void OnPriceChanged(int value) =>
 			_price.SetText(value.ToString());

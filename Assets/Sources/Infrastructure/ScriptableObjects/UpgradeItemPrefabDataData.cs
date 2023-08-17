@@ -1,5 +1,5 @@
 using Sources.Infrastructure.ScriptableObjects.Shop;
-using Sources.PresetrationInterfaces;
+using Sources.PresentationInterfaces;
 using Sources.View;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -7,15 +7,12 @@ using UnityEngine.Serialization;
 namespace Sources.Infrastructure.ScriptableObjects
 {
 	[CreateAssetMenu(fileName = "Item", menuName = "Data/Shop/Upgrade/Item")]
-	public class UpgradeItemViewData : ProgressItem, IUpgradeItemView
+	public class UpgradeItemPrefabDataData : ProgressItemData, IUpgradeItemPrefabData
 	{
-		[FormerlySerializedAs("_upgradeElement")] [SerializeField]
-		private UpgradeElementView _upgradeElementView;
+		[SerializeField] private UpgradeElementPrefab _upgradeElementPrefab;
 
 		[SerializeField] private Sprite _icon;
 		public Sprite Icon => _icon;
-		public IUpgradeElementView UpgradeElementView => _upgradeElementView;
-		
-		
+		public IUpgradeElementConstructable UpgradeElementConstructable => _upgradeElementPrefab;
 	}
 }
