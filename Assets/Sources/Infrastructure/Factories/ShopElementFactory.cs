@@ -23,19 +23,15 @@ namespace Sources.Infrastructure.Factories
 
 		public List<UpgradeElementPrefab> InstantiateElementPrefabs(Transform transform)
 		{
-			List<UpgradeElementPrefab> buttons = new();
-
 			List<IUpgradeProgressData> progress = _shopProgress.GetAll();
 
-			UpgradeItemList items = _assetProvider.Load<UpgradeItemList>(ResourcesAssetPath.ShopConfig.ShopItems);
-
+			IUpgradeItemList items = _assetProvider.Load<UpgradeItemList>(ResourcesAssetPath.ShopConfig.ShopItems);
 			InitItems(progress, items);
-
-			Instantiate(transform, items, buttons, progress);
-			return buttons;
+			
+			return Instantiate(transform, items, progress);
 		}
 
-		private void InitItems(List<IUpgradeProgressData> progress, UpgradeItemList upgradeItems)
+		private void InitItems(List<IUpgradeProgressData> progress, IUpgradeItemList upgradeItems)
 		{
 			for (var i = 0; i < upgradeItems.Items.Length; i++)
 			{
@@ -44,16 +40,20 @@ namespace Sources.Infrastructure.Factories
 			}
 		}
 
-		private void Instantiate(Transform transform, UpgradeItemList items, List<UpgradeElementPrefab> buttons,
+		private List<UpgradeElementPrefab> Instantiate(Transform transform, UpgradeItemList items,
 			List<IUpgradeProgressData> progress)
 		{
+			List<UpgradeElementPrefab> buttons = new();
+
 			for (int i = 0; i < progress.Count; i++)
 			{
-				var button = Object.Instantiate(items.Items[i].UpgradeElementView, transform.transform);
+				var button = Object.Instantiate(items.Prefabs[i], transform.transform);
 				button.Construct(items.Items[i], progress[i].Value);
 
 				buttons.Add(button);
 			}
+
+			return buttons;
 		}
 	}
 }

@@ -12,6 +12,7 @@ namespace Sources.Domain.Progress
 		public int Value
 		{
 			get => _value;
+
 			set
 			{
 				if (value < 0)

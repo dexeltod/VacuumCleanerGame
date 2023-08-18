@@ -41,9 +41,9 @@ namespace Sources.Application.UI
 			ConstructWindow();
 			InitButtons();
 
-			IUpgradeItemList items = _shopItemFactory.LoadItems();
+			IUpgradeItemData[] items = _shopItemFactory.LoadItems();
 
-			new ShopPurchaseController(items.Items, UpgradeWindow, _upgradeElementsPrefabs);
+			new ShopPurchaseController(UpgradeWindow, _upgradeElementsPrefabs);
 			return _upgradeWindow;
 		}
 

@@ -1,3 +1,4 @@
+using System;
 using Sources.Application.Utils.Configs;
 using Sources.DIService;
 using Sources.Infrastructure.ScriptableObjects;
@@ -10,19 +11,25 @@ namespace Sources.Infrastructure.Factories.UpgradeShop
 	{
 		private readonly IResourceProvider _assetProvider;
 
-		private UpgradeItemList _items;
+		private IUpgradeItemData[] _items;
 
 		public ShopItemFactory()
 		{
 			_assetProvider = GameServices.Container.Get<IResourceProvider>();
 		}
 
-		public IUpgradeItemList LoadItems()
+		public IUpgradeItemData[] LoadItems()
 		{
 			if (_items != null)
 				return _items;
 
-			_items = _assetProvider.Load<UpgradeItemList>(ResourcesAssetPath.ShopConfig.ShopItems);
+			UpgradeItemList upgradeItemList =
+				_assetProvider.Load<UpgradeItemList>(ResourcesAssetPath.ShopConfig.ShopItems);
+
+			IUpgradeItemData[] upgradeItemData = upgradeItemList.Items;
+
+			_items = upgradeItemData ?? throw new NullReferenceException("ShopItems is null");
+
 			return _items;
 		}
 	}

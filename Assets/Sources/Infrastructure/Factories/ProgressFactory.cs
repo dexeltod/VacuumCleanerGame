@@ -47,7 +47,7 @@ namespace Sources.Infrastructure.Factories
 
 		private GameProgressModel CreateNewProgress()
 		{
-			IUpgradeItemList itemsList =  _shopFactory.LoadItems();
+			IUpgradeItemData[] itemsList =  _shopFactory.LoadItems();
 
 			GameProgressModel newProgress = CreateProgress(itemsList);
 
@@ -57,7 +57,7 @@ namespace Sources.Infrastructure.Factories
 			return newProgress;
 		}
 
-		private GameProgressModel CreateProgress(IUpgradeItemList itemsList)
+		private GameProgressModel CreateProgress(IUpgradeItemData[] itemsList)
 		{
 			ResourcesData resourcesData = new ResourcesData(new Resource(ResourceType.Soft), StartMoneyCount);
 
@@ -75,13 +75,13 @@ namespace Sources.Infrastructure.Factories
 			return newProgress;
 		}
 
-		private List<IUpgradeProgressData> CreateNewUpgradeProgressData(IUpgradeItemList itemsList)
+		private List<IUpgradeProgressData> CreateNewUpgradeProgressData(IUpgradeItemData[] itemsList)
 		{
 			List<IUpgradeProgressData> data = new List<IUpgradeProgressData>();
 
-			foreach (var item in itemsList.Items)
+			foreach (var item in itemsList)
 			{
-				data.Add(new ProgressUpgradeData(item.Name, item.PointLevel));
+				data.Add(new ProgressUpgradeData(item.IdName, item.PointLevel));
 				item.SetUpgradeLevel(0);
 			}
 

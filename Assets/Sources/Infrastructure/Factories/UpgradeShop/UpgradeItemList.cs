@@ -2,13 +2,18 @@ using Sources.Infrastructure.ScriptableObjects;
 using Sources.InfrastructureInterfaces;
 using Sources.PresentationInterfaces;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Sources.Infrastructure.Factories.UpgradeShop
 {
-    [CreateAssetMenu(fileName = "ShopItems", menuName = "Data/Shop/Upgrade/ItemsList")]
-    public class UpgradeItemList : ScriptableObject, IUpgradeItemList
-    {
-        [SerializeField] private UpgradeItemPrefabDataData[] _list;
-        public IUpgradeItemPrefabData[] Items => _list;
-    }
+	[CreateAssetMenu(fileName = "ShopItems", menuName = "Data/Shop/Upgrade/ItemsList")]
+	public class UpgradeItemList : ScriptableObject, IUpgradeItemList
+	{
+		[FormerlySerializedAs("_list")] [SerializeField]
+		private UpgradeItemPrefabData[] _items;
+
+		public IUpgradeItemData[] Items => _items;
+		public IUpgradeItemPrefabData[] Prefabs => _items;
+	}
+
 }

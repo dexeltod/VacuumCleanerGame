@@ -4,6 +4,7 @@ namespace Sources.InfrastructureInterfaces
 {
 	public interface IUpgradeItemList
 	{
-		IUpgradeItemPrefabData[] Items { get; }
+		IUpgradeItemData[] Items { get; }
+		IUpgradeItemPrefabData[] Prefabs { get; }
 	}
 }

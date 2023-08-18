@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Sources.DIService;
 using Sources.InfrastructureInterfaces;
-using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
 using Sources.View;
@@ -14,7 +13,6 @@ namespace Sources.Application
 	{
 		private const int Point = 1;
 
-		private readonly IUpgradeItemPrefabData[] _items;
 		private readonly List<UpgradeElementPrefab> _upgradeElements;
 
 		private readonly IUpgradeWindow _upgradeWindow;
@@ -26,9 +24,7 @@ namespace Sources.Application
 			new Dictionary<string, UpgradeElementPrefab>();
 
 		public ShopPurchaseController
-		(
-			IUpgradeItemPrefabData[] items,
-			IUpgradeWindow upgradeWindow,
+		(IUpgradeWindow upgradeWindow,
 			List<UpgradeElementPrefab> upgradeElements
 		)
 
@@ -37,7 +33,6 @@ namespace Sources.Application
 			_shopProgressViewModel = GameServices.Container.Get<IShopProgressViewModel>();
 			_playerProgress = GameServices.Container.Get<IPlayerProgressViewModel>();
 
-			_items = items;
 			_upgradeWindow = upgradeWindow;
 			_upgradeElements = upgradeElements;
 
@@ -85,7 +80,10 @@ namespace Sources.Application
 
 		private void ChangeColor(IUpgradeItemData upgradeItemData)
 		{
-			IColorChangeable color  = _prefabsByNames.FirstOrDefault(element => element.Key == upgradeItemData.IdName).Value;
+			IColorChangeable color = _prefabsByNames
+				.FirstOrDefault(element => element.Key == upgradeItemData.IdName)
+				.Value;
+			
 			color.AddProgressPointColor(upgradeItemData.PointLevel);
 		}
 
@@ -100,12 +98,6 @@ namespace Sources.Application
 		{
 			int newLevel = upgradeElement.PointLevel + Point;
 			upgradeElement.SetUpgradeLevel(newLevel);
-		}
-
-		private void AddProgressPoints(IColorChangeable upgradeElement, string progressName)
-		{
-			_shopProgressViewModel.AddProgressPoint(progressName);
-			upgradeElement.AddProgressPointColor(Point);
 		}
 
 		private bool IsHaveExceptions(IUpgradeItemData upgradeElement)
