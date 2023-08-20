@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Factory;
 using Sources.ServicesInterfaces;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ namespace Sources.Services
 
 			IReadOnlyList<int> speedStats = new List<int>(7) { 2, 5, 7, 8, 10, 12, 15 };
 
-			_converter = new ShopPointsToStatsConverter();
+			// _converter = new ShopPointsToStatsConverter();
 		}
 
 		public int GetConvertedProgressValue(string progressName)

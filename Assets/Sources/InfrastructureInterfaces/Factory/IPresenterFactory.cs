@@ -1,7 +1,7 @@
 using Sources.DIService;
 using UnityEngine;
 
-namespace Sources.InfrastructureInterfaces
+namespace Sources.InfrastructureInterfaces.Factory
 {
 	public interface IPresenterFactory: IService
 	{

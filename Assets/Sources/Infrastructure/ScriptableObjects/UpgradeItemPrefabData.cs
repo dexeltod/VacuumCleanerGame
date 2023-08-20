@@ -1,6 +1,6 @@
 using Sources.Infrastructure.ScriptableObjects.Shop;
-using Sources.PresentationInterfaces;
-using Sources.View;
+using Sources.InfrastructureInterfaces;
+using Sources.View.UI.Shop;
 using UnityEngine;
 
 namespace Sources.Infrastructure.ScriptableObjects
@@ -12,7 +12,7 @@ namespace Sources.Infrastructure.ScriptableObjects
 
 		[SerializeField] private Sprite _icon;
 		public Sprite Icon => _icon;
-		public IUpgradeElementConstructable UpgradeElementConstructable => _upgradeElementPrefab;
+		public IUpgradeElementConstructable ElementConstructable => _upgradeElementPrefab;
 		public UpgradeElementPrefab Prefab => _upgradeElementPrefab;
 	}
 }

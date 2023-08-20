@@ -13,18 +13,16 @@ namespace Sources.Infrastructure.ScriptableObjects.Shop
 		[SerializeField] private string _title;
 		[SerializeField] private string _description;
 
-		public int Price { get; }
-		public int PointLevel { get; }
-		public event Action<int> PriceChanged;
-
-		public string IdName => name;
-
-		public string Title => _title;
-
-		public string Description => _description;
-
 		private string _progressName;
 		private int _pointLevel;
+
+		public int Price => _prices[_pointLevel];
+		public int PointLevel => _pointLevel;
+		public string IdName => name;
+		public string Title => _title;
+		public string Description => _description;
+
+		public event Action<int> PriceChanged;
 
 		public void SetUpgradeLevel(int level)
 		{

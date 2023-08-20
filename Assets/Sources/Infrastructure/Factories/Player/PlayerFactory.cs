@@ -1,6 +1,7 @@
 using Sources.Application.Utils.Configs;
 using Sources.DIService;
 using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Factory;
 using Sources.Services;
 using Sources.Services.Character;
 using Sources.Services.Scene;

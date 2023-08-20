@@ -1,6 +1,4 @@
-using Sources.InfrastructureInterfaces;
-
-namespace Sources.PresentationInterfaces
+namespace Sources.InfrastructureInterfaces
 {
 	public interface IUpgradeElementConstructable
 	{

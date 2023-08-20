@@ -6,6 +6,7 @@ using Sources.Domain.Progress.ResourcesData;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.ScriptableObjects;
 using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Factory;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
 

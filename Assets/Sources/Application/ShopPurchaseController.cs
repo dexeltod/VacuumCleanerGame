@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Sources.DIService;
 using Sources.InfrastructureInterfaces;
+using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
 using Sources.View;
+using Sources.View.UI.Shop;
 
 namespace Sources.Application
 {
@@ -24,7 +26,8 @@ namespace Sources.Application
 			new Dictionary<string, UpgradeElementPrefab>();
 
 		public ShopPurchaseController
-		(IUpgradeWindow upgradeWindow,
+		(
+			IUpgradeWindow upgradeWindow,
 			List<UpgradeElementPrefab> upgradeElements
 		)
 
@@ -83,8 +86,8 @@ namespace Sources.Application
 			IColorChangeable color = _prefabsByNames
 				.FirstOrDefault(element => element.Key == upgradeItemData.IdName)
 				.Value;
-			
-			color.AddProgressPointColor(upgradeItemData.PointLevel);
+
+			color.AddProgressPointColor(Point);
 		}
 
 		private void SetProgress(IUpgradeItemData upgradeElement)

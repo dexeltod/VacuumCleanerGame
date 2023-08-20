@@ -3,23 +3,31 @@
   <component name="ChangeListManager">
     <list default="true" id="e72b9b77-a85b-4195-b3c2-5f5bad8d4534" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/UI/Shop/ShopItems.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/UI/Shop/ShopItems.prefab.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/ShopPurchaseController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/ShopPurchaseController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/InitializeServicesAndProgressState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/InitializeServicesAndProgressState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/InitializeServicesWithProgressState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/InitializeServicesWithProgressState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/SceneLoadState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/SceneLoadState.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/UI/UpgradeWindowFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/UI/UpgradeWindowFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Domain/Progress/ProgressUpgradeData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Domain/Progress/ProgressUpgradeData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/Player/IPlayerFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/Player/IPlayerFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/Player/PlayerFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/Player/PlayerFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/PresenterFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/PresenterFactory.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/ProgressFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/ProgressFactory.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/ShopElementFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/ShopElementFactory.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UpgradeShop/ShopItemFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UpgradeShop/ShopItemFactory.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UpgradeShop/UpgradeItemList.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UpgradeShop/UpgradeItemList.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/ScriptableObjects/UpgradeItemPrefabDataData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/ScriptableObjects/UpgradeItemPrefabData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/ScriptableObjects/UpgradeItemPrefabDataData.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/ScriptableObjects/UpgradeItemPrefabData.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/ScriptableObjects/Shop/ProgressItemData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/ScriptableObjects/Shop/ProgressItemData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/ScriptableObjects/UpgradeItemPrefabData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/ScriptableObjects/UpgradeItemPrefabData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Factory/IPresenterFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Factory/IPresenterFactory.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Factory/IShopItemFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Factory/IShopItemFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/IUpgradeElementConstructable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/IUpgradeElementConstructable.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/IUpgradeItemList.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/IUpgradeItemList.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/IUpgradeItemPrefabData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/IUpgradeItemPrefabData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/View/ScriptableObjects.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/View/ScriptableObjects/UpgradeItems.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/View/ScriptableObjects/UpgradeItems/SO.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/View/UpgradeElementPrefab.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/View/UI/Shop/UpgradeElementPrefab.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/View/UpgradeElementPrefab.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/View/UI/Shop/UpgradeElementPrefab.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/PresentationInterfaces/IColorChangeable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/PresentationInterfaces/IColorChangeable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Services/PlayerStatsService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/PlayerStatsService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Services/Scene/PlayerTransformable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/Scene/PlayerTransformable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/View/UI/Shop/UpgradeElementPrefab.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/View/UI/Shop/UpgradeElementPrefab.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,10 +152,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="9248">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" />
+      <option name="pid" value="9248" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -262,6 +270,8 @@
       <workItem from="1692135462694" duration="597000" />
       <workItem from="1692197007136" duration="598000" />
       <workItem from="1692269708640" duration="13882000" />
+      <workItem from="1692365083327" duration="597000" />
+      <workItem from="1692451325475" duration="8501000" />
     </task>
     <servers />
   </component>
@@ -294,19 +304,6 @@
           <option name="timeStamp" value="131" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Application/ShopPurchaseController.cs</url>
-          <line>60</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Application\ShopPurchaseController.cs" initialLine="51" containingFunctionPresentation="method 'SubscribeOnButtons'">
-            <startOffsets>
-              <option value="1803" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1804" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="189" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Sources/Services/ResourceProvider.cs</url>
           <line>15</line>
           <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Services\ResourceProvider.cs" initialLine="12" containingFunctionPresentation="method 'LoadComponent'">
@@ -333,62 +330,69 @@
           <option name="timeStamp" value="209" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/View/UI/Shop/UpgradeWindow.cs</url>
-          <line>32</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\View\UI\Shop\UpgradeWindow.cs" initialLine="32" containingFunctionPresentation="method 'OnEnable'">
+          <url>file://$PROJECT_DIR$/Assets/Sources/Application/ShopPurchaseController.cs</url>
+          <line>96</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Application\ShopPurchaseController.cs" initialLine="93" containingFunctionPresentation="method 'SetProgress'">
             <startOffsets>
-              <option value="891" />
+              <option value="2715" />
             </startOffsets>
             <endOffsets>
-              <option value="892" />
+              <option value="2766" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="214" />
+          <option name="timeStamp" value="224" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Services/Scene/PlayerTransformable.cs</url>
-          <line>22</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Services\Scene\PlayerTransformable.cs" initialLine="20" containingFunctionPresentation="constructor 'PlayerTransformable'">
+          <url>file://$PROJECT_DIR$/Assets/Sources/Application/ShopPurchaseController.cs</url>
+          <line>93</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Application\ShopPurchaseController.cs" initialLine="90" containingFunctionPresentation="method 'SetProgress'">
             <startOffsets>
-              <option value="659" />
+              <option value="2615" />
             </startOffsets>
             <endOffsets>
-              <option value="674" />
+              <option value="2616" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="216" />
+          <option name="timeStamp" value="225" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Services/PlayerStatsService.cs</url>
-          <line>26</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Services\PlayerStatsService.cs" initialLine="47" containingFunctionPresentation="constructor 'PlayerStatsService'">
+          <url>file://$PROJECT_DIR$/Assets/Sources/Application/ShopPurchaseController.cs</url>
+          <line>89</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Application\ShopPurchaseController.cs" initialLine="86" containingFunctionPresentation="method 'ChangeColor'">
             <startOffsets>
-              <option value="790" />
+              <option value="2491" />
             </startOffsets>
             <endOffsets>
-              <option value="866" />
+              <option value="2547" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="219" />
+          <option name="timeStamp" value="227" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/SceneConfigGetter.cs</url>
-          <line>14</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Infrastructure\InfrastructureInterfaces\SceneConfigGetter.cs" initialLine="13" containingFunctionPresentation="constructor 'SceneConfigGetter'" />
-          <option name="timeStamp" value="220" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/ShopElementFactory.cs</url>
-          <line>49</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Infrastructure\Factories\ShopElementFactory.cs" initialLine="51" containingFunctionPresentation="method 'Instantiate'">
+          <url>file://$PROJECT_DIR$/Assets/Sources/Application/ShopPurchaseController.cs</url>
+          <line>101</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Application\ShopPurchaseController.cs" initialLine="98" containingFunctionPresentation="method 'SetUpgradeLevel'">
             <startOffsets>
-              <option value="1511" />
+              <option value="2843" />
             </startOffsets>
             <endOffsets>
-              <option value="1579" />
+              <option value="2892" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="221" />
+          <option name="timeStamp" value="230" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Sources/Application/ShopPurchaseController.cs</url>
+          <line>76</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Application\ShopPurchaseController.cs" initialLine="76" containingFunctionPresentation="method 'OnButtonPressed'">
+            <startOffsets>
+              <option value="2197" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2233" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="232" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

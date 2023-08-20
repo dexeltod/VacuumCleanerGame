@@ -1,11 +1,10 @@
 using UnityEngine;
 
-namespace Sources.PresentationInterfaces
+namespace Sources.InfrastructureInterfaces
 {
 	public interface IUpgradeItemPrefabData
 	{
 		Sprite Icon { get; }
-		IUpgradeElementConstructable UpgradeElementConstructable { get; }
-		
+		IUpgradeElementConstructable ElementConstructable { get; }
 	}
 }

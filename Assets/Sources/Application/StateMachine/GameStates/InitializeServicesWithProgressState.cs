@@ -8,6 +8,7 @@ using Sources.Infrastructure.Factories.UpgradeShop;
 using Sources.Infrastructure.ScriptableObjects;
 using Sources.Infrastructure.Shop;
 using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Factory;
 using Sources.Services;
 using Sources.Services.Interfaces;
 using Sources.ServicesInterfaces;

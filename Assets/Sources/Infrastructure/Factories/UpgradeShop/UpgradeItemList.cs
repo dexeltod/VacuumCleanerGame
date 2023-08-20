@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Sources.Infrastructure.ScriptableObjects;
 using Sources.InfrastructureInterfaces;
 using Sources.PresentationInterfaces;
@@ -12,8 +13,9 @@ namespace Sources.Infrastructure.Factories.UpgradeShop
 		[FormerlySerializedAs("_list")] [SerializeField]
 		private UpgradeItemPrefabData[] _items;
 
+		public IReadOnlyList<UpgradeItemPrefabData> ReadOnlyItems => _items;
+		
 		public IUpgradeItemData[] Items => _items;
 		public IUpgradeItemPrefabData[] Prefabs => _items;
 	}
-
 }

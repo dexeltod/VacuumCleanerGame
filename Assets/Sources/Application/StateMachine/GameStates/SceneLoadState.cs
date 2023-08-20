@@ -6,6 +6,7 @@ using Sources.Application.Utils.Configs;
 using Sources.DIService;
 using Sources.Infrastructure.Factories.Player;
 using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.Services.Interfaces;
 using Sources.ServicesInterfaces;

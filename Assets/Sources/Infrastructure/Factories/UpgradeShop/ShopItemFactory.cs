@@ -3,6 +3,7 @@ using Sources.Application.Utils.Configs;
 using Sources.DIService;
 using Sources.Infrastructure.ScriptableObjects;
 using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Factory;
 using Sources.ServicesInterfaces;
 
 namespace Sources.Infrastructure.Factories.UpgradeShop

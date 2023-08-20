@@ -1,4 +1,4 @@
-namespace Sources.InfrastructureInterfaces
+namespace Sources.InfrastructureInterfaces.Factory
 {
 	public interface IShopItemFactory
 	{

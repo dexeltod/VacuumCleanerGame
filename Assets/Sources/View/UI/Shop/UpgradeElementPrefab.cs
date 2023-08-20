@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Sources.View
+namespace Sources.View.UI.Shop
 {
 	public class UpgradeElementPrefab : MonoBehaviour, IUpgradeElementConstructable, IUpgradeInteractable, IColorChangeable
 	{

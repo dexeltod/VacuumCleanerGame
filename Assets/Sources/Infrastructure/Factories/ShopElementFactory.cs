@@ -5,7 +5,7 @@ using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.UpgradeShop;
 using Sources.InfrastructureInterfaces;
 using Sources.ServicesInterfaces;
-using Sources.View;
+using Sources.View.UI.Shop;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Factories
@@ -25,9 +25,9 @@ namespace Sources.Infrastructure.Factories
 		{
 			List<IUpgradeProgressData> progress = _shopProgress.GetAll();
 
-			IUpgradeItemList items = _assetProvider.Load<UpgradeItemList>(ResourcesAssetPath.ShopConfig.ShopItems);
+			UpgradeItemList items = _assetProvider.Load<UpgradeItemList>(ResourcesAssetPath.ShopConfig.ShopItems);
 			InitItems(progress, items);
-			
+
 			return Instantiate(transform, items, progress);
 		}
 
@@ -44,16 +44,20 @@ namespace Sources.Infrastructure.Factories
 			List<IUpgradeProgressData> progress)
 		{
 			List<UpgradeElementPrefab> buttons = new();
+			InitButtons(transform, items, progress, buttons);
+			return buttons;
+		}
 
+		private static void InitButtons(Transform transform, UpgradeItemList items, List<IUpgradeProgressData> progress,
+			List<UpgradeElementPrefab> buttons)
+		{
 			for (int i = 0; i < progress.Count; i++)
 			{
-				var button = Object.Instantiate(items.Prefabs[i], transform.transform);
-				button.Construct(items.Items[i], progress[i].Value);
+				var button = Object.Instantiate(items.ReadOnlyItems[i].Prefab, transform.transform);
+				button.Construct(items.Items[i], items.ReadOnlyItems[i]);
 
 				buttons.Add(button);
 			}
-
-			return buttons;
 		}
 	}
 }

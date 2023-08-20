@@ -18,9 +18,9 @@ namespace Sources.Services.Scene
 
 		public PlayerTransformable(Transform transform, Joystick joystick, IPlayerStatsService stats) : base(transform)
 		{
-			int speed = stats.GetConvertedProgressValue("Speed");
-			//TODO: Need to implement vacuum distance
-			_speed = speed;
+			//TODO: need to fix stats getting
+			// int speed = stats.GetConvertedProgressValue("Speed");
+			_speed = 4;
 			_joystick = joystick;
 		}
 

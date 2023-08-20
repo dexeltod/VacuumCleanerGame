@@ -1,4 +1,4 @@
-namespace Sources.View
+namespace Sources.PresentationInterfaces
 {
 	public interface IColorChangeable
 	{
