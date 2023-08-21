@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.agava.webutility": {
+      "version": "https://github.com/forcepusher/com.agava.webutility.git#3.0.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "8b3ff533346e27727613880171be328b15cb4e84"
+    },
     "com.cysharp.unitask": {
       "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
       "depth": 0,
@@ -8,11 +15,11 @@
       "hash": "73d86259ce31ce7f4dfe1d028ea1c3edf96c23e4"
     },
     "com.unity.2d.animation": {
-      "version": "7.0.8",
+      "version": "7.0.11",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.2d.common": "6.0.5",
+        "com.unity.2d.common": "6.0.6",
         "com.unity.2d.sprite": "1.0.0",
         "com.unity.modules.animation": "1.0.0",
         "com.unity.modules.uielements": "1.0.0"
@@ -20,7 +27,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.2d.common": {
-      "version": "6.0.5",
+      "version": "6.0.6",
       "depth": 1,
       "source": "registry",
       "dependencies": {

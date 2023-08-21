@@ -47,9 +47,9 @@ namespace Sources.View.UI.Shop
 
 			ILocalizationService localisation = GameServices.Container.Get<ILocalizationService>();
 
-			_title.SetText(localisation.GetTranslationText(itemData.Title));
+			_title.SetText(LeanLocalization.GetTranslationText(itemData.Title));
 			_price.SetText(itemData.Price.ToString());
-			_description.SetText(itemData.Description);
+			_description.SetText(localisation.GetTranslationText(itemData.Description));
 			_icon.sprite = viewInfo.Icon;
 
 			InstantiatePoints();

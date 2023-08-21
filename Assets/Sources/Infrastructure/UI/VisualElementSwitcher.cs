@@ -2,7 +2,7 @@ using UnityEngine.UIElements;
 
 namespace Sources.Infrastructure.UI
 {
-	public class VisualElementViewModel
+	public class VisualElementSwitcher
 	{
 		public void Enter(VisualElement from, VisualElement to)
 		{
@@ -15,10 +15,7 @@ namespace Sources.Infrastructure.UI
 			openedElement.visibility = Visibility.Visible;
 		}
 
-		public void Disable(VisualElement disabledElement)
-		{
-			IStyle lastElement = disabledElement.style;
-			lastElement.display = DisplayStyle.None;
-		}
+		public void Disable(VisualElement disabledElement) => 
+			disabledElement.style.display = DisplayStyle.None;
 	}
 }

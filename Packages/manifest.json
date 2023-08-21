@@ -1,7 +1,8 @@
 {
   "dependencies": {
+    "com.agava.webutility": "https://github.com/forcepusher/com.agava.webutility.git#3.0.0",
     "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
-    "com.unity.2d.animation": "7.0.8",
+    "com.unity.2d.animation": "7.0.11",
     "com.unity.2d.pixel-perfect": "5.0.1",
     "com.unity.2d.psdimporter": "6.0.6",
     "com.unity.2d.sprite": "1.0.0",

@@ -9,10 +9,10 @@ namespace Sources.Application.MainMenu
 	{
 		public VisualElement ThisElement { get; }
 	
-		protected readonly VisualElementViewModel VisualElementController;
+		protected readonly VisualElementSwitcher VisualElementController;
 		protected readonly UIElementGetterFacade ElementGetter;
 	
-		protected MenuElement(VisualElement thisElement, VisualElementViewModel visualElementSwitcher, UIElementGetterFacade elementGetter)
+		protected MenuElement(VisualElement thisElement, VisualElementSwitcher visualElementSwitcher, UIElementGetterFacade elementGetter)
 		{
 			ThisElement = thisElement;
 			VisualElementController = visualElementSwitcher;

@@ -5,6 +5,7 @@ using Sources.DIService;
 using Sources.Infrastructure.UI;
 using Sources.InfrastructureInterfaces;
 using Sources.Services;
+using Sources.ServicesInterfaces;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UIElements;
@@ -23,18 +24,20 @@ namespace Sources.Application
 		private VisualElement _startMenu;
 		private UIElementGetterFacade _uiElementGetter;
 
-		private VisualElementViewModel _visualElementSwitcher;
+		private VisualElementSwitcher _visualElementSwitcher;
 
 		private List<Button> _allButtons = new();
 		private ISceneConfigGetter _sceneConfigGetter;
 		private IGameStateMachine _gameStateMachine;
+		private ILocalizationService _localization;
 
 		private void Start()
 		{
 			_gameStateMachine = GameServices.Container.Get<IGameStateMachine>();
 			_sceneConfigGetter = GameServices.Container.Get<ISceneConfigGetter>();
+			_localization = GameServices.Container.Get<ILocalizationService>();
 			_uiElementGetter = GetComponent<UIElementGetterFacade>();
-			_visualElementSwitcher = new VisualElementViewModel();
+			_visualElementSwitcher = new VisualElementSwitcher();
 
 			CreateMenuWindows();
 			_allButtons = _uiElementGetter.GetAllByType<Button>();
@@ -51,7 +54,8 @@ namespace Sources.Application
 				_uiElementGetter,
 				_visualElementSwitcher,
 				_sceneConfigGetter,
-				_gameStateMachine
+				_gameStateMachine,
+				_localization
 			);
 		}
 

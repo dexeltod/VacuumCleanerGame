@@ -1,3 +1,4 @@
+using Joystick_Pack.Scripts.Base;
 using Sources.ServicesInterfaces;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace Sources.Infrastructure.Scene
 		public PlayerTransformable(Transform transform, Joystick joystick, IPlayerStatsService stats) : base(transform)
 		{
 			//TODO: need to fix stats getting
-			int speed = stats.GetConvertedProgressValue("Speed");
+			// int speed = stats.GetConvertedProgressValue("Speed");
 			_speed = 4;
 			_joystick = joystick;
 		}

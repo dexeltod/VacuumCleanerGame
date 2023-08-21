@@ -19,7 +19,7 @@ namespace Sources.Application.Utils.Configs
 	public class GameObjects
 	{
 		public readonly string Game = "Game/SceneConfigs/Game";
-		public readonly string LeanLocalization = "Localization/LeanLocalisation";
+		public readonly string LeanLocalization = "Localization/LeanLocalization";
 	}
 
 	public class UIResources
@@ -31,7 +31,7 @@ namespace Sources.Application.Utils.Configs
 
 	public class Configs
 	{
-		public readonly string Localization = "Config/LocalizationPhrases";
+		public readonly string Localization = "Config/Localization";
 		public readonly string ShopItems = "UI/Shop/ShopItems";
 	}
 }

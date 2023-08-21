@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Lean.Localization;
 using Sources.Application.Utils.Configs;
@@ -10,6 +11,7 @@ namespace Sources.Services.Localization
 	public class LocalizationService : ILocalizationService
 	{
 		private readonly string[] _phraseNames;
+		private readonly string[] _languages;
 
 		public LocalizationService()
 		{
@@ -17,46 +19,80 @@ namespace Sources.Services.Localization
 
 			LeanLocalization leanLocalization = LoadAssets(resourceProvider, out var localizationData);
 
+			_languages = new string[localizationData.Languages.Count];
+			_phraseNames = new string[localizationData.Phrases.Count];
+
 			AddLanguages(localizationData, leanLocalization);
 			CreatePhrases(localizationData, leanLocalization);
 
-			_phraseNames = new string[localizationData.Phrases.Count];
+			LeanLocalization.SetCurrentLanguageAll("Russian");
+			LeanLocalization.UpdateTranslations();
+		}
 
-			for (int i = 0; i < localizationData.Phrases.Count; i++)
-			{
-				Phrase phrase = localizationData.Phrases[i];
-				_phraseNames[i] = phrase.Name;
-			}
+		public string GetTranslationText(string phrase)
+		{
+			string phraseHuy = _phraseNames.FirstOrDefault(elem => elem == phrase);
+
+			string huy = LeanLocalization.GetTranslationText(phraseHuy);
+			return huy;
+		}
+
+		public void SetLocalLanguage(string language)
+		{
+			if (_languages.Contains(language) == false)
+				throw new InvalidOperationException($"Language {language} is not existing");
+
+			LeanLocalization.SetCurrentLanguageAll(language);
 		}
 
 		private LeanLocalization LoadAssets(IResourceProvider resourceProvider, out LocalizationRoot localizationData)
 		{
 			LeanLocalization leanLocalization =
-				resourceProvider.Load<LeanLocalization>(ResourcesAssetPath.GameObjects.LeanLocalization);
+				resourceProvider.InstantiateAndGetComponent<LeanLocalization>(ResourcesAssetPath.GameObjects
+					.LeanLocalization);
 
-			localizationData = JsonUtility.FromJson<LocalizationRoot>(ResourcesAssetPath.Configs.Localization);
+			string config = resourceProvider.Load<TextAsset>(ResourcesAssetPath.Configs.Localization).text;
+
+			localizationData = JsonUtility.FromJson<LocalizationRoot>(config);
 			return leanLocalization;
 		}
 
-		public string GetTranslationText(string phrase) =>
-			LeanLocalization.GetTranslationText(_phraseNames.FirstOrDefault(elem => elem == phrase));
-
 		private void AddLanguages(LocalizationRoot localizationData, LeanLocalization leanLocalization)
 		{
-			foreach (string language in localizationData.Languages)
+			for (int i = 0; i < localizationData.Languages.Count; i++)
+			{
+				string language = localizationData.Languages[i];
+				_languages[i] = language;
 				leanLocalization.AddLanguage(language);
+			}
 		}
 
 		private void CreatePhrases(LocalizationRoot localizationData, LeanLocalization leanLocalization)
 		{
-			for (var i = 0; i < localizationData.Phrases.Count; i++)
+			for (var x = 0; x < localizationData.Phrases.Count; x++)
 			{
-				LeanPhrase phrase = leanLocalization.AddPhrase(localizationData.Phrases[i].Name);
+				LeanPhrase phrase = leanLocalization.AddPhrase(localizationData.Phrases[x].Name);
 
-				phrase.AddEntry(
-					localizationData.Phrases[i].Translations[i].Language,
-					localizationData.Phrases[i].Translations[i].Text
-				);
+				for (int i = 0; i < _languages.Length; i++)
+				{
+					Phrase phraseData = localizationData.Phrases[x];
+
+					phrase.AddEntry(
+						phraseData.Translations[i].Language,
+						phraseData.Translations[i].Text
+					);
+				}
+			}
+
+			InitPhraseNames(localizationData);
+		}
+
+		private void InitPhraseNames(LocalizationRoot localizationData)
+		{
+			for (int i = 0; i < localizationData.Phrases.Count; i++)
+			{
+				Phrase phrase = localizationData.Phrases[i];
+				_phraseNames[i] = phrase.Name;
 			}
 		}
 	}

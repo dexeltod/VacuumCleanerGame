@@ -17,7 +17,7 @@
           "Text": "Upgrade"
         },
         {
-          "Language": "Trukish",
+          "Language": "Turkish",
           "Text": "Geliştirmek"
         }
       ]
@@ -31,7 +31,7 @@
         },
         {
           "Language": "English",
-          "Text": "Нет"
+          "Text": "Yes"
         },
         {
           "Language": "Turkish",
@@ -74,6 +74,23 @@
       ]
     },
     {
+      "Name": "SpeedUpgrade",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Cкорость"
+        },
+        {
+          "Language": "English",
+          "Text": "Speed"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Hız"
+        }
+      ]
+    },
+    {
       "Name": "PlayButton",
       "Translations": [
         {
@@ -87,6 +104,40 @@
         {
           "Language": "Turkish",
           "Text": "Oynamak"
+        }
+      ]
+    },
+    {
+      "Name": "VaccumRangeDescription",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Область сбора"
+        },
+        {
+          "Language": "English",
+          "Text": "Collection area"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Toplama alanı"
+        }
+      ]
+    },
+    {
+      "Name": "VaccumRange",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Область"
+        },
+        {
+          "Language": "English",
+          "Text": "Range"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Menzil"
         }
       ]
     }

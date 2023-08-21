@@ -1,29 +1,4 @@
 .button {
-    -unity-font: url('project://database/Assets/HyperCasualAssets/GUI%20Kit%20Casual%20Game/ResourcesData/Fonts/LilitaOne-Regular.ttf?fileID=12800000&guid=c16eb7d7c3953489db00312b8b09df4b&type=3#LilitaOne-Regular');
+    -unity-font: url('project://database/Assets/Fonts/MakiSans.otf?fileID=12800000&guid=c4a2ce0dab29b144f808c162ea42e2b9&type=3#MakiSans');
     -unity-font-definition: none;
-    background-image: url('project://database/Assets/HyperCasualAssets/GUI%20Kit%20Casual%20Game/ResourcesData/Sprite/Pass/_backup/_0002_pass_prg_bar.png?fileID=21300000&guid=b367987edc6cd41ada86fbcf1912a187&type=3#_0002_pass_prg_bar');
-    -unity-background-image-tint-color: rgb(255, 255, 255);
-    -unity-background-scale-mode: scale-to-fit;
-    background-color: rgba(0, 0, 0, 0);
-    border-left-width: 0;
-    border-right-width: 0;
-    border-top-width: 0;
-    border-bottom-width: 0;
-    transition-duration: 0.1s;
-}
-
-.button:hover {
-    -unity-font: url('project://database/Assets/HyperCasualAssets/GUI%20Kit%20Casual%20Game/ResourcesData/Fonts/LilitaOne-Regular.ttf?fileID=12800000&guid=c16eb7d7c3953489db00312b8b09df4b&type=3#LilitaOne-Regular');
-    -unity-font-definition: none;
-    background-image: url('project://database/Assets/HyperCasualAssets/GUI%20Kit%20Casual%20Game/ResourcesData/Sprite/Pass/_backup/_0002_pass_prg_bar.png?fileID=21300000&guid=b367987edc6cd41ada86fbcf1912a187&type=3#_0002_pass_prg_bar');
-    -unity-background-image-tint-color: rgb(255, 255, 255);
-    -unity-background-scale-mode: scale-to-fit;
-    background-color: rgba(0, 0, 0, 0);
-    border-left-width: 0;
-    border-right-width: 0;
-    border-top-width: 0;
-    border-bottom-width: 0;
-    scale: 1.2 1.2;
-    transition-delay: 0s;
-    transition-duration: 0.1s;
 }

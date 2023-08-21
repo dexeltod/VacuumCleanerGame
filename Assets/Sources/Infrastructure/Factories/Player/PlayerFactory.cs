@@ -1,3 +1,4 @@
+using Joystick_Pack.Scripts.Base;
 using Sources.Application.Utils.Configs;
 using Sources.DIService;
 using Sources.Infrastructure.Scene;
