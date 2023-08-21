@@ -82,7 +82,7 @@ namespace Sources.Application.MainMenu
 		private void OnPlay()
 		{
 			_visualElementSwitcher.Disable(ThisElement);
-			SceneConfig sceneConfig = _sceneConfigGetter.GetSceneConfig(ResourcesAssetPath.SceneConfigs.Game);
+			SceneConfig sceneConfig = _sceneConfigGetter.GetSceneConfig(ResourcesAssetPath.GameObjects.Game);
 			
 			_gameStateMachine.Enter<SceneLoadState, string>(sceneConfig.SceneName);
 		}

@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
+using Lean.Localization;
+using Sources.DIService;
 using Sources.InfrastructureInterfaces;
 using Sources.PresentationInterfaces;
+using Sources.ServicesInterfaces;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Sources.View.UI.Shop
 {
-	public class UpgradeElementPrefab : MonoBehaviour, IUpgradeElementConstructable, IUpgradeInteractable, IColorChangeable
+	public class UpgradeElementPrefab : MonoBehaviour, IUpgradeElementConstructable, IUpgradeInteractable,
+		IColorChangeable
 	{
 		[Header("Points")] [SerializeField] private int _maxPoints = 6;
 
@@ -33,16 +37,17 @@ namespace Sources.View.UI.Shop
 		public string IdName => _itemData.IdName;
 		public event Action<IUpgradeItemData> BuyButtonPressed;
 
-		public IUpgradeElementConstructable Construct(IUpgradeItemData itemData, IUpgradeItemPrefabData viewInfo)
+		public IUpgradeElementConstructable Construct(IUpgradeItemData itemData, IUpgradeItemPrefab viewInfo)
 		{
 			if (_isInit)
 				throw new InvalidOperationException("Item view is already constructed");
 
 			_boughtPoints = itemData.PointLevel;
-
 			_itemData = itemData;
 
-			_title.SetText(itemData.Title);
+			ILocalizationService localisation = GameServices.Container.Get<ILocalizationService>();
+
+			_title.SetText(localisation.GetTranslationText(itemData.Title));
 			_price.SetText(itemData.Price.ToString());
 			_description.SetText(itemData.Description);
 			_icon.sprite = viewInfo.Icon;

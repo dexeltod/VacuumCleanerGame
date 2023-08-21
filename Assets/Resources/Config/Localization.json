@@ -1,0 +1,94 @@
+{
+  "Languages": [
+    "Russian",
+    "English",
+    "Turkish"
+  ],
+  "Phrases": [
+    {
+      "Name": "UpgradeTitle",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Улучшить"
+        },
+        {
+          "Language": "English",
+          "Text": "Upgrade"
+        },
+        {
+          "Language": "Trukish",
+          "Text": "Geliştirmek"
+        }
+      ]
+    },
+    {
+      "Name": "Yes",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Да"
+        },
+        {
+          "Language": "English",
+          "Text": "Нет"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Evet"
+        }
+      ]
+    },
+    {
+      "Name": "No",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Нет"
+        },
+        {
+          "Language": "English",
+          "Text": "No"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Yok"
+        }
+      ]
+    },
+    {
+      "Name": "SpeedUpgradeDescription",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Увеличь скорость машины"
+        },
+        {
+          "Language": "English",
+          "Text": "Increase car speed"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Araba hızını artırın"
+        }
+      ]
+    },
+    {
+      "Name": "PlayButton",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Играть"
+        },
+        {
+          "Language": "English",
+          "Text": "Play"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Oynamak"
+        }
+      ]
+    }
+  ]
+}

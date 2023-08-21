@@ -25,7 +25,7 @@ namespace Sources.Infrastructure.Factories
 		{
 			List<IUpgradeProgressData> progress = _shopProgress.GetAll();
 
-			UpgradeItemList items = _assetProvider.Load<UpgradeItemList>(ResourcesAssetPath.ShopConfig.ShopItems);
+			UpgradeItemList items = _assetProvider.Load<UpgradeItemList>(ResourcesAssetPath.Configs.ShopItems);
 			InitItems(progress, items);
 
 			return Instantiate(transform, items, progress);

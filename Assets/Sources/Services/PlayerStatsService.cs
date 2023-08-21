@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sources.DomainInterfaces;
-using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.ServicesInterfaces;
 using UnityEngine;
@@ -18,14 +17,22 @@ namespace Sources.Services
 		public PlayerStatsService(IPersistentProgressService progressService, IShopItemFactory itemFactory)
 		{
 			_progress = progressService.GameProgress.PlayerProgress.GetAll();
-
 			_statNames = new string[_progress.Count];
-			Dictionary<string, int[]> dada = new();
- 
+
+			Dictionary<string, int[]> stats = new();
+
 			for (int i = 0; i < _progress.Count; i++)
 				_statNames[i] = _progress[i].Name;
 
-			IReadOnlyList<int> speedStats = new List<int>(7) { 2, 5, 7, 8, 10, 12, 15 };
+			int[] speedStats = new[]
+			{
+				2, 5, 7, 8, 10, 12, 15
+			};
+
+			int[] vacuumDistance = new[]
+			{
+				2, 3, 4, 5, 6, 7, 8
+			};
 
 			// _converter = new ShopPointsToStatsConverter();
 		}

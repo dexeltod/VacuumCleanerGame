@@ -1,7 +1,6 @@
 using System;
 using Sources.Application.Utils.Configs;
 using Sources.DIService;
-using Sources.Infrastructure.ScriptableObjects;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.ServicesInterfaces;
@@ -25,7 +24,7 @@ namespace Sources.Infrastructure.Factories.UpgradeShop
 				return _items;
 
 			UpgradeItemList upgradeItemList =
-				_assetProvider.Load<UpgradeItemList>(ResourcesAssetPath.ShopConfig.ShopItems);
+				_assetProvider.Load<UpgradeItemList>(ResourcesAssetPath.Configs.ShopItems);
 
 			IUpgradeItemData[] upgradeItemData = upgradeItemList.Items;
 

@@ -1,10 +1,10 @@
 using Sources.Application.Utils.Configs;
 using Sources.DIService;
+using Sources.Infrastructure.Scene;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.Services;
 using Sources.Services.Character;
-using Sources.Services.Scene;
 using Sources.ServicesInterfaces;
 using UnityEngine;
 
@@ -44,7 +44,7 @@ namespace Sources.Infrastructure.Factories.Player
 
 		private void Create(GameObject initialPoint)
 		{
-			var playerPresenter = _presenterFactory.Instantiate<Services.PlayerServices.Player>(
+			Player playerPresenter = _presenterFactory.Instantiate<Player>(
 				ResourcesAssetPath.Scene.Player,
 				initialPoint.transform.position);
 

@@ -1,4 +1,5 @@
 using System.ComponentModel.Design;
+using Lean.Localization;
 using Sources.Application.StateMachineInterfaces;
 using Sources.Application.Utils.Configs;
 using Sources.DIService;
@@ -9,7 +10,9 @@ using Sources.InfrastructureInterfaces.Scene;
 using Sources.Services;
 using Sources.Services.DomainServices;
 using Sources.Services.Interfaces;
+using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
+using UnityEngine;
 
 namespace Sources.Application.StateMachine.GameStates
 {
@@ -46,7 +49,11 @@ namespace Sources.Application.StateMachine.GameStates
 			_gameServices.Register<IGameStateMachine>(_gameStateMachine);
 
 			_gameServices.Register<IPersistentProgressService>(new PersistentProgressService());
-			_gameServices.Register<IResourceProvider>(new ResourceProvider());
+			IResourceProvider resourceProvider =_gameServices.Register<IResourceProvider>(new ResourceProvider());
+
+			LocalizationProvider localizationProvider = new LocalizationProvider(resourceProvider);
+			
+			_gameServices.Register<ILocalizationService>(new LocalizationService());
 
 			SceneLoadInformer sceneLoadInformer = new SceneLoadInformer();
 
@@ -60,6 +67,24 @@ namespace Sources.Application.StateMachine.GameStates
 			_gameServices.Register<ISceneConfigGetter>(new SceneConfigGetter());
 
 			_gameServices.Register<ISaveLoadDataService>(new SaveLoadDataService());
+		}
+	}
+
+	public class LocalizationProvider
+	{
+
+		public LocalizationProvider(IResourceProvider resourceProvider)
+		{
+			LeanLocalization leanLocalization =
+				resourceProvider.Load<LeanLocalization>(ResourcesAssetPath.GameObjects.LeanLocalization);
+
+			LocalizationRoot localizationData =
+				JsonUtility.FromJson<LocalizationRoot>(ResourcesAssetPath.Configs.Localization);
+		}
+
+		public void GetLocalizationRoot()
+		{
+			
 		}
 	}
 }

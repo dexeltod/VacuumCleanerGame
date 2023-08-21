@@ -3,8 +3,8 @@ namespace Sources.Application.Utils.Configs
 	public static class ResourcesAssetPath
 	{
 		public static readonly SceneResources Scene = new();
-		public static readonly SceneConfigResources SceneConfigs = new();
-		public static readonly ShopConfigResources ShopConfig = new();
+		public static readonly GameObjects GameObjects = new();
+		public static readonly Configs Configs = new();
 	}
 
 	public class SceneResources
@@ -16,9 +16,10 @@ namespace Sources.Application.Utils.Configs
 		public readonly string Player = "Game/Player/Player";
 	}
 
-	public class SceneConfigResources
+	public class GameObjects
 	{
 		public readonly string Game = "Game/SceneConfigs/Game";
+		public readonly string LeanLocalization = "Localization/LeanLocalisation";
 	}
 
 	public class UIResources
@@ -28,8 +29,9 @@ namespace Sources.Application.Utils.Configs
 		public readonly string UpgradeElement = "UI/Shop/ShopItemList/UpgradeElement/UpgradeElement";
 	}
 
-	public class ShopConfigResources
+	public class Configs
 	{
+		public readonly string Localization = "Config/LocalizationPhrases";
 		public readonly string ShopItems = "UI/Shop/ShopItems";
 	}
 }

@@ -27,13 +27,13 @@ namespace Sources.View
 
 		private void OnTriggerEnter(Collider other)
 		{
-			if (other.TryGetComponent(out Player _)) 
+			if (other.TryGetComponent(out IPlayer _)) 
 				_upgradeWindow.SetActiveYesNoButtons(true);
 		}
 		
 		private void OnTriggerExit(Collider other)
 		{
-			if (other.TryGetComponent(out Player _)) 
+			if (other.TryGetComponent(out IPlayer _)) 
 				_upgradeWindow.SetActiveYesNoButtons(false);
 		}
 	}
