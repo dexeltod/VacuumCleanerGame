@@ -1,15 +1,20 @@
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachineInterfaces;
 using Sources.Application.UI;
+using Sources.Application.Utils;
 using Sources.DIService;
+using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.Infrastructure;
 using Sources.Infrastructure.DataViewModel;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Player;
 using Sources.Infrastructure.Factories.UpgradeShop;
-using Sources.Infrastructure.ScriptableObjects;
 using Sources.Infrastructure.Shop;
-using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.Services;
+using Sources.Services.DomainServices;
 using Sources.Services.Interfaces;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
@@ -27,10 +32,10 @@ namespace Sources.Application.StateMachine.GameStates
 			_gameServices = gameServices;
 		}
 
-		public void Enter()
+		public async UniTask Enter()
 		{
 			RegisterServices();
-			_gameStateMachine.Enter<MenuState>();
+			await _gameStateMachine.Enter<MenuState>();
 		}
 
 		public void Exit()
@@ -40,17 +45,27 @@ namespace Sources.Application.StateMachine.GameStates
 		private void RegisterServices()
 		{
 			IShopItemFactory shopItemFactory = new ShopItemFactory();
+			ResourceServiceFactory resourceServiceFactory = new ResourceServiceFactory();
 
-			InitProgress(_gameServices.Get<ISaveLoadDataService>(),
+			Dictionary<ResourceType, IResource<int>> intResources = resourceServiceFactory.GetIntResources();
+			Dictionary<ResourceType, IResource<float>> floatResources = resourceServiceFactory.GetFloatResources();
+
+			_gameServices.Register<IResourceService>(new ResourcesService(intResources, floatResources));
+
+			InitProgress
+			(_gameServices.Get<ISaveLoadDataService>(),
 				_gameServices.Get<IPersistentProgressService>(), shopItemFactory
 			);
 
 			IPersistentProgressService progressService = _gameServices.Get<IPersistentProgressService>();
-			_gameServices.Register<IPlayerStatsService>(new PlayerStatsService(progressService, shopItemFactory));
 
-			_gameServices.Register<IPlayerProgressViewModel>(new PlayerProgressViewModel());
-			_gameServices.Register<IResourcesProgressViewModel>(new ResourcesViewModel());
-			_gameServices.Register<IShopProgressViewModel>(new ShopProgressViewModel());
+			PlayerStatsFactory statsFactory = new PlayerStatsFactory(shopItemFactory);
+
+			_gameServices.Register<IPlayerStatsService>(statsFactory.CreatePlayerStats(progressService));
+
+			_gameServices.Register<IPlayerProgressProvider>(new PlayerProgressProvider());
+			_gameServices.Register<IResourcesProgressPresenter>(new ResourcesPresenter());
+			_gameServices.Register<IShopProgressProvider>(new ShopProgressProvider());
 
 			CreateUIServices();
 
@@ -58,13 +73,26 @@ namespace Sources.Application.StateMachine.GameStates
 
 			_gameServices.Register<IUpgradeWindowFactory>(upgradeWindowFactory);
 			_gameServices.Register<IUpgradeWindowGetter>(upgradeWindowFactory);
-			_gameServices.Register<IPlayerFactory>(new PlayerFactory(_gameServices.Get<IResourceProvider>()));
+
+			_gameServices.Register<IPlayerFactory>
+			(
+				new PlayerFactory
+				(
+					_gameServices.Get<IAssetProvider>()
+				)
+			);
 		}
 
 		private void InitProgress(ISaveLoadDataService saveLoadService,
 			IPersistentProgressService persistentProgressService, IShopItemFactory shopItemFactory)
 		{
-			var progressFactory = new ProgressFactory(saveLoadService, persistentProgressService, shopItemFactory);
+			var progressFactory = new ProgressFactory
+			(
+				saveLoadService,
+				persistentProgressService,
+				shopItemFactory
+			);
+			
 			progressFactory.InitProgress();
 		}
 

@@ -11,8 +11,8 @@ namespace Sources.Services
 {
 	public class UIFactory : IUIFactory
 	{
-		private readonly IResourceProvider _assetProvider;
-		private readonly IResourcesProgressViewModel _resourcesProgressViewModel;
+		private readonly IAssetProvider _assetProvider;
+		private readonly IResourcesProgressPresenter _resourcesProgressPresenter;
 		private readonly IPersistentProgressService _gameProgress;
 		private GameplayInterfaceView _gameInterface;
 		public GameObject GameObject { get; private set; }
@@ -24,8 +24,8 @@ namespace Sources.Services
 
 		public UIFactory()
 		{
-			_assetProvider = GameServices.Container.Get<IResourceProvider>();
-			_resourcesProgressViewModel = GameServices.Container.Get<IResourcesProgressViewModel>();
+			_assetProvider = GameServices.Container.Get<IAssetProvider>();
+			_resourcesProgressPresenter = GameServices.Container.Get<IResourcesProgressPresenter>();
 			_gameProgress = GameServices.Container.Get<IPersistentProgressService>();
 		}
 
@@ -34,7 +34,7 @@ namespace Sources.Services
 			GameObject instance = _assetProvider.Instantiate(ResourcesAssetPath.Scene.UI.UI);
 			_gameInterface = instance.GetComponent<GameplayInterfaceView>();
 			
-			_gameInterface.Construct(_resourcesProgressViewModel, _gameProgress.GameProgress.ResourcesData.MaxFilledScore);
+			_gameInterface.Construct(_resourcesProgressPresenter, _gameProgress.GameProgress.ResourcesData.MaxFilledScore);
 
 			Canvas = _gameInterface.Canvas;
 			GameObject = _gameInterface.gameObject;

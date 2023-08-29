@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Sources.Services.Localization
+namespace Sources.Services.Localization.Serializable
 {
 	[Serializable]
 	public class LocalizationRoot

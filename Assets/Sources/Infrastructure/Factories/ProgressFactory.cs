@@ -1,25 +1,26 @@
 using System.Collections.Generic;
 using Sources.Application.Utils;
+using Sources.DIService;
+using Sources.Domain;
 using Sources.Domain.Progress;
 using Sources.Domain.Progress.Player;
-using Sources.Domain.Progress.ResourcesData;
 using Sources.DomainInterfaces;
-using Sources.Infrastructure.ScriptableObjects;
-using Sources.InfrastructureInterfaces;
+using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
+using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.ServicesInterfaces;
-using Sources.ServicesInterfaces.UI;
 
 namespace Sources.Infrastructure.Factories
 {
 	public class ProgressFactory
 	{
-		private const int StartMoneyCount = 1000;
-		private const string SpeedProgressName = "Speed";
+		private const int StartMoneyCount = 9999;
 
 		private readonly ISaveLoadDataService _saveLoadService;
 		private readonly IPersistentProgressService _persistentProgressService;
 		private readonly IShopItemFactory _shopFactory;
+		private readonly IResourceService _resourceService;
+		private readonly IUpgradeStatsProvider _provider;
 
 		public ProgressFactory(ISaveLoadDataService saveLoadService,
 			IPersistentProgressService persistentProgressService, IShopItemFactory shopItemFactory)
@@ -27,6 +28,8 @@ namespace Sources.Infrastructure.Factories
 			_saveLoadService = saveLoadService;
 			_persistentProgressService = persistentProgressService;
 			_shopFactory = shopItemFactory;
+			_resourceService = GameServices.Container.Get<IResourceService>();
+			_provider = GameServices.Container.Get<IUpgradeStatsProvider>();
 		}
 
 		public void InitProgress()
@@ -39,7 +42,7 @@ namespace Sources.Infrastructure.Factories
 		{
 			if (loadedProgress == null)
 			{
-				var newProgress = CreateNewProgress();
+				IGameProgressModel newProgress = CreateNewProgress();
 				loadedProgress = newProgress;
 			}
 
@@ -48,7 +51,9 @@ namespace Sources.Infrastructure.Factories
 
 		private GameProgressModel CreateNewProgress()
 		{
-			IUpgradeItemData[] itemsList =  _shopFactory.LoadItems();
+			StatsConfig config = _provider.LoadConfig();
+
+			IUpgradeItemData[] itemsList = _shopFactory.LoadItems();
 
 			GameProgressModel newProgress = CreateProgress(itemsList);
 
@@ -60,11 +65,20 @@ namespace Sources.Infrastructure.Factories
 
 		private GameProgressModel CreateProgress(IUpgradeItemData[] itemsList)
 		{
-			ResourcesData resourcesData = new ResourcesData(new Resource(ResourceType.Soft), StartMoneyCount);
+			IResource<int> soft = GetResource(ResourceType.Soft);
+			IResource<int> hard = GetResource(ResourceType.Hard);
 
-			PlayerProgress playerProgressModel = new PlayerProgress(CreateNewUpgradeProgressData(itemsList));
+			ResourcesData resourcesData = new ResourcesData
+			(
+				soft,
+				hard,
+				StartMoneyCount
+			);
 
-			ShopProgress shopProgressModel = new(CreateNewUpgradeProgressData(itemsList), new List<int>());
+			PlayerProgress playerProgressModel =
+				new PlayerProgress(CreateNewUpgradeProgressData(itemsList));
+
+			ShopProgress shopProgressModel = new(CreateNewUpgradeProgressData(itemsList));
 
 			GameProgressModel newProgress = new GameProgressModel
 			(
@@ -76,17 +90,20 @@ namespace Sources.Infrastructure.Factories
 			return newProgress;
 		}
 
+		private IResource<int> GetResource(ResourceType type) => 
+			_resourceService.GetResource<int>(type);
+
 		private List<IUpgradeProgressData> CreateNewUpgradeProgressData(IUpgradeItemData[] itemsList)
 		{
-			List<IUpgradeProgressData> data = new List<IUpgradeProgressData>();
+			List<IUpgradeProgressData> progressList = new List<IUpgradeProgressData>();
 
-			foreach (var item in itemsList)
+			foreach (var itemData in itemsList)
 			{
-				data.Add(new ProgressUpgradeData(item.IdName, item.PointLevel));
-				item.SetUpgradeLevel(0);
+				progressList.Add(new ProgressUpgradeData(itemData.IdName, 0));
+				itemData.SetUpgradeLevel(0);
 			}
 
-			return data;
+			return progressList;
 		}
 	}
 }

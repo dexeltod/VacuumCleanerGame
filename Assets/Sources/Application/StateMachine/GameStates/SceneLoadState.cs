@@ -24,7 +24,7 @@ namespace Sources.Application.StateMachine.GameStates
 		private readonly GameServices _gameServices;
 
 		private GameObject _initialPoint;
-		
+
 		private IPlayerFactory _playerFactory;
 		private IUIFactory _uiFactory;
 
@@ -35,6 +35,7 @@ namespace Sources.Application.StateMachine.GameStates
 		private IUpgradeWindowFactory _upgradeWindowFactory;
 		private IPlayerStatsService _playerStats;
 		private ISaveLoadDataService _saveLoadService;
+		private ILocalizationService _leanLocalization;
 
 		public SceneLoadState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain,
 			GameServices gameServices)
@@ -49,9 +50,10 @@ namespace Sources.Application.StateMachine.GameStates
 		{
 			_sceneLoad.SceneLoaded -= OnSceneLoaded;
 		}
-		
-		public void Enter(string levelName)
+
+		public async UniTask Enter(string levelName)
 		{
+			_leanLocalization = _gameServices.Get<ILocalizationService>();
 			_upgradeWindowFactory = _gameServices.Get<IUpgradeWindowFactory>();
 			_cameraFactory = _gameServices.Get<ICameraFactory>();
 			_playerFactory = _gameServices.Get<IPlayerFactory>();
@@ -59,10 +61,11 @@ namespace Sources.Application.StateMachine.GameStates
 			_sceneLoad = _gameServices.Get<ISceneLoad>();
 			_presenterFactory = _gameServices.Get<IPresenterFactory>();
 			_playerStats = _gameServices.Get<IPlayerStatsService>();
-			
+
 			_loadingCurtain.Show();
 			_sceneLoader.Load(levelName, OnLoaded);
 		}
+
 		private void OnLoaded()
 		{
 			_uiFactory.CreateUI();
@@ -76,20 +79,19 @@ namespace Sources.Application.StateMachine.GameStates
 			_sceneLoad.SceneLoaded += OnSceneLoaded;
 			_sceneLoad.InvokeSceneLoaded();
 			_loadingCurtain.Hide();
+			_leanLocalization.UpdateTranslations();
 		}
 
-		private void OnSceneLoaded()
+		private async void OnSceneLoaded()
 		{
-			_gameStateMachine.Enter<GameLoopState>();
+			await _gameStateMachine.Enter<GameLoopState>();
 			_sceneLoad.SceneLoaded -= OnSceneLoaded;
 		}
- 
+
 		public void Exit() =>
 			_loadingCurtain.Hide();
 
 		private void InstantiateUpgradeWindow() =>
 			_upgradeWindowFactory.Create();
-
-		
 	}
 }

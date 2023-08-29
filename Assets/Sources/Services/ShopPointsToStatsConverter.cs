@@ -19,13 +19,13 @@ namespace Sources.Services
 		public int GetConverted(string name, int value)
 		{
 			if (_stats.ContainsKey(name) == false)
-				throw new ArgumentException("Name is not existing");
+				throw new ArgumentException($"Stat {name} is not existing");
 
 			int[] convertedValues = _stats.FirstOrDefault(element => element.Key == name).Value;
 
 			if (value < 0 || value > convertedValues.Length)
 				throw new ArgumentOutOfRangeException("Value out of range for " + name);
-			
+
 			return convertedValues[value];
 		}
 	}

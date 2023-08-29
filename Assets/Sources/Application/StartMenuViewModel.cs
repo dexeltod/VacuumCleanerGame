@@ -4,6 +4,7 @@ using Sources.Application.StateMachineInterfaces;
 using Sources.DIService;
 using Sources.Infrastructure.UI;
 using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Scene;
 using Sources.Services;
 using Sources.ServicesInterfaces;
 using UnityEngine;
@@ -49,7 +50,7 @@ namespace Sources.Application
 
 		private void CreateMenuWindows()
 		{
-			var mainMenu = new MainMenu.MainMenu(
+			var mainMenu = new MainMenuElement(
 				_uiElementGetter.GetFirst<VisualElement>(MenuVisualElementNames.Menu), 
 				_uiElementGetter,
 				_visualElementSwitcher,

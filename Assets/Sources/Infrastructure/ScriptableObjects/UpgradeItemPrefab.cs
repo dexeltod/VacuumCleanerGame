@@ -1,5 +1,5 @@
 using Sources.Infrastructure.ScriptableObjects.Shop;
-using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.View.UI.Shop;
 using UnityEngine;
 

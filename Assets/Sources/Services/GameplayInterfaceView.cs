@@ -13,7 +13,7 @@ namespace Sources.Services
 		[SerializeField] private TextMeshProUGUI _moneyText;
 		[SerializeField] private Joystick _joystick;
 
-		private IResourcesProgressViewModel _resourcesProgress;
+		private IResourcesProgressPresenter _resourcesProgress;
 		private int _maxScore;
 		private Canvas _canvas;
 		private bool _isInitialized;
@@ -30,7 +30,7 @@ namespace Sources.Services
 			_resourcesProgress.MoneyChanged -= OnMoneyChanged;
 		}
 
-		public void Construct(IResourcesProgressViewModel resourcesProgress, int maxScore)
+		public void Construct(IResourcesProgressPresenter resourcesProgress, int maxScore)
 		{
 			if (_isInitialized)
 				return;

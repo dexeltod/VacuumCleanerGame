@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel.Design;
+using Sources.DomainInterfaces.DomainServicesInterfaces;
 using UnityEngine;
 
 namespace Sources.ServicesInterfaces.UI
@@ -12,6 +14,6 @@ namespace Sources.ServicesInterfaces.UI
 		void OnDestroy();
 		void SetActiveYesNoButtons(bool isActive);
 		Transform ContainerTransform {get;}
-		void Construct();
+		void Construct(IResource<int> resource);
 	}
 }

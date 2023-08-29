@@ -18,20 +18,20 @@ namespace Sources.Application.Utils.Configs
 
 	public class GameObjects
 	{
-		public readonly string Game = "Game/SceneConfigs/Game";
 		public readonly string LeanLocalization = "Localization/LeanLocalization";
+		public readonly string ShopItems = "UI/Shop/ShopItems";
 	}
 
 	public class UIResources
 	{
 		public readonly string UI = "UI/GameplayInterface";
 		public readonly string UpgradeWindow = "UI/Shop/ShopItemList/UpgradeCanvas";
-		public readonly string UpgradeElement = "UI/Shop/ShopItemList/UpgradeElement/UpgradeElement";
 	}
 
 	public class Configs
 	{
+		public readonly string Game = "Game/SceneConfigs/Game";
 		public readonly string Localization = "Config/Localization";
-		public readonly string ShopItems = "UI/Shop/ShopItems";
+		public readonly string ProgressItems = "Config/ProgressItems";
 	}
 }

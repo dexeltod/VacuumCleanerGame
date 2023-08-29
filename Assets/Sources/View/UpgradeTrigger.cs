@@ -1,5 +1,6 @@
 using Sources.DIService;
 using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Scene;
 using Sources.Services.PlayerServices;
 using Sources.ServicesInterfaces.UI;
 using UnityEngine;

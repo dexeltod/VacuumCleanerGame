@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachineInterfaces;
 
 namespace Sources.Application.StateMachine.GameStates
@@ -16,8 +17,9 @@ namespace Sources.Application.StateMachine.GameStates
 			
 		}
 
-		public void Enter()
+		public async UniTask Enter()
 		{
+			
 		}
 	}
 }

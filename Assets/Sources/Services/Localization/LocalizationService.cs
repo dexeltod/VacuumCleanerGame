@@ -3,6 +3,7 @@ using System.Linq;
 using Lean.Localization;
 using Sources.Application.Utils.Configs;
 using Sources.DIService;
+using Sources.Services.Localization.Serializable;
 using Sources.ServicesInterfaces;
 using UnityEngine;
 
@@ -10,14 +11,15 @@ namespace Sources.Services.Localization
 {
 	public class LocalizationService : ILocalizationService
 	{
+		private const string StartLanguane = "Russian";
 		private readonly string[] _phraseNames;
 		private readonly string[] _languages;
 
 		public LocalizationService()
 		{
-			IResourceProvider resourceProvider = GameServices.Container.Get<IResourceProvider>();
+			IAssetProvider assetProvider = GameServices.Container.Get<IAssetProvider>();
 
-			LeanLocalization leanLocalization = LoadAssets(resourceProvider, out var localizationData);
+			LeanLocalization leanLocalization = LoadAssets(assetProvider, out var localizationData);
 
 			_languages = new string[localizationData.Languages.Count];
 			_phraseNames = new string[localizationData.Phrases.Count];
@@ -25,16 +27,22 @@ namespace Sources.Services.Localization
 			AddLanguages(localizationData, leanLocalization);
 			CreatePhrases(localizationData, leanLocalization);
 
-			LeanLocalization.SetCurrentLanguageAll("Russian");
+			//TODO: Need to create detection language
+
+			LeanLocalization.SetCurrentLanguageAll(StartLanguane);
+			LeanLocalization.UpdateTranslations();
+		}
+
+		public void UpdateTranslations()
+		{
 			LeanLocalization.UpdateTranslations();
 		}
 
 		public string GetTranslationText(string phrase)
 		{
-			string phraseHuy = _phraseNames.FirstOrDefault(elem => elem == phrase);
+			string parsedPhrase = _phraseNames.FirstOrDefault(elem => elem == phrase);
 
-			string huy = LeanLocalization.GetTranslationText(phraseHuy);
-			return huy;
+			return LeanLocalization.GetTranslationText(parsedPhrase);
 		}
 
 		public void SetLocalLanguage(string language)
@@ -45,13 +53,13 @@ namespace Sources.Services.Localization
 			LeanLocalization.SetCurrentLanguageAll(language);
 		}
 
-		private LeanLocalization LoadAssets(IResourceProvider resourceProvider, out LocalizationRoot localizationData)
+		private LeanLocalization LoadAssets(IAssetProvider assetProvider, out LocalizationRoot localizationData)
 		{
 			LeanLocalization leanLocalization =
-				resourceProvider.InstantiateAndGetComponent<LeanLocalization>(ResourcesAssetPath.GameObjects
+				assetProvider.InstantiateAndGetComponent<LeanLocalization>(ResourcesAssetPath.GameObjects
 					.LeanLocalization);
 
-			string config = resourceProvider.Load<TextAsset>(ResourcesAssetPath.Configs.Localization).text;
+			string config = assetProvider.Load<TextAsset>(ResourcesAssetPath.Configs.Localization).text;
 
 			localizationData = JsonUtility.FromJson<LocalizationRoot>(config);
 			return leanLocalization;

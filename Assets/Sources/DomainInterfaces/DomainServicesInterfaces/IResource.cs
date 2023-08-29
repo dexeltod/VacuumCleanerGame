@@ -3,11 +3,14 @@ using Sources.Application.Utils;
 
 namespace Sources.DomainInterfaces.DomainServicesInterfaces
 {
-	public interface IResource<in T>
+	public interface IResource<T> : IResourceChangeable<T>
 	{
 		ResourceType ResourceType { get; }
-		int Count { get; set; }
+		T Count { get; }
 
-		event Action<int> CountChanged;
+		event Action<T> ResourceChanged;
+		void Set(T value);
+		void Increase(T value);
+		void Decrease(T value);
 	}
 }

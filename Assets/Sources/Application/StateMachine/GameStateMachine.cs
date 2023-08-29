@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachine.GameStates;
 using Sources.Application.StateMachineInterfaces;
 using Sources.DIService;
@@ -34,24 +35,24 @@ namespace Sources.Application.StateMachine
 
 		}
 
-		public void Enter<TState>() where TState : class, IGameState
+		public async UniTask Enter<TState>() where TState : class, IGameState
 		{
 			var state = ChangeState<TState>();
-			state.Enter();
+			await state.Enter();
 		}
 
-		public void Enter<TState, TPayload>(TPayload payload) where TState : class, IPayloadState<TPayload>
+		public async UniTask Enter<TState, TPayload>(TPayload payload) where TState : class, IPayloadState<TPayload>
 		{
 			TState state = ChangeState<TState>();
-			state.Enter(payload);
+			await state.Enter(payload);
 		}
 
-		public void Enter<TState, TPayload, T>(TPayload payload, string musicName,
+		public async UniTask Enter<TState, TPayload, T>(TPayload payload, string musicName,
 			bool isLevelNameIsStopMusicBetweenScenes
 		) where TState : class, IPayloadState<TPayload>
 		{
 			TState state = ChangeState<TState>();
-			state.Enter(payload);
+			await state.Enter(payload);
 
 			SetOrStopMusic<TState, TPayload>(isLevelNameIsStopMusicBetweenScenes, musicName);
 		}
@@ -61,6 +62,8 @@ namespace Sources.Application.StateMachine
 		{
 			if (musicName == _currentMusicName || string.IsNullOrWhiteSpace(musicName) == true)
 				return;
+			
+			//TODO: Need to create music... maybe.
 		}
 
 		private TState ChangeState<TState>() where TState : class, IExitState

@@ -6,11 +6,11 @@ namespace Sources.Services.PlayerServices
 {
 	public class PlayerResources : MonoBehaviour
 	{
-		private IResourcesProgressViewModel _resourcesProgress;
+		private IResourcesProgressPresenter _resourcesProgress;
 
 		private void Awake()
 		{
-			_resourcesProgress = GameServices.Container.Get<IResourcesProgressViewModel>();
+			_resourcesProgress = GameServices.Container.Get<IResourcesProgressPresenter>();
 		}
 
 		public void SellSand() =>

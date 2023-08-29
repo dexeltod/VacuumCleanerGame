@@ -12,7 +12,7 @@ namespace Sources.Infrastructure.Factories
 	{
 		private const string MainCameraPath = "MainCamera";
 		private const string VirtualCameraPath = "VirtualCamera";
-		private readonly IResourceProvider _assetProvider;
+		private readonly IAssetProvider _assetProvider;
 		private IPlayerFactory _playerFactory;
 
 		private GameObject _characterObject;
@@ -20,7 +20,7 @@ namespace Sources.Infrastructure.Factories
 
 		public CameraFactory()
 		{
-			_assetProvider = GameServices.Container.Get<IResourceProvider>();
+			_assetProvider = GameServices.Container.Get<IAssetProvider>();
 		}
 
 		public CinemachineVirtualCamera CreateVirtualCamera()

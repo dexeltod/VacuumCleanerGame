@@ -13,17 +13,17 @@ namespace Sources.View.SceneEntity
 
 		private Mesh _mesh;
 		private List<Vector3> _newVertices;
-		private IResourcesProgressViewModel _resourcesProgressViewModel;
+		private IResourcesProgressPresenter _resourcesProgressPresenter;
 
 		private void Start()
 		{
 			_mesh = GetComponent<MeshFilter>().mesh;
-			_resourcesProgressViewModel = GameServices.Container.Get<IResourcesProgressViewModel>();
+			_resourcesProgressPresenter = GameServices.Container.Get<IResourcesProgressPresenter>();
 		}
 
 		private void OnCollisionEnter(Collision collision)
 		{
-			if (_resourcesProgressViewModel.CheckMaxScore() == false)
+			if (_resourcesProgressPresenter.CheckMaxScore() == false)
 				return;
 
 			if (collision.collider.TryGetComponent(out VacuumTool _))
@@ -53,7 +53,7 @@ namespace Sources.View.SceneEntity
 					_mesh.RecalculateNormals();
 					_mesh.RecalculateBounds();
 					GetComponent<MeshCollider>().sharedMesh = _mesh;
-					_resourcesProgressViewModel.AddSand(SendScoreCount);
+					_resourcesProgressPresenter.AddSand(SendScoreCount);
 				}
 			}
 		}

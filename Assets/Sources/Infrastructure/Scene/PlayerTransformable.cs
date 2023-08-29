@@ -6,20 +6,29 @@ namespace Sources.Infrastructure.Scene
 {
 	public class PlayerTransformable : Transformable, IUpdatable
 	{
-		private const float MaxMoveHeight = 2f;
+		private const float MaxTransformHeight = 2f;
+		private const string SpeedName = "Speed";
 
 		public readonly float VacuumDistance;
-		private readonly float _speed;
-
+		
+		private float _speed;
 		private readonly Joystick _joystick;
+		private readonly IPlayerStat _speedStat;
+
 		private Vector3 _offset;
 
 		public PlayerTransformable(Transform transform, Joystick joystick, IPlayerStatsService stats) : base(transform)
 		{
-			//TODO: need to fix stats getting
-			// int speed = stats.GetConvertedProgressValue("Speed");
-			_speed = 4;
+			_speedStat = stats.GetPlayerStat(SpeedName);
+			_speedStat.ValueChanged += OnPlayerStatChanged;
+
+			_speed = _speedStat.Value;
 			_joystick = joystick;
+		}
+
+		private void OnPlayerStatChanged()
+		{
+			_speed = _speedStat.Value;
 		}
 
 		public void Update(float deltaTime) =>
@@ -32,8 +41,8 @@ namespace Sources.Infrastructure.Scene
 
 			_offset = Transform.position + direction;
 
-			if (Transform.position.y > MaxMoveHeight)
-				_offset.y = MaxMoveHeight;
+			if (Transform.position.y > MaxTransformHeight)
+				_offset.y = MaxTransformHeight;
 
 			MoveTo(_offset);
 

@@ -9,12 +9,12 @@ namespace Sources.Infrastructure.Factories.Player
 {
 	public class Player : Presenter, IPlayer
 	{
-		private IResourcesProgressViewModel _progressViewModel;
+		private IResourcesProgressPresenter _progressPresenter;
 		private Coroutine _sellRoutine;
 
 		private void Awake()
 		{
-			_progressViewModel = GameServices.Container.Get<IResourcesProgressViewModel>();
+			_progressPresenter = GameServices.Container.Get<IResourcesProgressPresenter>();
 		}
 
 		private void OnCollisionEnter(Collision collisionInfo)
@@ -36,7 +36,7 @@ namespace Sources.Infrastructure.Factories.Player
 
 		private IEnumerator SellRoutine()
 		{
-			_progressViewModel.SellSand();
+			_progressPresenter.SellSand();
 			yield return null;
 		}
 	}

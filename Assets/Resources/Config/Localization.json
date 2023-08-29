@@ -10,15 +10,49 @@
       "Translations": [
         {
           "Language": "Russian",
-          "Text": "Улучшить"
+          "Text": "Улучшение!"
         },
         {
           "Language": "English",
-          "Text": "Upgrade"
+          "Text": "Upgrade!"
         },
         {
           "Language": "Turkish",
           "Text": "Geliştirmek"
+        }
+      ]
+    },
+    {
+      "Name": "SettingsButton",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Настройки"
+        },
+        {
+          "Language": "English",
+          "Text": "Settings"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Ayarlar"
+        }
+      ]
+    }, 
+    {
+      "Name": "ExitButton", 
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Выход"
+        },
+        {
+          "Language": "English",
+          "Text": "Exit"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "çıkış"
         }
       ]
     },

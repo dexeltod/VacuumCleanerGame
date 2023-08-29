@@ -7,11 +7,8 @@ namespace Sources.Domain.Progress
 	[Serializable]
 	public class ShopProgress : Progress
 	{
-		private List<int> _progressPointPrice;
-
-		public ShopProgress(List<IUpgradeProgressData> progress, List<int> prices) : base(progress)
+		public ShopProgress(List<IUpgradeProgressData> progress) : base(progress)
 		{
-			_progressPointPrice = prices;
 		}
 	}
 }

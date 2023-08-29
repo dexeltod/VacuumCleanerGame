@@ -2,25 +2,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sources.DIService;
-using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.DTO;
+using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
-using Sources.View;
 using Sources.View.UI.Shop;
 
 namespace Sources.Application
 {
-	public class ShopPurchaseController
+	public class ShopPurchaseController: IDisposable
 	{
 		private const int Point = 1;
 
 		private readonly List<UpgradeElementPrefab> _upgradeElements;
 
 		private readonly IUpgradeWindow _upgradeWindow;
-		private readonly IResourcesProgressViewModel _resourcesProgress;
-		private readonly IShopProgressViewModel _shopProgressViewModel;
-		private readonly IPlayerProgressViewModel _playerProgress;
+		private readonly IResourcesProgressPresenter _resourcesProgress;
+		private readonly IShopProgressProvider _shopProgressProvider;
+		private readonly IPlayerProgressProvider _playerProgress;
 
 		private readonly Dictionary<string, UpgradeElementPrefab> _prefabsByNames =
 			new Dictionary<string, UpgradeElementPrefab>();
@@ -30,11 +30,10 @@ namespace Sources.Application
 			IUpgradeWindow upgradeWindow,
 			List<UpgradeElementPrefab> upgradeElements
 		)
-
 		{
-			_resourcesProgress = GameServices.Container.Get<IResourcesProgressViewModel>();
-			_shopProgressViewModel = GameServices.Container.Get<IShopProgressViewModel>();
-			_playerProgress = GameServices.Container.Get<IPlayerProgressViewModel>();
+			_resourcesProgress = GameServices.Container.Get<IResourcesProgressPresenter>();
+			_shopProgressProvider = GameServices.Container.Get<IShopProgressProvider>();
+			_playerProgress = GameServices.Container.Get<IPlayerProgressProvider>();
 
 			_upgradeWindow = upgradeWindow;
 			_upgradeElements = upgradeElements;
@@ -45,6 +44,9 @@ namespace Sources.Application
 			_upgradeWindow.ActiveChanged += OnActiveChanged;
 			_upgradeWindow.Destroyed += OnDestroyed;
 		}
+
+		public void Dispose() => 
+			UnsubscribeFromButtons(_upgradeElements);
 
 		private void OnActiveChanged(bool isActive)
 		{
@@ -84,8 +86,8 @@ namespace Sources.Application
 		private void ChangeColor(IUpgradeItemData upgradeItemData)
 		{
 			IColorChangeable color = _prefabsByNames
-				.FirstOrDefault(element => element.Key == upgradeItemData.IdName)
-				.Value;
+									 .FirstOrDefault(element => element.Key == upgradeItemData.IdName)
+									 .Value;
 
 			color.AddProgressPointColor(Point);
 		}
@@ -95,6 +97,7 @@ namespace Sources.Application
 			_resourcesProgress.DecreaseMoney(upgradeElement.Price);
 			SetUpgradeLevel(upgradeElement);
 			_playerProgress.SetProgress(upgradeElement.IdName);
+			_shopProgressProvider.AddProgressPoint(upgradeElement.IdName);
 		}
 
 		private void SetUpgradeLevel(IUpgradeItemData upgradeElement)
@@ -108,7 +111,7 @@ namespace Sources.Application
 			if (_resourcesProgress.SoftCurrency.Count - upgradeElement.Price < 0)
 				throw new InvalidOperationException("Not enough money");
 
-			if (upgradeElement.PointLevel >= 6)
+			if (upgradeElement.PointLevel >= upgradeElement.MaxPointLevel)
 				throw new InvalidOperationException("Maximum upgrade level");
 
 			return true;

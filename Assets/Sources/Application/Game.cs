@@ -1,4 +1,6 @@
+using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachine;
+using Sources.Application.StateMachine.GameStates;
 using Sources.DIService;
 using Sources.View.SceneEntity;
 
@@ -10,7 +12,15 @@ namespace Sources.Application
 
 		public Game(ICoroutineRunner coroutineRunner, LoadingCurtain loadingCurtain)
 		{
-			StateMachine = new GameStateMachine(new SceneLoader(coroutineRunner), loadingCurtain, GameServices.Container);
+			StateMachine = new GameStateMachine
+			(
+				new SceneLoader(coroutineRunner),
+				loadingCurtain,
+				GameServices.Container
+			);
 		}
+
+		public async UniTask Start() =>
+			await StateMachine.Enter<InitializeServicesAndProgressState>();
 	}
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Sources.Infrastructure.ScriptableObjects;
 using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Upgrade;
 using UnityEngine;
 using UnityEngine.Serialization;
 

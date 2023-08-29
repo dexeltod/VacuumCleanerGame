@@ -14,7 +14,7 @@ namespace Sources.Infrastructure.Factories.Player
 	public class PlayerFactory : IPlayerFactory
 	{
 		private readonly AnimationHasher _hasher;
-		private readonly IResourceProvider _assetProvider;
+		private readonly IAssetProvider _assetProvider;
 		private readonly IPersistentProgressService _progressService;
 
 		private IPresenterFactory _presenterFactory;
@@ -28,7 +28,7 @@ namespace Sources.Infrastructure.Factories.Player
 
 		public GameObject Player { get; private set; }
 
-		public PlayerFactory(IResourceProvider assetProvider)
+		public PlayerFactory(IAssetProvider assetProvider)
 		{
 			_progressService = GameServices.Container.Get<IPersistentProgressService>();
 			_assetProvider = assetProvider;

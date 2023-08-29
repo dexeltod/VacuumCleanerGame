@@ -9,14 +9,18 @@ namespace Sources.Domain.Progress.Player
 	public class ResourcesData : IResourcesData
 	{
 		public IResource<int> SoftCurrency { get; private set; }
+		public IResource<int> HardCurrency { get; private set; }
 		public int MaxFilledScore => MaxFillModifier + GameConfig.DefaultMaxSandFillCount;
 		public int MaxFillModifier { get; private set; } = 0;
 		public int CurrentSandCount { get; private set; } = 0;
 
-		public ResourcesData(IResource<int> softCurrency, int startCount)
+		public ResourcesData(IResource<int> softCurrency, IResource<int> hardCurrency, int startCount)
 		{
+			HardCurrency = hardCurrency;
+			HardCurrency.Set(startCount);
+
 			SoftCurrency = softCurrency;
-			SoftCurrency.Count = startCount;
+			SoftCurrency.Set(startCount);
 		}
 
 		public void AddSand(int count) =>
@@ -26,9 +30,9 @@ namespace Sources.Domain.Progress.Player
 			CurrentSandCount -= count;
 
 		public void AddMoney(int count) =>
-			SoftCurrency.Count += count;
+			SoftCurrency.Increase(count);
 
 		public void DecreaseMoney(int count) =>
-			SoftCurrency.Count -= count;
+			SoftCurrency.Decrease(count);
 	}
 }

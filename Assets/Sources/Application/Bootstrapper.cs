@@ -1,4 +1,3 @@
-using Sources.Application.StateMachine.GameStates;
 using Sources.View.SceneEntity;
 using UnityEngine;
 
@@ -10,13 +9,13 @@ namespace Sources.Application
 		
 		private Game _game;
 
-		private void Awake()
+		private async void Awake()
 		{
 			var loadingCurtain = GetLoadingCurtain();
 			loadingCurtain.gameObject.SetActive(false);
-			
+
 			_game = new Game(this, loadingCurtain);
-			_game.StateMachine.Enter<InitializeServicesAndProgressState>();
+			await _game.Start();
 			
 			DontDestroyOnLoad(this);
 		}

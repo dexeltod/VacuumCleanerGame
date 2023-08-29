@@ -6,5 +6,6 @@ namespace Sources.ServicesInterfaces
 	{
 		string GetTranslationText(string phrase);
 		void SetLocalLanguage(string language);
+		void UpdateTranslations();
 	}
 }

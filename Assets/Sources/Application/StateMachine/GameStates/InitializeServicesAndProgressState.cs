@@ -1,18 +1,16 @@
-using System.ComponentModel.Design;
-using Lean.Localization;
+using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachineInterfaces;
+using Sources.Application.UnityApplicationServices;
 using Sources.Application.Utils.Configs;
 using Sources.DIService;
 using Sources.Infrastructure.Factories;
-using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.Services;
 using Sources.Services.DomainServices;
-using Sources.Services.Interfaces;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
-using UnityEngine;
+using Unity.Services.Core;
 
 namespace Sources.Application.StateMachine.GameStates
 {
@@ -22,6 +20,7 @@ namespace Sources.Application.StateMachine.GameStates
 		private readonly GameServices _gameServices;
 		private readonly SceneLoader _sceneLoader;
 		private readonly MusicSetter _musicSetter;
+		private readonly UnityServicesController _unityServicesController;
 
 		public InitializeServicesAndProgressState(GameStateMachine gameStateMachine, GameServices gameServices,
 			SceneLoader sceneLoader)
@@ -29,28 +28,31 @@ namespace Sources.Application.StateMachine.GameStates
 			_sceneLoader = sceneLoader;
 			_gameStateMachine = gameStateMachine;
 			_gameServices = gameServices;
-			InitServices();
+			_unityServicesController = new UnityServicesController(new InitializationOptions());
 		}
 
 		public void Exit()
 		{
 		}
 
-		public void Enter()
+		public async UniTask Enter()
 		{
+			await InitServices();
 			_sceneLoader.Load(ConstantNames.InitialScene, OnSceneLoaded);
 		}
 
-		private void OnSceneLoaded() =>
-			_gameStateMachine.Enter<InitializeServicesWithProgressState>();
+		private async void OnSceneLoaded() =>
+			await _gameStateMachine.Enter<InitializeServicesWithProgressState>();
 
-		private void InitServices()
+		private async UniTask InitServices()
 		{
+			await _unityServicesController.InitializeUnityServices();
+
 			_gameServices.Register<IGameStateMachine>(_gameStateMachine);
 
 			_gameServices.Register<IPersistentProgressService>(new PersistentProgressService());
-			_gameServices.Register<IResourceProvider>(new ResourceProvider());
-
+			IAssetProvider provider = _gameServices.Register<IAssetProvider>(new AssetProvider());
+			_gameServices.Register<IUpgradeStatsProvider>(new UpgradeStatsProvider(provider));
 			_gameServices.Register<ILocalizationService>(new LocalizationService());
 
 			SceneLoadInformer sceneLoadInformer = new SceneLoadInformer();

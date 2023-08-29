@@ -1,5 +1,6 @@
 using System;
 using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Upgrade;
 
 namespace Sources.PresentationInterfaces
 {

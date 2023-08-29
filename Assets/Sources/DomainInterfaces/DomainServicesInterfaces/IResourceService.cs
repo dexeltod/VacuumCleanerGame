@@ -1,12 +1,14 @@
-using System;
 using Sources.Application.Utils;
+using Sources.DIService;
 
 namespace Sources.DomainInterfaces.DomainServicesInterfaces
 {
-	public interface IResourceService<in T>
+	public interface IResourceService : IService
 	{
-		event Action<IResource<T>> ResourceChanged;
-		void Increase(ResourceType type, int value);
-		void Decrease(ResourceType type, int value);
+		IResource<T> GetResource<T>(ResourceType type);
+
+		void Increase<T>(ResourceType type, T value);
+		void Decrease<T>(ResourceType type, T value);
+		void Set<T>(ResourceType type, T value);
 	}
 }

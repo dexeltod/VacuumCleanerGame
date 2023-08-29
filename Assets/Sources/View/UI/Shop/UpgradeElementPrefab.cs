@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Lean.Localization;
 using Sources.DIService;
-using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using TMPro;
@@ -12,7 +12,7 @@ using UnityEngine.UI;
 namespace Sources.View.UI.Shop
 {
 	public class UpgradeElementPrefab : MonoBehaviour, IUpgradeElementConstructable, IUpgradeInteractable,
-		IColorChangeable
+		IColorChangeable, IDisposable
 	{
 		[Header("Points")] [SerializeField] private int _maxPoints = 6;
 
@@ -34,13 +34,15 @@ namespace Sources.View.UI.Shop
 		private IUpgradeItemData _itemData;
 		private int _boughtPoints;
 		private bool _isInit;
+
 		public string IdName => _itemData.IdName;
+
 		public event Action<IUpgradeItemData> BuyButtonPressed;
 
 		public IUpgradeElementConstructable Construct(IUpgradeItemData itemData, IUpgradeItemPrefab viewInfo)
 		{
 			if (_isInit)
-				throw new InvalidOperationException("Item view is already constructed");
+				throw new InvalidOperationException($"{name} view is already constructed");
 
 			_boughtPoints = itemData.PointLevel;
 			_itemData = itemData;
@@ -58,6 +60,9 @@ namespace Sources.View.UI.Shop
 
 			return this;
 		}
+
+		public void Dispose() =>
+			_itemData.PriceChanged -= OnPriceChanged;
 
 		public void AddProgressPointColor(int count) =>
 			ChangePointsColor(count);

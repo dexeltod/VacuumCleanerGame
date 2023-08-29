@@ -1879,6 +1879,7 @@ GameObject:
   - component: {fileID: 8019734606638691930}
   - component: {fileID: 8019734606638691924}
   - component: {fileID: 8019734606638691931}
+  - component: {fileID: 1318281531758831293}
   m_Layer: 5
   m_Name: Title
   m_TagString: Untagged
@@ -1934,7 +1935,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0423\u043B\u0443\u0447\u0448\u0435\u043D\u0438\u0435!"
+  m_text: UpgradeTitle
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2b9004823d736ba47bca04fd2ece4c7a, type: 2}
   m_sharedMaterial: {fileID: -2096455649916167305, guid: 2b9004823d736ba47bca04fd2ece4c7a, type: 2}
@@ -2003,6 +2004,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1318281531758831293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8019734606638691929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d602a7b4aa8ba244aa9f92245e384c9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8019734606712862908
 GameObject:
   m_ObjectHideFlags: 0

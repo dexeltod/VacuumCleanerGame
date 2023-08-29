@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Sources.Services.Localization
+namespace Sources.Services.Localization.Serializable
 {
 	[Serializable]
 	public class Translation

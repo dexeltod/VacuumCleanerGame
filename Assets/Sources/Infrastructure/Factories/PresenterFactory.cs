@@ -8,11 +8,11 @@ namespace Sources.Infrastructure.Factories
 {
 	public class PresenterFactory : IPresenterFactory
 	{
-		private readonly IResourceProvider _assetProvider;
+		private readonly IAssetProvider _assetProvider;
 
 		public PresenterFactory()
 		{
-			_assetProvider = GameServices.Container.Get<IResourceProvider>();
+			_assetProvider = GameServices.Container.Get<IAssetProvider>();
 		}
 
 		public T Instantiate<T>(string name, Vector3 position)

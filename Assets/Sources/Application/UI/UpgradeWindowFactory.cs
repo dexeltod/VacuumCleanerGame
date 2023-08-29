@@ -1,13 +1,14 @@
 using System.Collections.Generic;
+using Sources.Application.Utils;
 using Sources.Application.Utils.Configs;
 using Sources.DIService;
 using Sources.DomainInterfaces;
+using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Factories;
-using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
+using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
-using Sources.View;
 using Sources.View.UI.Shop;
 using UnityEngine;
 
@@ -16,8 +17,9 @@ namespace Sources.Application.UI
 	public class UpgradeWindowFactory : IUpgradeWindowFactory
 	{
 		private readonly IShopItemFactory _shopItemFactory;
-		private readonly IResourceProvider _assetProvider;
+		private readonly IAssetProvider _assetProvider;
 		private readonly IGameProgressModel _progress;
+		private readonly IResourceService _resourceService;
 
 		private ShopElementFactory _shopElementFactory;
 		private List<UpgradeElementPrefab> _upgradeElementsPrefabs;
@@ -30,7 +32,8 @@ namespace Sources.Application.UI
 			_shopItemFactory = shopItemFactory;
 
 			_progress = GameServices.Container.Get<IPersistentProgressService>().GameProgress;
-			_assetProvider = GameServices.Container.Get<IResourceProvider>();
+			_assetProvider = GameServices.Container.Get<IAssetProvider>();
+			_resourceService = GameServices.Container.Get<IResourceService>();
 		}
 
 		public GameObject Create()
@@ -38,14 +41,23 @@ namespace Sources.Application.UI
 			if (_upgradeWindow != null)
 				return _upgradeWindow;
 
-			InstantiateWindow();
-			ConstructWindow();
-			InitButtons();
+			Initialize();
 
 			IUpgradeItemData[] items = _shopItemFactory.LoadItems();
 
-			new ShopPurchaseController(UpgradeWindow, _upgradeElementsPrefabs);
+			ShopPurchaseController shopPurchaseController = new ShopPurchaseController
+			(
+				UpgradeWindow, _upgradeElementsPrefabs
+			);
+
 			return _upgradeWindow;
+		}
+
+		private void Initialize()
+		{
+			InstantiateWindow();
+			ConstructWindow();
+			InitButtons();
 		}
 
 		private void InstantiateWindow()
@@ -59,8 +71,10 @@ namespace Sources.Application.UI
 
 		private void ConstructWindow()
 		{
+			IResource<int> resource = _resourceService.GetResource<int>(ResourceType.Soft);
+
 			UpgradeWindow = _upgradeWindow.GetComponent<UpgradeWindow>();
-			UpgradeWindow.Construct();
+			UpgradeWindow.Construct(resource);
 		}
 	}
 }
