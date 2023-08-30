@@ -12,16 +12,12 @@ namespace UseCases.Scene
 		[SerializeField] private string _phraseName;
 		private ILocalizationService _localization;
 
-		private void Awake()
-		{
-			_localization = GameServices.Container.Get<ILocalizationService>();
-		}
-
 		private void Start()
 		{
+			_localization = GameServices.Container.Get<ILocalizationService>();
 			TextMeshProUGUI textMeshPro = GetComponent<TextMeshProUGUI>();
 
-			if (string.IsNullOrEmpty(_phraseName) == false) 
+			if (string.IsNullOrEmpty(_phraseName) == false)
 				textMeshPro.text = _localization.GetTranslationText(_phraseName);
 			else
 				textMeshPro.text = _localization.GetTranslationText(textMeshPro.text);

@@ -34,7 +34,7 @@ namespace Sources.Infrastructure.Shop
 				return;
 
 			_shopProgress.SetProgress(progressName, newProgressPoint);
-			_saveLoadService.SaveProgress();
+			_saveLoadService.SaveToUnityCloud();
 		}
 	}
 }

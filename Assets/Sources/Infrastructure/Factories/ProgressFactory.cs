@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
 using Sources.Application.Utils;
 using Sources.DIService;
-using Sources.Domain;
 using Sources.Domain.Progress;
 using Sources.Domain.Progress.Player;
 using Sources.DomainInterfaces;
@@ -20,7 +21,6 @@ namespace Sources.Infrastructure.Factories
 		private readonly IPersistentProgressService _persistentProgressService;
 		private readonly IShopItemFactory _shopFactory;
 		private readonly IResourceService _resourceService;
-		private readonly IUpgradeStatsProvider _provider;
 
 		public ProgressFactory(ISaveLoadDataService saveLoadService,
 			IPersistentProgressService persistentProgressService, IShopItemFactory shopItemFactory)
@@ -29,12 +29,11 @@ namespace Sources.Infrastructure.Factories
 			_persistentProgressService = persistentProgressService;
 			_shopFactory = shopItemFactory;
 			_resourceService = GameServices.Container.Get<IResourceService>();
-			_provider = GameServices.Container.Get<IUpgradeStatsProvider>();
 		}
 
-		public void InitProgress()
+		public async UniTask InitProgress()
 		{
-			IGameProgressModel loadedProgress = _saveLoadService.LoadProgress();
+			IGameProgressModel loadedProgress = await _saveLoadService.LoadFromUnityCloud();
 			Init(loadedProgress);
 		}
 
@@ -51,14 +50,12 @@ namespace Sources.Infrastructure.Factories
 
 		private GameProgressModel CreateNewProgress()
 		{
-			StatsConfig config = _provider.LoadConfig();
-
 			IUpgradeItemData[] itemsList = _shopFactory.LoadItems();
 
 			GameProgressModel newProgress = CreateProgress(itemsList);
 
 			_persistentProgressService.Construct(newProgress);
-			_saveLoadService.SaveProgress();
+			_saveLoadService.SaveToUnityCloud();
 
 			return newProgress;
 		}
@@ -90,7 +87,7 @@ namespace Sources.Infrastructure.Factories
 			return newProgress;
 		}
 
-		private IResource<int> GetResource(ResourceType type) => 
+		private IResource<int> GetResource(ResourceType type) =>
 			_resourceService.GetResource<int>(type);
 
 		private List<IUpgradeProgressData> CreateNewUpgradeProgressData(IUpgradeItemData[] itemsList)
@@ -105,5 +102,49 @@ namespace Sources.Infrastructure.Factories
 
 			return progressList;
 		}
+
+		// [Serializable]
+		// public class HardCurrency
+		// {
+		// 	[SerializeField] public int Count;
+		// 	[SerializeField] public int ResourceType;
+		// }
+		//
+		// [Serializable]
+		// public class PlayerProgress
+		// {
+		// 	[SerializeField] public int MaxPointCount;
+		// }
+		//
+		// [Serializable]
+		// public class ResourcesData
+		// {
+		// 	[SerializeField] public int CurrentSandCount;
+		// 	[SerializeField] public HardCurrency HardCurrency;
+		// 	[SerializeField] public int MaxFillModifier;
+		// 	[SerializeField] public int MaxFilledScore;
+		// 	[SerializeField] public SoftCurrency SoftCurrency;
+		// }
+		//
+		// [Serializable]
+		// public class Root
+		// {
+		// 	[SerializeField] public PlayerProgress PlayerProgress;
+		// 	[SerializeField] public ResourcesData ResourcesData;
+		// 	[SerializeField] public ShopProgress ShopProgress;
+		// }
+		//
+		// [Serializable]
+		// public class ShopProgress
+		// {
+		// 	[SerializeField] public int MaxPointCount;
+		// }
+		//
+		// [Serializable]
+		// public class SoftCurrency
+		// {
+		// 	[SerializeField] public int Count;
+		// 	[SerializeField] public int ResourceType;
+		// }
 	}
 }

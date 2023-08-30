@@ -9,6 +9,7 @@ namespace Sources.Domain.Progress.Player
 	public class ResourcesData : IResourcesData
 	{
 		public IResource<int> SoftCurrency { get; private set; }
+
 		public IResource<int> HardCurrency { get; private set; }
 		public int MaxFilledScore => MaxFillModifier + GameConfig.DefaultMaxSandFillCount;
 		public int MaxFillModifier { get; private set; } = 0;

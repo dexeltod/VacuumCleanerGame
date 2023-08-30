@@ -1,4 +1,3 @@
-using System;
 using Sources.Application.Utils;
 
 namespace Sources.DomainInterfaces.DomainServicesInterfaces
@@ -8,7 +7,6 @@ namespace Sources.DomainInterfaces.DomainServicesInterfaces
 		ResourceType ResourceType { get; }
 		T Count { get; }
 
-		event Action<T> ResourceChanged;
 		void Set(T value);
 		void Increase(T value);
 		void Decrease(T value);

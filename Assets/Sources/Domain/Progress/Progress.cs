@@ -2,28 +2,36 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sources.DomainInterfaces;
+using UnityEngine;
 
 namespace Sources.Domain.Progress
 {
 	[Serializable]
 	public abstract class Progress : IGameProgress
 	{
+		[SerializeField] private int _maxPointCount = 6;
+		[SerializeField] private List<IUpgradeProgressData> _progressData = new();
+		
 		private readonly Dictionary<string, IUpgradeProgressData> _progress;
 
-		public int MaxPointCount { get; private set; } = 6;
-		public Progress(List<IUpgradeProgressData> progress)
+		public int MaxPointCount => _maxPointCount;
+
+		protected Progress(List<IUpgradeProgressData> progress)
 		{
 			_progress = new Dictionary<string, IUpgradeProgressData>();
 
 			foreach (var progressItem in progress)
+			{
 				_progress.Add(progressItem.Name, progressItem);
+				_progressData.Add(progressItem);
+			}
 		}
 
 		public List<IUpgradeProgressData> GetAll()
 		{
 			var progress = new List<IUpgradeProgressData>();
 
-			foreach (var value in _progress) 
+			foreach (var value in _progress)
 				progress.Add(value.Value);
 
 			return progress;

@@ -46,7 +46,7 @@ namespace Sources.Services.DomainServices.DTO
 			string[] files = Directory.GetFiles(_directorySavePath);
 
 			if (files.Length <= 0)
-				return null;
+				throw new Exception("Directory does not have any files with the name " + _directorySavePath);
 
 			files = Directory.GetFiles(_directorySavePath);
 

@@ -1,15 +1,23 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
 using Sources.DIService;
-using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.Services.DomainServices.DTO;
 using Sources.ServicesInterfaces;
+using Unity.Services.CloudSave;
+using UnityEngine;
 
 namespace Sources.Services.DomainServices
 {
+	[Serializable]
 	public class SaveLoadDataService : ISaveLoadDataService
 	{
 		private const string SavesDirectory = "/Saves/";
+		private const string GameProgressKey = "GameProgress";
 
 		private readonly BinaryDataSaveLoader _binaryDataSaveLoader;
 		private readonly JsonDataSaveLoader _jsonDataLoader;
@@ -29,6 +37,28 @@ namespace Sources.Services.DomainServices
 			_persistentProgress = GameServices.Container.Get<IPersistentProgressService>();
 		}
 
+		public void SaveToUnityCloud()
+		{
+			string a = JsonConvert.SerializeObject(_persistentProgress.GameProgress);
+
+			CloudSaveService.Instance.Data.ForceSaveAsync(new Dictionary<string, object>
+				{
+					{ GameProgressKey, _persistentProgress.GameProgress }
+				}
+			);
+		}
+
+		public async UniTask<IGameProgressModel> LoadFromUnityCloud()
+		{
+			Dictionary<string, string> keyAndJsonSaves = await CloudSaveService.Instance.Data.LoadAsync
+			(
+				new HashSet<string> { GameProgressKey }
+			);
+
+			// return JsonConvert.DeserializeObject<IGameProgressModel>(keyAndJsonSaves.Values.LastOrDefault());
+			return null;
+		}
+
 		public void SaveToJson(string fileName, object data) =>
 			_jsonDataLoader.Save(fileName, data);
 
@@ -38,10 +68,10 @@ namespace Sources.Services.DomainServices
 		public T LoadFromJson<T>(string fileName) =>
 			_jsonDataLoader.Load<T>(fileName);
 
-		public void SaveProgress() =>
+		public void SaveProgressBinary() =>
 			_binaryDataSaveLoader.Save(_persistentProgress.GameProgress);
 
-		public IGameProgressModel LoadProgress()
+		public IGameProgressModel LoadProgressBinary()
 		{
 			_gameProgress = _binaryDataSaveLoader.LoadProgress();
 			return _gameProgress;

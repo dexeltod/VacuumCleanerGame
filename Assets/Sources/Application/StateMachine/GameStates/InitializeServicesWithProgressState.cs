@@ -34,7 +34,7 @@ namespace Sources.Application.StateMachine.GameStates
 
 		public async UniTask Enter()
 		{
-			RegisterServices();
+			await RegisterServices();
 			await _gameStateMachine.Enter<MenuState>();
 		}
 
@@ -42,7 +42,7 @@ namespace Sources.Application.StateMachine.GameStates
 		{
 		}
 
-		private void RegisterServices()
+		private async UniTask RegisterServices()
 		{
 			IShopItemFactory shopItemFactory = new ShopItemFactory();
 			ResourceServiceFactory resourceServiceFactory = new ResourceServiceFactory();
@@ -52,7 +52,7 @@ namespace Sources.Application.StateMachine.GameStates
 
 			_gameServices.Register<IResourceService>(new ResourcesService(intResources, floatResources));
 
-			InitProgress
+			await InitProgress
 			(_gameServices.Get<ISaveLoadDataService>(),
 				_gameServices.Get<IPersistentProgressService>(), shopItemFactory
 			);
@@ -83,7 +83,7 @@ namespace Sources.Application.StateMachine.GameStates
 			);
 		}
 
-		private void InitProgress(ISaveLoadDataService saveLoadService,
+		private async UniTask InitProgress(ISaveLoadDataService saveLoadService,
 			IPersistentProgressService persistentProgressService, IShopItemFactory shopItemFactory)
 		{
 			var progressFactory = new ProgressFactory
@@ -93,7 +93,7 @@ namespace Sources.Application.StateMachine.GameStates
 				shopItemFactory
 			);
 			
-			progressFactory.InitProgress();
+			await progressFactory.InitProgress();
 		}
 
 		private void CreateUIServices()

@@ -40,11 +40,11 @@ namespace Sources.Infrastructure
 			return _playerStatsService;
 		}
 
-		private static Dictionary<string, int[]> CreateStatsDictionary(IUpgradeItemData[] upgradeItemDatas)
+		private static Dictionary<string, int[]> CreateStatsDictionary(IUpgradeItemData[] upgradeItemData)
 		{
 			Dictionary<string, int[]> stats = new Dictionary<string, int[]>();
 			{
-				foreach (IUpgradeItemData stat in upgradeItemDatas)
+				foreach (IUpgradeItemData stat in upgradeItemData)
 					stats.Add(stat.IdName, stat.Stats);
 			}
 

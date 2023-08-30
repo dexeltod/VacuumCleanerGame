@@ -1,3 +1,4 @@
+using System.Net;
 using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachineInterfaces;
 using Sources.Application.UnityApplicationServices;
@@ -47,11 +48,13 @@ namespace Sources.Application.StateMachine.GameStates
 		private async UniTask InitServices()
 		{
 			await _unityServicesController.InitializeUnityServices();
-
+			
 			_gameServices.Register<IGameStateMachine>(_gameStateMachine);
 
 			_gameServices.Register<IPersistentProgressService>(new PersistentProgressService());
+			
 			IAssetProvider provider = _gameServices.Register<IAssetProvider>(new AssetProvider());
+			
 			_gameServices.Register<IUpgradeStatsProvider>(new UpgradeStatsProvider(provider));
 			_gameServices.Register<ILocalizationService>(new LocalizationService());
 
