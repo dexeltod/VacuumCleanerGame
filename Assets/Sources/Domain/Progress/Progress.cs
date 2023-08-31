@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Sources.DomainInterfaces;
 using UnityEngine;
 
@@ -10,54 +12,56 @@ namespace Sources.Domain.Progress
 	public abstract class Progress : IGameProgress
 	{
 		[SerializeField] private int _maxPointCount = 6;
-		[SerializeField] private List<IUpgradeProgressData> _progressData = new();
-		
-		private readonly Dictionary<string, IUpgradeProgressData> _progress;
+		[SerializeField] private List<ProgressUpgradeData> _progressData;
+		[SerializeField] private List<string> _progressNames;
 
 		public int MaxPointCount => _maxPointCount;
 
-		protected Progress(List<IUpgradeProgressData> progress)
+		[JsonConstructor]
+		protected Progress(List<ProgressUpgradeData> progress)
 		{
-			_progress = new Dictionary<string, IUpgradeProgressData>();
+			_progressData = progress;
+			_progressNames = new List<string>();
 
-			foreach (var progressItem in progress)
+			for (int i = 0; i < progress.Count; i++)
 			{
-				_progress.Add(progressItem.Name, progressItem);
-				_progressData.Add(progressItem);
+				ProgressUpgradeData progressItem = progress[i];
+				_progressNames.Add(progressItem.Name);
+				_progressData[i] = progressItem;
 			}
 		}
 
 		public List<IUpgradeProgressData> GetAll()
 		{
-			var progress = new List<IUpgradeProgressData>();
+			List<IUpgradeProgressData> progress = new List<IUpgradeProgressData>();
 
-			foreach (var value in _progress)
-				progress.Add(value.Value);
+			foreach (var value in _progressData)
+				progress.Add(value);
 
 			return progress;
 		}
 
 		public IUpgradeProgressData GetByName(string name)
 		{
-			if (_progress == null || _progress.Count == 0)
+			if (_progressNames == null || _progressNames.Count == 0)
 				throw new NullReferenceException("Progress is not initialized");
 
-			var foundedProgress = _progress.FirstOrDefault(element => element.Key == name);
+			IUpgradeProgressData foundedProgress = _progressData.FirstOrDefault(element => element.Name == name);
 
-			if (foundedProgress.Value == null)
+			if (foundedProgress == null)
 				throw new InvalidOperationException("Invalid progress name: " + name);
 
-			return foundedProgress.Value;
+			return foundedProgress;
 		}
 
 		public void SetProgress(string progressName, int progressValue)
 		{
-			if (_progress.ContainsKey(progressName) == false)
+			if (_progressNames.Contains(progressName) == false)
 				return;
 
-			KeyValuePair<string, IUpgradeProgressData> element = _progress.FirstOrDefault(x => x.Key == progressName);
+			IUpgradeProgressData element = _progressData.FirstOrDefault(x => x.Name == progressName);
 
-			IUpgradeProgressData upgradeProgress = element.Value;
+			IUpgradeProgressData upgradeProgress = element;
 			upgradeProgress.Value = progressValue;
 		}
 	}

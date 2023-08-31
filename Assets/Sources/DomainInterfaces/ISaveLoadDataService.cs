@@ -1,8 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Sources.DIService;
-using Sources.DomainInterfaces;
 
-namespace Sources.ServicesInterfaces
+namespace Sources.DomainInterfaces
 {
 	public interface ISaveLoadDataService : IService
 	{

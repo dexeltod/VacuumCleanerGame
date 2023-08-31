@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using Sources.Application.Utils;
-using Sources.Application.Utils.Configs;
 using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
@@ -9,6 +7,8 @@ using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
+using Sources.Utils;
+using Sources.Utils.Configs;
 using Sources.View.UI.Shop;
 using UnityEngine;
 

@@ -2,8 +2,8 @@ using System;
 using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachineInterfaces;
 using Sources.Application.UI;
-using Sources.Application.Utils.Configs;
 using Sources.DIService;
+using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.Player;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
@@ -11,6 +11,7 @@ using Sources.InfrastructureInterfaces.Scene;
 using Sources.Services.Interfaces;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
+using Sources.Utils.Configs;
 using Sources.View.SceneEntity;
 using UnityEngine;
 

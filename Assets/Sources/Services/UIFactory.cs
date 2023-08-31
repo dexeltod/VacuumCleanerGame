@@ -1,8 +1,9 @@
 using Joystick_Pack.Scripts.Base;
-using Sources.Application.Utils.Configs;
 using Sources.DIService;
+using Sources.DomainInterfaces;
 using Sources.Services.Interfaces;
 using Sources.ServicesInterfaces;
+using Sources.Utils.Configs;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,7 +35,7 @@ namespace Sources.Services
 			GameObject instance = _assetProvider.Instantiate(ResourcesAssetPath.Scene.UI.UI);
 			_gameInterface = instance.GetComponent<GameplayInterfaceView>();
 			
-			_gameInterface.Construct(_resourcesProgressPresenter, _gameProgress.GameProgress.ResourcesData.MaxFilledScore);
+			_gameInterface.Construct(_resourcesProgressPresenter, _gameProgress.GameProgress.ResourcesModel.MaxFilledScore);
 
 			Canvas = _gameInterface.Canvas;
 			GameObject = _gameInterface.gameObject;

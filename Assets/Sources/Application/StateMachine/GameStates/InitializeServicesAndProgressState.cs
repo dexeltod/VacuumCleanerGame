@@ -2,8 +2,8 @@ using System.Net;
 using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachineInterfaces;
 using Sources.Application.UnityApplicationServices;
-using Sources.Application.Utils.Configs;
 using Sources.DIService;
+using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
@@ -11,6 +11,7 @@ using Sources.Services;
 using Sources.Services.DomainServices;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
+using Sources.Utils.Configs;
 using Unity.Services.Core;
 
 namespace Sources.Application.StateMachine.GameStates

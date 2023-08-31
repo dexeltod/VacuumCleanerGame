@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using Sources.Application.Utils.Configs;
 using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.UpgradeShop;
 using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.ServicesInterfaces;
+using Sources.Utils.Configs;
 using Sources.View.UI.Shop;
 using UnityEngine;
 

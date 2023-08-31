@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachineInterfaces;
 using Sources.Application.UI;
-using Sources.Application.Utils;
 using Sources.DIService;
+using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure;
 using Sources.Infrastructure.DataViewModel;
@@ -18,6 +18,7 @@ using Sources.Services.DomainServices;
 using Sources.Services.Interfaces;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
+using Sources.Utils;
 
 namespace Sources.Application.StateMachine.GameStates
 {
@@ -86,7 +87,7 @@ namespace Sources.Application.StateMachine.GameStates
 		private async UniTask InitProgress(ISaveLoadDataService saveLoadService,
 			IPersistentProgressService persistentProgressService, IShopItemFactory shopItemFactory)
 		{
-			var progressFactory = new ProgressFactory
+			ProgressFactory progressFactory = new ProgressFactory
 			(
 				saveLoadService,
 				persistentProgressService,

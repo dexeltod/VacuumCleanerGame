@@ -1,6 +1,6 @@
-using Sources.Application.Utils.Configs;
 using Sources.Domain;
 using Sources.ServicesInterfaces;
+using Sources.Utils.Configs;
 using UnityEngine;
 
 namespace Sources.Services

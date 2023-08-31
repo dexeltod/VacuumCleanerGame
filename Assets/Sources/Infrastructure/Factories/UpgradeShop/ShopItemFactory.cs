@@ -1,9 +1,9 @@
 using System;
-using Sources.Application.Utils.Configs;
 using Sources.DIService;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.ServicesInterfaces;
+using Sources.Utils.Configs;
 
 namespace Sources.Infrastructure.Factories.UpgradeShop
 {

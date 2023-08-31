@@ -1,8 +1,6 @@
-using System;
 using Sources.DIService;
-using Sources.DomainInterfaces;
 
-namespace Sources.ServicesInterfaces
+namespace Sources.DomainInterfaces
 {
 	public interface IPersistentProgressService : IService
 	{

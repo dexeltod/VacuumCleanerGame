@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sources.Application.Utils;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.Utils;
 
 namespace Sources.Services.DomainServices
 {
@@ -23,26 +23,6 @@ namespace Sources.Services.DomainServices
 
 		public IResource<T> GetResource<T>(ResourceType type) =>
 			FindResource<T>(type);
-
-		public void Increase<T>(ResourceType type, T value)
-		{
-			IResource<T> resource = FindResource<T>(type);
-
-			if (value.Equals(resource) == false)
-				throw new ArgumentException($"Resource count is not {typeof(T)}");
-
-			resource.Increase(value);
-		}
-
-		public void Decrease<T>(ResourceType type, T value)
-		{
-			IResource<T> resource = FindResource<T>(type);
-
-			if (value.Equals(resource) == false)
-				throw new ArgumentException($"Resource count is not {typeof(T)}");
-
-			resource.Decrease(value);
-		}
 
 		public void Set<T>(ResourceType type, T value)
 		{

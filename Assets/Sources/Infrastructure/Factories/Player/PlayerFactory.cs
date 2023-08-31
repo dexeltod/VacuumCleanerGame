@@ -1,12 +1,13 @@
 using Joystick_Pack.Scripts.Base;
-using Sources.Application.Utils.Configs;
 using Sources.DIService;
+using Sources.DomainInterfaces;
 using Sources.Infrastructure.Scene;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.Services;
 using Sources.Services.Character;
 using Sources.ServicesInterfaces;
+using Sources.Utils.Configs;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Factories.Player

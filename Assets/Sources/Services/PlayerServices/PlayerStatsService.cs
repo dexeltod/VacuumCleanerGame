@@ -4,7 +4,7 @@ using System.Linq;
 using Sources.DomainInterfaces;
 using Sources.ServicesInterfaces;
 
-namespace Sources.Services
+namespace Sources.Services.PlayerServices
 {
 	public class PlayerStatsService : IPlayerStatsService
 	{

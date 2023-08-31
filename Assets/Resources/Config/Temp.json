@@ -1,0 +1,21 @@
+{
+  "ShopProgress": {
+    "MaxPointCount": 6
+  },
+  "PlayerProgress": {
+    "MaxPointCount": 6
+  },
+  "ResourcesModel": {
+    "SoftCurrency": {
+      "Count": 9999,
+      "ResourceType": 0
+    },
+    "HardCurrency": {
+      "Count": 9999,
+      "ResourceType": 1
+    },
+    "MaxFilledScore": 160,
+    "MaxFillModifier": 0,
+    "CurrentSandCount": 0
+  }
+}

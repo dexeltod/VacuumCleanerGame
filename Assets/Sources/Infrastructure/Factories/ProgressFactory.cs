@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
-using Sources.Application.Utils;
 using Sources.DIService;
 using Sources.Domain.Progress;
 using Sources.Domain.Progress.Player;
+using Sources.Domain.Progress.ResourcesData;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.ServicesInterfaces;
+using Sources.Utils;
 
 namespace Sources.Infrastructure.Factories
 {
@@ -62,24 +63,23 @@ namespace Sources.Infrastructure.Factories
 
 		private GameProgressModel CreateProgress(IUpgradeItemData[] itemsList)
 		{
-			IResource<int> soft = GetResource(ResourceType.Soft);
-			IResource<int> hard = GetResource(ResourceType.Hard);
+			Resource<int> soft = GetResource(ResourceType.Soft);
+			Resource<int> hard = GetResource(ResourceType.Hard);
 
-			ResourcesData resourcesData = new ResourcesData
+			ResourcesModel resourcesModel = new ResourcesModel
 			(
 				soft,
 				hard,
 				StartMoneyCount
 			);
 
-			PlayerProgress playerProgressModel =
-				new PlayerProgress(CreateNewUpgradeProgressData(itemsList));
+			PlayerProgress playerProgressModel = new PlayerProgress(CreateNewUpgradeProgressData(itemsList));
 
 			ShopProgress shopProgressModel = new(CreateNewUpgradeProgressData(itemsList));
 
 			GameProgressModel newProgress = new GameProgressModel
 			(
-				resourcesData,
+				resourcesModel,
 				playerProgressModel,
 				shopProgressModel
 			);
@@ -87,12 +87,12 @@ namespace Sources.Infrastructure.Factories
 			return newProgress;
 		}
 
-		private IResource<int> GetResource(ResourceType type) =>
-			_resourceService.GetResource<int>(type);
+		private Resource<int> GetResource(ResourceType type) =>
+			_resourceService.GetResource<int>(type) as Resource<int>;
 
-		private List<IUpgradeProgressData> CreateNewUpgradeProgressData(IUpgradeItemData[] itemsList)
+		private List<ProgressUpgradeData> CreateNewUpgradeProgressData(IUpgradeItemData[] itemsList)
 		{
-			List<IUpgradeProgressData> progressList = new List<IUpgradeProgressData>();
+			List<ProgressUpgradeData> progressList = new List<ProgressUpgradeData>();
 
 			foreach (var itemData in itemsList)
 			{
@@ -102,49 +102,5 @@ namespace Sources.Infrastructure.Factories
 
 			return progressList;
 		}
-
-		// [Serializable]
-		// public class HardCurrency
-		// {
-		// 	[SerializeField] public int Count;
-		// 	[SerializeField] public int ResourceType;
-		// }
-		//
-		// [Serializable]
-		// public class PlayerProgress
-		// {
-		// 	[SerializeField] public int MaxPointCount;
-		// }
-		//
-		// [Serializable]
-		// public class ResourcesData
-		// {
-		// 	[SerializeField] public int CurrentSandCount;
-		// 	[SerializeField] public HardCurrency HardCurrency;
-		// 	[SerializeField] public int MaxFillModifier;
-		// 	[SerializeField] public int MaxFilledScore;
-		// 	[SerializeField] public SoftCurrency SoftCurrency;
-		// }
-		//
-		// [Serializable]
-		// public class Root
-		// {
-		// 	[SerializeField] public PlayerProgress PlayerProgress;
-		// 	[SerializeField] public ResourcesData ResourcesData;
-		// 	[SerializeField] public ShopProgress ShopProgress;
-		// }
-		//
-		// [Serializable]
-		// public class ShopProgress
-		// {
-		// 	[SerializeField] public int MaxPointCount;
-		// }
-		//
-		// [Serializable]
-		// public class SoftCurrency
-		// {
-		// 	[SerializeField] public int Count;
-		// 	[SerializeField] public int ResourceType;
-		// }
 	}
 }

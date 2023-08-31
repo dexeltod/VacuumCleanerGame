@@ -2,7 +2,7 @@ using Sources.DomainInterfaces.DomainServicesInterfaces;
 
 namespace Sources.DomainInterfaces
 {
-	public interface IResourcesData
+	public interface IResourcesModel
 	{
 		IResource<int> SoftCurrency { get; }
 		int MaxFilledScore { get; }

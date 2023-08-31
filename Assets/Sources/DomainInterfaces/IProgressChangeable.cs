@@ -1,6 +1,9 @@
 using System;
 
-public interface IProgressChangeable
+namespace Sources.DomainInterfaces
 {
-	event Action Changed;
+	public interface IProgressChangeable
+	{
+		event Action Changed;
+	}
 }

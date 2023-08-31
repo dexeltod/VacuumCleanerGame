@@ -1,10 +1,10 @@
 using System;
 using Sources.Application.StateMachine.GameStates;
 using Sources.Application.StateMachineInterfaces;
-using Sources.Application.Utils.Configs;
 using Sources.DIService;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Scene;
+using Sources.Utils.Configs;
 using UnityEngine;
 using UnityEngine.UI;
 

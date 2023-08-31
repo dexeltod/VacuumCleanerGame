@@ -1,6 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachineInterfaces;
-using Sources.Application.Utils.Configs;
+using Sources.Utils.Configs;
 using Sources.View.SceneEntity;
 
 namespace Sources.Application.StateMachine.GameStates

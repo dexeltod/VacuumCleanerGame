@@ -1,6 +1,6 @@
-using Sources.Application.Utils.Configs;
 using Sources.DIService;
 using Sources.ServicesInterfaces;
+using Sources.Utils.Configs;
 
 namespace Sources.InfrastructureInterfaces.Scene
 {

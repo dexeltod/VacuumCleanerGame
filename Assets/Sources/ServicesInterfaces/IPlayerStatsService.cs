@@ -1,4 +1,5 @@
 using Sources.DIService;
+using Sources.DomainInterfaces;
 
 namespace Sources.ServicesInterfaces
 {

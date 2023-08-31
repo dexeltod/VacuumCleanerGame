@@ -1,5 +1,8 @@
-namespace Sources.Application.Utils
+using System;
+
+namespace Sources.Utils
 {
+	[Serializable]
 	public enum ResourceType
 	{
 		Soft,

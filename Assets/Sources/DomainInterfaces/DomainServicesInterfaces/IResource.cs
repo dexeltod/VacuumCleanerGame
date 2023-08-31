@@ -1,4 +1,4 @@
-using Sources.Application.Utils;
+using Sources.Utils;
 
 namespace Sources.DomainInterfaces.DomainServicesInterfaces
 {
@@ -8,7 +8,5 @@ namespace Sources.DomainInterfaces.DomainServicesInterfaces
 		T Count { get; }
 
 		void Set(T value);
-		void Increase(T value);
-		void Decrease(T value);
 	}
 }

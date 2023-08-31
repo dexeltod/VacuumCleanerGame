@@ -1,9 +1,9 @@
 using Cinemachine;
-using Sources.Application.Utils.Configs;
 using Sources.DIService;
 using Sources.Infrastructure.Factories.Player;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.ServicesInterfaces;
+using Sources.Utils.Configs;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Factories

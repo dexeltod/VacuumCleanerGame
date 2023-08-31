@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using Newtonsoft.Json;
 using Sources.DIService;
+using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.Services.DomainServices.DTO;
-using Sources.ServicesInterfaces;
+using Unity.Plastic.Newtonsoft.Json;
 using Unity.Services.CloudSave;
 using UnityEngine;
 
@@ -22,40 +22,55 @@ namespace Sources.Services.DomainServices
 		private readonly BinaryDataSaveLoader _binaryDataSaveLoader;
 		private readonly JsonDataSaveLoader _jsonDataLoader;
 		private readonly IPersistentProgressService _persistentProgress;
+		private readonly JsonSerializerSettings _jsonSerializerSettings;
 		private IGameProgressModel _gameProgress;
-
-		private string _lastTime;
-		private string _saveFilePath;
 
 		public SaveLoadDataService()
 		{
-			string saveDirectoryPath = UnityEngine.Application.persistentDataPath + SavesDirectory;
+			string saveDirectoryPath = Application.persistentDataPath + SavesDirectory;
 			Directory.CreateDirectory(saveDirectoryPath);
 
 			_jsonDataLoader = new JsonDataSaveLoader();
 			_binaryDataSaveLoader = new BinaryDataSaveLoader();
 			_persistentProgress = GameServices.Container.Get<IPersistentProgressService>();
+
+			_jsonSerializerSettings = new JsonSerializerSettings();
+			_jsonSerializerSettings.ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor;
 		}
 
 		public void SaveToUnityCloud()
 		{
-			string a = JsonConvert.SerializeObject(_persistentProgress.GameProgress);
+			GameProgressModel a = _persistentProgress.GameProgress as GameProgressModel;
+
+			string dataJson = JsonConvert.SerializeObject(a);
 
 			CloudSaveService.Instance.Data.ForceSaveAsync(new Dictionary<string, object>
 				{
-					{ GameProgressKey, _persistentProgress.GameProgress }
+					{ GameProgressKey, dataJson }
 				}
 			);
 		}
 
 		public async UniTask<IGameProgressModel> LoadFromUnityCloud()
 		{
-			Dictionary<string, string> keyAndJsonSaves = await CloudSaveService.Instance.Data.LoadAsync
-			(
-				new HashSet<string> { GameProgressKey }
-			);
+			const bool aBool = false;
 
-			// return JsonConvert.DeserializeObject<IGameProgressModel>(keyAndJsonSaves.Values.LastOrDefault());
+			Dictionary<string, string> keyAndJsonSaves = await CloudSaveService
+				.Instance
+				.Data
+				.LoadAsync
+				(
+					new HashSet<string> { GameProgressKey }
+				);
+
+			string jsonSave = keyAndJsonSaves.Values.LastOrDefault();
+
+			if (aBool)
+			{
+				GameProgressModel a = JsonConvert.DeserializeObject<GameProgressModel>(jsonSave, _jsonSerializerSettings);
+				return a;
+			}
+
 			return null;
 		}
 

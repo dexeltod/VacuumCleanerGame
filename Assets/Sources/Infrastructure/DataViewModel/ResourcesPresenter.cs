@@ -1,6 +1,5 @@
 using System;
 using Sources.DIService;
-using Sources.Domain.Progress.Player;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.ServicesInterfaces;
@@ -13,12 +12,12 @@ namespace Sources.Infrastructure.DataViewModel
 		private const int Count = 1;
 		private readonly IPersistentProgressService _resourcesData;
 
-		public IResource<int> SoftCurrency => Data.SoftCurrency;
+		public IResource<int> SoftCurrency => Model.SoftCurrency;
 
 		public event Action<int> ScoreChanged;
 		public event Action<int> MoneyChanged;
 
-		private IResourcesData Data => _resourcesData.GameProgress.ResourcesData;
+		private IResourcesModel Model => _resourcesData.GameProgress.ResourcesModel;
 
 		public ResourcesPresenter()
 		{
@@ -27,7 +26,7 @@ namespace Sources.Infrastructure.DataViewModel
 
 		public bool CheckMaxScore()
 		{
-			if (Data.CurrentSandCount >= Data.MaxFilledScore)
+			if (Model.CurrentSandCount >= Model.MaxFilledScore)
 				return false;
 
 			return true;
@@ -35,44 +34,44 @@ namespace Sources.Infrastructure.DataViewModel
 
 		public bool AddSand(int newScore)
 		{
-			int currentScore = Data.CurrentSandCount;
+			int currentScore = Model.CurrentSandCount;
 			currentScore += newScore;
 
-			if (currentScore > Data.MaxFilledScore)
+			if (currentScore > Model.MaxFilledScore)
 				return false;
 
-			int score = Mathf.Clamp(newScore, 0, Data.MaxFilledScore);
+			int score = Mathf.Clamp(newScore, 0, Model.MaxFilledScore);
 
-			Data.AddSand(score);
+			Model.AddSand(score);
 
-			ScoreChanged?.Invoke(Data.CurrentSandCount);
+			ScoreChanged?.Invoke(Model.CurrentSandCount);
 			return true;
 		}
 
 		public void SellSand()
 		{
-			if (Data.CurrentSandCount <= 0)
+			if (Model.CurrentSandCount <= 0)
 				return;
 
-			if (Data.CurrentSandCount <= 0)
+			if (Model.CurrentSandCount <= 0)
 				return;
 
-			Data.AddMoney(Count);
-			Data.DecreaseSand(Count);
-			ScoreChanged?.Invoke(Data.CurrentSandCount);
-			MoneyChanged?.Invoke(Data.SoftCurrency.Count);
+			Model.AddMoney(Count);
+			Model.DecreaseSand(Count);
+			ScoreChanged?.Invoke(Model.CurrentSandCount);
+			MoneyChanged?.Invoke(Model.SoftCurrency.Count);
 		}
 
 		public void AddMoney(int count)
 		{
-			Data.AddMoney(count);
-			MoneyChanged?.Invoke(Data.SoftCurrency.Count);
+			Model.AddMoney(count);
+			MoneyChanged?.Invoke(Model.SoftCurrency.Count);
 		}
 
 		public void DecreaseMoney(int count)
 		{
-			Data.DecreaseMoney(count);
-			MoneyChanged?.Invoke(Data.SoftCurrency.Count);
+			Model.SoftCurrency.Set(Model.SoftCurrency.Count - count);
+			MoneyChanged?.Invoke(Model.SoftCurrency.Count);
 		}
 	}
 }

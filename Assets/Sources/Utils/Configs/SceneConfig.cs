@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Sources.Application.Utils.Configs
+namespace Sources.Utils.Configs
 {
 	[CreateAssetMenu(fileName = "ConfigLevel_", menuName = "Data/Level/LevelConfig")]
 	public class SceneConfig : ScriptableObject

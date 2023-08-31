@@ -1,5 +1,3 @@
-using Sources.ServicesInterfaces;
-
 namespace Sources.DomainInterfaces
 {
 	public interface IPlayerStatChangeable : IPlayerStat

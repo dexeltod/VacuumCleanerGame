@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Sources.Domain;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Upgrade;

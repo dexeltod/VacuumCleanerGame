@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 using Sources.Domain.Progress.Player;
 using Sources.DomainInterfaces;
 using UnityEngine;
@@ -8,17 +9,19 @@ namespace Sources.Domain.Progress
 	[Serializable]
 	public class GameProgressModel : IGameProgressModel
 	{
-		[SerializeField] private ShopProgress _shopProgress;
+		[SerializeField] private ResourcesModel _resources;
 		[SerializeField] private PlayerProgress _playerProgress;
-		[SerializeField] private Player.ResourcesData _resourcesData;
-		[SerializeField] public IGameProgress ShopProgress => _shopProgress;
-		[SerializeField] public IGameProgress PlayerProgress => _playerProgress;
-		[SerializeField] public IResourcesData ResourcesData => _resourcesData;
+		[SerializeField] private ShopProgress _shopProgress;
 
-		public GameProgressModel(Player.ResourcesData resourcesData, PlayerProgress playerProgress,
+		public IGameProgress ShopProgress => _shopProgress;
+		public IGameProgress PlayerProgress => _playerProgress;
+		public IResourcesModel ResourcesModel => _resources;
+
+		[JsonConstructor]
+		public GameProgressModel(ResourcesModel resourcesModel, PlayerProgress playerProgress,
 			ShopProgress shopProgress)
 		{
-			_resourcesData = resourcesData;
+			_resources = resourcesModel;
 			_playerProgress = playerProgress;
 			_shopProgress = shopProgress;
 		}

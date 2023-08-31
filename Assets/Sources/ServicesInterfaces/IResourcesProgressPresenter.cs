@@ -1,5 +1,6 @@
 using System;
 using Sources.DIService;
+using Sources.Domain.Progress.ResourcesData;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 
 namespace Sources.ServicesInterfaces

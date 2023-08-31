@@ -1,6 +1,6 @@
 using System;
 
-namespace Sources.ServicesInterfaces
+namespace Sources.DomainInterfaces
 {
 	public interface IPlayerStat
 	{

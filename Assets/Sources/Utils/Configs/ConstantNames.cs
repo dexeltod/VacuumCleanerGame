@@ -1,6 +1,6 @@
 
 
-namespace Sources.Application.Utils.Configs
+namespace Sources.Utils.Configs
 {
 	public static class ConstantNames
 	{

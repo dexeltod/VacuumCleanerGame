@@ -4,6 +4,6 @@ namespace Sources.DomainInterfaces
 	{
 		IGameProgress ShopProgress { get; }
 		IGameProgress PlayerProgress { get; }
-		IResourcesData ResourcesData { get; }
+		IResourcesModel ResourcesModel { get; }
 	}
 }
