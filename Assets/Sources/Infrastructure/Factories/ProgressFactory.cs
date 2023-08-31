@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Newtonsoft.Json;
 using Sources.DIService;
 using Sources.Domain.Progress;
 using Sources.Domain.Progress.Player;
@@ -9,11 +9,11 @@ using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Upgrade;
-using Sources.ServicesInterfaces;
 using Sources.Utils;
 
 namespace Sources.Infrastructure.Factories
 {
+	[Serializable]
 	public class ProgressFactory
 	{
 		private const int StartMoneyCount = 9999;
@@ -40,13 +40,19 @@ namespace Sources.Infrastructure.Factories
 
 		private void Init(IGameProgressModel loadedProgress)
 		{
+			loadedProgress = CreatNewIfNull(loadedProgress);
+			_persistentProgressService.Construct(loadedProgress);
+		}
+
+		private IGameProgressModel CreatNewIfNull(IGameProgressModel loadedProgress)
+		{
 			if (loadedProgress == null)
 			{
 				IGameProgressModel newProgress = CreateNewProgress();
 				loadedProgress = newProgress;
 			}
 
-			_persistentProgressService.Construct(loadedProgress);
+			return loadedProgress;
 		}
 
 		private GameProgressModel CreateNewProgress()
@@ -94,7 +100,7 @@ namespace Sources.Infrastructure.Factories
 		{
 			List<ProgressUpgradeData> progressList = new List<ProgressUpgradeData>();
 
-			foreach (var itemData in itemsList)
+			foreach (IUpgradeItemData itemData in itemsList)
 			{
 				progressList.Add(new ProgressUpgradeData(itemData.IdName, 0));
 				itemData.SetUpgradeLevel(0);

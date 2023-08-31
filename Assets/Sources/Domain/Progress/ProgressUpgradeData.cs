@@ -1,6 +1,5 @@
 using System;
 using Sources.DomainInterfaces;
-using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 
 namespace Sources.Domain.Progress
@@ -10,11 +9,9 @@ namespace Sources.Domain.Progress
 	{
 		[SerializeField] private int _value;
 		[SerializeField] private string _name;
-		
-		[JsonProperty(nameof(Name))]
+
 		public string Name => _name;
 
-		[JsonProperty(nameof(Value))]
 		public int Value
 		{
 			get => _value;
@@ -28,7 +25,6 @@ namespace Sources.Domain.Progress
 			}
 		}
 
-		[JsonConstructor]
 		public ProgressUpgradeData(string name, int pointCount)
 		{
 			_name = name;

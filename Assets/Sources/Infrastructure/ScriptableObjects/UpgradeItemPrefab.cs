@@ -1,3 +1,4 @@
+using System;
 using Sources.Infrastructure.ScriptableObjects.Shop;
 using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.View.UI.Shop;
@@ -5,6 +6,7 @@ using UnityEngine;
 
 namespace Sources.Infrastructure.ScriptableObjects
 {
+	[Serializable]
 	[CreateAssetMenu(fileName = "Item", menuName = "Data/Shop/Upgrade/Item")]
 	public class UpgradeItemPrefab : ProgressItemData, IUpgradeItemPrefab
 	{

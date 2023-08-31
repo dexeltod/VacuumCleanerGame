@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Sources.Infrastructure.ScriptableObjects.Shop
 {
+	[Serializable]
 	public class ProgressItemData : ScriptableObject, IUpgradeItemData
 	{
 		private const int MaxPoint = 6;

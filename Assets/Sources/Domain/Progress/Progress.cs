@@ -17,7 +17,6 @@ namespace Sources.Domain.Progress
 
 		public int MaxPointCount => _maxPointCount;
 
-		[JsonConstructor]
 		protected Progress(List<ProgressUpgradeData> progress)
 		{
 			_progressData = progress;

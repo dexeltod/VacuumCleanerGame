@@ -40,21 +40,20 @@ namespace Sources.Services.DomainServices
 
 		public void SaveToUnityCloud()
 		{
-			GameProgressModel a = _persistentProgress.GameProgress as GameProgressModel;
+			GameProgressModel model = _persistentProgress.GameProgress as GameProgressModel;
 
-			string dataJson = JsonConvert.SerializeObject(a);
+			string dataJson = JsonConvert.SerializeObject(model);
+			string dataJsonUtility = JsonUtility.ToJson(model);
 
 			CloudSaveService.Instance.Data.ForceSaveAsync(new Dictionary<string, object>
 				{
-					{ GameProgressKey, dataJson }
+					{ GameProgressKey, dataJsonUtility }
 				}
 			);
 		}
 
 		public async UniTask<IGameProgressModel> LoadFromUnityCloud()
 		{
-			const bool aBool = false;
-
 			Dictionary<string, string> keyAndJsonSaves = await CloudSaveService
 				.Instance
 				.Data
@@ -65,13 +64,23 @@ namespace Sources.Services.DomainServices
 
 			string jsonSave = keyAndJsonSaves.Values.LastOrDefault();
 
-			if (aBool)
-			{
-				GameProgressModel a = JsonConvert.DeserializeObject<GameProgressModel>(jsonSave, _jsonSerializerSettings);
-				return a;
-			}
+			return TryDeserialize(jsonSave);
+		}
 
-			return null;
+		private IGameProgressModel TryDeserialize(string jsonSave)
+		{
+			try
+			{
+				GameProgressModel model = JsonUtility.FromJson<GameProgressModel>(jsonSave);
+
+				return model;
+			}
+			catch (Exception e)
+			{
+				Debug.LogException(e);
+				Debug.Log("New progress will be created");
+				return null;
+			}
 		}
 
 		public void SaveToJson(string fileName, object data) =>
