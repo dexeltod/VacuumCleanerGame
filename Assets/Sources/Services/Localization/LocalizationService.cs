@@ -11,7 +11,7 @@ namespace Sources.Services.Localization
 {
 	public class LocalizationService : ILocalizationService
 	{
-		private const string StartLanguane = "Russian";
+		private const string StartLanguage = "Russian";
 		private readonly string[] _phraseNames;
 		private readonly string[] _languages;
 
@@ -29,7 +29,7 @@ namespace Sources.Services.Localization
 
 			//TODO: Need to create detection language
 
-			LeanLocalization.SetCurrentLanguageAll(StartLanguane);
+			LeanLocalization.SetCurrentLanguageAll(StartLanguage);
 			LeanLocalization.UpdateTranslations();
 		}
 

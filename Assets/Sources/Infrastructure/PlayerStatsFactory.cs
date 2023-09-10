@@ -1,22 +1,27 @@
+using System;
 using System.Collections.Generic;
 using Sources.Domain;
+using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.Services;
 using Sources.Services.PlayerServices;
 using Sources.ServicesInterfaces;
+using Sources.View.SceneEntity;
 
 namespace Sources.Infrastructure
 {
 	public class PlayerStatsFactory
 	{
 		private readonly IShopItemFactory _shopFactory;
+		private readonly LoadingCurtain _loadingCurtain;
 		private PlayerStatsService _playerStatsService;
 
-		public PlayerStatsFactory(IShopItemFactory shopItemFactory)
+		public PlayerStatsFactory(IShopItemFactory shopItemFactory, LoadingCurtain loadingCurtain)
 		{
 			_shopFactory = shopItemFactory;
+			_loadingCurtain = loadingCurtain;
 		}
 
 		public PlayerStatsService CreatePlayerStats(IPersistentProgressService persistentProgressService)
@@ -24,24 +29,29 @@ namespace Sources.Infrastructure
 			if (_playerStatsService != null)
 				return _playerStatsService;
 
+			_loadingCurtain.SetText("Loading UpgradeItemData from ShopFactory");
 			IUpgradeItemData[] items = _shopFactory.LoadItems();
 
+			_loadingCurtain.SetText("Loading stats dictionary");
 			Dictionary<string, int[]> stats = CreateStatsDictionary(items);
 
 			List<IUpgradeProgressData> progress = persistentProgressService.GameProgress.PlayerProgress.GetAll();
 
+			_loadingCurtain.SetText("Creating stats names");
 			string[] statNames = new string[progress.Count];
 			IPlayerStatChangeable[] playerStats = new IPlayerStatChangeable[progress.Count];
 
+			_loadingCurtain.SetText("ShopPoints creating");
 			ShopPointsToStatsConverter converter = new ShopPointsToStatsConverter(stats);
 			InitArrays(progress, statNames, playerStats, converter);
+			_loadingCurtain.SetText("Creating player stats service");
 
 			_playerStatsService = new PlayerStatsService(statNames, playerStats, progress, converter);
 
 			return _playerStatsService;
 		}
 
-		private static Dictionary<string, int[]> CreateStatsDictionary(IUpgradeItemData[] upgradeItemData)
+		private Dictionary<string, int[]> CreateStatsDictionary(IUpgradeItemData[] upgradeItemData)
 		{
 			Dictionary<string, int[]> stats = new Dictionary<string, int[]>();
 			{

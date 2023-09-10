@@ -34,8 +34,25 @@ namespace Sources.Infrastructure.Factories
 
 		public async UniTask InitProgress()
 		{
+#if YANDEX_GAMES && !TEST_BUILD
+			IGameProgressModel yandexProgress = await _saveLoadService.LoadFromYandex();
+			Init(yandexProgress);
+#endif
+
+#if !YANDEX_GAMES
 			IGameProgressModel loadedProgress = await _saveLoadService.LoadFromUnityCloud();
 			Init(loadedProgress);
+#endif
+
+#if !YANDEX_GAMES && UNITY_EDITOR
+			IGameProgressModel testProgress = CreateNewProgress();
+			Init(testProgress);
+#endif
+
+#if TEST_BUILD
+			IGameProgressModel testProgress = CreateNewProgress();
+			Init(testProgress);
+#endif
 		}
 
 		private void Init(IGameProgressModel loadedProgress)
@@ -58,11 +75,12 @@ namespace Sources.Infrastructure.Factories
 		private GameProgressModel CreateNewProgress()
 		{
 			IUpgradeItemData[] itemsList = _shopFactory.LoadItems();
-
 			GameProgressModel newProgress = CreateProgress(itemsList);
 
 			_persistentProgressService.Construct(newProgress);
+#if !YANDEX_GAMES
 			_saveLoadService.SaveToUnityCloud();
+#endif
 
 			return newProgress;
 		}

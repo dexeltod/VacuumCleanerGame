@@ -19,6 +19,7 @@ using Sources.Services.Interfaces;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
 using Sources.Utils;
+using Sources.View.SceneEntity;
 
 namespace Sources.Application.StateMachine.GameStates
 {
@@ -26,16 +27,20 @@ namespace Sources.Application.StateMachine.GameStates
 	{
 		private readonly GameStateMachine _gameStateMachine;
 		private readonly GameServices _gameServices;
+		private readonly LoadingCurtain _loadingCurtain;
 
-		public InitializeServicesWithProgressState(GameStateMachine gameStateMachine, GameServices gameServices)
+		public InitializeServicesWithProgressState(GameStateMachine gameStateMachine, GameServices gameServices,
+			LoadingCurtain loadingCurtain)
 		{
 			_gameStateMachine = gameStateMachine;
 			_gameServices = gameServices;
+			_loadingCurtain = loadingCurtain;
 		}
 
 		public async UniTask Enter()
 		{
-			await RegisterServices();
+			await RegisterServiceAndResources();
+			_loadingCurtain.SetText("Loading menu");
 			await _gameStateMachine.Enter<MenuState>();
 		}
 
@@ -43,9 +48,9 @@ namespace Sources.Application.StateMachine.GameStates
 		{
 		}
 
-		private async UniTask RegisterServices()
+		private async UniTask RegisterServiceAndResources()
 		{
-			IShopItemFactory shopItemFactory = new ShopItemFactory();
+			IShopItemFactory shopItemFactory = new ShopItemFactory(_loadingCurtain);
 			ResourceServiceFactory resourceServiceFactory = new ResourceServiceFactory();
 
 			Dictionary<ResourceType, IResource<int>> intResources = resourceServiceFactory.GetIntResources();
@@ -53,14 +58,14 @@ namespace Sources.Application.StateMachine.GameStates
 
 			_gameServices.Register<IResourceService>(new ResourcesService(intResources, floatResources));
 
-			await InitProgress
-			(_gameServices.Get<ISaveLoadDataService>(),
-				_gameServices.Get<IPersistentProgressService>(), shopItemFactory
-			);
+			ISaveLoadDataService saveLoadDataService = _gameServices.Get<ISaveLoadDataService>();
+			IPersistentProgressService persistentProgressService = _gameServices.Get<IPersistentProgressService>();
+			await InitProgress(saveLoadDataService, persistentProgressService, shopItemFactory);
 
 			IPersistentProgressService progressService = _gameServices.Get<IPersistentProgressService>();
 
-			PlayerStatsFactory statsFactory = new PlayerStatsFactory(shopItemFactory);
+			_loadingCurtain.SetText("Shop items");
+			PlayerStatsFactory statsFactory = new PlayerStatsFactory(shopItemFactory, _loadingCurtain);
 
 			_gameServices.Register<IPlayerStatsService>(statsFactory.CreatePlayerStats(progressService));
 
@@ -68,20 +73,19 @@ namespace Sources.Application.StateMachine.GameStates
 			_gameServices.Register<IResourcesProgressPresenter>(new ResourcesPresenter());
 			_gameServices.Register<IShopProgressProvider>(new ShopProgressProvider());
 
+			_loadingCurtain.SetText("Shop Creating UI services...");
 			CreateUIServices();
 
+			_loadingCurtain.SetText("UpgradeWindow factory");
 			UpgradeWindowFactory upgradeWindowFactory = new(shopItemFactory);
 
 			_gameServices.Register<IUpgradeWindowFactory>(upgradeWindowFactory);
 			_gameServices.Register<IUpgradeWindowGetter>(upgradeWindowFactory);
 
-			_gameServices.Register<IPlayerFactory>
-			(
-				new PlayerFactory
-				(
-					_gameServices.Get<IAssetProvider>()
-				)
-			);
+			_loadingCurtain.SetText("PlayerFactory");
+			_gameServices.Register<IPlayerFactory>(new PlayerFactory(_gameServices.Get<IAssetProvider>()));
+
+			_loadingCurtain.SetText("Services created");
 		}
 
 		private async UniTask InitProgress(ISaveLoadDataService saveLoadService,
@@ -93,7 +97,8 @@ namespace Sources.Application.StateMachine.GameStates
 				persistentProgressService,
 				shopItemFactory
 			);
-			
+
+			_loadingCurtain.SetText("Initialization progress");
 			await progressFactory.InitProgress();
 		}
 

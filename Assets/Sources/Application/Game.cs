@@ -14,7 +14,8 @@ namespace Sources.Application
 		{
 			StateMachine = new GameStateMachine
 			(
-				new SceneLoader(coroutineRunner),
+				coroutineRunner,
+				new SceneLoader(),
 				loadingCurtain,
 				GameServices.Container
 			);

@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Sources.View.SceneEntity;
 using UnityEngine;
 
@@ -6,21 +7,24 @@ namespace Sources.Application
 	public class Bootstrapper : MonoBehaviour, ICoroutineRunner
 	{
 		[SerializeField] private LoadingCurtain _loadingCurtain;
-		
+
 		private Game _game;
 
 		private async void Awake()
 		{
-			var loadingCurtain = GetLoadingCurtain();
-			loadingCurtain.gameObject.SetActive(false);
+			DontDestroyOnLoad(this);
+			LoadingCurtain loadingCurtain = GetLoadingCurtain();
+			loadingCurtain.gameObject.SetActive(true);
 
 			_game = new Game(this, loadingCurtain);
-			await _game.Start();
-			
-			DontDestroyOnLoad(this);
+			await StartGame();
+
 		}
-		
-		private LoadingCurtain GetLoadingCurtain() => 
+
+		private async UniTask StartGame() => 
+			await _game.Start();
+
+		private LoadingCurtain GetLoadingCurtain() =>
 			Instantiate(_loadingCurtain);
 	}
 }

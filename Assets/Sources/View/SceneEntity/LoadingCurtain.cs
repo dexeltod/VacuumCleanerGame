@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 namespace Sources.View.SceneEntity
@@ -6,9 +7,13 @@ namespace Sources.View.SceneEntity
 	public class LoadingCurtain : MonoBehaviour
 	{
 		[SerializeField] private CanvasGroup _curtain;
-		
+		[SerializeField] private TextMeshProUGUI _infoText;
+
 		private void Awake() => 
 			DontDestroyOnLoad(this);
+
+		public void SetText(string empty) => 
+			_infoText.text = empty;
 
 		public void Show()
 		{
@@ -16,7 +21,13 @@ namespace Sources.View.SceneEntity
 			_curtain.alpha = 1;
 		}
 
-		public void Hide() => 
+		public void Hide()
+		{
+			gameObject.SetActive(false);
+			_curtain.alpha = 0;
+		}
+
+		public void HideLazy() => 
 			StartCoroutine(HideCurtain());
 
 		private IEnumerator HideCurtain()

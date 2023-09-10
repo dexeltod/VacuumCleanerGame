@@ -18,10 +18,13 @@ namespace Sources.Application.StateMachine.GameStates
 
 		public async UniTask Enter()
 		{
-			_sceneLoader.Load(ConstantNames.MenuScene);
+			_loadingCurtain.SetText("");
+			await _sceneLoader.Load(ConstantNames.MenuScene);
+			_loadingCurtain.HideLazy();
 		}
 		public void Exit()
 		{
+			_loadingCurtain.Show();
 			_loadingCurtain.gameObject.SetActive(true);
 		}
 	}

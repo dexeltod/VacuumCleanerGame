@@ -6,5 +6,6 @@ namespace Sources.Application.StateMachineInterfaces
 	public interface IGameState : IExitState
 	{
 		UniTask Enter();
+		
 	}
 }

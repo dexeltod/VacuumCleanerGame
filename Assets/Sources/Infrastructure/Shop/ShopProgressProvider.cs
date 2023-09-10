@@ -34,7 +34,9 @@ namespace Sources.Infrastructure.Shop
 				return;
 
 			_shopProgress.SetProgress(progressName, newProgressPoint);
+#if !YANDEX_GAMES
 			_saveLoadService.SaveToUnityCloud();
+#endif
 		}
 	}
 }

@@ -1,15 +1,22 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Cysharp.Threading.Tasks;
+using Agava.YandexGames;
+using Newtonsoft.Json;
+using Sources.Application;
 using Sources.DIService;
 using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.Services.DomainServices.DTO;
-using Unity.Plastic.Newtonsoft.Json;
-using Unity.Services.CloudSave;
 using UnityEngine;
+#if !YANDEX_GAMES
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using System.Linq;
+#endif
+
+#if !YANDEX_GAMES
+using Unity.Services.CloudSave;
+#endif
 
 namespace Sources.Services.DomainServices
 {
@@ -19,39 +26,44 @@ namespace Sources.Services.DomainServices
 		private const string SavesDirectory = "/Saves/";
 		private const string GameProgressKey = "GameProgress";
 
+#if !YANDEX_GAMES
 		private readonly BinaryDataSaveLoader _binaryDataSaveLoader;
+#endif
 		private readonly JsonDataSaveLoader _jsonDataLoader;
 		private readonly IPersistentProgressService _persistentProgress;
 		private readonly JsonSerializerSettings _jsonSerializerSettings;
 		private IGameProgressModel _gameProgress;
 
-		public SaveLoadDataService()
+		public SaveLoadDataService(ICoroutineRunner coroutineRunner)
 		{
-			string saveDirectoryPath = Application.persistentDataPath + SavesDirectory;
+#if !YANDEX_GAMES
+			_binaryDataSaveLoader = new BinaryDataSaveLoader();
+#endif
+			string saveDirectoryPath = UnityEngine.Application.persistentDataPath + SavesDirectory;
 			Directory.CreateDirectory(saveDirectoryPath);
 
 			_jsonDataLoader = new JsonDataSaveLoader();
-			_binaryDataSaveLoader = new BinaryDataSaveLoader();
 			_persistentProgress = GameServices.Container.Get<IPersistentProgressService>();
 
-			_jsonSerializerSettings = new JsonSerializerSettings();
-			_jsonSerializerSettings.ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor;
+			_jsonSerializerSettings = new JsonSerializerSettings
+				{ ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor };
 		}
 
 		public void SaveToUnityCloud()
 		{
 			GameProgressModel model = _persistentProgress.GameProgress as GameProgressModel;
 
-			string dataJson = JsonConvert.SerializeObject(model);
 			string dataJsonUtility = JsonUtility.ToJson(model);
-
+#if !YANDEX_GAMES
 			CloudSaveService.Instance.Data.ForceSaveAsync(new Dictionary<string, object>
 				{
 					{ GameProgressKey, dataJsonUtility }
 				}
 			);
+#endif
 		}
 
+#if !YANDEX_GAMES
 		public async UniTask<IGameProgressModel> LoadFromUnityCloud()
 		{
 			Dictionary<string, string> keyAndJsonSaves = await CloudSaveService
@@ -66,8 +78,49 @@ namespace Sources.Services.DomainServices
 
 			return TryDeserialize(jsonSave);
 		}
+#endif
 
-		private IGameProgressModel TryDeserialize(string jsonSave)
+#if YANDEX_GAMES && !UNITY_EDITOR
+		public IGameProgressModel LoadFromYandex()
+		{
+			if (PlayerAccount.IsAuthorized)
+				PlayerAccount.GetCloudSaveData(OnYandexCloudSaveLoaded, OnYandexLoadError);
+
+			return _gameProgress;
+		}
+
+		private void OnYandexLoadError(string obj) =>
+			throw new Exception(obj);
+
+		private void OnYandexCloudSaveLoaded(string json) =>
+			_gameProgress = JsonUtility.FromJson<GameProgressModel>(json);
+
+		public void SaveToYandex(string jsonSave)
+		{
+			PlayerAccount.SetCloudSaveData(jsonSave);
+		}
+#endif
+		public void SaveToJson(string fileName, object data) =>
+			_jsonDataLoader.Save(fileName, data);
+
+		public string LoadFromJson(string fileName) =>
+			_jsonDataLoader.Load(fileName);
+
+		public T LoadFromJson<T>(string fileName) =>
+			_jsonDataLoader.Load<T>(fileName);
+
+#if !YANDEX_GAMES
+		public void SaveProgressBinary() =>
+			_binaryDataSaveLoader.Save(_persistentProgress.GameProgress);
+
+		public IGameProgressModel LoadProgressBinary()
+		{
+			_gameProgress = _binaryDataSaveLoader.LoadProgress();
+			return _gameProgress;
+		}
+#endif
+
+		private IGameProgressModel DeserializeJson(string jsonSave)
 		{
 			try
 			{
@@ -81,24 +134,6 @@ namespace Sources.Services.DomainServices
 				Debug.Log("New progress will be created");
 				return null;
 			}
-		}
-
-		public void SaveToJson(string fileName, object data) =>
-			_jsonDataLoader.Save(fileName, data);
-
-		public string LoadFromJson(string fileName) =>
-			_jsonDataLoader.Load(fileName);
-
-		public T LoadFromJson<T>(string fileName) =>
-			_jsonDataLoader.Load<T>(fileName);
-
-		public void SaveProgressBinary() =>
-			_binaryDataSaveLoader.Save(_persistentProgress.GameProgress);
-
-		public IGameProgressModel LoadProgressBinary()
-		{
-			_gameProgress = _binaryDataSaveLoader.LoadProgress();
-			return _gameProgress;
 		}
 	}
 }

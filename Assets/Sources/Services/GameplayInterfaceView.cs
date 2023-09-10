@@ -12,10 +12,11 @@ namespace Sources.Services
 		[SerializeField] private TextMeshProUGUI _scoreText;
 		[SerializeField] private TextMeshProUGUI _moneyText;
 		[SerializeField] private Joystick _joystick;
+		[SerializeField] private TextMeshProUGUI _playerName;
 
 		private IResourcesProgressPresenter _resourcesProgress;
-		private int _maxScore;
 		private Canvas _canvas;
+		private int _maxScore;
 		private bool _isInitialized;
 
 		public Slider ScoreSlider => _scoreSlider;
@@ -23,6 +24,7 @@ namespace Sources.Services
 		public TextMeshProUGUI MoneyText => _moneyText;
 		public Joystick Joystick => _joystick;
 		public Canvas Canvas => _canvas;
+		public TextMeshProUGUI PlayerName => _playerName;
 
 		~GameplayInterfaceView()
 		{
@@ -49,7 +51,7 @@ namespace Sources.Services
 			_isInitialized = true;
 		}
 
-		public void UpdateMaxScore(int newMaxScore) => _maxScore = newMaxScore;
+		public void SetMaxScore(int newMaxScore) => _maxScore = newMaxScore;
 
 		private void OnMoneyChanged(int newMoney)
 		{

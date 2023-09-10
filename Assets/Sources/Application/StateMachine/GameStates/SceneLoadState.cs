@@ -1,11 +1,9 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachineInterfaces;
-using Sources.Application.UI;
 using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.Player;
-using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.Services.Interfaces;
@@ -17,7 +15,7 @@ using UnityEngine;
 
 namespace Sources.Application.StateMachine.GameStates
 {
-	public class SceneLoadState : IPayloadState<string>, IDisposable
+	public class SceneLoadState : IPayloadState<string>
 	{
 		private readonly GameStateMachine _gameStateMachine;
 		private readonly SceneLoader _sceneLoader;
@@ -38,6 +36,8 @@ namespace Sources.Application.StateMachine.GameStates
 		private ISaveLoadDataService _saveLoadService;
 		private ILocalizationService _leanLocalization;
 
+		private bool _isSceneLoaded;
+
 		public SceneLoadState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain,
 			GameServices gameServices)
 		{
@@ -45,11 +45,6 @@ namespace Sources.Application.StateMachine.GameStates
 			_sceneLoader = sceneLoader;
 			_loadingCurtain = loadingCurtain;
 			_gameServices = gameServices;
-		}
-
-		public void Dispose()
-		{
-			_sceneLoad.SceneLoaded -= OnSceneLoaded;
 		}
 
 		public async UniTask Enter(string levelName)
@@ -64,33 +59,39 @@ namespace Sources.Application.StateMachine.GameStates
 			_playerStats = _gameServices.Get<IPlayerStatsService>();
 
 			_loadingCurtain.Show();
-			_sceneLoader.Load(levelName, OnLoaded);
+			await _sceneLoader.Load(levelName);
+			await Create();
+			await OnSceneLoaded();
 		}
 
-		private void OnLoaded()
+		private async UniTask Create()
 		{
-			_uiFactory.CreateUI();
+			_loadingCurtain.SetText("Create UI");
+			await _uiFactory.CreateUI();
 
 			_initialPoint = GameObject.FindWithTag(ConstantNames.PlayerSpawnPointTag);
+			_loadingCurtain.SetText("Instantiate Player");
 			_playerFactory.Instantiate(_initialPoint, _presenterFactory, _uiFactory.Joystick, _playerStats);
 			_cameraFactory.CreateVirtualCamera();
 
 			InstantiateUpgradeWindow();
 
-			_sceneLoad.SceneLoaded += OnSceneLoaded;
 			_sceneLoad.InvokeSceneLoaded();
-			_loadingCurtain.Hide();
+
+			_loadingCurtain.HideLazy();
 			_leanLocalization.UpdateTranslations();
+
+			_isSceneLoaded = true;
 		}
 
-		private async void OnSceneLoaded()
+		private async UniTask OnSceneLoaded()
 		{
 			await _gameStateMachine.Enter<GameLoopState>();
-			_sceneLoad.SceneLoaded -= OnSceneLoaded;
+			_loadingCurtain.SetText("");
 		}
 
 		public void Exit() =>
-			_loadingCurtain.Hide();
+			_loadingCurtain.HideLazy();
 
 		private void InstantiateUpgradeWindow() =>
 			_upgradeWindowFactory.Create();

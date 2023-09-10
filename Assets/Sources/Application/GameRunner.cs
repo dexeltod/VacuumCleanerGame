@@ -1,5 +1,3 @@
-using AYellowpaper;
-using Sources.Domain.Progress;
 using UnityEngine;
 
 namespace Sources.Application
@@ -10,7 +8,7 @@ namespace Sources.Application
 
 		private void Awake()
 		{
-			var bootstrapper = FindObjectOfType<Bootstrapper>();
+			Bootstrapper bootstrapper = FindObjectOfType<Bootstrapper>();
 
 			if (bootstrapper == null) 
 				Instantiate(_bootstrapperPrefab);

@@ -15,16 +15,17 @@ namespace Sources.Application.StateMachine
 		private string _currentMusicName;
 		private IExitState _activeState;
 
-		public GameStateMachine(SceneLoader sceneLoader, LoadingCurtain loadingCurtain,
+		public GameStateMachine(ICoroutineRunner coroutineRunner, SceneLoader sceneLoader,
+			LoadingCurtain loadingCurtain,
 			GameServices gameServices)
 		{
 			_states = new Dictionary<Type, IExitState>
 			{
 				[typeof(InitializeServicesAndProgressState)] =
-					new InitializeServicesAndProgressState(this, gameServices, sceneLoader),
+					new InitializeServicesAndProgressState(this, gameServices, sceneLoader, coroutineRunner, loadingCurtain),
 
 				[typeof(InitializeServicesWithProgressState)] =
-					new InitializeServicesWithProgressState(this, gameServices),
+					new InitializeServicesWithProgressState(this, gameServices, loadingCurtain),
 
 				[typeof(MenuState)] = new MenuState(sceneLoader, loadingCurtain),
 
@@ -32,7 +33,6 @@ namespace Sources.Application.StateMachine
 
 				[typeof(GameLoopState)] = new GameLoopState(this),
 			};
-
 		}
 
 		public async UniTask Enter<TState>() where TState : class, IGameState
