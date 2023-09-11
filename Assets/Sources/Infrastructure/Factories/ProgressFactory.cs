@@ -18,44 +18,33 @@ namespace Sources.Infrastructure.Factories
 	{
 		private const int StartMoneyCount = 9999;
 
-		private readonly ISaveLoadDataService _saveLoadService;
+		private readonly ISaveLoader _saveLoader;
 		private readonly IPersistentProgressService _persistentProgressService;
 		private readonly IShopItemFactory _shopFactory;
 		private readonly IResourceService _resourceService;
 
-		public ProgressFactory(ISaveLoadDataService saveLoadService,
+		public ProgressFactory(ISaveLoader saveLoader,
 			IPersistentProgressService persistentProgressService, IShopItemFactory shopItemFactory)
 		{
-			_saveLoadService = saveLoadService;
+			_saveLoader = saveLoader;
 			_persistentProgressService = persistentProgressService;
 			_shopFactory = shopItemFactory;
 			_resourceService = GameServices.Container.Get<IResourceService>();
 		}
 
+		public async UniTask<IGameProgressModel> Load() =>
+			await _saveLoader.Load();
+
+		public void Save(IGameProgressModel model) =>
+			_saveLoader.Save(model);
+
 		public async UniTask InitProgress()
 		{
-#if YANDEX_GAMES && !TEST_BUILD
-			IGameProgressModel yandexProgress = await _saveLoadService.LoadFromYandex();
-			Init(yandexProgress);
-#endif
-
-#if !YANDEX_GAMES
-			IGameProgressModel loadedProgress = await _saveLoadService.LoadFromUnityCloud();
-			Init(loadedProgress);
-#endif
-
-#if !YANDEX_GAMES && UNITY_EDITOR
-			IGameProgressModel testProgress = CreateNewProgress();
-			Init(testProgress);
-#endif
-
-#if TEST_BUILD
-			IGameProgressModel testProgress = CreateNewProgress();
-			Init(testProgress);
-#endif
+			IGameProgressModel model = await _saveLoader.Load();
+			Initialize(model);
 		}
 
-		private void Init(IGameProgressModel loadedProgress)
+		private void Initialize(IGameProgressModel loadedProgress)
 		{
 			loadedProgress = CreatNewIfNull(loadedProgress);
 			_persistentProgressService.Construct(loadedProgress);
@@ -78,10 +67,9 @@ namespace Sources.Infrastructure.Factories
 			GameProgressModel newProgress = CreateProgress(itemsList);
 
 			_persistentProgressService.Construct(newProgress);
-#if !YANDEX_GAMES
-			_saveLoadService.SaveToUnityCloud();
-#endif
 
+			_saveLoader.Save(newProgress);
+			
 			return newProgress;
 		}
 
@@ -111,9 +99,6 @@ namespace Sources.Infrastructure.Factories
 			return newProgress;
 		}
 
-		private Resource<int> GetResource(ResourceType type) =>
-			_resourceService.GetResource<int>(type) as Resource<int>;
-
 		private List<ProgressUpgradeData> CreateNewUpgradeProgressData(IUpgradeItemData[] itemsList)
 		{
 			List<ProgressUpgradeData> progressList = new List<ProgressUpgradeData>();
@@ -126,5 +111,8 @@ namespace Sources.Infrastructure.Factories
 
 			return progressList;
 		}
+
+		private Resource<int> GetResource(ResourceType type) =>
+			_resourceService.GetResource<int>(type) as Resource<int>;
 	}
 }

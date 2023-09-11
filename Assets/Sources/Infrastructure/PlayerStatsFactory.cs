@@ -29,15 +29,12 @@ namespace Sources.Infrastructure
 			if (_playerStatsService != null)
 				return _playerStatsService;
 
-			_loadingCurtain.SetText("Loading UpgradeItemData from ShopFactory");
 			IUpgradeItemData[] items = _shopFactory.LoadItems();
 
-			_loadingCurtain.SetText("Loading stats dictionary");
 			Dictionary<string, int[]> stats = CreateStatsDictionary(items);
 
 			List<IUpgradeProgressData> progress = persistentProgressService.GameProgress.PlayerProgress.GetAll();
 
-			_loadingCurtain.SetText("Creating stats names");
 			string[] statNames = new string[progress.Count];
 			IPlayerStatChangeable[] playerStats = new IPlayerStatChangeable[progress.Count];
 

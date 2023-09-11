@@ -1,11 +1,12 @@
 using Cysharp.Threading.Tasks;
+using Sources.ApplicationServicesInterfaces;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Core.Environments;
 
 namespace Sources.Application.UnityApplicationServices
 {
-	public class UnityServicesController
+	public class UnityServicesController : IUnityServicesController
 	{
 		private const string TestEnvironmentName = "tests";
 		private const string ProductionEnvironmentName = "production";
@@ -19,7 +20,7 @@ namespace Sources.Application.UnityApplicationServices
 
 		public async UniTask InitializeUnityServices()
 		{
-			InitializationOptions a = _options.SetEnvironmentName(TestEnvironmentName);
+			_options.SetEnvironmentName(TestEnvironmentName);
 
 			await UnityServices.InitializeAsync(_options);
 			await AuthenticationService.Instance.SignInAnonymouslyAsync();

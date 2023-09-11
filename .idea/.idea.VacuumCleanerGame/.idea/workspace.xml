@@ -2,48 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e72b9b77-a85b-4195-b3c2-5f5bad8d4534" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Application/YandexSDK/YandexGamesSdkController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Application/YandexSDK/YandexGamesSdkController.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/ApplicationServicesInterfaces.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/ApplicationServicesInterfaces/IYandexSDKController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/ApplicationServicesInterfaces/IYandexSDKController.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/IYandexGamesSdkController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/YandexGamesSdkController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/ApplicationServicesInterfaces/IUnityServicesController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/ApplicationServicesInterfaces/IUnityServicesController.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/DomainInterfaces/DomainServicesInterfaces/ISaveLoader.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/DomainInterfaces/DomainServicesInterfaces/ISaveLoader.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Services/DomainServices/EditorSaveLoader.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Services/DomainServices/EditorSaveLoader.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Services/DomainServices/YandexSaveLoader.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Services/DomainServices/YandexSaveLoader.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EditorSaveLoader.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/IUnityServicesController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Infractructure/LoadingCurtain.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Infractructure/LoadingCurtain.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/UI/GameplayInterface.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/UI/GameplayInterface.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/Application.asmdef" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/Application.asmdef" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/Bootstrapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/Bootstrapper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/Game.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/Game.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/GameRunner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/GameRunner.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/ICoroutineRunner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/UseCases/Scene/ICoroutineRunner.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/ICoroutineRunner.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/UseCases/Scene/ICoroutineRunner.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/SceneLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/SceneLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStateMachine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStateMachine.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/InitializeServicesAndProgressState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/InitializeServicesAndProgressState.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/InitializeServicesWithProgressState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/InitializeServicesWithProgressState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/MenuState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/MenuState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/SceneLoadState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/SceneLoadState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/StateMachineInterfaces/IGameState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/StateMachineInterfaces/IGameState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Domain/Domain.asmdef" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Domain/Domain.asmdef" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/DomainInterfaces/DomainInterfaces.asmdef" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/DomainInterfaces/DomainInterfaces.asmdef" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/UnityApplicationServices/UnityServicesController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/UnityApplicationServices/UnityServicesController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/YandexSDK/YandexGamesSdkController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/YandexSDK/YandexGamesSdkController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/ApplicationServicesInterfaces/IYandexSDKController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/ApplicationServicesInterfaces/IYandexSDKController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/DomainInterfaces/ISaveLoadDataService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/DomainInterfaces/ISaveLoadDataService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/ProgressFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/ProgressFactory.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UpgradeShop/ShopItemFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UpgradeShop/ShopItemFactory.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/PlayerStatsFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/PlayerStatsFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Shop/ShopProgressProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Shop/ShopProgressProvider.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Services/DomainServices/SaveLoadDataService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/DomainServices/SaveLoadDataService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Services/GameplayInterfaceView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/GameplayInterfaceView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Services/Interfaces/IUIFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/Interfaces/IUIFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Services/Localization/LocalizationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/Localization/LocalizationService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Services/Services.asmdef" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/Services.asmdef" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Services/UIFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/UIFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/ServicesInterfaces.asmdef" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/ServicesInterfaces.asmdef" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/UseCases/Scene/TmpLocalizationBehaviour.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/Localization/TmpLocalizationBehaviour.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/UseCases/Scene/TmpLocalizationBehaviour.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/Localization/TmpLocalizationBehaviour.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/View/SceneEntity/LoadingCurtain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/View/SceneEntity/LoadingCurtain.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,6 +59,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9ac0682aa4f74ee59eb5d5c917c9f1c98a000/cd/b241b5ce/JsonSerializerInternalReader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9d3d0b5eea2149139d21af730ecd911826e00/cd/e9433b89/StateMachine.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a3989f8c34e6476eaca56644d5639ee854a00/a8/bb48e032/ResourceType.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b30ea74e071f43fca20fd22d9086c5a41ca00/1f/afc72d37/ICloudSaveDataClient.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b32fc9256653475fa703f6fa4b6d42111a200/f7/97c19932/GameProgressFactory.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bae255e3e08e46f7bc2fbd23dde96338158800/28/b912dc45/Object.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bae255e3e08e46f7bc2fbd23dde96338158800/2d/782d41e9/Resources.cs" root0="SKIP_HIGHLIGHTING" />
@@ -111,6 +91,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/Sources/View/UI/Shop/UpgradeElementPrefab.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/View/UI/Shop/UpgradeWindowEnabler.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/View/UpgradeTrigger.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/EditorSaveLoader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.agava.webutility@8b3ff53334/Runtime/AdBlock.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.agava.webutility@8b3ff53334/Runtime/WebApplication.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.agava.yandexgames@fa31f21513/Runtime/Agava.YandexGames.asmdef" root0="SKIP_HIGHLIGHTING" />
@@ -363,6 +344,7 @@
       <workItem from="1694246052576" duration="13344000" />
       <workItem from="1694351419026" duration="12227000" />
       <workItem from="1694379792233" duration="1890000" />
+      <workItem from="1694415584638" duration="10354000" />
     </task>
     <servers />
   </component>
@@ -396,27 +378,14 @@
           <option name="timeStamp" value="131" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/InitializeServicesAndProgressState.cs</url>
-          <line>61</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Application\StateMachine\GameStates\InitializeServicesAndProgressState.cs" initialLine="63" containingFunctionPresentation="method 'InitServices'">
-            <startOffsets>
-              <option value="2057" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2143" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="397" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/InitializeServicesWithProgressState.cs</url>
-          <line>43</line>
+          <line>47</line>
           <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Application\StateMachine\GameStates\InitializeServicesWithProgressState.cs" initialLine="42" containingFunctionPresentation="method 'Enter'">
             <startOffsets>
-              <option value="1481" />
+              <option value="1635" />
             </startOffsets>
             <endOffsets>
-              <option value="1524" />
+              <option value="1678" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="399" />
@@ -488,13 +457,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/InitializeServicesAndProgressState.cs</url>
-          <line>97</line>
+          <line>90</line>
           <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Application\StateMachine\GameStates\InitializeServicesAndProgressState.cs" initialLine="95" containingFunctionPresentation="method 'RegisterServices'">
             <startOffsets>
-              <option value="3758" />
+              <option value="3409" />
             </startOffsets>
             <endOffsets>
-              <option value="3759" />
+              <option value="3410" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="407" />

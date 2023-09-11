@@ -15,9 +15,8 @@ namespace Sources.Infrastructure.Factories.UpgradeShop
 
 		private IUpgradeItemData[] _items;
 
-		public ShopItemFactory(LoadingCurtain loadingCurtain)
+		public ShopItemFactory()
 		{
-			_loadingCurtain = loadingCurtain;
 			_assetProvider = GameServices.Container.Get<IAssetProvider>();
 		}
 
@@ -26,10 +25,7 @@ namespace Sources.Infrastructure.Factories.UpgradeShop
 			if (_items != null)
 				return _items;
 
-			_loadingCurtain.SetText("Loading upgrade item list from assets");
 			UpgradeItemList upgradeItemList = _assetProvider.Load<UpgradeItemList>(ResourcesAssetPath.GameObjects.ShopItems);
-
-			_loadingCurtain.SetText("Items loaded");
 			IUpgradeItemData[] upgradeItemData = upgradeItemList.Items;
 
 			_items = upgradeItemData ?? throw new NullReferenceException("ShopItems is null");

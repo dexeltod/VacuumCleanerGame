@@ -8,5 +8,8 @@ namespace Sources.ApplicationServicesInterfaces
 	{
 		UniTask Initialize();
 		UniTask<PlayerAccountProfileDataResponse> GetPlayerAccount();
+
+		void Save(string json);
+		UniTask<string> Load();
 	}
 }

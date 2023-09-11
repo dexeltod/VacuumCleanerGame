@@ -1,21 +1,23 @@
+using System.Data;
 using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
+using Sources.DomainInterfaces;
 using Sources.View.SceneEntity;
+using UnityEngine;
 
 namespace Sources.Application.YandexSDK
 {
 	public class YandexGamesSdkController : IYandexSDKController
 	{
-		private const int AuthorizationDelay = 1500;
+		private const int Delay = 1500;
 		private readonly ICoroutineRunner _coroutineRunner;
 		private readonly LoadingCurtain _loadingCurtain;
 
 		private PlayerAccountProfileDataResponse _playerAccount;
 
-		private bool _isInitialized;
 		private bool _isAuthorized;
-		private bool _isPlayerAccountReceived;
+		private IGameProgressModel _gameProgress;
 
 		public YandexGamesSdkController(ICoroutineRunner coroutineRunner, LoadingCurtain loadingCurtain)
 		{
@@ -25,37 +27,87 @@ namespace Sources.Application.YandexSDK
 
 		public async UniTask Initialize()
 		{
-			_loadingCurtain.SetText("Initialization SDK");
-			_coroutineRunner.StartCoroutine(YandexGamesSdk.Initialize(OnInitialized));
-			await UniTask.WaitWhile(() => _isInitialized == false);
+			bool isInitialized = false;
 
-			// if (PlayerAccount.IsAuthorized == false)
-			// {
-			// 	_loadingCurtain.SetText("Starting authorization");
-			// 	PlayerAccount.StartAuthorizationPolling(AuthorizationDelay, OnAuthorizationEnded);
-			// 	await UniTask.WaitWhile(() => _isAuthorized == false);
-			// 	_loadingCurtain.SetText("");
-			// }
+			_loadingCurtain.SetText("Initialization SDK");
+			
+			_coroutineRunner.StartCoroutine
+			(
+				YandexGamesSdk.Initialize(() =>
+					{
+						isInitialized = true;
+					}
+				)
+			);
+
+			await UniTask.WaitWhile(() => isInitialized == false);
+
+			if (PlayerAccount.IsAuthorized == false)
+			{
+				bool isAuthorized = false;
+
+				_loadingCurtain.SetText("Starting authorization");
+
+				PlayerAccount.StartAuthorizationPolling
+				(
+					Delay,
+					() => { isAuthorized = true; }
+				);
+
+				await UniTask.WaitWhile(() => isAuthorized == false);
+
+				_loadingCurtain.SetText("");
+			}
 		}
 
 		public async UniTask<PlayerAccountProfileDataResponse> GetPlayerAccount()
 		{
-			_isPlayerAccountReceived = false;
-			PlayerAccount.GetProfileData(OnPlayerAccountReceived);
-			await UniTask.WaitWhile(() => _isPlayerAccountReceived == false);
-			return _playerAccount;
+			bool isReceived = false;
+			
+			PlayerAccountProfileDataResponse dataResponse = null;
+
+			_loadingCurtain.SetText("Getting player account");
+
+			PlayerAccount.GetProfileData
+			(response =>
+				{
+					dataResponse = response;
+					isReceived = true;
+				}
+			);
+
+			await UniTask.WaitWhile(() => isReceived == false);
+
+			return dataResponse;
 		}
 
-		private void OnPlayerAccountReceived(PlayerAccountProfileDataResponse playerAccount)
+		public void Save(string json) =>
+			PlayerAccount.SetCloudSaveData(json);
+
+		public async UniTask<string> Load()
 		{
-			_playerAccount = playerAccount;
-			_isPlayerAccountReceived = true;
+			bool isReceived = false;
+			string json = "";
+
+			_loadingCurtain.SetText("Getting player saves");
+
+			PlayerAccount.GetCloudSaveData
+			(
+				successCallback =>
+				{
+					json = successCallback;
+					isReceived = true;
+				},
+				errorCallback =>
+				{
+					json = errorCallback;
+					isReceived = false;
+				}
+			);
+
+			await UniTask.WaitWhile(() => isReceived == false);
+
+			return json;
 		}
-
-		private void OnAuthorizationEnded() =>
-			_isAuthorized = true;
-
-		private void OnInitialized() =>
-			_isInitialized = true;
 	}
 }

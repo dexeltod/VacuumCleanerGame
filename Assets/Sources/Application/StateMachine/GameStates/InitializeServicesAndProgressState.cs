@@ -2,7 +2,6 @@ using System.Collections;
 using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachineInterfaces;
 using Sources.Application.UnityApplicationServices;
-using Sources.ApplicationServicesInterfaces;
 using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories;
@@ -15,7 +14,6 @@ using Sources.ServicesInterfaces;
 using Sources.Utils.Configs;
 using Sources.View.SceneEntity;
 using Unity.Services.Core;
-using UnityEngine;
 #if YANDEX_GAMES && !UNITY_EDITOR
 using Sources.Application.YandexSDK;
 #endif
@@ -41,7 +39,6 @@ namespace Sources.Application.StateMachine.GameStates
 			_loadingCurtain = loadingCurtain;
 			_gameStateMachine = gameStateMachine;
 			_gameServices = gameServices;
-			_unityServicesController = new UnityServicesController(new InitializationOptions());
 		}
 
 		public void Exit()
@@ -61,16 +58,12 @@ namespace Sources.Application.StateMachine.GameStates
 		{
 			IAssetProvider provider = _gameServices.Register<IAssetProvider>(new AssetProvider());
 			_gameServices.Register<ILocalizationService>(new LocalizationService());
+			
 #if YANDEX_GAMES && !UNITY_EDITOR
 			_loadingCurtain.SetText("Start YANDEX SDK initialization");
 			YandexGamesSdkController yandexGamesSdkController = new YandexGamesSdkController(_coroutineRunner, _loadingCurtain);
 			await yandexGamesSdkController.Initialize();
 			_gameServices.Register<IYandexSDKController>(yandexGamesSdkController);
-#endif
-
-#if !YANDEX_GAMES && TEST_BUILD && !UNITY_EDITOR
-			_loadingCurtain.SetText("Start UNITY SERVICES initialization");
-			await _unityServicesController.InitializeUnityServices();
 #endif
 
 			_loadingCurtain.SetText("Initialization services");
@@ -91,7 +84,7 @@ namespace Sources.Application.StateMachine.GameStates
 			_gameServices.Register<ISceneConfigGetter>(new SceneConfigGetter());
 
 			_loadingCurtain.SetText("Register save load ");
-			_gameServices.Register<ISaveLoadDataService>(new SaveLoadDataService(_coroutineRunner));
+			_gameServices.Register<ISaveLoadDataService>(new SaveLoadDataService());
 			_loadingCurtain.SetText("");
 
 			_isServicesRegistered = true;
