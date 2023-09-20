@@ -30,9 +30,7 @@ namespace Sources.Services
 
 		public UIFactory()
 		{
-#if YANDEX_GAMES && !UNITY_EDITOR
 			_yandexGamesController = GameServices.Container.Get<IYandexSDKController>();
-#endif
 			_assetProvider = GameServices.Container.Get<IAssetProvider>();
 			_resourcesProgressPresenter = GameServices.Container.Get<IResourcesProgressPresenter>();
 			_gameProgress = GameServices.Container.Get<IPersistentProgressService>();
@@ -46,15 +44,12 @@ namespace Sources.Services
 			_gameInterface.Construct(_resourcesProgressPresenter,
 				_gameProgress.GameProgress.ResourcesModel.MaxFilledScore);
 
-#if YANDEX_GAMES && !UNITY_EDITOR
-
 			PlayerAccountProfileDataResponse playerAccount = await _yandexGamesController.GetPlayerAccount();
 
 			string publicName = playerAccount.scopePermissions.public_name;
-			
+
 			_playerName = _gameInterface.PlayerName;
 			_playerName.SetText(playerAccount.publicName);
-#endif
 
 			Canvas = _gameInterface.Canvas;
 

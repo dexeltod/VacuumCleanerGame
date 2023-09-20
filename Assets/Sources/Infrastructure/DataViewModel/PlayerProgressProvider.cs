@@ -1,3 +1,4 @@
+using System;
 using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.DTO;
@@ -7,25 +8,29 @@ namespace Sources.Infrastructure.DataViewModel
 {
 	public class PlayerProgressProvider : IPlayerProgressProvider
 	{
-		private const int Point = 1;
+		private const int OnePoint = 1;
 		private readonly IGameProgress _playerProgress;
 		private readonly IPlayerStatsService _playerStats;
 
-		public PlayerProgressProvider()
+		public PlayerProgressProvider(IPlayerStatsService playerStats)
 		{
-			_playerProgress = GameServices.Container.Get<IPersistentProgressService>().GameProgress
+			_playerProgress = GameServices
+				.Container
+				.Get<IPersistentProgressService>()
+				.GameProgress
 				.PlayerProgress;
 
-			_playerStats = GameServices.Container.Get<IPlayerStatsService>();
+			_playerStats = playerStats; 
 		}
 
 		public void SetProgress(string progressName)
 		{
 			IUpgradeProgressData upgradeProgress = _playerProgress.GetByName(progressName);
-			int newProgressValue = upgradeProgress.Value + Point;
+			int newProgressValue = upgradeProgress.Value + OnePoint;
 
 			_playerStats.Set(upgradeProgress.Name, newProgressValue);
 			_playerProgress.SetProgress(progressName, newProgressValue);
+			
 		}
 	}
 }

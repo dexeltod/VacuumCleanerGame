@@ -1,9 +1,11 @@
+using System;
+using Cysharp.Threading.Tasks;
 using Sources.DIService;
 
 namespace Sources.InfrastructureInterfaces.DTO
 {
 	public interface IShopProgressProvider : IService
 	{
-		void AddProgressPoint(string progressName);
+		UniTask AddProgressPoint(string progressName, Action succededCallback);
 	}
 }

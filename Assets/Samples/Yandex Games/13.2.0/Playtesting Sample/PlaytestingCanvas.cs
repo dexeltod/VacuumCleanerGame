@@ -2,10 +2,8 @@
 
 using System.Collections;
 
-#if YANDEX_GAMES
 using Agava.YandexGames;
 using Agava.YandexGames.Samples;
-#endif
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -31,11 +29,6 @@ namespace Agava.YandexGames.Samples
 
         private IEnumerator Start()
         {
-#if !UNITY_WEBGL || UNITY_EDITOR
-            yield break;
-#endif
-
-            // Always wait for it if invoking something immediately in the first scene.
             yield return YandexGamesSdk.Initialize();
 
             if (PlayerAccount.IsAuthorized == false)

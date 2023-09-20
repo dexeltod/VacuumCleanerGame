@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using Sources.DIService;
 using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Upgrade;
@@ -11,7 +12,7 @@ using Sources.View.UI.Shop;
 
 namespace Sources.Application
 {
-	public class ShopPurchaseController: IDisposable
+	public class ShopPurchaseController : IDisposable
 	{
 		private const int Point = 1;
 
@@ -24,6 +25,8 @@ namespace Sources.Application
 
 		private readonly Dictionary<string, UpgradeElementPrefab> _prefabsByNames =
 			new Dictionary<string, UpgradeElementPrefab>();
+
+		private bool _isCanAddProgress;
 
 		public ShopPurchaseController
 		(
@@ -45,7 +48,7 @@ namespace Sources.Application
 			_upgradeWindow.Destroyed += OnDestroyed;
 		}
 
-		public void Dispose() => 
+		public void Dispose() =>
 			UnsubscribeFromButtons(_upgradeElements);
 
 		private void OnActiveChanged(bool isActive)
@@ -74,47 +77,54 @@ namespace Sources.Application
 				element.BuyButtonPressed -= OnButtonPressed;
 		}
 
-		private void OnButtonPressed(IUpgradeItemData data)
+		private async void OnButtonPressed(IUpgradeItemData data)
 		{
-			if (IsHaveExceptions(data) == false)
-				return;
+			if (_isCanAddProgress == false)
+				throw new InvalidOperationException("Callback still not received");
 
-			SetProgress(data);
+			if (data.PointLevel >= data.MaxPointLevel)
+				throw new InvalidOperationException("Maximum upgrade level");
+
+			await SetProgress(data);
+
 			ChangeColor(data);
 		}
 
 		private void ChangeColor(IUpgradeItemData upgradeItemData)
 		{
 			IColorChangeable color = _prefabsByNames
-									 .FirstOrDefault(element => element.Key == upgradeItemData.IdName)
-									 .Value;
+				.FirstOrDefault(element => element.Key == upgradeItemData.IdName)
+				.Value;
 
 			color.AddProgressPointColor(Point);
 		}
 
-		private void SetProgress(IUpgradeItemData upgradeElement)
+		private async UniTask SetProgress(IUpgradeItemData upgradeElement)
 		{
-			_resourcesProgress.DecreaseMoney(upgradeElement.Price);
-			SetUpgradeLevel(upgradeElement);
-			_playerProgress.SetProgress(upgradeElement.IdName);
-			_shopProgressProvider.AddProgressPoint(upgradeElement.IdName);
+			_isCanAddProgress = false;
+
+			int countedMoney = _resourcesProgress.GetDecreasedMoney(upgradeElement.Price);
+
+			if (countedMoney < 0)
+				throw new InvalidOperationException("Money less than zero");
+
+			await _shopProgressProvider.AddProgressPoint
+			(
+				upgradeElement.IdName,
+				succededCallback: () =>
+				{
+					_playerProgress.SetProgress(upgradeElement.IdName);
+					_isCanAddProgress = true;
+				}
+			);
+
+			SetUpgradeLevelVisual(upgradeElement);
 		}
 
-		private void SetUpgradeLevel(IUpgradeItemData upgradeElement)
+		private void SetUpgradeLevelVisual(IUpgradeItemData upgradeElement)
 		{
 			int newLevel = upgradeElement.PointLevel + Point;
 			upgradeElement.SetUpgradeLevel(newLevel);
-		}
-
-		private bool IsHaveExceptions(IUpgradeItemData upgradeElement)
-		{
-			if (_resourcesProgress.SoftCurrency.Count - upgradeElement.Price < 0)
-				throw new InvalidOperationException("Not enough money");
-
-			if (upgradeElement.PointLevel >= upgradeElement.MaxPointLevel)
-				throw new InvalidOperationException("Maximum upgrade level");
-
-			return true;
 		}
 	}
 }

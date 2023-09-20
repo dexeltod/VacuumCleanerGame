@@ -36,8 +36,6 @@ namespace Sources.Application.StateMachine.GameStates
 		private ISaveLoadDataService _saveLoadService;
 		private ILocalizationService _leanLocalization;
 
-		private bool _isSceneLoaded;
-
 		public SceneLoadState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain,
 			GameServices gameServices)
 		{
@@ -61,7 +59,8 @@ namespace Sources.Application.StateMachine.GameStates
 			_loadingCurtain.Show();
 			await _sceneLoader.Load(levelName);
 			await Create();
-			await OnSceneLoaded();
+			
+			OnSceneLoaded();
 		}
 
 		private async UniTask Create()
@@ -80,13 +79,11 @@ namespace Sources.Application.StateMachine.GameStates
 
 			_loadingCurtain.HideLazy();
 			_leanLocalization.UpdateTranslations();
-
-			_isSceneLoaded = true;
 		}
 
-		private async UniTask OnSceneLoaded()
+		private void OnSceneLoaded()
 		{
-			await _gameStateMachine.Enter<GameLoopState>();
+			_gameStateMachine.Enter<GameLoopState>();
 			_loadingCurtain.SetText("");
 		}
 

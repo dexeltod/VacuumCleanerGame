@@ -16,7 +16,7 @@ namespace Sources.Application.StateMachine.GameStates
 			_loadingCurtain = loadingCurtain;
 		}
 
-		public async UniTask Enter()
+		public async void Enter()
 		{
 			_loadingCurtain.SetText("");
 			await _sceneLoader.Load(ConstantNames.MenuScene);

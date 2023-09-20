@@ -6,5 +6,6 @@ namespace Sources.Application
 	public interface ICoroutineRunner
 	{
 		Coroutine StartCoroutine(IEnumerator routine);
+		void StopCoroutineRunning(Coroutine coroutine);
 	}
 }

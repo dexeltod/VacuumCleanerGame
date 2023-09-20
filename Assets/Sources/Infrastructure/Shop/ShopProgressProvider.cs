@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using Sources.DIService;
 using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
@@ -10,6 +11,7 @@ namespace Sources.Infrastructure.Shop
 {
 	public class ShopProgressProvider : IShopProgressProvider
 	{
+		
 		private const int Point = 1;
 		private readonly IGameProgress _shopProgress;
 		private readonly ISaveLoadDataService _saveLoadService;
@@ -21,7 +23,7 @@ namespace Sources.Infrastructure.Shop
 			_shopProgress = gameProgress.ShopProgress;
 		}
 
-		public void AddProgressPoint(string progressName)
+		public async UniTask AddProgressPoint(string progressName, Action succededCallback)
 		{
 			IUpgradeProgressData upgradeProgress = _shopProgress.GetByName(progressName);
 
@@ -34,9 +36,7 @@ namespace Sources.Infrastructure.Shop
 				return;
 
 			_shopProgress.SetProgress(progressName, newProgressPoint);
-#if !YANDEX_GAMES
-			_saveLoadService.SaveToUnityCloud();
-#endif
+			await _saveLoadService.SaveToCloud();
 		}
 	}
 }

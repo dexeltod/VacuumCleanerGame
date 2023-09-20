@@ -9,7 +9,7 @@ namespace Sources.Infrastructure.DataViewModel
 {
 	public class ResourcesPresenter : IResourcesProgressPresenter
 	{
-		private const int Count = 1;
+		private const int ResourceAddCount = 1;
 		private readonly IPersistentProgressService _resourcesData;
 
 		public IResource<int> SoftCurrency => Model.SoftCurrency;
@@ -56,8 +56,8 @@ namespace Sources.Infrastructure.DataViewModel
 			if (Model.CurrentSandCount <= 0)
 				return;
 
-			Model.AddMoney(Count);
-			Model.DecreaseSand(Count);
+			Model.AddMoney(ResourceAddCount);
+			Model.DecreaseSand(ResourceAddCount);
 			ScoreChanged?.Invoke(Model.CurrentSandCount);
 			MoneyChanged?.Invoke(Model.SoftCurrency.Count);
 		}
@@ -73,5 +73,8 @@ namespace Sources.Infrastructure.DataViewModel
 			Model.SoftCurrency.Set(Model.SoftCurrency.Count - count);
 			MoneyChanged?.Invoke(Model.SoftCurrency.Count);
 		}
+
+		public int GetDecreasedMoney(int count) => 
+			count - Model.SoftCurrency.Count;
 	}
 }

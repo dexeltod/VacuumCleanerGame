@@ -53,14 +53,12 @@ namespace Sources.Services
 
 		public void SetMaxScore(int newMaxScore) => _maxScore = newMaxScore;
 
-		private void OnMoneyChanged(int newMoney)
-		{
+		private void OnMoneyChanged(int newMoney) => 
 			_moneyText.SetText(newMoney.ToString());
-		}
 
 		private void OnScoreChanged(int newScore)
 		{
-			float value = (_scoreSlider.maxValue / _maxScore) * newScore;
+			float value = _scoreSlider.maxValue / _maxScore * newScore;
 			_scoreSlider.value = value;
 			_scoreText.SetText($"{newScore}/{_maxScore}");
 		}

@@ -17,9 +17,10 @@ namespace Sources.Application.StateMachine.GameStates
 			
 		}
 
-		public async UniTask Enter()
+		public void Enter()
 		{
 			
 		}
+
 	}
 }

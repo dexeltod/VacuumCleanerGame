@@ -9,9 +9,6 @@ namespace Sources.View.SceneEntity
 		[SerializeField] private CanvasGroup _curtain;
 		[SerializeField] private TextMeshProUGUI _infoText;
 
-		private void Awake() => 
-			DontDestroyOnLoad(this);
-
 		public void SetText(string empty) => 
 			_infoText.text = empty;
 

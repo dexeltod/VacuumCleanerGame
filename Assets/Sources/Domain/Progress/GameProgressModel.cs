@@ -1,5 +1,4 @@
 using System;
-using Newtonsoft.Json;
 using Sources.Domain.Progress.Player;
 using Sources.DomainInterfaces;
 using UnityEngine;
@@ -16,8 +15,7 @@ namespace Sources.Domain.Progress
 		public IGameProgress ShopProgress => _shopProgress;
 		public IGameProgress PlayerProgress => _playerProgress;
 		public IResourcesModel ResourcesModel => _resources;
-
-		[JsonConstructor]
+		
 		public GameProgressModel(ResourcesModel resourcesModel, PlayerProgress playerProgress,
 			ShopProgress shopProgress)
 		{

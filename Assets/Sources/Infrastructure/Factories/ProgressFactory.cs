@@ -10,39 +10,48 @@ using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.Utils;
+using UnityEngine;
 
 namespace Sources.Infrastructure.Factories
 {
 	[Serializable]
-	public class ProgressFactory
+	public class ProgressFactory : IDisposable
 	{
 		private const int StartMoneyCount = 9999;
 
-		private readonly ISaveLoader _saveLoader;
-		private readonly IPersistentProgressService _persistentProgressService;
+		private readonly ISaveLoadDataService _saveLoadDataService;
+		private readonly IPersistentProgressServiceConstructable _persistentProgressService;
 		private readonly IShopItemFactory _shopFactory;
+		private readonly ISaveClearable _saveClearable;
 		private readonly IResourceService _resourceService;
 
-		public ProgressFactory(ISaveLoader saveLoader,
-			IPersistentProgressService persistentProgressService, IShopItemFactory shopItemFactory)
+		public ProgressFactory(ISaveLoadDataService saveLoadDataService,
+			IPersistentProgressServiceConstructable persistentProgressService, IShopItemFactory shopItemFactory,
+			ISaveClearable saveClearable)
 		{
-			_saveLoader = saveLoader;
+			_saveLoadDataService = saveLoadDataService;
 			_persistentProgressService = persistentProgressService;
 			_shopFactory = shopItemFactory;
+			_saveClearable = saveClearable;
 			_resourceService = GameServices.Container.Get<IResourceService>();
+			_saveClearable.ProgressCleared += CreateNewProgress;
+		}
+
+		public void Dispose() =>
+			_saveClearable.ProgressCleared -= CreateNewProgress;
+
+		public async UniTask InitializeProgress()
+		{
+			IGameProgressModel loadedSaves = await _saveLoadDataService.LoadFromCloud();
+
+			Initialize(loadedSaves);
 		}
 
 		public async UniTask<IGameProgressModel> Load() =>
-			await _saveLoader.Load();
+			await _saveLoadDataService.LoadFromCloud();
 
 		public void Save(IGameProgressModel model) =>
-			_saveLoader.Save(model);
-
-		public async UniTask InitProgress()
-		{
-			IGameProgressModel model = await _saveLoader.Load();
-			Initialize(model);
-		}
+			_saveLoadDataService.SaveToCloud(model);
 
 		private void Initialize(IGameProgressModel loadedProgress)
 		{
@@ -54,7 +63,10 @@ namespace Sources.Infrastructure.Factories
 		{
 			if (loadedProgress == null)
 			{
+				Debug.Log("Creation new progress model");
+
 				IGameProgressModel newProgress = CreateNewProgress();
+				_saveLoadDataService.SaveToCloud(newProgress);
 				loadedProgress = newProgress;
 			}
 
@@ -68,8 +80,6 @@ namespace Sources.Infrastructure.Factories
 
 			_persistentProgressService.Construct(newProgress);
 
-			_saveLoader.Save(newProgress);
-			
 			return newProgress;
 		}
 
@@ -78,6 +88,8 @@ namespace Sources.Infrastructure.Factories
 			Resource<int> soft = GetResource(ResourceType.Soft);
 			Resource<int> hard = GetResource(ResourceType.Hard);
 
+			Debug.Log("Resources loaded");
+
 			ResourcesModel resourcesModel = new ResourcesModel
 			(
 				soft,
@@ -85,7 +97,7 @@ namespace Sources.Infrastructure.Factories
 				StartMoneyCount
 			);
 
-			PlayerProgress playerProgressModel = new PlayerProgress(CreateNewUpgradeProgressData(itemsList));
+			PlayerProgress playerProgressModel = new PlayerProgress(CreateNewUpgradeProgressData(itemsList), 0);
 
 			ShopProgress shopProgressModel = new(CreateNewUpgradeProgressData(itemsList));
 

@@ -1,15 +1,16 @@
 using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
 using Sources.DIService;
+using Sources.DomainInterfaces;
 
 namespace Sources.ApplicationServicesInterfaces
 {
 	public interface IYandexSDKController : IService
 	{
-		UniTask Initialize();
 		UniTask<PlayerAccountProfileDataResponse> GetPlayerAccount();
 
-		void Save(string json);
+		UniTask Save(string json);
 		UniTask<string> Load();
+		UniTask DeleteSaves(IGameProgressModel gameProgressModel);
 	}
 }

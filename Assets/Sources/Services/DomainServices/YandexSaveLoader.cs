@@ -1,5 +1,7 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
+using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using UnityEngine;
@@ -14,18 +16,47 @@ namespace Sources.Services.DomainServices
 		{
 			_yandexController = yandexController;
 		}
-		
-		public void Save(IGameProgressModel @object)
-		{
-			string json = JsonUtility.ToJson(@object);
 
-			_yandexController.Save(json);
+		public async UniTask Save(IGameProgressModel @object, Action succeededCallback)
+		{
+			await _yandexController.Save
+			(
+				JsonUtility.ToJson((GameProgressModel)@object)
+			);
+
+			succeededCallback.Invoke();
 		}
 
-		public async UniTask<IGameProgressModel> Load()
+		public async UniTask<IGameProgressModel> Load(Action succeededCallback)
 		{
 			string json = await _yandexController.Load();
-			return JsonUtility.FromJson<IGameProgressModel>(json);
+
+			Debug.Log("JSON" + json);
+
+			if (string.IsNullOrEmpty(json) || json == "{}")
+			{
+				Debug.LogError("PROGRESS IS NULL");
+				return null;
+			}
+
+			try
+			{
+				Debug.Log("" + json);
+				GameProgressModel convertedJson = JsonUtility.FromJson<GameProgressModel>(json);
+				succeededCallback.Invoke();
+				return convertedJson;
+			}
+			catch (Exception e)
+			{
+				Debug.LogError(e + "RETURN NULL");
+				throw new InvalidCastException("Json is wrong");
+			}
+		}
+
+		public async UniTask ClearSaves(IGameProgressModel gameProgressModel, Action succeededCallback)
+		{
+			await _yandexController.DeleteSaves(gameProgressModel);
+			succeededCallback.Invoke();
 		}
 	}
 }

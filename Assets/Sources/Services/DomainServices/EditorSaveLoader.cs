@@ -23,10 +23,7 @@ public class EditorSaveLoader : ISaveLoader
 		_unityServicesController = unityServicesController;
 	}
 
-	public async UniTask Initialize() =>
-		await _unityServicesController.InitializeUnityServices();
-
-	public async void Save(IGameProgressModel @object)
+	public async UniTask Save(IGameProgressModel @object, Action succeededCallback)
 	{
 		GameProgressModel model = _progressService.GameProgress as GameProgressModel;
 		string dataJsonUtility = JsonUtility.ToJson(model);
@@ -38,7 +35,7 @@ public class EditorSaveLoader : ISaveLoader
 		);
 	}
 
-	public async UniTask<IGameProgressModel> Load()
+	public async UniTask<IGameProgressModel> Load(Action callback)
 	{
 		Dictionary<string, string> keyAndJsonSaves = await CloudSaveService
 			.Instance
@@ -52,6 +49,9 @@ public class EditorSaveLoader : ISaveLoader
 
 		return DeserializeJson(jsonSave);
 	}
+
+	public async UniTask ClearSaves(IGameProgressModel gameProgressModel) => 
+		await CloudSaveService.Instance.Data.ForceDeleteAsync(GameProgressKey);
 
 	private IGameProgressModel DeserializeJson(string jsonSave)
 	{

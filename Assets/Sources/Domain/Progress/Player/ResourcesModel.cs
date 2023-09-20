@@ -16,10 +16,8 @@ namespace Sources.Domain.Progress.Player
 		[SerializeField] private int _maxFillModifier;
 		[SerializeField] private int _currentSandCount;
 
-		[JsonProperty(nameof(SoftCurrency))]
 		public IResource<int> SoftCurrency => _softCurrency;
 
-		[JsonProperty(nameof(HardCurrency))]
 		public IResource<int> HardCurrency => _hardCurrency;
 
 		[JsonProperty(nameof(MaxFilledScore))]
@@ -37,7 +35,6 @@ namespace Sources.Domain.Progress.Player
 			private set => _currentSandCount = value;
 		}
 
-		[JsonConstructor]
 		public ResourcesModel(Resource<int> softCurrency, Resource<int> hardCurrency, int startCount)
 		{
 			_hardCurrency = hardCurrency as IntResource;

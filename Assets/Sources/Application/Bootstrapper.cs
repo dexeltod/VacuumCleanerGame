@@ -7,24 +7,24 @@ namespace Sources.Application
 	public class Bootstrapper : MonoBehaviour, ICoroutineRunner
 	{
 		[SerializeField] private LoadingCurtain _loadingCurtain;
+		[SerializeField] private YandexAuthorizationHandler _authorizationHandler;
 
 		private Game _game;
 
-		private async void Awake()
+		private void Awake()
 		{
 			DontDestroyOnLoad(this);
-			LoadingCurtain loadingCurtain = GetLoadingCurtain();
-			loadingCurtain.gameObject.SetActive(true);
+			_loadingCurtain.gameObject.SetActive(true);
 
-			_game = new Game(this, loadingCurtain);
-			await StartGame();
+			_game = new Game(this, _loadingCurtain, _authorizationHandler);
 
+			StartGame();
 		}
 
-		private async UniTask StartGame() => 
-			await _game.Start();
+		private void StartGame() =>
+			_game.Start();
 
-		private LoadingCurtain GetLoadingCurtain() =>
-			Instantiate(_loadingCurtain);
+		public void StopCoroutineRunning(Coroutine coroutine) =>
+			StopCoroutine(coroutine);
 	}
 }

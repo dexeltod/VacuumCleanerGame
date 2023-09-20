@@ -40,6 +40,23 @@
       ]
     }, 
     {
+      "Name": "DeleteSavesButton",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Удалить сохранения"
+        },
+        {
+          "Language": "English",
+          "Text": "DeleteSaves"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Kayıtları sil"
+        }
+      ]
+    }, 
+    {
       "Name": "ExitButton", 
       "Translations": [
         {

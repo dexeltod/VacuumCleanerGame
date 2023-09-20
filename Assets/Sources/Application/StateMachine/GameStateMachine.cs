@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachine.GameStates;
 using Sources.Application.StateMachineInterfaces;
 using Sources.DIService;
+using Sources.PresentationInterfaces;
 using Sources.View.SceneEntity;
 
 namespace Sources.Application.StateMachine
@@ -15,54 +16,84 @@ namespace Sources.Application.StateMachine
 		private string _currentMusicName;
 		private IExitState _activeState;
 
-		public GameStateMachine(ICoroutineRunner coroutineRunner, SceneLoader sceneLoader,
+		public GameStateMachine
+		(
+			SceneLoader sceneLoader,
 			LoadingCurtain loadingCurtain,
-			GameServices gameServices)
+			IYandexAuthorizationHandler yandexAuthorizationHandler,
+			GameServices gameServices
+		)
 		{
 			_states = new Dictionary<Type, IExitState>
 			{
 				[typeof(InitializeServicesAndProgressState)] =
-					new InitializeServicesAndProgressState(this, gameServices, sceneLoader, coroutineRunner, loadingCurtain),
+					new InitializeServicesAndProgressState
+					(
+						this,
+						gameServices,
+						sceneLoader,
+						yandexAuthorizationHandler
+					),
 
 				[typeof(InitializeServicesWithProgressState)] =
-					new InitializeServicesWithProgressState(this, gameServices, loadingCurtain),
+					new InitializeServicesWithProgressState
+					(
+						this,
+						gameServices,
+						loadingCurtain
+					),
 
 				[typeof(MenuState)] = new MenuState(sceneLoader, loadingCurtain),
 
-				[typeof(SceneLoadState)] = new SceneLoadState(this, sceneLoader, loadingCurtain, gameServices),
+				[typeof(SceneLoadState)] = new SceneLoadState
+				(
+					this,
+					sceneLoader,
+					loadingCurtain,
+					gameServices
+				),
 
-				[typeof(GameLoopState)] = new GameLoopState(this),
+				[typeof(GameLoopState)] = new GameLoopState(this)
 			};
 		}
 
-		public async UniTask Enter<TState>() where TState : class, IGameState
+		public void Enter<TState>() where TState : class, IGameState
 		{
 			var state = ChangeState<TState>();
-			await state.Enter();
+			state.Enter();
 		}
 
-		public async UniTask Enter<TState, TPayload>(TPayload payload) where TState : class, IPayloadState<TPayload>
+		public void Enter<TState, TPayload>(TPayload payload)
+			where TState : class, IPayloadState<TPayload>
 		{
 			TState state = ChangeState<TState>();
-			await state.Enter(payload);
+			state.Enter(payload);
 		}
 
-		public async UniTask Enter<TState, TPayload, T>(TPayload payload, string musicName,
+		public void Enter<TState, TPayload, T>
+		(
+			TPayload payload,
+			string musicName,
 			bool isLevelNameIsStopMusicBetweenScenes
-		) where TState : class, IPayloadState<TPayload>
+		)
+			where TState : class, IPayloadState<TPayload>
 		{
 			TState state = ChangeState<TState>();
-			await state.Enter(payload);
+			state.Enter(payload);
 
 			SetOrStopMusic<TState, TPayload>(isLevelNameIsStopMusicBetweenScenes, musicName);
 		}
 
-		private void SetOrStopMusic<TState, TPayload>(bool isMusicStopped, string musicName)
+		private void SetOrStopMusic<TState, TPayload>
+		(
+			bool isMusicStopped,
+			string musicName
+		)
 			where TState : class, IPayloadState<TPayload>
 		{
 			if (musicName == _currentMusicName || string.IsNullOrWhiteSpace(musicName) == true)
 				return;
-			
+
 			//TODO: Need to create music... maybe.
 		}
 

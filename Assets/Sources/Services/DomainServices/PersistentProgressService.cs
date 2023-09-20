@@ -1,6 +1,5 @@
 using System;
 using Sources.DomainInterfaces;
-using Sources.ServicesInterfaces;
 
 namespace Sources.Services.DomainServices
 {
@@ -12,9 +11,6 @@ namespace Sources.Services.DomainServices
 
 		public void Construct(IGameProgressModel gameProgress)
 		{
-			if (GameProgress != null)
-				return;
-
 			_gameProgress = gameProgress;
 		}
 	}

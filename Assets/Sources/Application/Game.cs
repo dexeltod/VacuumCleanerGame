@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachine;
 using Sources.Application.StateMachine.GameStates;
 using Sources.DIService;
+using Sources.PresentationInterfaces;
 using Sources.View.SceneEntity;
 
 namespace Sources.Application
@@ -10,18 +11,22 @@ namespace Sources.Application
 	{
 		public readonly GameStateMachine StateMachine;
 
-		public Game(ICoroutineRunner coroutineRunner, LoadingCurtain loadingCurtain)
+		public Game
+		(
+			ICoroutineRunner coroutineRunner,
+			LoadingCurtain loadingCurtain,
+			IYandexAuthorizationHandler yandexAuthorizationHandler
+		)
 		{
 			StateMachine = new GameStateMachine
-			(
-				coroutineRunner,
-				new SceneLoader(),
+			(new SceneLoader(),
 				loadingCurtain,
+				yandexAuthorizationHandler,
 				GameServices.Container
 			);
 		}
 
-		public async UniTask Start() =>
-			await StateMachine.Enter<InitializeServicesAndProgressState>();
+		public void Start() =>
+			StateMachine.Enter<InitializeServicesAndProgressState>();
 	}
 }

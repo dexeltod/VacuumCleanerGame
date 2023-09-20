@@ -15,5 +15,6 @@ namespace Sources.ServicesInterfaces
 		void SellSand();
 		void AddMoney(int count);
 		void DecreaseMoney(int count);
+		int GetDecreasedMoney(int count);
 	}
 }
