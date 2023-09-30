@@ -12,12 +12,12 @@ namespace Sources.Infrastructure.Factories
 {
 	public class ShopElementFactory
 	{
-		private readonly IGameProgress _shopProgress;
+		private readonly IGameProgress  _shopProgress;
 		private readonly IAssetProvider _assetProvider;
 
 		public ShopElementFactory(IGameProgress shopProgress)
 		{
-			_shopProgress = shopProgress;
+			_shopProgress  = shopProgress;
 			_assetProvider = GameServices.Container.Get<IAssetProvider>();
 		}
 
@@ -31,11 +31,20 @@ namespace Sources.Infrastructure.Factories
 			return Instantiate(transform, items, progress);
 		}
 
-		private void InstantiateButtons(Transform transform, UpgradeItemList items, List<UpgradeElementPrefab> buttons,
-			int itemIndex)
+		private void InstantiateButtons
+		(
+			Transform                  transform,
+			UpgradeItemList            items,
+			List<UpgradeElementPrefab> buttons,
+			int                        itemIndex
+		)
 		{
 			UpgradeElementPrefab button =
-				Object.Instantiate(items.ReadOnlyItems[itemIndex].Prefab, transform.transform);
+				Object.Instantiate
+				(
+					items.ReadOnlyItems[itemIndex].Prefab,
+					transform.transform
+				);
 
 			button.Construct(items.Items[itemIndex], items.ReadOnlyItems[itemIndex]);
 
@@ -48,8 +57,12 @@ namespace Sources.Infrastructure.Factories
 				upgradeItems.Items[i].SetUpgradeLevel(progress[i].Value);
 		}
 
-		private List<UpgradeElementPrefab> Instantiate(Transform transform, UpgradeItemList items,
-			List<IUpgradeProgressData> progress)
+		private List<UpgradeElementPrefab> Instantiate
+		(
+			Transform                  transform,
+			UpgradeItemList            items,
+			List<IUpgradeProgressData> progress
+		)
 		{
 			List<UpgradeElementPrefab> buttons = new();
 			InitButtons(transform, items, progress, buttons);
@@ -57,8 +70,13 @@ namespace Sources.Infrastructure.Factories
 			return buttons;
 		}
 
-		private void InitButtons(Transform transform, UpgradeItemList items, List<IUpgradeProgressData> progress,
-			List<UpgradeElementPrefab> buttons)
+		private void InitButtons
+		(
+			Transform                  transform,
+			UpgradeItemList            items,
+			List<IUpgradeProgressData> progress,
+			List<UpgradeElementPrefab> buttons
+		)
 		{
 			for (int i = 0; i < progress.Count; i++)
 				InstantiateButtons(transform, items, buttons, i);

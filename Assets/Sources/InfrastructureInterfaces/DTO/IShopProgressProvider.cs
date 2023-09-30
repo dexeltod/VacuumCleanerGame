@@ -6,6 +6,6 @@ namespace Sources.InfrastructureInterfaces.DTO
 {
 	public interface IShopProgressProvider : IService
 	{
-		UniTask AddProgressPoint(string progressName, Action succededCallback);
+		UniTask AddProgressPoint(string progressName, Action succeededCallback);
 	}
 }

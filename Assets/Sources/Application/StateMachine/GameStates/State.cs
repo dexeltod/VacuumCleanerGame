@@ -9,19 +9,23 @@ namespace Sources.Application.StateMachine.GameStates
 {
 	public abstract class State : IState
 	{
-		protected readonly Animator Animator;
+		protected readonly Animator        Animator;
 		protected readonly AnimationHasher AnimationHasher;
 
 		private readonly IStateTransition[] _transitions;
-		private int _currentAnimationHash;
-		public event Action<IState> StateChanged;
+		private          int                _currentAnimationHash;
+		public event Action<IState>         StateChanged;
 
-		protected State(Animator animator, AnimationHasher hasher,
-			IStateTransition[] transitions)
+		protected State
+		(
+			Animator           animator,
+			AnimationHasher    hasher,
+			IStateTransition[] transitions
+		)
 		{
-			Animator = animator;
+			Animator        = animator;
 			AnimationHasher = hasher;
-			_transitions = transitions;
+			_transitions    = transitions;
 		}
 
 		public void Enter()
@@ -46,16 +50,11 @@ namespace Sources.Application.StateMachine.GameStates
 			OnExit();
 		}
 
-		protected virtual void OnEnter()
-		{
-		}
+		protected virtual void OnEnter() { }
 
-		protected virtual void OnExit()
-		{
-		}
+		protected virtual void OnExit() { }
 
-		private void OnStateChanging(IState state) =>
-			StateChanged?.Invoke(state);
+		private void OnStateChanging(IState state) => StateChanged?.Invoke(state);
 
 		public void Dispose()
 		{

@@ -4,11 +4,10 @@ using UnityEngine;
 
 namespace Sources.Domain
 {
-	[Serializable]
-	public class Stats
+	[Serializable] public class Stats
 	{
 		[SerializeField] public string Name;
-		[SerializeField] public int[] Points;
-		[SerializeField] public int[] Prices;
+		[SerializeField] public int[]  Points;
+		[SerializeField] public int[]  Prices;
 	}
 }

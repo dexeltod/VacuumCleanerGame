@@ -8,18 +8,17 @@ using UnityEngine;
 
 namespace Sources.Domain.Progress
 {
-	[Serializable]
-	public abstract class Progress : IGameProgress
+	[Serializable] public abstract class Progress : IGameProgress
 	{
-		[SerializeField] private int _maxPointCount = 6;
+		[SerializeField] private int                       _maxPointCount = 6;
 		[SerializeField] private List<ProgressUpgradeData> _progressData;
-		[SerializeField] private List<string> _progressNames;
+		[SerializeField] private List<string>              _progressNames;
 
 		public int MaxPointCount => _maxPointCount;
 
 		protected Progress(List<ProgressUpgradeData> progress)
 		{
-			_progressData = progress;
+			_progressData  = progress;
 			_progressNames = new List<string>();
 
 			for (int i = 0; i < progress.Count; i++)

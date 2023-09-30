@@ -5,21 +5,18 @@ using UnityEngine;
 
 namespace Sources.Domain.Progress.ResourcesData
 {
-	[Serializable]
-	public abstract class Resource<T> : IResource<T>
+	[Serializable] public abstract class Resource<T> : IResource<T>
 	{
-		[SerializeField] private T _count;
+		[SerializeField] private T            _count;
 		[SerializeField] private ResourceType _resourceType;
 
 		public T Count => _count;
-		public ResourceType ResourceType => _resourceType;
 
+		public ResourceType    ResourceType => _resourceType;
 		public event Action<T> ResourceChanged;
 
-		protected Resource(ResourceType resourceType)
-		{
+		protected Resource(ResourceType resourceType) =>
 			_resourceType = resourceType;
-		}
 
 		public void Set(T value)
 		{

@@ -4,8 +4,7 @@ using UnityEngine;
 
 namespace Sources.Domain
 {
-	[Serializable]
-	public class StatsConfig
+	[Serializable] public class StatsConfig
 	{
 		[SerializeField] public List<Stats> Stats;
 	}

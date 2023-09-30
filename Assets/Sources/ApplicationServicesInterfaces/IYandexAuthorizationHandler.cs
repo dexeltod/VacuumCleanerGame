@@ -6,6 +6,6 @@ namespace Sources.PresentationInterfaces
 {
 	public interface IYandexAuthorizationHandler
 	{
-		void IsWantsAuthorization(Action<bool> callback, Action isPlayerWantsAuthorize = null);
+		void IsWantsAuthorization(Action<bool> callback, Action isPlayerWantsAuthorizeCallback = null);
 	}
 }

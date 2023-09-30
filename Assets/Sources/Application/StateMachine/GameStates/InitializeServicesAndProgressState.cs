@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Sources.Application.Leaderboard;
 using Sources.Application.StateMachineInterfaces;
 using Sources.Application.UnityApplicationServices;
 using Sources.ApplicationServicesInterfaces;
@@ -24,39 +25,39 @@ using Unity.Services.Core;
 using Sources.Services.DomainServices.YandexLeaderboard;
 using Agava.YandexGames;
 using Sources.Application.YandexSDK;
-using Leaderboard = UnityEngine.SocialPlatforms.Impl.Leaderboard;
 #endif
+using Leaderboard = UnityEngine.SocialPlatforms.Impl.Leaderboard;
 
 namespace Sources.Application.StateMachine.GameStates
 {
 	public class InitializeServicesAndProgressState : IGameState
 	{
-		private readonly GameStateMachine _gameStateMachine;
-		private readonly GameServices _gameServices;
-		private readonly SceneLoader _sceneLoader;
+		private readonly UnityServicesController     _unityServicesController;
 		private readonly IYandexAuthorizationHandler _yandexAuthorizationHandler;
-		private readonly MusicSetter _musicSetter;
-		private readonly UnityServicesController _unityServicesController;
+
+		private readonly GameStateMachine _gameStateMachine;
+		private readonly GameServices     _gameServices;
+		private readonly SceneLoader      _sceneLoader;
+		private readonly MusicSetter      _musicSetter;
 
 		private bool _isServicesRegistered;
 
 		public InitializeServicesAndProgressState
 		(
-			GameStateMachine gameStateMachine,
-			GameServices gameServices,
-			SceneLoader sceneLoader,
-			IYandexAuthorizationHandler yandexAuthorizationHandler
+			IYandexAuthorizationHandler yandexAuthorizationHandler,
+			GameStateMachine            gameStateMachine,
+			GameServices                gameServices,
+			SceneLoader                 sceneLoader
+ 
 		)
 		{
-			_sceneLoader = sceneLoader;
 			_yandexAuthorizationHandler = yandexAuthorizationHandler;
-			_gameStateMachine = gameStateMachine;
-			_gameServices = gameServices;
+			_gameStateMachine           = gameStateMachine;
+			_gameServices               = gameServices;
+			_sceneLoader                = sceneLoader;
 		}
 
-		public void Exit()
-		{
-		}
+		public void Exit() { }
 
 		public async void Enter()
 		{
@@ -72,19 +73,13 @@ namespace Sources.Application.StateMachine.GameStates
 			IAssetProvider provider = _gameServices.Register<IAssetProvider>(new AssetProvider());
 			_gameServices.Register<ILocalizationService>(new LocalizationService());
 
-			AbstractLeaderBoard abstractLeaderBoard = new AbstractLeaderBoard(GetLeaderboard());
+			new AbstractLeaderBoard(GetLeaderboard());
 
-			LeaderBoardService leaderboard = new LeaderBoardService(abstractLeaderBoard);
-
-			_gameServices.Register<ILeaderBoardService>(leaderboard);
+			_gameServices.Register<ILeaderBoardService>(new AbstractLeaderBoard(GetLeaderboard()));
 
 #if YANDEX_GAMES && !UNITY_EDITOR
 			YandexGamesSdkFacade yandexSdk =
-				new YandexGamesSdkFacade
-				(
-					_loadingCurtain,
-					_yandexAuthorizationHandler
-				);
+				new YandexGamesSdkFacade(_yandexAuthorizationHandler);
 
 			await yandexSdk.Initialize();
 
@@ -93,27 +88,38 @@ namespace Sources.Application.StateMachine.GameStates
 			_gameServices.Register<IGameStateMachine>(_gameStateMachine);
 
 			ResourceServiceFactory resourceServiceFactory = new ResourceServiceFactory();
-			Dictionary<ResourceType, IResource<int>> intResources = resourceServiceFactory.GetIntResources();
+
+			Dictionary<ResourceType, IResource<int>>   intResources   = resourceServiceFactory.GetIntResources();
 			Dictionary<ResourceType, IResource<float>> floatResources = resourceServiceFactory.GetFloatResources();
 
-			_gameServices.Register<IResourceService>(new ResourcesService(intResources, floatResources));
+			_gameServices.Register<IResourceService>
+			(
+				new ResourcesService
+				(
+					intResources,
+					floatResources
+				)
+			);
 
 			IShopItemFactory shopItemFactory = _gameServices.Register<IShopItemFactory>(new ShopItemFactory());
 
 			IPersistentProgressService persistentProgressService =
-				_gameServices.Register<IPersistentProgressService>(new PersistentProgressService());
+				_gameServices.Register<IPersistentProgressService>
+				(
+					new PersistentProgressService()
+				);
 
 			ISaveLoader saveLoader = await GetSaveLoader
-			(
+									(
 #if YANDEX_GAMES && !UNITY_EDITOR
 				yandexSdk,
 #endif
-				persistentProgressService
-			);
+										persistentProgressService
+									);
 
-			ISaveLoadDataService saveLoadDataService = _gameServices.Register<ISaveLoadDataService>
+			IProgressLoadDataService progressLoadDataService = _gameServices.Register<IProgressLoadDataService>
 			(
-				new SaveLoadDataService
+				new ProgressLoadDataService
 				(
 					saveLoader,
 					persistentProgressService
@@ -135,10 +141,10 @@ namespace Sources.Application.StateMachine.GameStates
 
 			ProgressFactory progressFactory = new ProgressFactory
 			(
-				saveLoadDataService,
+				progressLoadDataService,
 				persistentProgressService,
 				shopItemFactory,
-				saveLoadDataService
+				progressLoadDataService
 			);
 
 			await progressFactory.InitializeProgress();
@@ -151,13 +157,16 @@ namespace Sources.Application.StateMachine.GameStates
 #if YANDEX_GAMES && !UNITY_EDITOR
 			IYandexSDKController sdkController,
 #endif
-			IPersistentProgressService progressService)
+			IPersistentProgressService progressService
+		)
 		{
 #if YANDEX_GAMES && !UNITY_EDITOR
 			return new YandexSaveLoader(sdkController);
 #endif
 
+#if UNITY_EDITOR
 			return await GetEditorSaveLoader(progressService);
+#endif
 		}
 
 		private async UniTask<EditorSaveLoader> GetEditorSaveLoader(IPersistentProgressService progressService)
@@ -170,34 +179,14 @@ namespace Sources.Application.StateMachine.GameStates
 			return saveLoader;
 		}
 
-		private ILeaderBoard GetLeaderboard()
+		private IAbstractLeaderBoard GetLeaderboard()
 		{
 #if !UNITY_EDITOR && YANDEX_GAMES
 			return new YandexLeaderboard();
 #endif
-			return new EditorLeaderBoardService();
+#if UNITY_EDITOR
+			return new EditorAbstractLeaderBoardService();
+#endif
 		}
-	}
-
-	public class AbstractLeaderBoard : ILeaderBoardInfo
-	{
-		private readonly ILeaderBoard _leaderboard;
-
-		public int Score { get; }
-		private List<int> _scores;
-
-		public AbstractLeaderBoard
-		(
-			ILeaderBoard leaderboard
-		)
-		{
-			_leaderboard = leaderboard;
-		}
-
-		public async UniTask<Dictionary<string, int>> GetPlayers(int playerCount) =>
-			await _leaderboard.GetPlayers(playerCount);
-
-		public async UniTask SetScore(int score) =>
-			await _leaderboard.Set(score);
 	}
 }

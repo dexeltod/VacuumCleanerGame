@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachine.GameStates;
 using Sources.Application.StateMachineInterfaces;
 using Sources.DIService;
@@ -13,26 +12,25 @@ namespace Sources.Application.StateMachine
 	{
 		private readonly Dictionary<Type, IExitState> _states;
 
-		private string _currentMusicName;
+		private string     _currentMusicName;
 		private IExitState _activeState;
 
 		public GameStateMachine
 		(
-			SceneLoader sceneLoader,
-			LoadingCurtain loadingCurtain,
+			SceneLoader                 sceneLoader,
+			LoadingCurtain              loadingCurtain,
 			IYandexAuthorizationHandler yandexAuthorizationHandler,
-			GameServices gameServices
-		)
-		{
+			GameServices                gameServices
+		) =>
 			_states = new Dictionary<Type, IExitState>
 			{
 				[typeof(InitializeServicesAndProgressState)] =
 					new InitializeServicesAndProgressState
 					(
+						yandexAuthorizationHandler,
 						this,
 						gameServices,
-						sceneLoader,
-						yandexAuthorizationHandler
+						sceneLoader
 					),
 
 				[typeof(InitializeServicesWithProgressState)] =
@@ -43,7 +41,7 @@ namespace Sources.Application.StateMachine
 						loadingCurtain
 					),
 
-				[typeof(MenuState)] = new MenuState(sceneLoader, loadingCurtain),
+				[typeof(MenuState)] = new MenuState(sceneLoader, loadingCurtain, gameServices),
 
 				[typeof(SceneLoadState)] = new SceneLoadState
 				(
@@ -55,7 +53,6 @@ namespace Sources.Application.StateMachine
 
 				[typeof(GameLoopState)] = new GameLoopState(this)
 			};
-		}
 
 		public void Enter<TState>() where TState : class, IGameState
 		{
@@ -73,8 +70,8 @@ namespace Sources.Application.StateMachine
 		public void Enter<TState, TPayload, T>
 		(
 			TPayload payload,
-			string musicName,
-			bool isLevelNameIsStopMusicBetweenScenes
+			string   musicName,
+			bool     isLevelNameIsStopMusicBetweenScenes
 		)
 			where TState : class, IPayloadState<TPayload>
 		{
@@ -86,7 +83,7 @@ namespace Sources.Application.StateMachine
 
 		private void SetOrStopMusic<TState, TPayload>
 		(
-			bool isMusicStopped,
+			bool   isMusicStopped,
 			string musicName
 		)
 			where TState : class, IPayloadState<TPayload>
@@ -100,8 +97,10 @@ namespace Sources.Application.StateMachine
 		private TState ChangeState<TState>() where TState : class, IExitState
 		{
 			_activeState?.Exit();
+
 			TState state = GetState<TState>();
 			_activeState = state;
+
 			return state;
 		}
 

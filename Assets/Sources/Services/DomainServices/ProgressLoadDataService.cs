@@ -10,7 +10,7 @@ using Sources.Services.DomainServices.DTO;
 namespace Sources.Services.DomainServices
 {
 	[Serializable]
-	public class SaveLoadDataService : ISaveLoadDataService
+	public class ProgressLoadDataService : IProgressLoadDataService
 	{
 		private const string SavesDirectory = "/Saves/";
 
@@ -26,7 +26,7 @@ namespace Sources.Services.DomainServices
 		
 		public event Func<IGameProgressModel> ProgressCleared;
 
-		public SaveLoadDataService(ISaveLoader saveLoader, IPersistentProgressServiceConstructable progressService)
+		public ProgressLoadDataService(ISaveLoader saveLoader, IPersistentProgressServiceConstructable progressService)
 		{
 			_saveLoader = saveLoader;
 			_progressService = progressService;

@@ -1,9 +1,8 @@
+using System;
 using Sources.DIService;
 using Sources.DomainInterfaces;
-using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Scene;
-using Sources.Services.PlayerServices;
 using Sources.ServicesInterfaces.UI;
 using UnityEngine;
 
@@ -14,7 +13,7 @@ namespace Sources.View
 		private IUpgradeWindowGetter _upgradeWindowGetter;
 		private IUpgradeWindow _upgradeWindow;
 		private ISceneLoadInformer _sceneLoadInformer;
-		private ISaveLoadDataService _saveLoadService;
+		private IProgressLoadDataService _progressLoadService;
 
 		private bool _isCanSave;
 
@@ -24,11 +23,16 @@ namespace Sources.View
 			_sceneLoadInformer.SceneLoaded += OnLoaded;
 		}
 
+		private void OnDisable()
+		{
+			_sceneLoadInformer.SceneLoaded -= OnLoaded;
+		}
+
 		private void OnLoaded()
 		{
 			_upgradeWindowGetter = GameServices.Container.Get<IUpgradeWindowGetter>();
-			_saveLoadService = GameServices.Container.Get<ISaveLoadDataService>();
-			
+			_progressLoadService = GameServices.Container.Get<IProgressLoadDataService>();
+
 			_upgradeWindow = _upgradeWindowGetter.UpgradeWindow;
 			_sceneLoadInformer.SceneLoaded -= OnLoaded;
 		}
@@ -52,7 +56,7 @@ namespace Sources.View
 				if (_isCanSave == false)
 					return;
 
-				await _saveLoadService.SaveToCloud(() => _isCanSave = true);
+				await _progressLoadService.SaveToCloud(() => _isCanSave = true);
 			}
 		}
 	}

@@ -1,6 +1,4 @@
 namespace Sources.DIService
 {
-	public interface IService
-	{
-	}
+	public interface IService { }
 }

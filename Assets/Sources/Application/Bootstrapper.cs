@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using Sources.View.SceneEntity;
 using UnityEngine;
 
@@ -6,7 +5,7 @@ namespace Sources.Application
 {
 	public class Bootstrapper : MonoBehaviour, ICoroutineRunner
 	{
-		[SerializeField] private LoadingCurtain _loadingCurtain;
+		[SerializeField] private LoadingCurtain             _loadingCurtain;
 		[SerializeField] private YandexAuthorizationHandler _authorizationHandler;
 
 		private Game _game;
@@ -21,10 +20,8 @@ namespace Sources.Application
 			StartGame();
 		}
 
-		private void StartGame() =>
-			_game.Start();
+		private void StartGame() => _game.Start();
 
-		public void StopCoroutineRunning(Coroutine coroutine) =>
-			StopCoroutine(coroutine);
+		public void StopCoroutineRunning(Coroutine coroutine) => StopCoroutine(coroutine);
 	}
 }

@@ -3,26 +3,22 @@ using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
 using Sources.DomainInterfaces;
 using Sources.PresentationInterfaces;
-using Sources.View.SceneEntity;
 using UnityEngine;
 
 namespace Sources.Application.YandexSDK
 {
 	public class YandexGamesSdkFacade : IYandexSDKController
 	{
-		private const int Delay = 1500;
-		private readonly LoadingCurtain _loadingCurtain;
+		private const    int                         Delay = 1500;
 		private readonly IYandexAuthorizationHandler _yandexAuthorizationHandler;
 
 		private PlayerAccountProfileDataResponse _playerAccount;
-		private IGameProgressModel _gameProgress;
+		private IGameProgressModel               _gameProgress;
 
 		private bool _isAuthorized;
 
-		public YandexGamesSdkFacade(LoadingCurtain loadingCurtain,
-			IYandexAuthorizationHandler yandexAuthorizationHandler)
+		public YandexGamesSdkFacade(IYandexAuthorizationHandler yandexAuthorizationHandler)
 		{
-			_loadingCurtain = loadingCurtain;
 			_yandexAuthorizationHandler = yandexAuthorizationHandler;
 		}
 
@@ -30,35 +26,37 @@ namespace Sources.Application.YandexSDK
 		{
 			bool isInitialized = false;
 
-			_loadingCurtain.SetText("Initialization SDK");
-
 			await YandexGamesSdk.Initialize(() => { isInitialized = true; });
 			await UniTask.WaitWhile(() => isInitialized == false);
 
 			if (PlayerAccount.IsAuthorized == false)
 			{
 				bool isNeedAuthorization = false;
-				bool isProcessCompleted = false;
-			
-				Debug.Log("Waiting for choice");
-				_yandexAuthorizationHandler.IsWantsAuthorization(isPlayerMadeChoice =>
-					isNeedAuthorization = isPlayerMadeChoice);
-			
+				bool isProcessCompleted  = false;
+
+				Debug.Log("Waiting");
+
+				_yandexAuthorizationHandler.IsWantsAuthorization
+				(
+					callback: isPlayerMadeChoice => isNeedAuthorization      = isPlayerMadeChoice,
+					isPlayerWantsAuthorizeCallback: () => isProcessCompleted = true
+				);
+
+				await UniTask.WaitWhile(() => isProcessCompleted == false);
+
 				if (isNeedAuthorization == false)
 					return;
-			
-				_loadingCurtain.SetText("Starting authorization");
-			
+
+				isProcessCompleted = false;
+
 				PlayerAccount.Authorize();
 				PlayerAccount.StartAuthorizationPolling
 				(
 					Delay,
 					() => { isProcessCompleted = true; }
 				);
-			
+
 				await UniTask.WaitWhile(() => isProcessCompleted == false);
-			
-				_loadingCurtain.SetText("");
 			}
 		}
 
@@ -71,13 +69,11 @@ namespace Sources.Application.YandexSDK
 
 			PlayerAccountProfileDataResponse playerAccount = null;
 
-			_loadingCurtain.SetText("Getting player account");
-
 			PlayerAccount.GetProfileData
 			(response =>
 				{
 					playerAccount = response;
-					isReceived = true;
+					isReceived    = true;
 				}
 			);
 
@@ -99,24 +95,22 @@ namespace Sources.Application.YandexSDK
 
 		public async UniTask<string> Load()
 		{
-			bool isReceived = false;
-			string json = "";
-
-			_loadingCurtain.SetText("Getting player saves");
+			bool   isReceived = false;
+			string json       = "";
 
 			PlayerAccount.GetCloudSaveData
 			(
 				successCallback =>
 				{
 					isReceived = true;
-					json = successCallback;
+					json       = successCallback;
 				},
 				errorCallback =>
 				{
 					Debug.LogError(errorCallback);
 
 					isReceived = true;
-					json = null;
+					json       = null;
 				}
 			);
 

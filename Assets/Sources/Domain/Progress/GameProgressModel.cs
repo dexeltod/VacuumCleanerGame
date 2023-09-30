@@ -5,23 +5,26 @@ using UnityEngine;
 
 namespace Sources.Domain.Progress
 {
-	[Serializable]
-	public class GameProgressModel : IGameProgressModel
+	[Serializable] public class GameProgressModel : IGameProgressModel
 	{
 		[SerializeField] private ResourcesModel _resources;
 		[SerializeField] private PlayerProgress _playerProgress;
-		[SerializeField] private ShopProgress _shopProgress;
+		[SerializeField] private ShopProgress   _shopProgress;
 
-		public IGameProgress ShopProgress => _shopProgress;
-		public IGameProgress PlayerProgress => _playerProgress;
+		public IGameProgress   ShopProgress   => _shopProgress;
+		public IGameProgress   PlayerProgress => _playerProgress;
 		public IResourcesModel ResourcesModel => _resources;
-		
-		public GameProgressModel(ResourcesModel resourcesModel, PlayerProgress playerProgress,
-			ShopProgress shopProgress)
+
+		public GameProgressModel
+		(
+			ResourcesModel resourcesModel,
+			PlayerProgress playerProgress,
+			ShopProgress   shopProgress
+		)
 		{
-			_resources = resourcesModel;
+			_resources      = resourcesModel;
 			_playerProgress = playerProgress;
-			_shopProgress = shopProgress;
+			_shopProgress   = shopProgress;
 		}
 	}
 }

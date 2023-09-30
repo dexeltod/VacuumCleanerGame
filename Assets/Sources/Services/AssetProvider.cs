@@ -17,10 +17,10 @@ namespace Sources.Services
 			return @object.GetComponent<T>();
 		}
 
-		public T InstantiateAndGetComponent<T>(string path) where T: Behaviour => 
+		public T InstantiateAndGetComponent<T>(string path) where T : Behaviour =>
 			Object.Instantiate(Resources.Load<T>(path));
 
-		public T Load<T>(string path) where T : Object => 
+		public T Load<T>(string path) where T : Object =>
 			Resources.Load<T>(path);
 
 		public GameObject Instantiate(string path, Vector3 position)

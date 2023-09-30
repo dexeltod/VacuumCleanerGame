@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Lean.Localization;
 using Sources.DIService;
 using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.PresentationInterfaces;
@@ -12,27 +11,28 @@ using UnityEngine.UI;
 namespace Sources.View.UI.Shop
 {
 	public class UpgradeElementPrefab : MonoBehaviour, IUpgradeElementConstructable, IUpgradeInteractable,
-		IColorChangeable, IDisposable
+										IColorChangeable, IDisposable
 	{
 		[Header("Points")] [SerializeField] private int _maxPoints = 6;
 
-		[SerializeField] private Color _notBoughtPointColor;
-		[SerializeField] private Color _boughtPointColor;
-		[SerializeField] private Transform _pointsContainer;
 		[SerializeField] private GameObject _pointElement;
+		[SerializeField] private Color      _notBoughtPointColor;
+		[SerializeField] private Color      _boughtPointColor;
+		[SerializeField] private Transform  _pointsContainer;
 
 		[Header("Upgrade window")] [SerializeField]
 		private TextMeshProUGUI _title;
 
+		[SerializeField] private Image           _icon;
+		[SerializeField] private Button          _buttonBuy;
 		[SerializeField] private TextMeshProUGUI _description;
 		[SerializeField] private TextMeshProUGUI _price;
-		[SerializeField] private Image _icon;
-		[SerializeField] private Button _buttonBuy;
 
 		private readonly List<Image> _pointsColors = new();
 
 		private IUpgradeItemData _itemData;
-		private int _boughtPoints;
+
+		private int  _boughtPoints;
 		private bool _isInit;
 
 		public string IdName => _itemData.IdName;
@@ -45,18 +45,19 @@ namespace Sources.View.UI.Shop
 				throw new InvalidOperationException($"{name} view is already constructed");
 
 			_boughtPoints = itemData.PointLevel;
-			_itemData = itemData;
+			_itemData     = itemData;
 
 			ILocalizationService localisation = GameServices.Container.Get<ILocalizationService>();
 
-			_title.SetText(LeanLocalization.GetTranslationText(itemData.Title));
+			_title.SetText(localisation.GetTranslationText(itemData.Title));
 			_price.SetText(itemData.Price.ToString());
 			_description.SetText(localisation.GetTranslationText(itemData.Description));
+			
 			_icon.sprite = viewInfo.Icon;
 
 			InstantiatePoints();
 			itemData.PriceChanged += OnPriceChanged;
-			_isInit = true;
+			_isInit               =  true;
 
 			return this;
 		}
@@ -65,7 +66,7 @@ namespace Sources.View.UI.Shop
 			_itemData.PriceChanged -= OnPriceChanged;
 
 		public void AddProgressPointColor(int count) =>
-			ChangePointsColor(count);
+			AddPoints(count);
 
 		private void OnEnable() =>
 			_buttonBuy.onClick.AddListener(OnBuyButtonPressed);
@@ -82,13 +83,14 @@ namespace Sources.View.UI.Shop
 		private void OnPriceChanged(int value) =>
 			_price.SetText(value.ToString());
 
-		private void ChangePointsColor(int count)
+		private void AddPoints(int count)
 		{
 			if (_boughtPoints + count > _maxPoints)
 				return;
 
 			_boughtPoints += count;
-
+			
+			
 			for (int i = 0; i < _boughtPoints; i++)
 				_pointsColors[i].color = _boughtPointColor;
 
@@ -98,8 +100,8 @@ namespace Sources.View.UI.Shop
 
 		private void InstantiatePoints()
 		{
-			InstantiatePoints(0, _boughtPoints, _boughtPointColor);
-			InstantiatePoints(_boughtPoints, _maxPoints, _notBoughtPointColor);
+			InstantiatePoints(0,             _boughtPoints, _boughtPointColor);
+			InstantiatePoints(_boughtPoints, _maxPoints,    _notBoughtPointColor);
 		}
 
 		private void InstantiatePoints(int startIndex, int end, Color color)

@@ -14,13 +14,13 @@ namespace Sources.Infrastructure
 {
 	public class PlayerStatsFactory
 	{
-		private readonly IShopItemFactory _shopFactory;
-		private readonly LoadingCurtain _loadingCurtain;
-		private PlayerStatsService _playerStatsService;
+		private readonly IShopItemFactory   _shopFactory;
+		private readonly LoadingCurtain     _loadingCurtain;
+		private          PlayerStatsService _playerStatsService;
 
 		public PlayerStatsFactory(IShopItemFactory shopItemFactory, LoadingCurtain loadingCurtain)
 		{
-			_shopFactory = shopItemFactory;
+			_shopFactory    = shopItemFactory;
 			_loadingCurtain = loadingCurtain;
 		}
 
@@ -35,7 +35,7 @@ namespace Sources.Infrastructure
 
 			List<IUpgradeProgressData> progress = persistentProgressService.GameProgress.PlayerProgress.GetAll();
 
-			string[] statNames = new string[progress.Count];
+			string[]                statNames   = new string[progress.Count];
 			IPlayerStatChangeable[] playerStats = new IPlayerStatChangeable[progress.Count];
 
 			_loadingCurtain.SetText("ShopPoints creating");
@@ -59,15 +59,24 @@ namespace Sources.Infrastructure
 			return stats;
 		}
 
-		private void InitArrays(List<IUpgradeProgressData> progress, string[] statNames,
-			IPlayerStatChangeable[] playerStats, ShopPointsToStatsConverter shopPointsToStatsConverter)
+		private void InitArrays
+		(
+			List<IUpgradeProgressData> progress,
+			string[]                   statNames,
+			IPlayerStatChangeable[]    playerStats,
+			ShopPointsToStatsConverter shopPointsToStatsConverter
+		)
 		{
 			CreateNames(progress, statNames);
 			CreateStats(progress, playerStats, shopPointsToStatsConverter);
 		}
 
-		private void CreateStats(List<IUpgradeProgressData> progress, IPlayerStatChangeable[] playerStats,
-			ShopPointsToStatsConverter converter)
+		private void CreateStats
+		(
+			List<IUpgradeProgressData> progress,
+			IPlayerStatChangeable[]    playerStats,
+			ShopPointsToStatsConverter converter
+		)
 		{
 			for (int i = 0; i < progress.Count; i++)
 				playerStats[i] = new PlayerStat

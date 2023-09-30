@@ -5,8 +5,7 @@ using UnityEngine;
 
 namespace Sources.Domain.Progress.Player
 {
-	[Serializable]
-	public class PlayerProgress : Progress
+	[Serializable] public class PlayerProgress : Progress
 	{
 		[SerializeField] private int _points;
 
@@ -16,10 +15,8 @@ namespace Sources.Domain.Progress.Player
 		public PlayerProgress
 		(
 			List<ProgressUpgradeData> progress,
-			int points
+			int                       points
 		)
-			: base(progress)
-		{
-		}
+			: base(progress) { }
 	}
 }

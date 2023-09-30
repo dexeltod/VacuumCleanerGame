@@ -8,16 +8,19 @@ using UnityEngine;
 
 namespace Sources.Domain.Progress.Player
 {
-	[Serializable]
-	public class ResourcesModel : IResourcesModel
+	[Serializable] public class ResourcesModel : IResourcesModel
 	{
 		[SerializeField] private IntResource _softCurrency;
 		[SerializeField] private IntResource _hardCurrency;
+		[SerializeField] private IntResource _score;
+
 		[SerializeField] private int _maxFillModifier;
 		[SerializeField] private int _currentSandCount;
+		[SerializeField] private int _globalSandCount;
+
+		public IResource<int> Score => _score;
 
 		public IResource<int> SoftCurrency => _softCurrency;
-
 		public IResource<int> HardCurrency => _hardCurrency;
 
 		[JsonProperty(nameof(MaxFilledScore))]
@@ -35,17 +38,36 @@ namespace Sources.Domain.Progress.Player
 			private set => _currentSandCount = value;
 		}
 
-		public ResourcesModel(Resource<int> softCurrency, Resource<int> hardCurrency, int startCount)
+		public int GlobalSandCount
 		{
-			_hardCurrency = hardCurrency as IntResource;
-			HardCurrency.Set(startCount);
-
-			_softCurrency = softCurrency as IntResource;
-			SoftCurrency.Set(startCount);
+			get => _globalSandCount;
+			private set => _globalSandCount = value;
 		}
 
-		public void AddSand(int count) =>
+		public ResourcesModel
+		(
+			Resource<int> softCurrency,
+			Resource<int> hardCurrency,
+			Resource<int> score,
+			int           startCount,
+			int           globalSandCount
+		)
+		{
+			_hardCurrency = hardCurrency as IntResource;
+			_softCurrency = softCurrency as IntResource;
+			_score        = score as IntResource;
+
+			HardCurrency.Set(startCount);
+			SoftCurrency.Set(startCount);
+
+			_globalSandCount = globalSandCount;
+		}
+
+		public void AddSand(int count)
+		{
 			CurrentSandCount += count;
+			GlobalSandCount  += count;
+		}
 
 		public void DecreaseSand(int count) =>
 			CurrentSandCount -= count;

@@ -24,7 +24,7 @@ namespace Sources.View.SceneEntity
 			_curtain.alpha = 0;
 		}
 
-		public void HideLazy() => 
+		public void HideSlow() => 
 			StartCoroutine(HideCurtain());
 
 		private IEnumerator HideCurtain()

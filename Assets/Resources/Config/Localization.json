@@ -23,7 +23,7 @@
       ]
     },
     {
-      "Name": "SettingsButton",
+      "Name": "SettingsMenu",
       "Translations": [
         {
           "Language": "Russian",
@@ -38,7 +38,24 @@
           "Text": "Ayarlar"
         }
       ]
-    }, 
+    },
+    {
+      "Name": "SoundVolumeSetting",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Звуки"
+        },
+        {
+          "Language": "English",
+          "Text": "Sounds"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Sesler"
+        }
+      ]
+    },
     {
       "Name": "DeleteSavesButton",
       "Translations": [
@@ -55,9 +72,26 @@
           "Text": "Kayıtları sil"
         }
       ]
-    }, 
+    },
     {
-      "Name": "ExitButton", 
+      "Name": "LeaderBoardMenuWindow",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Лидеры"
+        },
+        {
+          "Language": "English",
+          "Text": "Leader board"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Liderler"
+        }
+      ]
+    },
+    {
+      "Name": "ExitButton",
       "Translations": [
         {
           "Language": "Russian",
@@ -172,6 +206,23 @@
         {
           "Language": "Turkish",
           "Text": "Toplama alanı"
+        }
+      ]
+    },
+    {
+      "Name": "BuyButton",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Купить"
+        },
+        {
+          "Language": "English",
+          "Text": "Buy"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Satın almak"
         }
       ]
     },

@@ -3,11 +3,8 @@ using Sources.Utils;
 
 namespace Sources.Domain.Progress.ResourcesData
 {
-	[Serializable]
-	public class IntResource : Resource<int>
+	[Serializable] public class IntResource : Resource<int>
 	{
-		public IntResource(ResourceType resourceType) : base(resourceType)
-		{
-		}
+		public IntResource(ResourceType resourceType) : base(resourceType) { }
 	}
 }

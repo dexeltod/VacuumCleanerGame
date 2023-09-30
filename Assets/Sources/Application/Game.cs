@@ -13,13 +13,14 @@ namespace Sources.Application
 
 		public Game
 		(
-			ICoroutineRunner coroutineRunner,
-			LoadingCurtain loadingCurtain,
+			ICoroutineRunner            coroutineRunner,
+			LoadingCurtain              loadingCurtain,
 			IYandexAuthorizationHandler yandexAuthorizationHandler
 		)
 		{
 			StateMachine = new GameStateMachine
-			(new SceneLoader(),
+			(
+				new SceneLoader(),
 				loadingCurtain,
 				yandexAuthorizationHandler,
 				GameServices.Container

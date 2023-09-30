@@ -5,13 +5,16 @@ namespace Sources.DomainInterfaces
 	public interface IResourcesModel
 	{
 		IResource<int> SoftCurrency { get; }
-		int MaxFilledScore { get; }
-		int MaxFillModifier { get; }
-		int CurrentSandCount { get; }
 		IResource<int> HardCurrency { get; }
-		void AddSand(int count);
-		void DecreaseSand(int count);
-		void AddMoney(int count);
+		IResource<int> Score        { get; }
+
+		int  MaxFilledScore   { get; }
+		int  MaxFillModifier  { get; }
+		int  CurrentSandCount { get; }
+		int  GlobalSandCount  { get; }
+		void AddSand(int       count);
+		void DecreaseSand(int  count);
+		void AddMoney(int      count);
 		void DecreaseMoney(int count);
 	}
 }

@@ -8,16 +8,16 @@ namespace Sources.Services.DomainServices
 {
 	public class ResourcesService : IResourceService
 	{
-		private readonly Dictionary<ResourceType, IResource<int>> _intResources;
+		private readonly Dictionary<ResourceType, IResource<int>>   _intResources;
 		private readonly Dictionary<ResourceType, IResource<float>> _floatResources;
 
 		public ResourcesService
 		(
-			Dictionary<ResourceType, IResource<int>> intResources,
+			Dictionary<ResourceType, IResource<int>>   intResources,
 			Dictionary<ResourceType, IResource<float>> floatResources
 		)
 		{
-			_intResources = intResources;
+			_intResources   = intResources;
 			_floatResources = floatResources;
 		}
 
@@ -48,11 +48,10 @@ namespace Sources.Services.DomainServices
 
 		private void SeeContaining(ResourceType type)
 		{
-			if (_floatResources.ContainsKey(type) == false)
-			{
-				if (_intResources.ContainsKey(type) == false)
-					throw new ArgumentException($"Resource {type} does not exist in current context");
-			}
+			if (_floatResources.ContainsKey(type) != false) return;
+
+			if (_intResources.ContainsKey(type) == false)
+				throw new ArgumentException($"Resource {type} does not exist in current context");
 		}
 	}
 }

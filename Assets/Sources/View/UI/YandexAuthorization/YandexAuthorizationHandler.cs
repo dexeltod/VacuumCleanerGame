@@ -35,12 +35,12 @@ public class YandexAuthorizationHandler : MonoBehaviour, IYandexAuthorizationHan
 		_yesNoButtons.gameObject.SetActive(false);
 	}
 
-	public void IsWantsAuthorization(Action<bool> isPlayerWantsAuthorize, Action callback = null)
+	public void IsWantsAuthorization(Action<bool> isPlayerWantsAuthorize, Action isPlayerWantsAuthorizeCallback = null)
 	{
 		_loadingText.SetActive(false);
 		_yesNoButtons.SetActive(true);
 		
-		_callback = callback;
+		_callback = isPlayerWantsAuthorizeCallback;
 		_isPlayerWantsAuthorize = isPlayerWantsAuthorize;
 	}
 

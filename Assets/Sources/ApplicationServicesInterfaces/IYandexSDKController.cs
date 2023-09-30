@@ -9,8 +9,8 @@ namespace Sources.ApplicationServicesInterfaces
 	{
 		UniTask<PlayerAccountProfileDataResponse> GetPlayerAccount();
 
-		UniTask Save(string json);
+		UniTask         Save(string json);
 		UniTask<string> Load();
-		UniTask DeleteSaves(IGameProgressModel gameProgressModel);
+		UniTask         DeleteSaves(IGameProgressModel gameProgressModel);
 	}
 }

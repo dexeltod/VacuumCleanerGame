@@ -1,7 +1,4 @@
 namespace Sources.DomainInterfaces.DomainServicesInterfaces
 {
-	public interface IProgressInitializeable
-	{
-		
-	}
+	public interface IProgressInitializeable { }
 }

@@ -9,33 +9,30 @@ namespace Sources.Infrastructure.DataViewModel
 {
 	public class ResourcesPresenter : IResourcesProgressPresenter
 	{
-		private const int ResourceAddCount = 1;
 		private readonly IPersistentProgressService _resourcesData;
+
+		private int _increasedDelta;
 
 		public IResource<int> SoftCurrency => Model.SoftCurrency;
 
 		public event Action<int> ScoreChanged;
 		public event Action<int> MoneyChanged;
+		public event Action<int> GlobalScoreChanged;
 
-		private IResourcesModel Model => _resourcesData.GameProgress.ResourcesModel;
+		private IResourcesModel Model =>
+			_resourcesData
+				.GameProgress
+				.ResourcesModel;
 
-		public ResourcesPresenter()
-		{
+		public ResourcesPresenter() =>
 			_resourcesData = GameServices.Container.Get<IPersistentProgressService>();
-		}
 
-		public bool CheckMaxScore()
-		{
-			if (Model.CurrentSandCount >= Model.MaxFilledScore)
-				return false;
+		public bool CheckMaxScore() =>
+			Model.CurrentSandCount < Model.MaxFilledScore;
 
-			return true;
-		}
-
-		public bool AddSand(int newScore)
+		public bool TryAddSand(int newScore)
 		{
 			int currentScore = Model.CurrentSandCount;
-			currentScore += newScore;
 
 			if (currentScore > Model.MaxFilledScore)
 				return false;
@@ -45,6 +42,7 @@ namespace Sources.Infrastructure.DataViewModel
 			Model.AddSand(score);
 
 			ScoreChanged?.Invoke(Model.CurrentSandCount);
+			GlobalScoreChanged.Invoke(Model.GlobalSandCount);
 			return true;
 		}
 
@@ -53,28 +51,36 @@ namespace Sources.Infrastructure.DataViewModel
 			if (Model.CurrentSandCount <= 0)
 				return;
 
-			if (Model.CurrentSandCount <= 0)
-				return;
+			_increasedDelta++;
 
-			Model.AddMoney(ResourceAddCount);
-			Model.DecreaseSand(ResourceAddCount);
+			if (Model.CurrentSandCount - _increasedDelta < 0)
+			{
+				_increasedDelta = 0;
+				return;
+			}
+
+			Model.AddMoney(_increasedDelta);
+			Model.DecreaseSand(_increasedDelta);
 			ScoreChanged?.Invoke(Model.CurrentSandCount);
-			MoneyChanged?.Invoke(Model.SoftCurrency.Count);
+			MoneyChanged?.Invoke(SoftCurrency.Count);
 		}
 
 		public void AddMoney(int count)
 		{
 			Model.AddMoney(count);
-			MoneyChanged?.Invoke(Model.SoftCurrency.Count);
+			MoneyChanged?.Invoke(SoftCurrency.Count);
 		}
 
 		public void DecreaseMoney(int count)
 		{
-			Model.SoftCurrency.Set(Model.SoftCurrency.Count - count);
-			MoneyChanged?.Invoke(Model.SoftCurrency.Count);
+			if (Model.SoftCurrency.Count - count < 0)
+				throw new ArgumentOutOfRangeException($"{SoftCurrency} less than zero");
+
+			Model.SoftCurrency.Set(SoftCurrency.Count - count);
+			MoneyChanged?.Invoke(SoftCurrency.Count);
 		}
 
-		public int GetDecreasedMoney(int count) => 
-			count - Model.SoftCurrency.Count;
+		public int GetDecreasedMoney(int count) =>
+			Model.SoftCurrency.Count - count;
 	}
 }

@@ -146,7 +146,6 @@ GameObject:
   - component: {fileID: 127196617436377992}
   - component: {fileID: 4046607987286173954}
   - component: {fileID: 6164110805716261460}
-  - component: {fileID: 1444958686547948237}
   m_Layer: 5
   m_Name: Title
   m_TagString: Untagged
@@ -202,7 +201,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Title
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -271,20 +270,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &1444958686547948237
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 539914816515055143}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbf51be86e70d7941bd40914206e4ddc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  translationName: 
-  FallbackText: Title
 --- !u!1 &1071132649802193900
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,6 +459,7 @@ GameObject:
   - component: {fileID: 5094002040186634079}
   - component: {fileID: 743671444132825415}
   - component: {fileID: 5433146349030047077}
+  - component: {fileID: 6760623675703214674}
   m_Layer: 5
   m_Name: ButtonTitle-text
   m_TagString: Untagged
@@ -529,7 +515,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: BUY
+  m_text: BuyButton
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -556,10 +542,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 55
+  m_fontSize: 30.6
   m_fontSizeBase: 55
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -598,6 +584,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6760623675703214674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1831594118657120095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d602a7b4aa8ba244aa9f92245e384c9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _phraseName: 
 --- !u!1 &2116853337829424970
 GameObject:
   m_ObjectHideFlags: 0
@@ -664,7 +663,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: sdfsdafaafafsdfsdafaafafsdfsdafaafafsdfsdafaafaf
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -691,7 +690,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
+  m_fontSize: 24
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -951,15 +950,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxPoints: 6
+  _pointElement: {fileID: 5220799815932149384, guid: 7c70e425e036970469a149381cbb8bf7, type: 3}
   _notBoughtPointColor: {r: 0.7176471, g: 0.7176471, b: 0.7176471, a: 1}
   _boughtPointColor: {r: 0.2, g: 0.8392157, b: 0.12941177, a: 1}
   _pointsContainer: {fileID: 2319650695670038048}
-  _pointElement: {fileID: 5220799815932149384, guid: 7c70e425e036970469a149381cbb8bf7, type: 3}
   _title: {fileID: 6164110805716261460}
-  _description: {fileID: 9166928342763985661}
-  _price: {fileID: 2382550311170700344}
   _icon: {fileID: 4008094084244974186}
   _buttonBuy: {fileID: 6643549780794602985}
+  _description: {fileID: 9166928342763985661}
+  _price: {fileID: 2382550311170700344}
 --- !u!1 &3478792050673008874
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,7 +5,7 @@ using Sources.DIService;
 
 namespace Sources.DomainInterfaces
 {
-	public interface ISaveLoadDataService : ISaveClearable, IService
+	public interface IProgressLoadDataService : IProgressClearable, IService
 	{
 		void SaveProgressBinary();
 		IGameProgressModel LoadProgressBinary();

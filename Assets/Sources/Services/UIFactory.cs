@@ -1,4 +1,6 @@
+#if YANDEX_GAMES && !UNITY_EDITOR
 using Agava.YandexGames;
+#endif
 using Cysharp.Threading.Tasks;
 using Joystick_Pack.Scripts.Base;
 using Sources.ApplicationServicesInterfaces;
@@ -38,26 +40,34 @@ namespace Sources.Services
 
 		public async UniTask<GameObject> CreateUI()
 		{
+			
 			GameObject instance = _assetProvider.Instantiate(ResourcesAssetPath.Scene.UI.UI);
 			_gameInterface = instance.GetComponent<GameplayInterfaceView>();
 
-			_gameInterface.Construct(_resourcesProgressPresenter,
-				_gameProgress.GameProgress.ResourcesModel.MaxFilledScore);
+			_gameInterface.Construct
+			(
+				_resourcesProgressPresenter,
+				_gameProgress
+					.GameProgress
+					.ResourcesModel
+					.MaxFilledScore
+			);
 
+#if YANDEX_GAMES && !UNITY_EDITOR
 			PlayerAccountProfileDataResponse playerAccount = await _yandexGamesController.GetPlayerAccount();
-
 			string publicName = playerAccount.scopePermissions.public_name;
 
 			_playerName = _gameInterface.PlayerName;
 			_playerName.SetText(playerAccount.publicName);
 
+#endif
 			Canvas = _gameInterface.Canvas;
 
 			GameObject = _gameInterface.gameObject;
 			Joystick = _gameInterface.Joystick;
 			ScoreSlider = _gameInterface.ScoreSlider;
-			ScoreText = _gameInterface.ScoreText;
-			MoneyText = _gameInterface.ScoreText;
+			ScoreText = _gameInterface.ScoreCash;
+			MoneyText = _gameInterface.ScoreCash;
 			return instance;
 		}
 	}

@@ -2,7 +2,7 @@ using System;
 
 namespace Sources.DomainInterfaces
 {
-	public interface ISaveClearable
+	public interface IProgressClearable
 	{
 		event Func<IGameProgressModel> ProgressCleared;
 	}

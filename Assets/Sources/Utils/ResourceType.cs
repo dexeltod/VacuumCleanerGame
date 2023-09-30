@@ -7,6 +7,6 @@ namespace Sources.Utils
 	{
 		Soft,
 		Hard,
-		Sand,
+		Score,
 	}
 }

@@ -14,19 +14,20 @@ namespace Sources.View.UI.Shop
 	[RequireComponent(typeof(UpgradeWindow))]
 	public class UpgradeWindow : MonoBehaviour, IUpgradeWindow
 	{
-		[SerializeField] private GameObject _content;
-
-		[SerializeField] private Button _closeMenuButton;
-		[SerializeField] private Button _noButton;
-		[SerializeField] private GameObject _yesNoButtons;
+		[SerializeField] private GameObject      _content;
 		[SerializeField] private TextMeshProUGUI _money;
 
-		private IUIGetter _gameplayInterface;
+		[SerializeField] private Button     _closeMenuButton;
+		[SerializeField] private Button     _noButton;
+		[SerializeField] private GameObject _yesNoButtons;
+
+		private IUIGetter                  _gameplayInterface;
 		private List<UpgradeElementPrefab> _buttons;
+
 		public Transform ContainerTransform => _content.transform;
 
 		public event Action<bool> ActiveChanged;
-		public event Action Destroyed;
+		public event Action       Destroyed;
 
 		private void Awake() =>
 			enabled = false;
@@ -54,11 +55,16 @@ namespace Sources.View.UI.Shop
 		public void Construct(IResource<int> resource)
 		{
 			resource.ResourceChanged += OnMoneyChanged;
+
 			_money.text = resource.Count.ToString();
+			Debug.Log
+			(
+				resource.Count.ToString()
+			);
 
 			_gameplayInterface = GameServices.Container.Get<IUIGetter>();
-			_closeMenuButton.onClick.AddListener(OnEnableJoystick);
 
+			_closeMenuButton.onClick.AddListener(OnEnableJoystick);
 			_noButton.onClick.AddListener(OnEnableJoystick);
 		}
 
@@ -68,7 +74,7 @@ namespace Sources.View.UI.Shop
 			_noButton.onClick.RemoveListener(OnEnableJoystick);
 		}
 
-		private void OnMoneyChanged(int amount) => 
+		private void OnMoneyChanged(int amount) =>
 			_money.text = amount.ToString();
 
 		private void OnEnableJoystick() =>

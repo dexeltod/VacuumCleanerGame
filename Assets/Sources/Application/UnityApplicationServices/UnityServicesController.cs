@@ -8,7 +8,7 @@ namespace Sources.Application.UnityApplicationServices
 {
 	public class UnityServicesController : IUnityServicesController
 	{
-		private const string TestEnvironmentName = "tests";
+		private const string TestEnvironmentName       = "tests";
 		private const string ProductionEnvironmentName = "production";
 
 		private readonly InitializationOptions _options;
