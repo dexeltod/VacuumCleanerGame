@@ -44,7 +44,7 @@ namespace Sources.Application.StateMachine.GameStates
 				(
 					ResourcesAssetPath
 						.Scene
-						.UI
+						.UIResources
 						.MainMenuCanvas
 				);
 

@@ -10,5 +10,6 @@ namespace Sources.ServicesInterfaces
 		T Load<T>(string path) where T: Object;
 		GameObject Instantiate(string path, Vector3 position);
 		T InstantiateAndGetComponent<T>(string path) where T: Behaviour;
+		T InstantiateAndGetComponent<T>(string path, Vector3 position) where T: Behaviour;
 	}
 }

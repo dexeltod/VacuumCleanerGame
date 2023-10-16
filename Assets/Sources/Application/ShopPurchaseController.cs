@@ -9,7 +9,6 @@ using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
 using Sources.View.UI.Shop;
-using UnityEngine;
 
 namespace Sources.Application
 {
@@ -127,6 +126,5 @@ namespace Sources.Application
 
 			upgradeElement.SetUpgradeLevel(upgradeElement.PointLevel + Point);
 		}
-
 	}
 }

@@ -14,26 +14,29 @@ using UnityEngine;
 
 namespace Sources.Infrastructure.Factories
 {
-	[Serializable]
-	public class ProgressFactory : IDisposable
+	[Serializable] public class ProgressFactory : IDisposable
 	{
 		private const int StartMoneyCount = 99999;
 
-		private readonly IProgressLoadDataService _progressLoadDataService;
+		private readonly IProgressLoadDataService                _progressLoadDataService;
 		private readonly IPersistentProgressServiceConstructable _persistentProgressService;
-		private readonly IShopItemFactory _shopFactory;
-		private readonly IProgressClearable _progressClearable;
-		private readonly IResourceService _resourceService;
+		private readonly IShopItemFactory                        _shopFactory;
+		private readonly IProgressClearable                      _progressClearable;
+		private readonly IResourceService                        _resourceService;
 
-		public ProgressFactory(IProgressLoadDataService progressLoadDataService,
-			IPersistentProgressServiceConstructable persistentProgressService, IShopItemFactory shopItemFactory,
-			IProgressClearable progressClearable)
+		public ProgressFactory
+		(
+			IProgressLoadDataService                progressLoadDataService,
+			IPersistentProgressServiceConstructable persistentProgressService,
+			IShopItemFactory                        shopItemFactory,
+			IProgressClearable                      progressClearable
+		)
 		{
-			_progressLoadDataService = progressLoadDataService;
-			_persistentProgressService = persistentProgressService;
-			_shopFactory = shopItemFactory;
-			_progressClearable = progressClearable;
-			_resourceService = GameServices.Container.Get<IResourceService>();
+			_progressLoadDataService           =  progressLoadDataService;
+			_persistentProgressService         =  persistentProgressService;
+			_shopFactory                       =  shopItemFactory;
+			_progressClearable                 =  progressClearable;
+			_resourceService                   =  GameServices.Container.Get<IResourceService>();
 			_progressClearable.ProgressCleared += CreateNewProgress;
 		}
 
@@ -75,8 +78,8 @@ namespace Sources.Infrastructure.Factories
 
 		private GameProgressModel CreateNewProgress()
 		{
-			IUpgradeItemData[] itemsList = _shopFactory.LoadItems();
-			GameProgressModel newProgress = CreateProgress(itemsList);
+			IUpgradeItemData[] itemsList   = _shopFactory.LoadItems();
+			GameProgressModel  newProgress = CreateProgress(itemsList);
 
 			_persistentProgressService.Construct(newProgress);
 
@@ -85,8 +88,10 @@ namespace Sources.Infrastructure.Factories
 
 		private GameProgressModel CreateProgress(IUpgradeItemData[] itemsList)
 		{
-			Resource<int> soft = GetResource(ResourceType.Soft);
-			Resource<int> hard = GetResource(ResourceType.Hard);
+			string progressName = "CurrentLevel";
+			
+			Resource<int> soft  = GetResource(ResourceType.Soft);
+			Resource<int> hard  = GetResource(ResourceType.Hard);
 			Resource<int> score = GetResource(ResourceType.Score);
 
 			Debug.Log("Resources loaded");
@@ -100,21 +105,30 @@ namespace Sources.Infrastructure.Factories
 				0
 			);
 
-			PlayerProgress playerProgressModel = new PlayerProgress(CreateNewUpgradeProgressData(itemsList), 0);
+			PlayerProgress playerProgressModel = new PlayerProgress(CreateNewUpgradeProgressData(itemsList));
 
-			ShopProgress shopProgressModel = new(CreateNewUpgradeProgressData(itemsList));
+			ShopProgress shopProgressModel = new(CreateNewUpgradeProgressData(itemsList), 6);
+
+			LevelProgress levelProgressModel = new
+			(
+				new List<ProgressUpgradeData>
+				{
+					new ProgressUpgradeData(progressName, 1)
+				}
+			);
 
 			GameProgressModel newProgress = new GameProgressModel
 			(
 				resourcesModel,
 				playerProgressModel,
-				shopProgressModel
+				shopProgressModel,
+				levelProgressModel
 			);
 
 			return newProgress;
 		}
 
-		private List<ProgressUpgradeData> CreateNewUpgradeProgressData(IUpgradeItemData[] itemsList)
+		private List<ProgressUpgradeData> CreateNewUpgradeProgressData(IEnumerable<IUpgradeItemData> itemsList)
 		{
 			List<ProgressUpgradeData> progressList = new List<ProgressUpgradeData>();
 

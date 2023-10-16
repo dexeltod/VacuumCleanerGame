@@ -5,6 +5,6 @@ namespace Sources.InfrastructureInterfaces.Scene
 {
 	public interface ISceneConfigGetter : IService
 	{
-		SceneConfig GetSceneConfig(string sceneConfigName);
+		SceneConfig Get(string sceneConfigName);
 	}
 }

@@ -7,7 +7,7 @@ namespace Sources.Services
 	{
 		public GameObject Instantiate(string path)
 		{
-			var @object = Resources.Load<GameObject>(path);
+			GameObject @object = Resources.Load<GameObject>(path);
 			return Object.Instantiate(@object);
 		}
 
@@ -19,6 +19,9 @@ namespace Sources.Services
 
 		public T InstantiateAndGetComponent<T>(string path) where T : Behaviour =>
 			Object.Instantiate(Resources.Load<T>(path));
+
+		public T InstantiateAndGetComponent<T>(string path, Vector3 position) where T : Behaviour =>
+			Object.Instantiate(Resources.Load<T>(path), position, Quaternion.identity);
 
 		public T Load<T>(string path) where T : Object =>
 			Resources.Load<T>(path);

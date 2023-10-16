@@ -43,7 +43,7 @@ namespace Sources.Application.StateMachine
 
 				[typeof(MenuState)] = new MenuState(sceneLoader, loadingCurtain, gameServices),
 
-				[typeof(SceneLoadState)] = new SceneLoadState
+				[typeof(BuildSceneState)] = new BuildSceneState
 				(
 					this,
 					sceneLoader,
@@ -56,7 +56,7 @@ namespace Sources.Application.StateMachine
 
 		public void Enter<TState>() where TState : class, IGameState
 		{
-			var state = ChangeState<TState>();
+			TState state = ChangeState<TState>();
 			state.Enter();
 		}
 
@@ -65,33 +65,6 @@ namespace Sources.Application.StateMachine
 		{
 			TState state = ChangeState<TState>();
 			state.Enter(payload);
-		}
-
-		public void Enter<TState, TPayload, T>
-		(
-			TPayload payload,
-			string   musicName,
-			bool     isLevelNameIsStopMusicBetweenScenes
-		)
-			where TState : class, IPayloadState<TPayload>
-		{
-			TState state = ChangeState<TState>();
-			state.Enter(payload);
-
-			SetOrStopMusic<TState, TPayload>(isLevelNameIsStopMusicBetweenScenes, musicName);
-		}
-
-		private void SetOrStopMusic<TState, TPayload>
-		(
-			bool   isMusicStopped,
-			string musicName
-		)
-			where TState : class, IPayloadState<TPayload>
-		{
-			if (musicName == _currentMusicName || string.IsNullOrWhiteSpace(musicName) == true)
-				return;
-
-			//TODO: Need to create music... maybe.
 		}
 
 		private TState ChangeState<TState>() where TState : class, IExitState

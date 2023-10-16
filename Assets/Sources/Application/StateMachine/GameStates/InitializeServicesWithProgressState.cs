@@ -50,14 +50,14 @@ namespace Sources.Application.StateMachine.GameStates
 
 			PlayerStatsFactory statsFactory = new PlayerStatsFactory(shopItemFactory, _loadingCurtain);
 
-			_gameServices.Register<IPlayerStatsService>
-			(
-				statsFactory.CreatePlayerStats(progressService)
-			);
+			_gameServices.Register<IPlayerStatsService>(statsFactory.CreatePlayerStats(progressService));
 
 			_gameServices.Register<IPlayerProgressProvider>
 			(
-				new PlayerProgressProvider(GameServices.Container.Get<IPlayerStatsService>())
+				new PlayerProgressProvider
+				(
+					GameServices.Container.Get<IPlayerStatsService>()
+				)
 			);
 
 			IResourcesProgressPresenter resourcesProgressPresenter = _gameServices.Register<IResourcesProgressPresenter>
@@ -65,23 +65,17 @@ namespace Sources.Application.StateMachine.GameStates
 				new ResourcesPresenter()
 			);
 
-			_gameServices.Register<IShopProgressProvider>
-			(
-				new ShopProgressProvider()
-			);
+			_gameServices.Register<IShopProgressProvider>(new ShopProgressProvider());
 
 			CreateUIServices();
 
-			UpgradeWindowFactory upgradeWindowFactory = new
+			CreateUpgradeWindow
 			(
 				assetProvider,
 				shopItemFactory,
 				resourcesProgressPresenter,
-				progressService.GameProgress
+				progressService
 			);
-
-			_gameServices.Register<IUpgradeWindowFactory>(upgradeWindowFactory);
-			_gameServices.Register<IUpgradeWindowGetter>(upgradeWindowFactory);
 
 			_gameServices.Register<IPlayerFactory>
 			(
@@ -94,17 +88,31 @@ namespace Sources.Application.StateMachine.GameStates
 			_loadingCurtain.SetText("");
 		}
 
+		private void CreateUpgradeWindow
+		(
+			IAssetProvider              assetProvider,
+			IShopItemFactory            shopItemFactory,
+			IResourcesProgressPresenter resourcesProgressPresenter,
+			IPersistentProgressService  progressService
+		)
+		{
+			UpgradeWindowFactory upgradeWindowFactory = new
+			(
+				assetProvider,
+				shopItemFactory,
+				resourcesProgressPresenter,
+				progressService.GameProgress
+			);
+
+			_gameServices.Register<IUpgradeWindowFactory>(upgradeWindowFactory);
+			_gameServices.Register<IUpgradeWindowGetter>(upgradeWindowFactory);
+		}
+
 		private void CreateUIServices()
 		{
 			UIFactory uiFactory = new UIFactory();
-			_gameServices.Register<IUIFactory>
-			(
-				uiFactory
-			);
-			_gameServices.Register<IUIGetter>
-			(
-				uiFactory
-			);
+			_gameServices.Register<IUIFactory>(uiFactory);
+			_gameServices.Register<IUIGetter>(uiFactory);
 		}
 	}
 }

@@ -14,16 +14,14 @@ namespace Sources.Infrastructure.Factories.Player
 {
 	public class PlayerFactory : IPlayerFactory
 	{
-		private readonly AnimationHasher _hasher;
-		private readonly IAssetProvider _assetProvider;
+		private readonly AnimationHasher            _hasher;
+		private readonly IAssetProvider             _assetProvider;
 		private readonly IPersistentProgressService _progressService;
 
-		private IPresenterFactory _presenterFactory;
-
-		private Joystick _joystick;
-		private Animator _animator;
-		private AnimationHasher _animationHasher;
-		private AnimatorFacade _animatorFacade;
+		private Joystick            _joystick;
+		private Animator            _animator;
+		private AnimationHasher     _animationHasher;
+		private AnimatorFacade      _animatorFacade;
 		private PlayerStatesFactory _playerStatesFactory;
 		private IPlayerStatsService _playerStats;
 
@@ -32,25 +30,30 @@ namespace Sources.Infrastructure.Factories.Player
 		public PlayerFactory(IAssetProvider assetProvider)
 		{
 			_progressService = GameServices.Container.Get<IPersistentProgressService>();
-			_assetProvider = assetProvider;
+			_assetProvider   = assetProvider;
 		}
 
-		public void Instantiate(GameObject initialPoint, IPresenterFactory presenterFactory,
-			Joystick joystick, IPlayerStatsService stats)
+		public void Instantiate
+		(
+			GameObject          initialPoint,
+			Joystick            joystick,
+			IPlayerStatsService stats
+		)
 		{
 			_playerStats = stats;
-			_joystick = joystick;
-			_presenterFactory = presenterFactory;
+			_joystick    = joystick;
 			Create(initialPoint);
 		}
 
 		private void Create(GameObject initialPoint)
 		{
-			Player playerPresenter = _presenterFactory.Instantiate<Player>(
+			Player playerPresenter = _assetProvider.InstantiateAndGetComponent<Player>
+			(
 				ResourcesAssetPath.Scene.Player,
-				initialPoint.transform.position);
+				initialPoint.transform.position
+			);
 
-			var character = playerPresenter.gameObject;
+			GameObject character = playerPresenter.gameObject;
 			Player = character;
 			Rigidbody rigidbody = Player.GetComponent<Rigidbody>();
 

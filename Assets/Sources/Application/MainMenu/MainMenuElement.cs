@@ -13,15 +13,16 @@ namespace Sources.Application.MainMenu
 {
 	public class MainMenuElement : MenuElement, IDisposable
 	{
-		private const string LevelsMenuElement = "Levels";
+		private const string LevelsMenuElement   = "Levels";
 		private const string SettingsMenuElement = "Settings";
-		private const string GameSceneName = "Game";
+		private const string GameSceneName       = "Game";
 
 		private readonly UIElementGetterFacade _uiElementGetter;
 		private readonly VisualElementSwitcher _visualElementSwitcher;
-		private readonly ISceneConfigGetter _sceneConfigGetter;
-		private readonly IGameStateMachine _gameStateMachine;
-		private readonly ILocalizationService _localizationService;
+		private readonly ISceneConfigGetter    _sceneConfigGetter;
+		private readonly IGameStateMachine     _gameStateMachine;
+		private readonly ILocalizationService  _localizationService;
+
 		private VisualElement _menuVisualElement;
 		private VisualElement _levelsVisualElement;
 		private VisualElement _settingsVisualElement;
@@ -34,12 +35,12 @@ namespace Sources.Application.MainMenu
 
 		public MainMenuElement
 		(
-			VisualElement thisElement,
+			VisualElement         thisElement,
 			UIElementGetterFacade uiElementGetter,
 			VisualElementSwitcher visualElementSwitcher,
-			ISceneConfigGetter sceneConfigGetter,
-			IGameStateMachine gameStateMachine,
-			ILocalizationService localizationService
+			ISceneConfigGetter    sceneConfigGetter,
+			IGameStateMachine     gameStateMachine,
+			ILocalizationService  localizationService
 		) : base
 		(
 			thisElement,
@@ -47,11 +48,11 @@ namespace Sources.Application.MainMenu
 			uiElementGetter
 		)
 		{
-			_uiElementGetter = uiElementGetter;
+			_uiElementGetter       = uiElementGetter;
 			_visualElementSwitcher = visualElementSwitcher;
-			_sceneConfigGetter = sceneConfigGetter;
-			_gameStateMachine = gameStateMachine;
-			_localizationService = localizationService;
+			_sceneConfigGetter     = sceneConfigGetter;
+			_gameStateMachine      = gameStateMachine;
+			_localizationService   = localizationService;
 			Initialize();
 		}
 
@@ -68,15 +69,11 @@ namespace Sources.Application.MainMenu
 			GC.SuppressFinalize(this);
 		}
 
-		~MainMenuElement()
-		{
+		~MainMenuElement() =>
 			ReleaseUnmanagedResources();
-		}
 
-		private void GetElementsToSwitch()
-		{
+		private void GetElementsToSwitch() =>
 			_levelsVisualElement = _uiElementGetter.GetFirst<VisualElement>(LevelsMenuElement);
-		}
 
 		private void GetButtons()
 		{
@@ -87,15 +84,11 @@ namespace Sources.Application.MainMenu
 				_playButton.text = translation;
 		}
 
-		private void SubscribeOnButtons()
-		{
+		private void SubscribeOnButtons() =>
 			_playButton.clicked += OnPlay;
-		}
 
-		private void UnsubscribeFromButtons()
-		{
+		private void UnsubscribeFromButtons() =>
 			_playButton.clicked -= OnPlay;
-		}
 
 		private void OnExitGame() =>
 			UnityEngine.Application.Quit();
@@ -109,14 +102,12 @@ namespace Sources.Application.MainMenu
 		private void OnPlay()
 		{
 			_visualElementSwitcher.Disable(ThisElement);
-			SceneConfig sceneConfig = _sceneConfigGetter.GetSceneConfig(ResourcesAssetPath.Configs.Game);
+			SceneConfig sceneConfig = _sceneConfigGetter.Get(ResourcesAssetPath.Configs.Game);
 
-			_gameStateMachine.Enter<SceneLoadState, string>(sceneConfig.SceneName);
+			_gameStateMachine.Enter<BuildSceneState, SceneConfig>(sceneConfig);
 		}
 
-		private void ReleaseUnmanagedResources()
-		{
+		private void ReleaseUnmanagedResources() =>
 			UnsubscribeFromButtons();
-		}
 	}
 }

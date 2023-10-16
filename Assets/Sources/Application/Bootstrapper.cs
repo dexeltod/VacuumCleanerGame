@@ -15,13 +15,15 @@ namespace Sources.Application
 			DontDestroyOnLoad(this);
 			_loadingCurtain.gameObject.SetActive(true);
 
-			_game = new Game(this, _loadingCurtain, _authorizationHandler);
+			_game = new Game(_loadingCurtain, _authorizationHandler);
 
 			StartGame();
 		}
 
-		private void StartGame() => _game.Start();
+		private void StartGame() =>
+			_game.Start();
 
-		public void StopCoroutineRunning(Coroutine coroutine) => StopCoroutine(coroutine);
+		public void StopCoroutineRunning(Coroutine coroutine) =>
+			StopCoroutine(coroutine);
 	}
 }

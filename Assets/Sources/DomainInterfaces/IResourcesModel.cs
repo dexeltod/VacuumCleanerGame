@@ -8,13 +8,14 @@ namespace Sources.DomainInterfaces
 		IResource<int> HardCurrency { get; }
 		IResource<int> Score        { get; }
 
-		int  MaxFilledScore   { get; }
-		int  MaxFillModifier  { get; }
+		int  MaxScore    { get; }
+		int  MaxModifier { get; }
+		void AddSand(int newValue);
+
 		int  CurrentSandCount { get; }
 		int  GlobalSandCount  { get; }
-		void AddSand(int       count);
-		void DecreaseSand(int  count);
-		void AddMoney(int      count);
-		void DecreaseMoney(int count);
+		void DecreaseSand(int  newValue);
+		void AddMoney(int      newValue);
+		void DecreaseMoney(int newValue);
 	}
 }

@@ -20,6 +20,8 @@ using Sources.ServicesInterfaces;
 using Sources.Utils;
 using Sources.Utils.Configs;
 using Unity.Services.Core;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 #if YANDEX_GAMES
 using Sources.Services.DomainServices.YandexLeaderboard;
@@ -48,7 +50,6 @@ namespace Sources.Application.StateMachine.GameStates
 			GameStateMachine            gameStateMachine,
 			GameServices                gameServices,
 			SceneLoader                 sceneLoader
- 
 		)
 		{
 			_yandexAuthorizationHandler = yandexAuthorizationHandler;
@@ -70,23 +71,103 @@ namespace Sources.Application.StateMachine.GameStates
 
 		private async UniTask RegisterServices()
 		{
-			IAssetProvider provider = _gameServices.Register<IAssetProvider>(new AssetProvider());
+			SceneLoadService sceneLoadService = new SceneLoadService(_gameStateMachine);
+
+			IAssetProvider assetProvider = _gameServices.Register<IAssetProvider>(new AssetProvider());
 			_gameServices.Register<ILocalizationService>(new LocalizationService());
 
-			new AbstractLeaderBoard(GetLeaderboard());
+			CreateLeaderBoard();
 
-			_gameServices.Register<ILeaderBoardService>(new AbstractLeaderBoard(GetLeaderboard()));
-
-#if YANDEX_GAMES && !UNITY_EDITOR
-			YandexGamesSdkFacade yandexSdk =
-				new YandexGamesSdkFacade(_yandexAuthorizationHandler);
-
-			await yandexSdk.Initialize();
-
-			_gameServices.Register<IYandexSDKController>(yandexSdk);
-#endif
 			_gameServices.Register<IGameStateMachine>(_gameStateMachine);
 
+			CreateResourceService();
+
+			IShopItemFactory shopItemFactory = _gameServices.Register<IShopItemFactory>(new ShopItemFactory());
+
+			IPersistentProgressService persistentProgressService = CreatPersistentProgressService();
+
+			ISaveLoader saveLoader = await GetSaveLoader
+									 (
+#if YANDEX_GAMES && !UNITY_EDITOR
+										 yandexSdk,
+#endif
+										 persistentProgressService
+									 );
+
+			IProgressLoadDataService progressLoadDataService = CreateProgressLoadDataService
+				(saveLoader, persistentProgressService);
+
+			_gameServices.Register<IUpgradeStatsProvider>(new UpgradeStatsProvider(assetProvider));
+
+			CreateSceneLoadServices();
+
+			CreateCamera();
+
+			_gameServices.Register<ISceneConfigGetter>(new SceneConfigGetter());
+
+			ProgressFactory progressFactory = CreateProgressFactory
+				(progressLoadDataService, persistentProgressService, shopItemFactory);
+
+			await progressFactory.InitializeProgress();
+
+			_isServicesRegistered = true;
+		}
+
+		private void CreateSceneLoadServices()
+		{
+			SceneLoadInformer sceneLoadInformer = new SceneLoadInformer();
+
+			_gameServices.Register<ISceneLoadInformer>(sceneLoadInformer);
+			_gameServices.Register<ISceneLoad>(sceneLoadInformer);
+		}
+
+		private static ProgressFactory CreateProgressFactory
+		(
+			IProgressLoadDataService   progressLoadDataService,
+			IPersistentProgressService persistentProgressService,
+			IShopItemFactory           shopItemFactory
+		)
+		{
+			ProgressFactory progressFactory = new ProgressFactory
+			(
+				progressLoadDataService,
+				persistentProgressService,
+				shopItemFactory,
+				progressLoadDataService
+			);
+			return progressFactory;
+		}
+
+		private IPersistentProgressService CreatPersistentProgressService()
+		{
+			IPersistentProgressService persistentProgressService =
+				_gameServices.Register<IPersistentProgressService>
+				(
+					new PersistentProgressService()
+				);
+			return persistentProgressService;
+		}
+
+		private IProgressLoadDataService CreateProgressLoadDataService
+			(ISaveLoader saveLoader, IPersistentProgressService persistentProgressService)
+		{
+			IProgressLoadDataService progressLoadDataService =
+				_gameServices.Register<IProgressLoadDataService>
+				(
+					new ProgressLoadDataService(saveLoader, persistentProgressService)
+				);
+			return progressLoadDataService;
+		}
+
+		private void CreateCamera()
+		{
+			CameraFactory cameraFactory = new CameraFactory();
+			_gameServices.Register<ICameraFactory>(cameraFactory);
+			_gameServices.Register<ICamera>(cameraFactory);
+		}
+
+		private void CreateResourceService()
+		{
 			ResourceServiceFactory resourceServiceFactory = new ResourceServiceFactory();
 
 			Dictionary<ResourceType, IResource<int>>   intResources   = resourceServiceFactory.GetIntResources();
@@ -100,56 +181,22 @@ namespace Sources.Application.StateMachine.GameStates
 					floatResources
 				)
 			);
+		}
 
-			IShopItemFactory shopItemFactory = _gameServices.Register<IShopItemFactory>(new ShopItemFactory());
+		private void CreateLeaderBoard()
+		{
+			LeaderBoard leaderBoardService = new LeaderBoard(GetLeaderboard());
 
-			IPersistentProgressService persistentProgressService =
-				_gameServices.Register<IPersistentProgressService>
-				(
-					new PersistentProgressService()
-				);
+			_gameServices.Register<ILeaderBoardService>(leaderBoardService);
 
-			ISaveLoader saveLoader = await GetSaveLoader
-									(
 #if YANDEX_GAMES && !UNITY_EDITOR
-				yandexSdk,
+			YandexGamesSdkFacade yandexSdk =
+				new YandexGamesSdkFacade(_yandexAuthorizationHandler);
+
+			await yandexSdk.Initialize();
+
+			_gameServices.Register<IYandexSDKController>(yandexSdk);
 #endif
-										persistentProgressService
-									);
-
-			IProgressLoadDataService progressLoadDataService = _gameServices.Register<IProgressLoadDataService>
-			(
-				new ProgressLoadDataService
-				(
-					saveLoader,
-					persistentProgressService
-				)
-			);
-
-			_gameServices.Register<IUpgradeStatsProvider>(new UpgradeStatsProvider(provider));
-
-			SceneLoadInformer sceneLoadInformer = new SceneLoadInformer();
-
-			_gameServices.Register<IPresenterFactory>(new PresenterFactory());
-			_gameServices.Register<ISceneLoadInformer>(sceneLoadInformer);
-			_gameServices.Register<ISceneLoad>(sceneLoadInformer);
-
-			CameraFactory cameraFactory = new CameraFactory();
-			_gameServices.Register<ICameraFactory>(cameraFactory);
-			_gameServices.Register<ICamera>(cameraFactory);
-			_gameServices.Register<ISceneConfigGetter>(new SceneConfigGetter());
-
-			ProgressFactory progressFactory = new ProgressFactory
-			(
-				progressLoadDataService,
-				persistentProgressService,
-				shopItemFactory,
-				progressLoadDataService
-			);
-
-			await progressFactory.InitializeProgress();
-
-			_isServicesRegistered = true;
 		}
 
 		private async UniTask<ISaveLoader> GetSaveLoader
@@ -187,6 +234,34 @@ namespace Sources.Application.StateMachine.GameStates
 #if UNITY_EDITOR
 			return new EditorAbstractLeaderBoardService();
 #endif
+		}
+	}
+
+	internal class SceneLoadService
+	{
+		private readonly GameStateMachine _gameStateMachine;
+
+		public SceneLoadService(GameStateMachine gameStateMachine) =>
+			_gameStateMachine = gameStateMachine;
+
+		public async UniTask Load(string nextScene)
+		{
+			if (SceneManager.GetActiveScene().name == nextScene)
+				return;
+
+			AsyncOperation waitNextTime = SceneManager.LoadSceneAsync(nextScene);
+
+			await UniTask.WaitWhile(() => waitNextTime.isDone == false);
+		}
+
+		public async UniTask Load(SceneConfig config)
+		{
+			if (SceneManager.GetActiveScene().name == config.SceneName)
+				return;
+
+			AsyncOperation waitNextTime = SceneManager.LoadSceneAsync(config.SceneName);
+
+			await UniTask.WaitWhile(() => waitNextTime.isDone == false);
 		}
 	}
 }

@@ -21,7 +21,7 @@ namespace Sources.View.UI.Shop
 		[SerializeField] private Button     _noButton;
 		[SerializeField] private GameObject _yesNoButtons;
 
-		private IUIGetter                  _gameplayInterface;
+		private IUIGetter                  _uiGetter;
 		private List<UpgradeElementPrefab> _buttons;
 
 		public Transform ContainerTransform => _content.transform;
@@ -34,14 +34,14 @@ namespace Sources.View.UI.Shop
 
 		public void OnEnable()
 		{
-			_gameplayInterface.Canvas.enabled = false;
+			_uiGetter.GameplayInterface.Canvas.enabled = false;
 			ActiveChanged?.Invoke(true);
 		}
 
 		public void OnDisable()
 		{
-			if (_gameplayInterface.Canvas != null)
-				_gameplayInterface.Canvas.enabled = true;
+			if (_uiGetter.GameplayInterface.Canvas != null)
+				_uiGetter.GameplayInterface.Canvas.enabled = true;
 
 			ActiveChanged?.Invoke(false);
 		}
@@ -54,6 +54,8 @@ namespace Sources.View.UI.Shop
 
 		public void Construct(IResource<int> resource)
 		{
+			_uiGetter = GameServices.Container.Get<IUIGetter>();
+			
 			resource.ResourceChanged += OnMoneyChanged;
 
 			_money.text = resource.Count.ToString();
@@ -61,8 +63,6 @@ namespace Sources.View.UI.Shop
 			(
 				resource.Count.ToString()
 			);
-
-			_gameplayInterface = GameServices.Container.Get<IUIGetter>();
 
 			_closeMenuButton.onClick.AddListener(OnEnableJoystick);
 			_noButton.onClick.AddListener(OnEnableJoystick);
@@ -78,6 +78,6 @@ namespace Sources.View.UI.Shop
 			_money.text = amount.ToString();
 
 		private void OnEnableJoystick() =>
-			_gameplayInterface.Joystick.enabled = true;
+			_uiGetter.GameplayInterface.Joystick.enabled = true;
 	}
 }

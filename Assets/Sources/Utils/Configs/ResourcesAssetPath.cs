@@ -9,7 +9,7 @@ namespace Sources.Utils.Configs
 
 	public class SceneResources
 	{
-		public readonly UIResources UI = new();
+		public readonly UIResources UIResources = new();
 
 		public readonly string CinemachineVirtualCamera = "Game/Cameras/VirtualCamera";
 		public readonly string MainCamera               = "Game/Cameras/Main Camera";

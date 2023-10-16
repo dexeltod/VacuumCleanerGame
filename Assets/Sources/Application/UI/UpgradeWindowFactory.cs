@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Factories;
@@ -7,7 +6,6 @@ using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
-using Sources.Utils;
 using Sources.Utils.Configs;
 using Sources.View.UI.Shop;
 using UnityEngine;
@@ -69,7 +67,7 @@ namespace Sources.Application.UI
 		private void InstantiateWindow()
 		{
 			_shopElementFactory ??= new ShopElementFactory(_progress.ShopProgress);
-			_upgradeWindow      =   _assetProvider.Instantiate(ResourcesAssetPath.Scene.UI.UpgradeWindow);
+			_upgradeWindow      =   _assetProvider.Instantiate(ResourcesAssetPath.Scene.UIResources.UpgradeWindow);
 		}
 
 		private void InitButtons() =>

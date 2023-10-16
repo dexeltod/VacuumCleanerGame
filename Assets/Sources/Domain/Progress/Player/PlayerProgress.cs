@@ -1,22 +1,17 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace Sources.Domain.Progress.Player
 {
 	[Serializable] public class PlayerProgress : Progress
 	{
-		[SerializeField] private int _points;
-
-		public int Points => _points;
-
 		[JsonConstructor]
 		public PlayerProgress
 		(
 			List<ProgressUpgradeData> progress,
-			int                       points
+			int                       maxUpgradePointsCount = 0
 		)
-			: base(progress) { }
+			: base(progress, maxUpgradePointsCount) { }
 	}
 }

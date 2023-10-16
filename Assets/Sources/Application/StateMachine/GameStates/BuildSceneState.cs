@@ -4,7 +4,6 @@ using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Player;
-using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.PresentationInterfaces;
 using Sources.Services;
@@ -17,14 +16,12 @@ using UnityEngine;
 
 namespace Sources.Application.StateMachine.GameStates
 {
-	public class SceneLoadState : IPayloadState<string>
+	public class BuildSceneState : IPayloadState<SceneConfig>
 	{
 		private readonly GameStateMachine _gameStateMachine;
 		private readonly LoadingCurtain   _loadingCurtain;
 		private readonly GameServices     _gameServices;
 		private readonly SceneLoader      _sceneLoader;
-
-		private GameObject _initialPoint;
 
 		private IPlayerFactory _playerFactory;
 		private IUIFactory     _uiFactory;
@@ -34,13 +31,12 @@ namespace Sources.Application.StateMachine.GameStates
 		private IResourcesProgressPresenter _resourcesProgressPresenter;
 		private IUpgradeWindowFactory       _upgradeWindowFactory;
 		private ILocalizationService        _leanLocalization;
-		private IProgressLoadDataService        _progressLoadService;
+		private IProgressLoadDataService    _progressLoadService;
 		private IPlayerStatsService         _playerStats;
-		private IPresenterFactory           _presenterFactory;
 		private ICameraFactory              _cameraFactory;
 		private IAssetProvider              _assetProvider;
 
-		public SceneLoadState
+		public BuildSceneState
 		(
 			GameStateMachine gameStateMachine,
 			SceneLoader      sceneLoader,
@@ -54,13 +50,12 @@ namespace Sources.Application.StateMachine.GameStates
 			_gameServices     = gameServices;
 		}
 
-		public async UniTask Enter(string levelName)
+		public async UniTask Enter(SceneConfig sceneConfig)
 		{
 			_resourcesProgressPresenter = _gameServices.Get<IResourcesProgressPresenter>();
 			_upgradeWindowFactory       = _gameServices.Get<IUpgradeWindowFactory>();
 
 			_leanLocalization = _gameServices.Get<ILocalizationService>();
-			_presenterFactory = _gameServices.Get<IPresenterFactory>();
 			_cameraFactory    = _gameServices.Get<ICameraFactory>();
 			_playerFactory    = _gameServices.Get<IPlayerFactory>();
 			_assetProvider    = _gameServices.Get<IAssetProvider>();
@@ -69,7 +64,7 @@ namespace Sources.Application.StateMachine.GameStates
 			_sceneLoad        = _gameServices.Get<ISceneLoad>();
 
 			_loadingCurtain.Show();
-			await _sceneLoader.Load(levelName);
+			await _sceneLoader.Load(sceneConfig.SceneName);
 			await Create();
 
 			OnSceneLoaded();
@@ -81,14 +76,14 @@ namespace Sources.Application.StateMachine.GameStates
 
 			IMeshDeformationPresenter meshDeformationPresenter
 				= new MeshDeformationPresenter(meshModifiable, _resourcesProgressPresenter);
-			MeshPresenter meshPresenter = new MeshPresenter(meshDeformationPresenter, _resourcesProgressPresenter);
 
-			_loadingCurtain.SetText("Create UI");
+			new MeshPresenter(meshDeformationPresenter, _resourcesProgressPresenter);
+
 			await _uiFactory.CreateUI();
 
-			_initialPoint = GameObject.FindWithTag(ConstantNames.PlayerSpawnPointTag);
-			_loadingCurtain.SetText("Instantiate Player");
-			_playerFactory.Instantiate(_initialPoint, _presenterFactory, _uiFactory.Joystick, _playerStats);
+			GameObject initialPoint = GameObject.FindWithTag(ConstantNames.PlayerSpawnPointTag);
+
+			_playerFactory.Instantiate(initialPoint, _uiFactory.GameplayInterface.Joystick, _playerStats);
 			_cameraFactory.CreateVirtualCamera();
 
 			InstantiateUpgradeWindow();
@@ -99,11 +94,8 @@ namespace Sources.Application.StateMachine.GameStates
 			_leanLocalization.UpdateTranslations();
 		}
 
-		private void OnSceneLoaded()
-		{
+		private void OnSceneLoaded() =>
 			_gameStateMachine.Enter<GameLoopState>();
-			_loadingCurtain.SetText("");
-		}
 
 		public void Exit() =>
 			_loadingCurtain.HideSlow();

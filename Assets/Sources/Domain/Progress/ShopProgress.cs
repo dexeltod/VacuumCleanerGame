@@ -7,6 +7,10 @@ namespace Sources.Domain.Progress
 	[Serializable] public class ShopProgress : Progress
 	{
 		[JsonConstructor]
-		public ShopProgress(List<ProgressUpgradeData> progress) : base(progress) { }
+		public ShopProgress
+		(
+			List<ProgressUpgradeData> progress,
+			int                       maxUpgradePointsCount
+		) : base(progress, maxUpgradePointsCount) { }
 	}
 }

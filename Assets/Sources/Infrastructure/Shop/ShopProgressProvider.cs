@@ -11,16 +11,19 @@ namespace Sources.Infrastructure.Shop
 {
 	public class ShopProgressProvider : IShopProgressProvider
 	{
-		
-		private const int Point = 1;
-		private readonly IGameProgress _shopProgress;
+		private const    int                      Point = 1;
+		private readonly IGameProgress            _shopProgress;
 		private readonly IProgressLoadDataService _progressLoadService;
 
 		public ShopProgressProvider()
 		{
-			var gameProgress = GameServices.Container.Get<IPersistentProgressService>().GameProgress;
+			_shopProgress = GameServices
+				.Container
+				.Get<IPersistentProgressService>()
+				.GameProgress
+				.ShopProgress;
+
 			_progressLoadService = GameServices.Container.Get<IProgressLoadDataService>();
-			_shopProgress = gameProgress.ShopProgress;
 		}
 
 		public async UniTask AddProgressPoint(string progressName, Action succeededCallback)
@@ -32,10 +35,11 @@ namespace Sources.Infrastructure.Shop
 
 			int newProgressPoint = upgradeProgress.Value + Point;
 
-			if (newProgressPoint > _shopProgress.MaxPointCount)
+			if (newProgressPoint > _shopProgress.MaxUpgradePointCount)
 				return;
 
 			_shopProgress.SetProgress(progressName, newProgressPoint);
+
 			await _progressLoadService.SaveToCloud();
 			succeededCallback.Invoke();
 		}

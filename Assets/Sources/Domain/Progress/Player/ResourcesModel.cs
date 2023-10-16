@@ -5,6 +5,7 @@ using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Utils.Configs;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Sources.Domain.Progress.Player
 {
@@ -14,7 +15,7 @@ namespace Sources.Domain.Progress.Player
 		[SerializeField] private IntResource _hardCurrency;
 		[SerializeField] private IntResource _score;
 
-		[SerializeField] private int _maxFillModifier;
+		[SerializeField] private int _maxModifier;
 		[SerializeField] private int _currentSandCount;
 		[SerializeField] private int _globalSandCount;
 
@@ -23,13 +24,12 @@ namespace Sources.Domain.Progress.Player
 		public IResource<int> SoftCurrency => _softCurrency;
 		public IResource<int> HardCurrency => _hardCurrency;
 
-		[JsonProperty(nameof(MaxFilledScore))]
-		public int MaxFilledScore => MaxFillModifier + GameConfig.DefaultMaxSandFillCount;
+		[JsonProperty(nameof(MaxScore))] public int MaxScore => MaxModifier + GameConfig.DefaultMaxSandFillCount;
 
-		public int MaxFillModifier
+		public int MaxModifier
 		{
-			get => _maxFillModifier;
-			private set => _maxFillModifier = value;
+			get => _maxModifier;
+			private set => _maxModifier = value;
 		}
 
 		public int CurrentSandCount
@@ -63,19 +63,20 @@ namespace Sources.Domain.Progress.Player
 			_globalSandCount = globalSandCount;
 		}
 
-		public void AddSand(int count)
+		public void AddSand(int newValue)
 		{
-			CurrentSandCount += count;
-			GlobalSandCount  += count;
+			CurrentSandCount += newValue;
+			GlobalSandCount  += newValue;
+			_score.Set(_score.Count + newValue);
 		}
 
-		public void DecreaseSand(int count) =>
-			CurrentSandCount -= count;
+		public void DecreaseSand(int newValue) =>
+			CurrentSandCount -= newValue;
 
-		public void AddMoney(int count) =>
-			SoftCurrency.Set(count + _softCurrency.Count);
+		public void AddMoney(int newValue) =>
+			SoftCurrency.Set(newValue + _softCurrency.Count);
 
-		public void DecreaseMoney(int count) =>
-			SoftCurrency.Set(count - _softCurrency.Count);
+		public void DecreaseMoney(int newValue) =>
+			SoftCurrency.Set(newValue - _softCurrency.Count);
 	}
 }

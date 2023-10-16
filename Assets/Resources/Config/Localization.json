@@ -108,6 +108,23 @@
       ]
     },
     {
+      "Name": "GoToNextLevel",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Следующий уровень"
+        },
+        {
+          "Language": "English",
+          "Text": "Next level"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Sonraki seviye"
+        }
+      ]
+    },
+    {
       "Name": "Yes",
       "Translations": [
         {

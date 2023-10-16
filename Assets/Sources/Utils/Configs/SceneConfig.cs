@@ -8,5 +8,6 @@ namespace Sources.Utils.Configs
 		[SerializeField] public string MusicName;
 		[SerializeField] public string SceneName;
 		[SerializeField] public bool IsStopMusicBetweenScenes = false;
+		[SerializeField] public Color SandColor;
 	}
 }

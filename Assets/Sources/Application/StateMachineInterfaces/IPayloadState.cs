@@ -3,7 +3,7 @@ using Sources.Application.StateMachine.GameStates;
 
 namespace Sources.Application.StateMachineInterfaces
 {
-	public interface IPayloadState<TPayload> : IExitState
+	public interface IPayloadState<in TPayload> : IExitState
 	{
 		UniTask Enter(TPayload payload);
 	}

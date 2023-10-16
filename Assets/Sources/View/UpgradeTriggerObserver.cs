@@ -8,18 +8,18 @@ using UnityEngine;
 
 namespace Sources.View
 {
-	public class UpgradeTriggerObserver : MonoBehaviour
+	public class UpgradeTriggerObserver : MonoBehaviour, IDisposable
 	{
-		private IUpgradeWindowGetter _upgradeWindowGetter;
-		private IUpgradeWindow _upgradeWindow;
-		private ISceneLoadInformer _sceneLoadInformer;
+		private IUpgradeWindowGetter     _upgradeWindowGetter;
+		private IUpgradeWindow           _upgradeWindow;
+		private ISceneLoadInformer       _sceneLoadInformer;
 		private IProgressLoadDataService _progressLoadService;
 
 		private bool _isCanSave;
 
 		private void Start()
 		{
-			_sceneLoadInformer = GameServices.Container.Get<ISceneLoadInformer>();
+			_sceneLoadInformer             =  GameServices.Container.Get<ISceneLoadInformer>();
 			_sceneLoadInformer.SceneLoaded += OnLoaded;
 		}
 
@@ -33,7 +33,7 @@ namespace Sources.View
 			_upgradeWindowGetter = GameServices.Container.Get<IUpgradeWindowGetter>();
 			_progressLoadService = GameServices.Container.Get<IProgressLoadDataService>();
 
-			_upgradeWindow = _upgradeWindowGetter.UpgradeWindow;
+			_upgradeWindow                 =  _upgradeWindowGetter.UpgradeWindow;
 			_sceneLoadInformer.SceneLoaded -= OnLoaded;
 		}
 
@@ -59,5 +59,8 @@ namespace Sources.View
 				await _progressLoadService.SaveToCloud(() => _isCanSave = true);
 			}
 		}
+
+		public void Dispose() =>
+			_sceneLoadInformer.SceneLoaded -= OnLoaded;
 	}
 }

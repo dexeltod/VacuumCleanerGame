@@ -1,5 +1,4 @@
 using System;
-using Cysharp.Threading.Tasks;
 using Sources.Application.StateMachine.GameStates;
 using Sources.Application.StateMachineInterfaces;
 using Sources.ApplicationServicesInterfaces;
@@ -18,23 +17,19 @@ namespace Sources.Application
 		[SerializeField] private GameObject _mainMenu;
 
 		[SerializeField] private Button _playButton;
-		[SerializeField] private Button _settingsButton;
 		[SerializeField] private Button _deleteSavesButton;
-		[SerializeField] private Button _exitButton;
 		[SerializeField] private Button _addScoreButton;
 
-		private IGameStateMachine    _gameStateMachine;
-		private ISceneConfigGetter   _sceneConfigGetter;
+		private IGameStateMachine        _gameStateMachine;
+		private ISceneConfigGetter       _sceneConfigGetter;
 		private IProgressLoadDataService _progressLoadDataService;
-		private ILeaderBoardService  _leaderBoardService;
+		private ILeaderBoardService      _leaderBoardService;
 
 		private void OnEnable()
 		{
 			_addScoreButton.onClick.AddListener(OnAddLeader);
 			_playButton.onClick.AddListener(OnPlay);
 			_deleteSavesButton.onClick.AddListener(OnDeleteSaves);
-			// _settingsButton.onClick.AddListener(OnSettings);
-			// _exitButton.onClick.AddListener(OnExit);
 		}
 
 		private void OnDisable()
@@ -42,34 +37,32 @@ namespace Sources.Application
 			_playButton.onClick.RemoveListener(OnPlay);
 			_addScoreButton.onClick.RemoveListener(OnAddLeader);
 			_deleteSavesButton.onClick.RemoveListener(OnDeleteSaves);
-			// _settingsButton.onClick.RemoveListener(OnSettings);
-			// _exitButton.onClick.RemoveListener(OnExit);
 		}
 
 		private void Start()
 		{
-			_leaderBoardService  = GameServices.Container.Get<ILeaderBoardService>();
 			_progressLoadDataService = GameServices.Container.Get<IProgressLoadDataService>();
-			_gameStateMachine    = GameServices.Container.Get<IGameStateMachine>();
-			_sceneConfigGetter   = GameServices.Container.Get<ISceneConfigGetter>();
+			_leaderBoardService      = GameServices.Container.Get<ILeaderBoardService>();
+			_gameStateMachine        = GameServices.Container.Get<IGameStateMachine>();
+			_sceneConfigGetter       = GameServices.Container.Get<ISceneConfigGetter>();
 		}
 
 		public void Dispose()
 		{
 			_playButton.onClick.RemoveListener(OnPlay);
-			// _settingsButton.onClick.RemoveListener(OnSettings);
-			// _exitButton.onClick.RemoveListener(OnExit);
 		}
 
 		private void OnPlay()
 		{
-			SceneConfig sceneConfig = _sceneConfigGetter.GetSceneConfig(ResourcesAssetPath.Configs.Game);
-			_gameStateMachine.Enter<SceneLoadState, string>(sceneConfig.SceneName);
+			SceneConfig sceneConfig = _sceneConfigGetter.Get(ResourcesAssetPath.Configs.Game);
+			_gameStateMachine.Enter<BuildSceneState, SceneConfig>(sceneConfig);
 		}
 
-		private async void OnAddLeader() => await _leaderBoardService.AddScore(200);
+		private async void OnAddLeader() =>
+			await _leaderBoardService.AddScore(200);
 
-		private async void OnDeleteSaves() => await _progressLoadDataService.ClearSaves();
+		private async void OnDeleteSaves() =>
+			await _progressLoadDataService.ClearSaves();
 
 		private void OnSettings()
 		{
@@ -77,6 +70,7 @@ namespace Sources.Application
 			_settingsMenu.gameObject.SetActive(true);
 		}
 
-		private void OnExit() => UnityEngine.Application.Quit();
+		private void OnExit() =>
+			UnityEngine.Application.Quit();
 	}
 }

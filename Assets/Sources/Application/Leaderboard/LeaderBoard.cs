@@ -6,17 +6,15 @@ using Sources.DomainInterfaces.DomainServicesInterfaces;
 
 namespace Sources.Application.Leaderboard
 {
-	public class AbstractLeaderBoard : ILeaderBoardService
+	public class LeaderBoard : ILeaderBoardService
 	{
 		private readonly IAbstractLeaderBoard _leaderboard;
 
-		public AbstractLeaderBoard(IAbstractLeaderBoard leaderboard) => _leaderboard = leaderboard;
+		public LeaderBoard(IAbstractLeaderBoard leaderboard) => _leaderboard = leaderboard;
 
-		public async UniTask<Tuple<string, int>> GetLeader()
-		{
+		public async UniTask<Tuple<string, int>> GetLeader() =>
 			//TODO: need implementation
-			return null;
-		}
+			null;
 
 		public async UniTask<Dictionary<string, int>> GetLeaders(int playerCount) =>
 			await _leaderboard.GetPlayers(playerCount);

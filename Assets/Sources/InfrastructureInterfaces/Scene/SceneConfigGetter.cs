@@ -15,7 +15,7 @@ namespace Sources.InfrastructureInterfaces.Scene
 			_assetProvider = GameServices.Container.Get<IAssetProvider>();
 		}
 
-		public SceneConfig GetSceneConfig(string sceneConfigName)
+		public SceneConfig Get(string sceneConfigName)
 		{
 			if (sceneConfigName == _sceneName)
 				return _lastSceneConfig;
