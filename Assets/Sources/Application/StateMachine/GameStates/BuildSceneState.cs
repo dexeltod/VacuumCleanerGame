@@ -79,7 +79,7 @@ namespace Sources.Application.StateMachine.GameStates
 
 			new MeshPresenter(meshDeformationPresenter, _resourcesProgressPresenter);
 
-			await _uiFactory.CreateUI();
+			await _uiFactory.Instantiate();
 
 			GameObject initialPoint = GameObject.FindWithTag(ConstantNames.PlayerSpawnPointTag);
 

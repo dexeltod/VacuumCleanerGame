@@ -24,7 +24,7 @@ namespace Sources.Domain.Progress.Player
 		public IResource<int> SoftCurrency => _softCurrency;
 		public IResource<int> HardCurrency => _hardCurrency;
 
-		[JsonProperty(nameof(MaxScore))] public int MaxScore => MaxModifier + GameConfig.DefaultMaxSandFillCount;
+		[JsonProperty(nameof(MaxCashScore))] public int MaxCashScore => MaxModifier + GameConfig.DefaultMaxSandFillCount;
 
 		public int MaxModifier
 		{

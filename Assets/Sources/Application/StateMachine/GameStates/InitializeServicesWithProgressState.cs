@@ -8,6 +8,7 @@ using Sources.Infrastructure.Factories.Player;
 using Sources.Infrastructure.Shop;
 using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Factory;
+using Sources.PresentationInterfaces;
 using Sources.Services;
 using Sources.Services.Interfaces;
 using Sources.ServicesInterfaces;
@@ -48,6 +49,8 @@ namespace Sources.Application.StateMachine.GameStates
 			IShopItemFactory           shopItemFactory = _gameServices.Get<IShopItemFactory>();
 			IPersistentProgressService progressService = _gameServices.Get<IPersistentProgressService>();
 
+			IGameplayInterfaceView gameplayInterfaceView = CreateUIServices().GameplayInterface;
+
 			PlayerStatsFactory statsFactory = new PlayerStatsFactory(shopItemFactory, _loadingCurtain);
 
 			_gameServices.Register<IPlayerStatsService>(statsFactory.CreatePlayerStats(progressService));
@@ -60,14 +63,13 @@ namespace Sources.Application.StateMachine.GameStates
 				)
 			);
 
-			IResourcesProgressPresenter resourcesProgressPresenter = _gameServices.Register<IResourcesProgressPresenter>
-			(
-				new ResourcesPresenter()
-			);
+			IResourcesProgressPresenter resourcesProgressPresenter =
+				_gameServices.Register<IResourcesProgressPresenter>
+				(
+					new ResourcesProgressPresenter(progressService, gameplayInterfaceView)
+				);
 
 			_gameServices.Register<IShopProgressProvider>(new ShopProgressProvider());
-
-			CreateUIServices();
 
 			CreateUpgradeWindow
 			(
@@ -108,11 +110,11 @@ namespace Sources.Application.StateMachine.GameStates
 			_gameServices.Register<IUpgradeWindowGetter>(upgradeWindowFactory);
 		}
 
-		private void CreateUIServices()
+		private IUIGetter CreateUIServices()
 		{
 			UIFactory uiFactory = new UIFactory();
 			_gameServices.Register<IUIFactory>(uiFactory);
-			_gameServices.Register<IUIGetter>(uiFactory);
+			return _gameServices.Register<IUIGetter>(uiFactory);
 		}
 	}
 }

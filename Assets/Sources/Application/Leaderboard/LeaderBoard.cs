@@ -10,15 +10,19 @@ namespace Sources.Application.Leaderboard
 	{
 		private readonly IAbstractLeaderBoard _leaderboard;
 
-		public LeaderBoard(IAbstractLeaderBoard leaderboard) => _leaderboard = leaderboard;
+		public LeaderBoard(IAbstractLeaderBoard leaderboard) =>
+			_leaderboard = leaderboard;
 
-		public async UniTask<Tuple<string, int>> GetLeader() =>
+		public UniTask<Tuple<string, int>> GetLeader()
+		{
 			//TODO: need implementation
-			null;
+			return new UniTask<Tuple<string, int>>(null);
+		}
 
 		public async UniTask<Dictionary<string, int>> GetLeaders(int playerCount) =>
 			await _leaderboard.GetPlayers(playerCount);
 
-		public async UniTask AddScore(int score) => await _leaderboard.AddScore(score);
+		public async UniTask AddScore(int score) =>
+			await _leaderboard.AddScore(score);
 	}
 }

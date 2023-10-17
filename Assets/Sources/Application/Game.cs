@@ -1,29 +1,19 @@
 using Sources.Application.StateMachine;
 using Sources.Application.StateMachine.GameStates;
-using Sources.DIService;
-using Sources.PresentationInterfaces;
-using Sources.View.SceneEntity;
 
 namespace Sources.Application
 {
 	public class Game
 	{
-		private readonly GameStateMachine _stateMachine;
+		private readonly GameStateMachine _gameStateMachine;
 
 		public Game
 		(
-			LoadingCurtain              loadingCurtain,
-			IYandexAuthorizationHandler yandexAuthorizationHandler
+			GameStateMachine gameStateMachine
 		) =>
-			_stateMachine = new GameStateMachine
-			(
-				new SceneLoader(),
-				loadingCurtain,
-				yandexAuthorizationHandler,
-				GameServices.Container
-			);
+			_gameStateMachine = gameStateMachine;
 
 		public void Start() =>
-			_stateMachine.Enter<InitializeServicesAndProgressState>();
+			_gameStateMachine.Enter<InitializeServicesAndProgressState>();
 	}
 }

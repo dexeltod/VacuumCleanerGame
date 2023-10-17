@@ -2,57 +2,17 @@ using System;
 using System.Collections.Generic;
 using Sources.Application.StateMachine.GameStates;
 using Sources.Application.StateMachineInterfaces;
-using Sources.DIService;
-using Sources.PresentationInterfaces;
-using Sources.View.SceneEntity;
 
 namespace Sources.Application.StateMachine
 {
 	public class GameStateMachine : IGameStateMachine
 	{
-		private readonly Dictionary<Type, IExitState> _states;
-
-		private string     _currentMusicName;
 		private IExitState _activeState;
 
-		public GameStateMachine
-		(
-			SceneLoader                 sceneLoader,
-			LoadingCurtain              loadingCurtain,
-			IYandexAuthorizationHandler yandexAuthorizationHandler,
-			GameServices                gameServices
-		) =>
-			_states = new Dictionary<Type, IExitState>
-			{
-				[typeof(InitializeServicesAndProgressState)] =
-					new InitializeServicesAndProgressState
-					(
-						yandexAuthorizationHandler,
-						this,
-						gameServices,
-						sceneLoader
-					),
+		private Dictionary<Type, IExitState> _states;
 
-				[typeof(InitializeServicesWithProgressState)] =
-					new InitializeServicesWithProgressState
-					(
-						this,
-						gameServices,
-						loadingCurtain
-					),
-
-				[typeof(MenuState)] = new MenuState(sceneLoader, loadingCurtain, gameServices),
-
-				[typeof(BuildSceneState)] = new BuildSceneState
-				(
-					this,
-					sceneLoader,
-					loadingCurtain,
-					gameServices
-				),
-
-				[typeof(GameLoopState)] = new GameLoopState(this)
-			};
+		public void Initialize(Dictionary<Type, IExitState> states) =>
+			_states = states;
 
 		public void Enter<TState>() where TState : class, IGameState
 		{

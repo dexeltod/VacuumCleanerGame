@@ -13,6 +13,7 @@ namespace Sources.Services
 	{
 		private const float MaxFillAmount = 1f;
 
+		[SerializeField] private TextMeshProUGUI _currentLevel;
 		[SerializeField] private TextMeshProUGUI _scoreCash;
 		[SerializeField] private TextMeshProUGUI _globalScoreText;
 		[SerializeField] private TextMeshProUGUI _maxGlobalScoreText;
@@ -25,8 +26,6 @@ namespace Sources.Services
 
 		[FormerlySerializedAs("_scoresSprite")] [SerializeField]
 		private Image _globalScoreImage;
-
-		private IResourcesProgressPresenter _resourcesProgress;
 
 		private Canvas _canvas;
 		private int    _maxCashScore;
@@ -44,18 +43,28 @@ namespace Sources.Services
 		public event Action GoToTextLevelButtonClicked;
 
 		~GameplayInterfaceView() =>
-			ReleaseUnmanagedResources();
+			Unsubscribe();
 
 		public void Dispose()
 		{
-			ReleaseUnmanagedResources();
+			Unsubscribe();
 			GC.SuppressFinalize(this);
+		}
+
+		public void SetGlobalScore(int newScore)
+		{
+			_globalScore = newScore;
+
+			float value = MaxFillAmount / _maxCashScore * _globalScore;
+			_globalScoreImage.fillAmount = value;
+
+			_globalScoreText.SetText($"{_globalScore}");
 		}
 
 		public void Construct
 		(
-			IResourcesProgressPresenter resourcesProgress,
-			int                         maxScore
+			int maxScore,
+			int moneyCount
 		)
 		{
 			if (_isInitialized == true)
@@ -64,24 +73,11 @@ namespace Sources.Services
 			_goToNextLevelButton.gameObject.SetActive(false);
 			const int StartScore = 0;
 
-			_goToNextLevelButton.onClick.AddListener(OnGoToNextLevelButtonClicked);
+			_canvas ??= GetComponent<Canvas>();
 
-			_canvas            ??= GetComponent<Canvas>();
-			_resourcesProgress =   resourcesProgress;
+			_moneyText.SetText($"{moneyCount}");
 
-			_resourcesProgress.HalfGlobalScoreReached += OnHalfScoreReached;
-
-			_moneyText.SetText
-			(
-				_resourcesProgress
-					.SoftCurrency
-					.Count
-					.ToString()
-			);
-
-			_resourcesProgress.ScoreChanged       += OnScoreChanged;
-			_resourcesProgress.GlobalScoreChanged += OnGlobalChanged;
-			_resourcesProgress.MoneyChanged       += OnMoneyChanged;
+			Subscribe();
 
 			_maxCashScore = maxScore;
 			SetScoreText(StartScore);
@@ -90,35 +86,28 @@ namespace Sources.Services
 			_isInitialized = true;
 		}
 
-		private void ReleaseUnmanagedResources()
-		{
-			_resourcesProgress.ScoreChanged       -= OnScoreChanged;
-			_resourcesProgress.GlobalScoreChanged -= OnGlobalChanged;
-			_resourcesProgress.MoneyChanged       -= OnMoneyChanged;
+		private void Subscribe() =>
+			_goToNextLevelButton.onClick.AddListener(OnGoToNextLevelButtonClicked);
 
+		private void Unsubscribe() =>
 			_goToNextLevelButton.onClick.RemoveListener(OnGoToNextLevelButtonClicked);
-		}
 
-		private void OnHalfScoreReached() =>
-			_goToNextLevelButton.gameObject.SetActive(true);
+		public void SetActiveGoToNextLevelButton(bool isActive) =>
+			_goToNextLevelButton.gameObject.SetActive(isActive);
 
-		public void SetMaxCashScore(int newMaxScore) =>
-			_maxCashScore = newMaxScore;
-
-		private void OnGlobalChanged()
+		public void SetMaxCashScore(int newMaxScore)
 		{
-			_globalScore = _resourcesProgress.GlobalScore;
-
-			float value = MaxFillAmount / _maxCashScore * _globalScore;
-			_globalScoreImage.fillAmount = value;
-
-			_globalScoreText.SetText($"{_globalScore}");
+			_maxCashScore = newMaxScore;
+			_maxGlobalScoreText.SetText($"{newMaxScore}");
 		}
 
-		private void OnMoneyChanged(int newMoney) =>
+		public void SetMoney(int newMoney) =>
 			_moneyText.SetText(newMoney.ToString());
 
-		private void OnScoreChanged(int newScore)
+		public void SetCurrentLevel(int newLevel) =>
+			_currentLevel.SetText($"{newLevel}");
+
+		public void SetScore(int newScore)
 		{
 			SetSliderValue(newScore);
 			SetScoreText(newScore);

@@ -8,7 +8,7 @@ namespace Sources.DomainInterfaces
 		IResource<int> HardCurrency { get; }
 		IResource<int> Score        { get; }
 
-		int  MaxScore    { get; }
+		int  MaxCashScore    { get; }
 		int  MaxModifier { get; }
 		void AddSand(int newValue);
 

@@ -57,6 +57,23 @@
       ]
     },
     {
+      "Name": "CurrentLevel",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Уровень"
+        },
+        {
+          "Language": "English",
+          "Text": "Level"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Seviye"
+        }
+      ]
+    },
+    {
       "Name": "DeleteSavesButton",
       "Translations": [
         {

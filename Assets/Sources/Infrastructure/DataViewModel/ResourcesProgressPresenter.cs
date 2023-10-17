@@ -2,14 +2,16 @@ using System;
 using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using UnityEngine;
 
 namespace Sources.Infrastructure.DataViewModel
 {
-	public class ResourcesPresenter : IResourcesProgressPresenter
+	public class ResourcesProgressPresenter : IResourcesProgressPresenter
 	{
 		private readonly IPersistentProgressService _resourcesData;
+		private readonly IGameplayInterfaceView     _gameplayInterfaceView;
 
 		private int _increasedDelta;
 
@@ -17,40 +19,48 @@ namespace Sources.Infrastructure.DataViewModel
 
 		public int GlobalScore { get; private set; }
 
-		public event Action<int> ScoreChanged;
-		public event Action<int> MoneyChanged;
-		public event Action      HalfGlobalScoreReached;
-		public event Action      GlobalScoreChanged;
+		private bool _isHalfScoreAlreadyReached = false;
 
 		private IResourcesModel ResourcesModel =>
 			_resourcesData
 				.GameProgress
 				.ResourcesModel;
 
-		public ResourcesPresenter() =>
-			_resourcesData = GameServices.Container.Get<IPersistentProgressService>();
+		public ResourcesProgressPresenter
+		(
+			IPersistentProgressService persistentProgressService,
+			IGameplayInterfaceView     gameplayInterfaceView
+		)
+		{
+			_resourcesData         = persistentProgressService;
+			_gameplayInterfaceView = gameplayInterfaceView;
+		}
 
 		public bool CheckMaxScore() =>
-			ResourcesModel.CurrentSandCount < ResourcesModel.MaxScore;
+			ResourcesModel.CurrentSandCount < ResourcesModel.MaxCashScore;
 
 		public bool TryAddSand(int newScore)
 		{
 			int currentScore = ResourcesModel.CurrentSandCount;
 
-			if (currentScore > ResourcesModel.MaxScore)
+			if (currentScore > ResourcesModel.MaxCashScore)
 				return false;
 
-			int score = Mathf.Clamp(newScore, 0, ResourcesModel.MaxScore);
+			int score = Mathf.Clamp(newScore, 0, ResourcesModel.MaxCashScore);
 
 			ResourcesModel.AddSand(score);
 
 			ScoreChanged?.Invoke(ResourcesModel.CurrentSandCount);
 
 			GlobalScore = ResourcesModel.GlobalSandCount;
-			GlobalScoreChanged?.Invoke();
 
-			if (IsHalfScoreReached() == true)
+			_gameplayInterfaceView.SetGlobalScore(GlobalScore);
+
+			if (IsHalfScoreReached() == true && !_isHalfScoreAlreadyReached)
+			{
 				HalfGlobalScoreReached.Invoke();
+				_isHalfScoreAlreadyReached = true;
+			}
 
 			return true;
 		}
@@ -70,8 +80,9 @@ namespace Sources.Infrastructure.DataViewModel
 
 			ResourcesModel.AddMoney(_increasedDelta);
 			ResourcesModel.DecreaseSand(_increasedDelta);
-			ScoreChanged?.Invoke(ResourcesModel.CurrentSandCount);
-			MoneyChanged?.Invoke(SoftCurrency.Count);
+
+			_gameplayInterfaceView.SetScore(ResourcesModel.CurrentSandCount);
+			_gameplayInterfaceView.SetMoney(SoftCurrency.Count);
 		}
 
 		public void AddMoney(int count)
@@ -94,7 +105,7 @@ namespace Sources.Infrastructure.DataViewModel
 
 		private bool IsHalfScoreReached()
 		{
-			int halfScore = ResourcesModel.MaxScore / 2;
+			int halfScore = ResourcesModel.MaxCashScore / 2;
 
 			return ResourcesModel.Score.Count >= halfScore;
 		}

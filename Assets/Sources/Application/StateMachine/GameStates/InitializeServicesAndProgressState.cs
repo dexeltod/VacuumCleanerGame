@@ -34,8 +34,10 @@ namespace Sources.Application.StateMachine.GameStates
 {
 	public class InitializeServicesAndProgressState : IGameState
 	{
-		private readonly UnityServicesController     _unityServicesController;
+		private readonly UnityServicesController _unityServicesController;
+#if YANDEX_GAMES && !UNITY_EDITOR
 		private readonly IYandexAuthorizationHandler _yandexAuthorizationHandler;
+#endif
 
 		private readonly GameStateMachine _gameStateMachine;
 		private readonly GameServices     _gameServices;
@@ -52,10 +54,12 @@ namespace Sources.Application.StateMachine.GameStates
 			SceneLoader                 sceneLoader
 		)
 		{
+#if YANDEX_GAMES && !UNITY_EDITOR
 			_yandexAuthorizationHandler = yandexAuthorizationHandler;
-			_gameStateMachine           = gameStateMachine;
-			_gameServices               = gameServices;
-			_sceneLoader                = sceneLoader;
+#endif
+			_gameStateMachine = gameStateMachine;
+			_gameServices     = gameServices;
+			_sceneLoader      = sceneLoader;
 		}
 
 		public void Exit() { }

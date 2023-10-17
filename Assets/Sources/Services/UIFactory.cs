@@ -14,32 +14,32 @@ namespace Sources.Services
 {
 	public class UIFactory : IUIFactory
 	{
-		private readonly IAssetProvider                 _assetProvider;
-		private readonly IResourcesProgressPresenter    _resourcesProgressPresenter;
-		private readonly IPersistentProgressService     _gameProgress;
+		private readonly IAssetProvider              _assetProvider;
+		private readonly IResourcesProgressPresenter _resourcesProgressPresenter;
+		private readonly IPersistentProgressService  _gameProgress;
 
 		public IGameplayInterfaceView GameplayInterface { get; private set; }
 
 		public UIFactory()
 		{
-			
-			_assetProvider                 = GameServices.Container.Get<IAssetProvider>();
-			_resourcesProgressPresenter    = GameServices.Container.Get<IResourcesProgressPresenter>();
-			_gameProgress                  = GameServices.Container.Get<IPersistentProgressService>();
+			_assetProvider              = GameServices.Container.Get<IAssetProvider>();
+			_resourcesProgressPresenter = GameServices.Container.Get<IResourcesProgressPresenter>();
+			_gameProgress               = GameServices.Container.Get<IPersistentProgressService>();
 		}
 
-		public async UniTask<GameObject> CreateUI()
+		public async UniTask<GameObject> Instantiate()
 		{
 			GameObject instance = _assetProvider.Instantiate(ResourcesAssetPath.Scene.UIResources.UI);
 			GameplayInterface = instance.GetComponent<IGameplayInterfaceView>();
 
+			IResourcesModel model = _gameProgress
+				.GameProgress
+				.ResourcesModel;
+
 			GameplayInterface.Construct
 			(
-				_resourcesProgressPresenter,
-				_gameProgress
-					.GameProgress
-					.ResourcesModel
-					.MaxScore
+				model.MaxCashScore,
+				model.SoftCurrency.Count
 			);
 
 			return instance;

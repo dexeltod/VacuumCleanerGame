@@ -14,12 +14,17 @@ namespace Sources.PresentationInterfaces
 		public TextMeshProUGUI ScoreText   { get; }
 		public TextMeshProUGUI MoneyText   { get; }
 		public Joystick        Joystick    { get; }
+		void                   SetGlobalScore(int newScore);
 
 		void Construct
 		(
-			IResourcesProgressPresenter    resourcesProgress,
-			int                            maxScore
+			int maxScore,
+			int moneyCount
 		);
-	}
 
+		void SetMoney(int                      newMoney);
+		void SetScore(int                      newScore);
+		void SetCurrentLevel(int               newLevel);
+		void SetActiveGoToNextLevelButton(bool isActive);
+	}
 }

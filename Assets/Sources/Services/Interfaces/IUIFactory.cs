@@ -5,6 +5,6 @@ namespace Sources.Services.Interfaces
 {
 	public interface IUIFactory : IUIGetter
 	{
-		UniTask<GameObject> CreateUI();
+		UniTask<GameObject> Instantiate();
 	}
 }
