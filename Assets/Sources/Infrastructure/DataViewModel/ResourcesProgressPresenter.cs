@@ -10,8 +10,8 @@ namespace Sources.Infrastructure.DataViewModel
 {
 	public class ResourcesProgressPresenter : IResourcesProgressPresenter
 	{
-		private readonly IPersistentProgressService _resourcesData;
-		private readonly IGameplayInterfaceView     _gameplayInterfaceView;
+		private readonly IResourcesModel        _resourcesData;
+		private readonly IGameplayInterfaceView _gameplayInterfaceView;
 
 		private int _increasedDelta;
 
@@ -21,15 +21,12 @@ namespace Sources.Infrastructure.DataViewModel
 
 		private bool _isHalfScoreAlreadyReached = false;
 
-		private IResourcesModel ResourcesModel =>
-			_resourcesData
-				.GameProgress
-				.ResourcesModel;
+		public IResourcesModel ResourcesModel => _resourcesData;
 
 		public ResourcesProgressPresenter
 		(
-			IPersistentProgressService persistentProgressService,
-			IGameplayInterfaceView     gameplayInterfaceView
+			IResourcesModel        persistentProgressService,
+			IGameplayInterfaceView gameplayInterfaceView
 		)
 		{
 			_resourcesData         = persistentProgressService;
@@ -50,7 +47,7 @@ namespace Sources.Infrastructure.DataViewModel
 
 			ResourcesModel.AddSand(score);
 
-			ScoreChanged?.Invoke(ResourcesModel.CurrentSandCount);
+			_gameplayInterfaceView.SetScore(ResourcesModel.CurrentSandCount);
 
 			GlobalScore = ResourcesModel.GlobalSandCount;
 
@@ -58,7 +55,7 @@ namespace Sources.Infrastructure.DataViewModel
 
 			if (IsHalfScoreReached() == true && !_isHalfScoreAlreadyReached)
 			{
-				HalfGlobalScoreReached.Invoke();
+				_gameplayInterfaceView.SetActiveGoToNextLevelButton(true);
 				_isHalfScoreAlreadyReached = true;
 			}
 
@@ -88,7 +85,7 @@ namespace Sources.Infrastructure.DataViewModel
 		public void AddMoney(int count)
 		{
 			ResourcesModel.AddMoney(count);
-			MoneyChanged?.Invoke(SoftCurrency.Count);
+			SetMoneyInPresentation();
 		}
 
 		public void DecreaseMoney(int count)
@@ -97,11 +94,14 @@ namespace Sources.Infrastructure.DataViewModel
 				throw new ArgumentOutOfRangeException($"{SoftCurrency} less than zero");
 
 			ResourcesModel.SoftCurrency.Set(SoftCurrency.Count - count);
-			MoneyChanged?.Invoke(SoftCurrency.Count);
+			SetMoneyInPresentation();
 		}
 
 		public int GetDecreasedMoney(int count) =>
 			ResourcesModel.SoftCurrency.Count - count;
+
+		private void SetMoneyInPresentation() =>
+			_gameplayInterfaceView.SetMoney(SoftCurrency.Count);
 
 		private bool IsHalfScoreReached()
 		{

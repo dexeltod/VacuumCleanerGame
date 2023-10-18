@@ -19,7 +19,7 @@ namespace Sources.Application.MainMenu
 
 		private readonly UIElementGetterFacade _uiElementGetter;
 		private readonly VisualElementSwitcher _visualElementSwitcher;
-		private readonly ISceneConfigGetter    _sceneConfigGetter;
+		private readonly ILevelConfigGetter    _levelConfigGetter;
 		private readonly IGameStateMachine     _gameStateMachine;
 		private readonly ILocalizationService  _localizationService;
 
@@ -38,7 +38,7 @@ namespace Sources.Application.MainMenu
 			VisualElement         thisElement,
 			UIElementGetterFacade uiElementGetter,
 			VisualElementSwitcher visualElementSwitcher,
-			ISceneConfigGetter    sceneConfigGetter,
+			ILevelConfigGetter    levelConfigGetter,
 			IGameStateMachine     gameStateMachine,
 			ILocalizationService  localizationService
 		) : base
@@ -50,7 +50,7 @@ namespace Sources.Application.MainMenu
 		{
 			_uiElementGetter       = uiElementGetter;
 			_visualElementSwitcher = visualElementSwitcher;
-			_sceneConfigGetter     = sceneConfigGetter;
+			_levelConfigGetter     = levelConfigGetter;
 			_gameStateMachine      = gameStateMachine;
 			_localizationService   = localizationService;
 			Initialize();
@@ -102,9 +102,9 @@ namespace Sources.Application.MainMenu
 		private void OnPlay()
 		{
 			_visualElementSwitcher.Disable(ThisElement);
-			SceneConfig sceneConfig = _sceneConfigGetter.Get(ResourcesAssetPath.Configs.Game);
+			LevelConfig levelConfig = _levelConfigGetter.GetCurrentLevel();
 
-			_gameStateMachine.Enter<BuildSceneState, SceneConfig>(sceneConfig);
+			_gameStateMachine.Enter<BuildSceneState, LevelConfig>(levelConfig);
 		}
 
 		private void ReleaseUnmanagedResources() =>

@@ -3,7 +3,9 @@ using Sources.Application.StateMachine.GameStates;
 using Sources.Application.StateMachineInterfaces;
 using Sources.ApplicationServicesInterfaces;
 using Sources.DIService;
+using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
+using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.Utils.Configs;
 using UnityEngine;
@@ -21,9 +23,11 @@ namespace Sources.Application
 		[SerializeField] private Button _addScoreButton;
 
 		private IGameStateMachine        _gameStateMachine;
-		private ISceneConfigGetter       _sceneConfigGetter;
+		private ILevelConfigGetter       _levelConfigGetter;
 		private IProgressLoadDataService _progressLoadDataService;
 		private ILeaderBoardService      _leaderBoardService;
+
+		private ILevelProgressPresenter _levelProgress;
 
 		private void OnEnable()
 		{
@@ -41,10 +45,12 @@ namespace Sources.Application
 
 		private void Start()
 		{
+			_levelProgress = GameServices.Container.Get<ILevelProgressPresenter>();
+
 			_progressLoadDataService = GameServices.Container.Get<IProgressLoadDataService>();
 			_leaderBoardService      = GameServices.Container.Get<ILeaderBoardService>();
 			_gameStateMachine        = GameServices.Container.Get<IGameStateMachine>();
-			_sceneConfigGetter       = GameServices.Container.Get<ISceneConfigGetter>();
+			_levelConfigGetter       = GameServices.Container.Get<ILevelConfigGetter>();
 		}
 
 		public void Dispose()
@@ -54,8 +60,10 @@ namespace Sources.Application
 
 		private void OnPlay()
 		{
-			SceneConfig sceneConfig = _sceneConfigGetter.Get(ResourcesAssetPath.Configs.Game);
-			_gameStateMachine.Enter<BuildSceneState, SceneConfig>(sceneConfig);
+			_levelConfigGetter.Get(_levelProgress.CurrentLevelNumber);
+
+			LevelConfig levelConfig = _levelConfigGetter.GetCurrentLevel();
+			_gameStateMachine.Enter<BuildSceneState, LevelConfig>(levelConfig);
 		}
 
 		private async void OnAddLeader() =>

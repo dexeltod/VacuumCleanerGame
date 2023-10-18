@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Sources.Services
 {
-	public class GameplayInterfaceView : MonoBehaviour, IDisposable, IGameplayInterfaceView, IGoToTextLevelButton
+	public class GameplayInterfaceView : MonoBehaviour, IDisposable, IGameplayInterfaceView
 	{
 		private const float MaxFillAmount = 1f;
 

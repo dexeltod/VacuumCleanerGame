@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Sources.PresentationInterfaces
 {
-	public interface IGameplayInterfaceView
+	public interface IGameplayInterfaceView : IGoToTextLevelButtonSubscribeable
 	{
 		public GameObject      GameObject  { get; }
 		public Canvas          Canvas      { get; }

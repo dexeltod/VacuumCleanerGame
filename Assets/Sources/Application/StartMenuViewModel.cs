@@ -28,14 +28,14 @@ namespace Sources.Application
 		private VisualElementSwitcher _visualElementSwitcher;
 
 		private List<Button>         _allButtons = new();
-		private ISceneConfigGetter   _sceneConfigGetter;
+		private ILevelConfigGetter   _levelConfigGetter;
 		private IGameStateMachine    _gameStateMachine;
 		private ILocalizationService _localization;
 
 		private void Start()
 		{
 			_gameStateMachine      = GameServices.Container.Get<IGameStateMachine>();
-			_sceneConfigGetter     = GameServices.Container.Get<ISceneConfigGetter>();
+			_levelConfigGetter     = GameServices.Container.Get<ILevelConfigGetter>();
 			_localization          = GameServices.Container.Get<ILocalizationService>();
 			_uiElementGetter       = GetComponent<UIElementGetterFacade>();
 			_visualElementSwitcher = new VisualElementSwitcher();
@@ -53,7 +53,7 @@ namespace Sources.Application
 				_uiElementGetter.GetFirst<VisualElement>(MenuVisualElementNames.Menu),
 				_uiElementGetter,
 				_visualElementSwitcher,
-				_sceneConfigGetter,
+				_levelConfigGetter,
 				_gameStateMachine,
 				_localization
 			);

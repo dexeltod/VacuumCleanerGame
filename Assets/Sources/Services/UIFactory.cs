@@ -19,6 +19,7 @@ namespace Sources.Services
 		private readonly IPersistentProgressService  _gameProgress;
 
 		public IGameplayInterfaceView GameplayInterface { get; private set; }
+		public IGoToTextLevelButtonSubscribeable GoToNextLevelButtonButton { get; private set; }
 
 		public UIFactory()
 		{

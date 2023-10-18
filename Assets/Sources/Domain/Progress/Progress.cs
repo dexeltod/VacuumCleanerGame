@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
 using Sources.DomainInterfaces;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -33,15 +31,8 @@ namespace Sources.Domain.Progress
 			}
 		}
 
-		public List<IUpgradeProgressData> GetAll()
-		{
-			List<IUpgradeProgressData> progress = new List<IUpgradeProgressData>();
-
-			foreach (var value in _progressData)
-				progress.Add(value);
-
-			return progress;
-		}
+		public List<IUpgradeProgressData> GetAll() =>
+			_progressData.Cast<IUpgradeProgressData>().ToList();
 
 		public IUpgradeProgressData GetByName(string name)
 		{
@@ -64,6 +55,10 @@ namespace Sources.Domain.Progress
 			IUpgradeProgressData element = _progressData.FirstOrDefault(x => x.Name == progressName);
 
 			IUpgradeProgressData upgradeProgress = element;
+
+			if (upgradeProgress == null)
+				throw new Exception("upgradeProgress is null");
+
 			upgradeProgress.Value = progressValue;
 		}
 	}

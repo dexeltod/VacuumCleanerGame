@@ -16,7 +16,7 @@ using UnityEngine;
 
 namespace Sources.Application.StateMachine.GameStates
 {
-	public class BuildSceneState : IPayloadState<SceneConfig>
+	public class BuildSceneState : IPayloadState<LevelConfig>
 	{
 		private readonly GameStateMachine _gameStateMachine;
 		private readonly LoadingCurtain   _loadingCurtain;
@@ -36,6 +36,8 @@ namespace Sources.Application.StateMachine.GameStates
 		private ICameraFactory              _cameraFactory;
 		private IAssetProvider              _assetProvider;
 
+		private LevelConfig _levelConfig;
+
 		public BuildSceneState
 		(
 			GameStateMachine gameStateMachine,
@@ -50,8 +52,10 @@ namespace Sources.Application.StateMachine.GameStates
 			_gameServices     = gameServices;
 		}
 
-		public async UniTask Enter(SceneConfig sceneConfig)
+		public async UniTask Enter(LevelConfig levelConfig)
 		{
+			_levelConfig = levelConfig;
+
 			_resourcesProgressPresenter = _gameServices.Get<IResourcesProgressPresenter>();
 			_upgradeWindowFactory       = _gameServices.Get<IUpgradeWindowFactory>();
 
@@ -64,7 +68,7 @@ namespace Sources.Application.StateMachine.GameStates
 			_sceneLoad        = _gameServices.Get<ISceneLoad>();
 
 			_loadingCurtain.Show();
-			await _sceneLoader.Load(sceneConfig.SceneName);
+			await _sceneLoader.Load(levelConfig.LevelName);
 			await Create();
 
 			OnSceneLoaded();

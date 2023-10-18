@@ -10,11 +10,13 @@ using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.UpgradeShop;
+using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.PresentationInterfaces;
 using Sources.Services;
 using Sources.Services.DomainServices;
+using Sources.Services.Interfaces;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.Utils;
@@ -75,9 +77,10 @@ namespace Sources.Application.StateMachine.GameStates
 
 		private async UniTask RegisterServices()
 		{
-			SceneLoadService sceneLoadService = new SceneLoadService(_gameStateMachine);
+			IGameplayInterfaceView gameplayInterface = _gameServices.Get<IUIGetter>().GameplayInterface;
+			SceneLoadService       sceneLoadService  = new SceneLoadService(_gameStateMachine);
+			IAssetProvider         assetProvider     = _gameServices.Register<IAssetProvider>(new AssetProvider());
 
-			IAssetProvider assetProvider = _gameServices.Register<IAssetProvider>(new AssetProvider());
 			_gameServices.Register<ILocalizationService>(new LocalizationService());
 
 			CreateLeaderBoard();
@@ -89,6 +92,15 @@ namespace Sources.Application.StateMachine.GameStates
 			IShopItemFactory shopItemFactory = _gameServices.Register<IShopItemFactory>(new ShopItemFactory());
 
 			IPersistentProgressService persistentProgressService = CreatPersistentProgressService();
+
+			ILevelProgressPresenter levelProgressPresenter = _gameServices.Register<ILevelProgressPresenter>
+			(
+				new LevelProgressPresenter
+				(
+					persistentProgressService.GameProgress.LevelProgress,
+					gameplayInterface
+				)
+			);
 
 			ISaveLoader saveLoader = await GetSaveLoader
 									 (
@@ -107,7 +119,7 @@ namespace Sources.Application.StateMachine.GameStates
 
 			CreateCamera();
 
-			_gameServices.Register<ISceneConfigGetter>(new SceneConfigGetter());
+			_gameServices.Register<ILevelConfigGetter>(new LevelConfigGetter(assetProvider, levelProgressPresenter));
 
 			ProgressFactory progressFactory = CreateProgressFactory
 				(progressLoadDataService, persistentProgressService, shopItemFactory);
@@ -258,12 +270,12 @@ namespace Sources.Application.StateMachine.GameStates
 			await UniTask.WaitWhile(() => waitNextTime.isDone == false);
 		}
 
-		public async UniTask Load(SceneConfig config)
+		public async UniTask Load(LevelConfig config)
 		{
-			if (SceneManager.GetActiveScene().name == config.SceneName)
+			if (SceneManager.GetActiveScene().name == config.LevelName)
 				return;
 
-			AsyncOperation waitNextTime = SceneManager.LoadSceneAsync(config.SceneName);
+			AsyncOperation waitNextTime = SceneManager.LoadSceneAsync(config.LevelName);
 
 			await UniTask.WaitWhile(() => waitNextTime.isDone == false);
 		}

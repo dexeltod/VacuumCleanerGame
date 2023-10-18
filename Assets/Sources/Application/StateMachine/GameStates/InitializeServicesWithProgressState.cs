@@ -6,6 +6,7 @@ using Sources.Infrastructure;
 using Sources.Infrastructure.DataViewModel;
 using Sources.Infrastructure.Factories.Player;
 using Sources.Infrastructure.Shop;
+using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.PresentationInterfaces;
@@ -19,15 +20,15 @@ namespace Sources.Application.StateMachine.GameStates
 {
 	public class InitializeServicesWithProgressState : IGameState
 	{
-		private readonly GameStateMachine _gameStateMachine;
-		private readonly GameServices     _gameServices;
-		private readonly LoadingCurtain   _loadingCurtain;
+		private readonly IGameStateMachine _gameStateMachine;
+		private readonly GameServices      _gameServices;
+		private readonly LoadingCurtain    _loadingCurtain;
 
 		public InitializeServicesWithProgressState
 		(
-			GameStateMachine gameStateMachine,
-			GameServices     gameServices,
-			LoadingCurtain   loadingCurtain
+			IGameStateMachine gameStateMachine,
+			GameServices      gameServices,
+			LoadingCurtain    loadingCurtain
 		)
 		{
 			_gameStateMachine = gameStateMachine;
@@ -66,8 +67,18 @@ namespace Sources.Application.StateMachine.GameStates
 			IResourcesProgressPresenter resourcesProgressPresenter =
 				_gameServices.Register<IResourcesProgressPresenter>
 				(
-					new ResourcesProgressPresenter(progressService, gameplayInterfaceView)
+					new ResourcesProgressPresenter(progressService.GameProgress.ResourcesModel, gameplayInterfaceView)
 				);
+
+			ILevelProgressPresenter levelProgressPresenter =
+				_gameServices.Register<ILevelProgressPresenter>
+				(
+					new LevelProgressPresenter
+						(progressService.GameProgress.LevelProgress, gameplayInterfaceView)
+				);
+
+			// LevelChanger levelChanger = new LevelChanger
+			// 	(gameplayInterfaceView, levelProgressPresenter, _gameStateMachine);
 
 			_gameServices.Register<IShopProgressProvider>(new ShopProgressProvider());
 

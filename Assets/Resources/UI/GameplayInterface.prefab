@@ -266,6 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23d11ae2e2f77fe42aa2a938b73e7e2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentLevel: {fileID: 6276463750702891311}
   _scoreCash: {fileID: 8778986452386420974}
   _globalScoreText: {fileID: 6827389632814850691}
   _maxGlobalScoreText: {fileID: 5280714058190142866}
@@ -957,7 +958,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 4
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0

@@ -5,7 +5,6 @@ using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Utils.Configs;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Sources.Domain.Progress.Player
 {
@@ -24,7 +23,8 @@ namespace Sources.Domain.Progress.Player
 		public IResource<int> SoftCurrency => _softCurrency;
 		public IResource<int> HardCurrency => _hardCurrency;
 
-		[JsonProperty(nameof(MaxCashScore))] public int MaxCashScore => MaxModifier + GameConfig.DefaultMaxSandFillCount;
+		[JsonProperty(nameof(MaxCashScore))]
+		public int MaxCashScore => MaxModifier + GameConfig.DefaultMaxSandFillCount;
 
 		public int MaxModifier
 		{
