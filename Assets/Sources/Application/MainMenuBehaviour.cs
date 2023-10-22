@@ -3,7 +3,6 @@ using Sources.Application.StateMachine.GameStates;
 using Sources.Application.StateMachineInterfaces;
 using Sources.ApplicationServicesInterfaces;
 using Sources.DIService;
-using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Scene;
@@ -27,7 +26,7 @@ namespace Sources.Application
 		private IProgressLoadDataService _progressLoadDataService;
 		private ILeaderBoardService      _leaderBoardService;
 
-		private ILevelProgressPresenter _levelProgress;
+		private ILevelProgressFacade _levelProgress;
 
 		private void OnEnable()
 		{
@@ -45,25 +44,20 @@ namespace Sources.Application
 
 		private void Start()
 		{
-			_levelProgress = GameServices.Container.Get<ILevelProgressPresenter>();
-
-			_progressLoadDataService = GameServices.Container.Get<IProgressLoadDataService>();
-			_leaderBoardService      = GameServices.Container.Get<ILeaderBoardService>();
-			_gameStateMachine        = GameServices.Container.Get<IGameStateMachine>();
-			_levelConfigGetter       = GameServices.Container.Get<ILevelConfigGetter>();
+			_levelProgress           = ServiceLocator.Container.Get<ILevelProgressFacade>();
+			_progressLoadDataService = ServiceLocator.Container.Get<IProgressLoadDataService>();
+			_leaderBoardService      = ServiceLocator.Container.Get<ILeaderBoardService>();
+			_gameStateMachine        = ServiceLocator.Container.Get<IGameStateMachine>();
+			_levelConfigGetter       = ServiceLocator.Container.Get<ILevelConfigGetter>();
 		}
 
-		public void Dispose()
-		{
+		public void Dispose() =>
 			_playButton.onClick.RemoveListener(OnPlay);
-		}
 
 		private void OnPlay()
 		{
-			_levelConfigGetter.Get(_levelProgress.CurrentLevelNumber);
-
-			LevelConfig levelConfig = _levelConfigGetter.GetCurrentLevel();
-			_gameStateMachine.Enter<BuildSceneState, LevelConfig>(levelConfig);
+			LevelConfig levelConfig = _levelConfigGetter.Get(_levelProgress.CurrentLevelNumber);
+			_gameStateMachine.Enter<BuildSandState, LevelConfig>(levelConfig);
 		}
 
 		private async void OnAddLeader() =>
@@ -71,12 +65,6 @@ namespace Sources.Application
 
 		private async void OnDeleteSaves() =>
 			await _progressLoadDataService.ClearSaves();
-
-		private void OnSettings()
-		{
-			_mainMenu.gameObject.SetActive(false);
-			_settingsMenu.gameObject.SetActive(true);
-		}
 
 		private void OnExit() =>
 			UnityEngine.Application.Quit();

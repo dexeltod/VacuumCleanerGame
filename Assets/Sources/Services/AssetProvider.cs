@@ -23,7 +23,7 @@ namespace Sources.Services
 		public T InstantiateAndGetComponent<T>(string path, Vector3 position) where T : Behaviour =>
 			Object.Instantiate(Resources.Load<T>(path), position, Quaternion.identity);
 
-		public T Load<T>(string path) where T : Object =>
+		public T LoadFromResources<T>(string path) where T : Object =>
 			Resources.Load<T>(path);
 
 		public GameObject Instantiate(string path, Vector3 position)

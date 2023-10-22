@@ -14,7 +14,7 @@ namespace UseCases.Scene
 
 		private void Start()
 		{
-			_localization = GameServices.Container.Get<ILocalizationService>();
+			_localization = ServiceLocator.Container.Get<ILocalizationService>();
 			TextMeshProUGUI textMeshPro = GetComponent<TextMeshProUGUI>();
 
 			if (string.IsNullOrEmpty(_phraseName) == false)

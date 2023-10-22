@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Factories;
+using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.ServicesInterfaces;
@@ -15,12 +16,14 @@ namespace Sources.Application.UI
 	public class UpgradeWindowFactory : IUpgradeWindowFactory
 	{
 		private readonly IResourcesProgressPresenter _resourceProgressPresenter;
-		private readonly IShopItemFactory            _shopItemFactory;
+		private readonly IUpgradeDataFactory            _upgradeDataFactory;
 		private readonly IAssetProvider              _assetProvider;
 		private readonly IGameProgressModel          _progress;
+		private readonly IShopProgressProvider       _shopProgressProvider;
+		private readonly IPlayerProgressProvider     _playerProgressProvider;
 
 		private ShopElementFactory         _shopElementFactory;
-		private List<UpgradeElementPrefab> _upgradeElementsPrefabs;
+		private List<UpgradeElementPrefabView> _upgradeElementsPrefabs;
 
 		private GameObject     _upgradeWindow;
 		public  IUpgradeWindow UpgradeWindow { get; private set; }
@@ -28,15 +31,19 @@ namespace Sources.Application.UI
 		public UpgradeWindowFactory
 		(
 			IAssetProvider              assetProvider,
-			IShopItemFactory            shopItemFactory,
+			IUpgradeDataFactory            upgradeDataFactory,
 			IResourcesProgressPresenter resourceProgressPresenter,
-			IGameProgressModel          progress
+			IGameProgressModel          progress,
+			IShopProgressProvider       shopProgressProvider,
+			IPlayerProgressProvider     playerProgressProvider
 		)
 		{
 			_assetProvider             = assetProvider;
-			_shopItemFactory           = shopItemFactory;
+			_upgradeDataFactory           = upgradeDataFactory;
 			_resourceProgressPresenter = resourceProgressPresenter;
 			_progress                  = progress;
+			_shopProgressProvider      = shopProgressProvider;
+			_playerProgressProvider    = playerProgressProvider;
 		}
 
 		public GameObject Create()
@@ -46,12 +53,15 @@ namespace Sources.Application.UI
 
 			Initialize();
 
-			IUpgradeItemData[] items = _shopItemFactory.LoadItems();
+			IUpgradeItemData[] items = _upgradeDataFactory.LoadItems();
 
 			ShopPurchaseController shopPurchaseController = new ShopPurchaseController
 			(
 				UpgradeWindow,
-				_upgradeElementsPrefabs
+				_upgradeElementsPrefabs,
+				_resourceProgressPresenter,
+				_shopProgressProvider,
+				_playerProgressProvider
 			);
 
 			return _upgradeWindow;

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Sources.DIService;
 using Sources.Domain.Progress;
 using Sources.Domain.Progress.Player;
 using Sources.Domain.Progress.ResourcesData;
@@ -20,7 +19,7 @@ namespace Sources.Infrastructure.Factories
 
 		private readonly IProgressLoadDataService                _progressLoadDataService;
 		private readonly IPersistentProgressServiceConstructable _persistentProgressService;
-		private readonly IShopItemFactory                        _shopFactory;
+		private readonly IUpgradeDataFactory                        _shopFactory;
 		private readonly IProgressClearable                      _progressClearable;
 		private readonly IResourceService                        _resourceService;
 
@@ -28,15 +27,17 @@ namespace Sources.Infrastructure.Factories
 		(
 			IProgressLoadDataService                progressLoadDataService,
 			IPersistentProgressServiceConstructable persistentProgressService,
-			IShopItemFactory                        shopItemFactory,
-			IProgressClearable                      progressClearable
+			IUpgradeDataFactory                        upgradeDataFactory,
+			IProgressClearable                      progressClearable, 
+			IResourceService resourceService
 		)
 		{
 			_progressLoadDataService           =  progressLoadDataService;
 			_persistentProgressService         =  persistentProgressService;
-			_shopFactory                       =  shopItemFactory;
+			_shopFactory                       =  upgradeDataFactory;
 			_progressClearable                 =  progressClearable;
-			_resourceService                   =  GameServices.Container.Get<IResourceService>();
+			_resourceService                   =  resourceService;
+			
 			_progressClearable.ProgressCleared += CreateNewProgress;
 		}
 
@@ -107,7 +108,7 @@ namespace Sources.Infrastructure.Factories
 
 			PlayerProgress playerProgressModel = new PlayerProgress(CreateNewUpgradeProgressData(itemsList));
 
-			ShopProgress shopProgressModel = new(CreateNewUpgradeProgressData(itemsList), 6);
+			UpgradeProgressModel upgradeProgressModelModel = new(CreateNewUpgradeProgressData(itemsList), 6);
 
 			LevelProgress levelProgressModel = new
 			(
@@ -121,7 +122,7 @@ namespace Sources.Infrastructure.Factories
 			(
 				resourcesModel,
 				playerProgressModel,
-				shopProgressModel,
+				upgradeProgressModelModel,
 				levelProgressModel
 			);
 

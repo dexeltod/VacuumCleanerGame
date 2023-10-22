@@ -102,9 +102,11 @@ namespace Sources.Application.MainMenu
 		private void OnPlay()
 		{
 			_visualElementSwitcher.Disable(ThisElement);
-			LevelConfig levelConfig = _levelConfigGetter.GetCurrentLevel();
+			// LevelConfig levelConfig = _levelConfigGetter.Get(_)
 
-			_gameStateMachine.Enter<BuildSceneState, LevelConfig>(levelConfig);
+			// _gameStateMachine.Enter<BuildSceneState, LevelConfig>(levelConfig);
+
+			throw new NotImplementedException();
 		}
 
 		private void ReleaseUnmanagedResources() =>

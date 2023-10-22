@@ -9,8 +9,7 @@ namespace Sources.Domain.Progress
 {
 	[Serializable] public abstract class Progress : IGameProgress
 	{
-		[FormerlySerializedAs("_maxPointCount")] [SerializeField]
-		private int _maxUpgradePointsCount;
+		[SerializeField] private int _maxUpgradePointsCount;
 
 		[SerializeField] private List<ProgressUpgradeData> _progressData;
 		[SerializeField] private List<string>              _progressNames;

@@ -19,19 +19,17 @@ namespace Sources.View
 
 		private void Start()
 		{
-			_sceneLoadInformer             =  GameServices.Container.Get<ISceneLoadInformer>();
+			_sceneLoadInformer             =  ServiceLocator.Container.Get<ISceneLoadInformer>();
 			_sceneLoadInformer.SceneLoaded += OnLoaded;
 		}
 
-		private void OnDisable()
-		{
+		private void OnDisable() =>
 			_sceneLoadInformer.SceneLoaded -= OnLoaded;
-		}
 
 		private void OnLoaded()
 		{
-			_upgradeWindowGetter = GameServices.Container.Get<IUpgradeWindowGetter>();
-			_progressLoadService = GameServices.Container.Get<IProgressLoadDataService>();
+			_upgradeWindowGetter = ServiceLocator.Container.Get<IUpgradeWindowGetter>();
+			_progressLoadService = ServiceLocator.Container.Get<IProgressLoadDataService>();
 
 			_upgradeWindow                 =  _upgradeWindowGetter.UpgradeWindow;
 			_sceneLoadInformer.SceneLoaded -= OnLoaded;

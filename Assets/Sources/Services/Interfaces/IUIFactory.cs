@@ -1,10 +1,10 @@
-using Cysharp.Threading.Tasks;
-using UnityEngine;
+using Sources.PresentationInterfaces;
 
 namespace Sources.Services.Interfaces
 {
 	public interface IUIFactory : IUIGetter
 	{
-		UniTask<GameObject> Instantiate();
+		IGameplayInterfaceView Instantiate();
+		void                   SetActive(bool isActive);
 	}
 }

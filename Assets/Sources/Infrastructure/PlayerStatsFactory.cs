@@ -14,13 +14,13 @@ namespace Sources.Infrastructure
 {
 	public class PlayerStatsFactory
 	{
-		private readonly IShopItemFactory   _shopFactory;
+		private readonly IUpgradeDataFactory   _shopFactory;
 		private readonly LoadingCurtain     _loadingCurtain;
 		private          PlayerStatsService _playerStatsService;
 
-		public PlayerStatsFactory(IShopItemFactory shopItemFactory, LoadingCurtain loadingCurtain)
+		public PlayerStatsFactory(IUpgradeDataFactory upgradeDataFactory, LoadingCurtain loadingCurtain)
 		{
-			_shopFactory    = shopItemFactory;
+			_shopFactory    = upgradeDataFactory;
 			_loadingCurtain = loadingCurtain;
 		}
 
@@ -38,10 +38,8 @@ namespace Sources.Infrastructure
 			string[]                statNames   = new string[progress.Count];
 			IPlayerStatChangeable[] playerStats = new IPlayerStatChangeable[progress.Count];
 
-			_loadingCurtain.SetText("ShopPoints creating");
 			ShopPointsToStatsConverter converter = new ShopPointsToStatsConverter(stats);
 			InitArrays(progress, statNames, playerStats, converter);
-			_loadingCurtain.SetText("Creating player stats service");
 
 			_playerStatsService = new PlayerStatsService(statNames, playerStats, progress, converter);
 

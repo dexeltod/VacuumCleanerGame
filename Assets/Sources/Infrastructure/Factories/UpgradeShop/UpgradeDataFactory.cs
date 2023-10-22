@@ -8,24 +8,24 @@ using Sources.View.SceneEntity;
 
 namespace Sources.Infrastructure.Factories.UpgradeShop
 {
-	public class ShopItemFactory : IShopItemFactory
+	public class UpgradeDataFactory : IUpgradeDataFactory
 	{
 		private readonly LoadingCurtain _loadingCurtain;
 		private readonly IAssetProvider _assetProvider;
 
 		private IUpgradeItemData[] _items;
 
-		public ShopItemFactory()
-		{
-			_assetProvider = GameServices.Container.Get<IAssetProvider>();
-		}
+		public UpgradeDataFactory(IAssetProvider assetProvider) =>
+			_assetProvider = assetProvider;
 
 		public IUpgradeItemData[] LoadItems()
 		{
 			if (_items != null)
 				return _items;
 
-			UpgradeItemList upgradeItemList = _assetProvider.Load<UpgradeItemList>(ResourcesAssetPath.GameObjects.ShopItems);
+			UpgradeItemList upgradeItemList = _assetProvider
+				.LoadFromResources<UpgradeItemList>(ResourcesAssetPath.GameObjects.ShopItems);
+
 			IUpgradeItemData[] upgradeItemData = upgradeItemList.Items;
 
 			_items = upgradeItemData ?? throw new NullReferenceException("ShopItems is null");

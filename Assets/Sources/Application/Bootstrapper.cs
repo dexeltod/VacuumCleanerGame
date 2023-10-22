@@ -1,8 +1,14 @@
 using System;
 using System.Collections.Generic;
+using PlasticGui;
 using Sources.Application.StateMachine;
 using Sources.Application.StateMachine.GameStates;
+using Sources.Application.UI;
 using Sources.DIService;
+using Sources.DomainInterfaces;
+using Sources.InfrastructureInterfaces.DTO;
+using Sources.InfrastructureInterfaces.Factory;
+using Sources.ServicesInterfaces;
 using Sources.View.SceneEntity;
 using UnityEngine;
 
@@ -18,16 +24,16 @@ namespace Sources.Application
 		private void Awake()
 		{
 			DontDestroyOnLoad(this);
+
+			ServiceLocator.Initialize();
+
 			_loadingCurtain.gameObject.SetActive(true);
 
 			SceneLoader sceneLoader = new SceneLoader();
 
 			GameStateMachine gameStateMachine = CreateGameStateMachine(sceneLoader);
 
-			_game = new Game
-			(
-				gameStateMachine
-			);
+			_game = new Game(gameStateMachine);
 
 			StartGame();
 		}
@@ -45,7 +51,7 @@ namespace Sources.Application
 						(
 							_authorizationHandler,
 							gameStateMachine,
-							GameServices.Container,
+							ServiceLocator.Container,
 							sceneLoader
 						),
 
@@ -53,24 +59,30 @@ namespace Sources.Application
 						new InitializeServicesWithProgressState
 						(
 							gameStateMachine,
-							GameServices.Container,
+							ServiceLocator.Container,
 							_loadingCurtain
 						),
 
-					[typeof(MenuState)] = new MenuState(sceneLoader, _loadingCurtain, GameServices.Container),
+					[typeof(MenuState)] = new MenuState(sceneLoader, _loadingCurtain, ServiceLocator.Container),
 
-					[typeof(BuildSceneState)] = new BuildSceneState
+					[typeof(BuildSandState)] = new BuildSandState
 					(
 						gameStateMachine,
 						sceneLoader,
-						_loadingCurtain,
-						GameServices.Container
+						ServiceLocator.Container,
+						_loadingCurtain
 					),
 
-					[typeof(GameLoopState)] = new GameLoopState(gameStateMachine)
+					[typeof(InitializeServicesWithViewState)] = new InitializeServicesWithViewState
+						(gameStateMachine, ServiceLocator.Container),
+
+					[typeof(BuildSceneState)] = new BuildSceneState
+						(gameStateMachine, ServiceLocator.Container),
+
+					[typeof(GameLoopState)] = new GameLoopState(gameStateMachine, _loadingCurtain)
 				}
 			);
-			
+
 			return gameStateMachine;
 		}
 

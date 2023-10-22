@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace Sources.View.UI.Shop
 {
-	public class UpgradeElementPrefab : MonoBehaviour, IUpgradeElementConstructable, IUpgradeInteractable,
+	public class UpgradeElementPrefabView : MonoBehaviour, IUpgradeElementConstructable, IUpgradeInteractable,
 										IColorChangeable, IDisposable
 	{
 		[Header("Points")] [SerializeField] private int _maxPoints = 6;
@@ -47,7 +47,7 @@ namespace Sources.View.UI.Shop
 			_boughtPoints = itemData.PointLevel;
 			_itemData     = itemData;
 
-			ILocalizationService localisation = GameServices.Container.Get<ILocalizationService>();
+			ILocalizationService localisation = ServiceLocator.Container.Get<ILocalizationService>();
 
 			_title.SetText(localisation.GetTranslationText(itemData.Title));
 			_price.SetText(itemData.Price.ToString());

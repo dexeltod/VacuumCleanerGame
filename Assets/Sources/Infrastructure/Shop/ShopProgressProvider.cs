@@ -17,13 +17,13 @@ namespace Sources.Infrastructure.Shop
 
 		public ShopProgressProvider()
 		{
-			_shopProgress = GameServices
+			_shopProgress = ServiceLocator
 				.Container
 				.Get<IPersistentProgressService>()
 				.GameProgress
 				.ShopProgress;
 
-			_progressLoadService = GameServices.Container.Get<IProgressLoadDataService>();
+			_progressLoadService = ServiceLocator.Container.Get<IProgressLoadDataService>();
 		}
 
 		public async UniTask AddProgressPoint(string progressName, Action succeededCallback)

@@ -15,7 +15,7 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 		{
 			Dictionary<string, int> playersLeaders = new Dictionary<string, int>();
 
-			bool isResponseReceived = false;
+			bool                          isResponseReceived  = false;
 			LeaderboardGetEntriesResponse leaderboardResponse = null;
 
 			Leaderboard.GetEntries
@@ -24,7 +24,7 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 				onSuccessCallback: response =>
 				{
 					leaderboardResponse = response;
-					isResponseReceived = true;
+					isResponseReceived  = true;
 				},
 				errorResponse =>
 				{
@@ -40,12 +40,6 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 
 			foreach (LeaderboardEntryResponse response in entries)
 				playersLeaders.Add(response.player.scopePermissions.public_name, response.score);
-
-			foreach (LeaderboardEntryResponse response in entries)
-			{
-				Debug.Log("scopePermissionName - " + response.player.scopePermissions.public_name);
-				Debug.Log("simple name - " + response.player.publicName);
-			}
 
 			return playersLeaders;
 		}
@@ -72,7 +66,7 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 
 		public async UniTask<Tuple<string, int>> GetPlayer()
 		{
-			bool isResponseReceived = false;
+			bool                     isResponseReceived  = false;
 			LeaderboardEntryResponse leaderboardResponse = null;
 
 			async void ErrorCallback(string errorResponse)
@@ -82,12 +76,13 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 				await UniTask.WaitWhile(() => isResponseReceived == false);
 			}
 
-			Leaderboard.GetPlayerEntry(
+			Leaderboard.GetPlayerEntry
+			(
 				BoardName,
 				response =>
 				{
 					leaderboardResponse = response;
-					isResponseReceived = true;
+					isResponseReceived  = true;
 				},
 				ErrorCallback
 			);
@@ -99,7 +94,7 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 
 		private async UniTask<LeaderboardEntryResponse> GetPlayerEntry()
 		{
-			bool isResponseReceived = false;
+			bool                     isResponseReceived  = false;
 			LeaderboardEntryResponse leaderboardResponse = null;
 
 			Leaderboard.GetPlayerEntry
@@ -108,7 +103,7 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 				response =>
 				{
 					leaderboardResponse = response;
-					isResponseReceived = true;
+					isResponseReceived  = true;
 				},
 				async errorResponse =>
 				{

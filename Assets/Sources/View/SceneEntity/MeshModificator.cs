@@ -35,7 +35,7 @@ namespace Sources.View.SceneEntity
 		private void Start()
 		{
 			Mesh = GetComponent<MeshFilter>().mesh;
-			_resourcesProgressPresenter = GameServices.Container.Get<IResourcesProgressPresenter>();
+			_resourcesProgressPresenter = ServiceLocator.Container.Get<IResourcesProgressPresenter>();
 		}
 
 		private void OnCollisionEnter(Collision collision)

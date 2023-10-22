@@ -12,7 +12,7 @@ namespace Sources.DomainInterfaces
 		int  MaxModifier { get; }
 		void AddSand(int newValue);
 
-		int  CurrentSandCount { get; }
+		int  CurrentCashScore { get; }
 		int  GlobalSandCount  { get; }
 		void DecreaseSand(int  newValue);
 		void AddMoney(int      newValue);

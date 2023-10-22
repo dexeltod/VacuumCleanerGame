@@ -36,7 +36,7 @@ namespace Sources.Services.DomainServices
 			Directory.CreateDirectory(saveDirectoryPath);
 
 			_jsonDataLoader = new JsonDataSaveLoader();
-			_persistentProgress = GameServices.Container.Get<IPersistentProgressService>();
+			_persistentProgress = ServiceLocator.Container.Get<IPersistentProgressService>();
 		}
 
 		public async UniTask SaveToCloud(IGameProgressModel model, Action succeededCallback = null)

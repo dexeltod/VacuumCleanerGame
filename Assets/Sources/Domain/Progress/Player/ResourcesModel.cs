@@ -32,7 +32,7 @@ namespace Sources.Domain.Progress.Player
 			private set => _maxModifier = value;
 		}
 
-		public int CurrentSandCount
+		public int CurrentCashScore
 		{
 			get => _currentSandCount;
 			private set => _currentSandCount = value;
@@ -65,13 +65,13 @@ namespace Sources.Domain.Progress.Player
 
 		public void AddSand(int newValue)
 		{
-			CurrentSandCount += newValue;
+			CurrentCashScore += newValue;
 			GlobalSandCount  += newValue;
 			_score.Set(_score.Count + newValue);
 		}
 
 		public void DecreaseSand(int newValue) =>
-			CurrentSandCount -= newValue;
+			CurrentCashScore -= newValue;
 
 		public void AddMoney(int newValue) =>
 			SoftCurrency.Set(newValue + _softCurrency.Count);

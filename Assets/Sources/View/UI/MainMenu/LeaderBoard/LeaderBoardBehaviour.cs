@@ -10,7 +10,7 @@ public class LeaderBoardBehaviour : MonoBehaviour
 	public void InstantiatePanels(Dictionary<string, int> players)
 	{
 		if (_playerPanel == null)
-			Debug.Log("PANEL IS NULL");
+			Debug.LogError("PANEL IS NULL");
 
 		foreach (KeyValuePair<string, int> player in players)
 		{

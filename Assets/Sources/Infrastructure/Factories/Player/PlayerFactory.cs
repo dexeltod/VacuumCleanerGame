@@ -1,9 +1,8 @@
+using System;
 using Joystick_Pack.Scripts.Base;
 using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Scene;
-using Sources.InfrastructureInterfaces;
-using Sources.InfrastructureInterfaces.Factory;
 using Sources.Services;
 using Sources.Services.Character;
 using Sources.ServicesInterfaces;
@@ -29,7 +28,7 @@ namespace Sources.Infrastructure.Factories.Player
 
 		public PlayerFactory(IAssetProvider assetProvider)
 		{
-			_progressService = GameServices.Container.Get<IPersistentProgressService>();
+			_progressService = ServiceLocator.Container.Get<IPersistentProgressService>();
 			_assetProvider   = assetProvider;
 		}
 
@@ -37,12 +36,20 @@ namespace Sources.Infrastructure.Factories.Player
 		(
 			GameObject          initialPoint,
 			Joystick            joystick,
-			IPlayerStatsService stats
+			IPlayerStatsService stats,
+			Action              onErrorCallback = null
 		)
 		{
-			_playerStats = stats;
-			_joystick    = joystick;
-			Create(initialPoint);
+			try
+			{
+				_playerStats = stats;
+				_joystick    = joystick;
+				Create(initialPoint);
+			}
+			catch (Exception e)
+			{
+				onErrorCallback?.Invoke();
+			}
 		}
 
 		private void Create(GameObject initialPoint)

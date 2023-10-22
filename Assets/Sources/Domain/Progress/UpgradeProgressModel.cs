@@ -4,10 +4,10 @@ using Newtonsoft.Json;
 
 namespace Sources.Domain.Progress
 {
-	[Serializable] public class ShopProgress : Progress
+	[Serializable] public class UpgradeProgressModel : Progress
 	{
 		[JsonConstructor]
-		public ShopProgress
+		public UpgradeProgressModel
 		(
 			List<ProgressUpgradeData> progress,
 			int                       maxUpgradePointsCount

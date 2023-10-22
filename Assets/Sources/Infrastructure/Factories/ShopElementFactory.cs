@@ -18,14 +18,14 @@ namespace Sources.Infrastructure.Factories
 		public ShopElementFactory(IGameProgress shopProgress)
 		{
 			_shopProgress  = shopProgress;
-			_assetProvider = GameServices.Container.Get<IAssetProvider>();
+			_assetProvider = ServiceLocator.Container.Get<IAssetProvider>();
 		}
 
-		public List<UpgradeElementPrefab> InstantiateElementPrefabs(Transform transform)
+		public List<UpgradeElementPrefabView> InstantiateElementPrefabs(Transform transform)
 		{
 			List<IUpgradeProgressData> progress = _shopProgress.GetAll();
 
-			UpgradeItemList items = _assetProvider.Load<UpgradeItemList>(ResourcesAssetPath.GameObjects.ShopItems);
+			UpgradeItemList items = _assetProvider.LoadFromResources<UpgradeItemList>(ResourcesAssetPath.GameObjects.ShopItems);
 			SetUpgradeLevelsToItems(progress, items);
 
 			return Instantiate(transform, items, progress);
@@ -35,14 +35,14 @@ namespace Sources.Infrastructure.Factories
 		(
 			Transform                  transform,
 			UpgradeItemList            items,
-			List<UpgradeElementPrefab> buttons,
+			List<UpgradeElementPrefabView> buttons,
 			int                        itemIndex
 		)
 		{
-			UpgradeElementPrefab button =
+			UpgradeElementPrefabView button =
 				Object.Instantiate
 				(
-					items.ReadOnlyItems[itemIndex].Prefab,
+					items.ReadOnlyItems[itemIndex].PrefabView,
 					transform.transform
 				);
 
@@ -57,14 +57,14 @@ namespace Sources.Infrastructure.Factories
 				upgradeItems.Items[i].SetUpgradeLevel(progress[i].Value);
 		}
 
-		private List<UpgradeElementPrefab> Instantiate
+		private List<UpgradeElementPrefabView> Instantiate
 		(
 			Transform                  transform,
 			UpgradeItemList            items,
 			List<IUpgradeProgressData> progress
 		)
 		{
-			List<UpgradeElementPrefab> buttons = new();
+			List<UpgradeElementPrefabView> buttons = new();
 			InitButtons(transform, items, progress, buttons);
 
 			return buttons;
@@ -75,7 +75,7 @@ namespace Sources.Infrastructure.Factories
 			Transform                  transform,
 			UpgradeItemList            items,
 			List<IUpgradeProgressData> progress,
-			List<UpgradeElementPrefab> buttons
+			List<UpgradeElementPrefabView> buttons
 		)
 		{
 			for (int i = 0; i < progress.Count; i++)

@@ -8,9 +8,6 @@ namespace Sources.Application
 	{
 		public async UniTask Load(string nextScene)
 		{
-			if (SceneManager.GetActiveScene().name == nextScene)
-				return;
-
 			AsyncOperation waitNextTime = SceneManager.LoadSceneAsync(nextScene);
 
 			await UniTask.WaitWhile(() => waitNextTime.isDone == false);

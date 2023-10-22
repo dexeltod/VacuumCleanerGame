@@ -22,7 +22,7 @@ namespace Sources.View.UI.Shop
 		[SerializeField] private GameObject _yesNoButtons;
 
 		private IUIGetter                  _uiGetter;
-		private List<UpgradeElementPrefab> _buttons;
+		private List<UpgradeElementPrefabView> _buttons;
 
 		public Transform ContainerTransform => _content.transform;
 
@@ -54,15 +54,11 @@ namespace Sources.View.UI.Shop
 
 		public void Construct(IResource<int> resource)
 		{
-			_uiGetter = GameServices.Container.Get<IUIGetter>();
+			_uiGetter = ServiceLocator.Container.Get<IUIGetter>();
 			
 			resource.ResourceChanged += OnMoneyChanged;
 
 			_money.text = resource.Count.ToString();
-			Debug.Log
-			(
-				resource.Count.ToString()
-			);
 
 			_closeMenuButton.onClick.AddListener(OnEnableJoystick);
 			_noButton.onClick.AddListener(OnEnableJoystick);

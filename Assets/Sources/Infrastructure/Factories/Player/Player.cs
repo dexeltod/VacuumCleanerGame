@@ -14,7 +14,7 @@ namespace Sources.Infrastructure.Factories.Player
 
 		private void Awake()
 		{
-			_progressPresenter = GameServices.Container.Get<IResourcesProgressPresenter>();
+			_progressPresenter = ServiceLocator.Container.Get<IResourcesProgressPresenter>();
 		}
 
 		private void OnCollisionEnter(Collision collisionInfo)

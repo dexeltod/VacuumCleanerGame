@@ -16,32 +16,35 @@ namespace Sources.Application
 	{
 		private const int Point = 1;
 
-		private readonly List<UpgradeElementPrefab> _upgradeElements;
+		private readonly List<UpgradeElementPrefabView> _upgradeElements;
 
 		private readonly IResourcesProgressPresenter _resourcesProgress;
 		private readonly IPlayerProgressProvider     _playerProgress;
 		private readonly IShopProgressProvider       _shopProgressProvider;
 		private readonly IUpgradeWindow              _upgradeWindow;
 
-		private readonly Dictionary<string, UpgradeElementPrefab> _prefabsByNames =
-			new Dictionary<string, UpgradeElementPrefab>();
+		private readonly Dictionary<string, UpgradeElementPrefabView> _prefabsByNames =
+			new Dictionary<string, UpgradeElementPrefabView>();
 
 		private bool _isCanAddProgress = true;
 
 		public ShopPurchaseController
 		(
-			IUpgradeWindow             upgradeWindow,
-			List<UpgradeElementPrefab> upgradeElements
+			IUpgradeWindow                 upgradeWindow,
+			List<UpgradeElementPrefabView> upgradeElements,
+			IResourcesProgressPresenter    resourcesProgress,
+			IShopProgressProvider          shopProgressProvider,
+			IPlayerProgressProvider        playerProgressProvider
 		)
 		{
-			_resourcesProgress    = GameServices.Container.Get<IResourcesProgressPresenter>();
-			_shopProgressProvider = GameServices.Container.Get<IShopProgressProvider>();
-			_playerProgress       = GameServices.Container.Get<IPlayerProgressProvider>();
+			_resourcesProgress    = resourcesProgress;
+			_shopProgressProvider = shopProgressProvider;
+			_playerProgress       = playerProgressProvider;
 
 			_upgradeWindow   = upgradeWindow;
 			_upgradeElements = upgradeElements;
 
-			foreach (UpgradeElementPrefab element in _upgradeElements)
+			foreach (UpgradeElementPrefabView element in _upgradeElements)
 				_prefabsByNames.Add(element.IdName, element);
 
 			_upgradeWindow.ActiveChanged += OnActiveChanged;
@@ -65,15 +68,15 @@ namespace Sources.Application
 			_upgradeWindow.ActiveChanged -= OnActiveChanged;
 		}
 
-		private void SubscribeOnButtons(List<UpgradeElementPrefab> elements)
+		private void SubscribeOnButtons(List<UpgradeElementPrefabView> elements)
 		{
-			foreach (UpgradeElementPrefab element in elements)
+			foreach (UpgradeElementPrefabView element in elements)
 				element.BuyButtonPressed += OnButtonPressed;
 		}
 
-		private void UnsubscribeFromButtons(List<UpgradeElementPrefab> elements)
+		private void UnsubscribeFromButtons(List<UpgradeElementPrefabView> elements)
 		{
-			foreach (UpgradeElementPrefab element in elements)
+			foreach (UpgradeElementPrefabView element in elements)
 				element.BuyButtonPressed -= OnButtonPressed;
 		}
 

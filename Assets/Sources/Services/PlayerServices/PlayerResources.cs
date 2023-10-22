@@ -10,7 +10,7 @@ namespace Sources.Services.PlayerServices
 
 		private void Awake()
 		{
-			_resourcesProgress = GameServices.Container.Get<IResourcesProgressPresenter>();
+			_resourcesProgress = ServiceLocator.Container.Get<IResourcesProgressPresenter>();
 		}
 
 		public void SellSand() =>

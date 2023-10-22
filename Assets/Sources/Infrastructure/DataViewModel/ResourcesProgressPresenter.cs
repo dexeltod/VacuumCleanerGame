@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks.Triggers;
 using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
@@ -8,14 +9,14 @@ using UnityEngine;
 
 namespace Sources.Infrastructure.DataViewModel
 {
-	public class ResourcesProgressPresenter : IResourcesProgressPresenter
+	public class ResourcesProgressPresenter : IResourcesProgressPresenter, IResourceProgressEventHandler
 	{
 		private readonly IResourcesModel        _resourcesData;
 		private readonly IGameplayInterfaceView _gameplayInterfaceView;
 
 		private int _increasedDelta;
 
-		public IResource<int> SoftCurrency => ResourcesModel.SoftCurrency;
+		public IResource<int> SoftCurrency => _resourcesData.SoftCurrency;
 
 		public int GlobalScore { get; private set; }
 
@@ -23,91 +24,105 @@ namespace Sources.Infrastructure.DataViewModel
 
 		public IResourcesModel ResourcesModel => _resourcesData;
 
+		//TODO: Need decomposition
+		public event Action<int>  SoftCurrencyChanged;
+		public event Action<int>  CashScoreChanged;
+		public event Action<int>  GlobalScoreChanged;
+		public event Action<int>  MaxGlobalScoreChanged;
+		public event Action<int>  MaxCashScoreChanged;
+		public event Action<bool> HalfGlobalScoreReached;
+
 		public ResourcesProgressPresenter
 		(
-			IResourcesModel        persistentProgressService,
-			IGameplayInterfaceView gameplayInterfaceView
+			IResourcesModel persistentProgressService
 		)
 		{
-			_resourcesData         = persistentProgressService;
-			_gameplayInterfaceView = gameplayInterfaceView;
+			_resourcesData = persistentProgressService;
 		}
 
 		public bool CheckMaxScore() =>
-			ResourcesModel.CurrentSandCount < ResourcesModel.MaxCashScore;
+			_resourcesData.CurrentCashScore < _resourcesData.MaxCashScore;
 
 		public bool TryAddSand(int newScore)
 		{
-			int currentScore = ResourcesModel.CurrentSandCount;
+			int currentScore = _resourcesData.CurrentCashScore;
 
-			if (currentScore > ResourcesModel.MaxCashScore)
+			if (currentScore > _resourcesData.MaxCashScore)
 				return false;
 
-			int score = Mathf.Clamp(newScore, 0, ResourcesModel.MaxCashScore);
+			int score = Mathf.Clamp(newScore, 0, _resourcesData.MaxCashScore);
 
-			ResourcesModel.AddSand(score);
+			_resourcesData.AddSand(score);
 
-			_gameplayInterfaceView.SetScore(ResourcesModel.CurrentSandCount);
+			GlobalScore = _resourcesData.GlobalSandCount;
 
-			GlobalScore = ResourcesModel.GlobalSandCount;
-
-			_gameplayInterfaceView.SetGlobalScore(GlobalScore);
-
-			if (IsHalfScoreReached() == true && !_isHalfScoreAlreadyReached)
-			{
-				_gameplayInterfaceView.SetActiveGoToNextLevelButton(true);
-				_isHalfScoreAlreadyReached = true;
-			}
+			OnCashScoreChanged();
+			OnGlobalScoreChanged();
+			OnHalfScoreReached();
 
 			return true;
 		}
 
+		private void OnGlobalScoreChanged()
+		{
+			GlobalScoreChanged.Invoke(GlobalScore);
+		}
+
+		private void OnHalfScoreReached()
+		{
+			if (IsHalfScoreReached() == true && !_isHalfScoreAlreadyReached)
+				HalfGlobalScoreReached(true);
+		}
+
 		public void SellSand()
 		{
-			if (ResourcesModel.CurrentSandCount <= 0)
+			if (_resourcesData.CurrentCashScore <= 0)
 				return;
 
 			_increasedDelta++;
 
-			if (ResourcesModel.CurrentSandCount - _increasedDelta < 0)
+			if (_resourcesData.CurrentCashScore - _increasedDelta < 0)
 			{
 				_increasedDelta = 0;
 				return;
 			}
 
-			ResourcesModel.AddMoney(_increasedDelta);
-			ResourcesModel.DecreaseSand(_increasedDelta);
+			_resourcesData.AddMoney(_increasedDelta);
+			_resourcesData.DecreaseSand(_increasedDelta);
 
-			_gameplayInterfaceView.SetScore(ResourcesModel.CurrentSandCount);
-			_gameplayInterfaceView.SetMoney(SoftCurrency.Count);
+			OnMoneyChanged();
+			OnCashScoreChanged();
 		}
 
 		public void AddMoney(int count)
 		{
-			ResourcesModel.AddMoney(count);
-			SetMoneyInPresentation();
+			_resourcesData.AddMoney(count);
+			OnMoneyChanged();
 		}
 
 		public void DecreaseMoney(int count)
 		{
-			if (ResourcesModel.SoftCurrency.Count - count < 0)
+			if (_resourcesData.SoftCurrency.Count - count < 0)
 				throw new ArgumentOutOfRangeException($"{SoftCurrency} less than zero");
 
-			ResourcesModel.SoftCurrency.Set(SoftCurrency.Count - count);
-			SetMoneyInPresentation();
+			_resourcesData.SoftCurrency.Set(SoftCurrency.Count - count);
+			OnMoneyChanged();
 		}
 
 		public int GetDecreasedMoney(int count) =>
-			ResourcesModel.SoftCurrency.Count - count;
+			_resourcesData.SoftCurrency.Count - count;
 
-		private void SetMoneyInPresentation() =>
-			_gameplayInterfaceView.SetMoney(SoftCurrency.Count);
+		private void OnMoneyChanged() =>
+			SoftCurrencyChanged.Invoke(SoftCurrency.Count);
+
+		private void OnCashScoreChanged() =>
+			CashScoreChanged.Invoke(_resourcesData.CurrentCashScore);
 
 		private bool IsHalfScoreReached()
 		{
-			int halfScore = ResourcesModel.MaxCashScore / 2;
+			int halfScore = _resourcesData.MaxCashScore / 2;
 
-			return ResourcesModel.Score.Count >= halfScore;
+			return _resourcesData.Score.Count >= halfScore;
 		}
 	}
 }

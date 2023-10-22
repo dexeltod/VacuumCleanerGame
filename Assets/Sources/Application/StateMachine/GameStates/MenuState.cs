@@ -18,15 +18,15 @@ namespace Sources.Application.StateMachine.GameStates
 
 		private readonly SceneLoader    _sceneLoader;
 		private readonly LoadingCurtain _loadingCurtain;
-		private readonly GameServices   _gameServices;
+		private readonly ServiceLocator   _serviceLocator;
 
 		private LeaderBoardBehaviour _leaderBoardBehaviour;
 
-		public MenuState(SceneLoader sceneLoader, LoadingCurtain loadingCurtain, GameServices gameServices)
+		public MenuState(SceneLoader sceneLoader, LoadingCurtain loadingCurtain, ServiceLocator serviceLocator)
 		{
 			_sceneLoader    = sceneLoader;
 			_loadingCurtain = loadingCurtain;
-			_gameServices   = gameServices;
+			_serviceLocator   = serviceLocator;
 		}
 
 		public async void Enter()
@@ -35,26 +35,28 @@ namespace Sources.Application.StateMachine.GameStates
 			ILeaderBoardService leaderBoardService = _gameServices.Get<ILeaderBoardService>();
 #endif
 
-			IAssetProvider assetProvider = _gameServices.Get<IAssetProvider>();
+			IAssetProvider assetProvider = _serviceLocator.Get<IAssetProvider>();
 
 			await _sceneLoader.Load(ConstantNames.MenuScene);
 
-			_leaderBoardBehaviour =
-				assetProvider.InstantiateAndGetComponent<LeaderBoardBehaviour>
-				(
-					ResourcesAssetPath
-						.Scene
-						.UIResources
-						.MainMenuCanvas
-				);
+			_leaderBoardBehaviour = InstantiateLeaderBoardBehaviour(assetProvider);
 
 			_loadingCurtain.SetText("Loading leaders");
 
 #if !UNITY_EDITOR
 			InstantiateLeaders(await LoadLeaders(leaderBoardService));
 #endif
-			_loadingCurtain.HideSlow();
+			_loadingCurtain.HideSlowly();
 		}
+
+		private LeaderBoardBehaviour InstantiateLeaderBoardBehaviour(IAssetProvider assetProvider) =>
+			assetProvider.InstantiateAndGetComponent<LeaderBoardBehaviour>
+			(
+				ResourcesAssetPath
+					.Scene
+					.UIResources
+					.MainMenuCanvas
+			);
 
 		public void Exit()
 		{

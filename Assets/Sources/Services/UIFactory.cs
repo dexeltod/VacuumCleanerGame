@@ -1,49 +1,74 @@
 #if YANDEX_GAMES && !UNITY_EDITOR
 using Agava.YandexGames;
 #endif
-using Cysharp.Threading.Tasks;
-using Sources.DIService;
+
 using Sources.DomainInterfaces;
 using Sources.PresentationInterfaces;
 using Sources.Services.Interfaces;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs;
-using UnityEngine;
 
 namespace Sources.Services
 {
 	public class UIFactory : IUIFactory
 	{
-		private readonly IAssetProvider              _assetProvider;
-		private readonly IResourcesProgressPresenter _resourcesProgressPresenter;
-		private readonly IPersistentProgressService  _gameProgress;
+		private readonly IAssetProvider                _assetProvider;
+		private readonly IResourceProgressEventHandler _resourceProgressEventHandler;
+		private readonly IPersistentProgressService    _gameProgress;
 
 		public IGameplayInterfaceView GameplayInterface { get; private set; }
-		public IGoToTextLevelButtonSubscribeable GoToNextLevelButtonButton { get; private set; }
 
-		public UIFactory()
+		public UIFactory
+		(
+			IAssetProvider                assetProvider,
+			IResourceProgressEventHandler resourceProgressEventHandler,
+			IPersistentProgressService    persistentProgressService
+		)
 		{
-			_assetProvider              = GameServices.Container.Get<IAssetProvider>();
-			_resourcesProgressPresenter = GameServices.Container.Get<IResourcesProgressPresenter>();
-			_gameProgress               = GameServices.Container.Get<IPersistentProgressService>();
+			_assetProvider                = assetProvider;
+			_resourceProgressEventHandler = resourceProgressEventHandler;
+			_gameProgress                 = persistentProgressService;
 		}
 
-		public async UniTask<GameObject> Instantiate()
+		public IGameplayInterfaceView Instantiate() =>
+			Create();
+
+		public void SetActive(bool isActive) =>
+			GameplayInterface.GameObject.SetActive(isActive);
+
+		private IGameplayInterfaceView Create()
 		{
-			GameObject instance = _assetProvider.Instantiate(ResourcesAssetPath.Scene.UIResources.UI);
-			GameplayInterface = instance.GetComponent<IGameplayInterfaceView>();
+			LoadAndSet();
 
-			IResourcesModel model = _gameProgress
-				.GameProgress
-				.ResourcesModel;
+			IResourcesModel model = GetModel();
 
+			Construct(model);
+
+			return GameplayInterface;
+		}
+
+		private void Construct(IResourcesModel model) =>
 			GameplayInterface.Construct
 			(
 				model.MaxCashScore,
-				model.SoftCurrency.Count
+				model.SoftCurrency.Count,
+				_resourceProgressEventHandler
 			);
 
-			return instance;
-		}
+		private IResourcesModel GetModel() =>
+			_gameProgress
+				.GameProgress
+				.ResourcesModel;
+
+		private void LoadAndSet() =>
+			GameplayInterface = _assetProvider
+				.Instantiate
+				(
+					ResourcesAssetPath
+						.Scene
+						.UIResources
+						.UI
+				)
+				.GetComponent<IGameplayInterfaceView>();
 	}
 }

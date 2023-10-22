@@ -3,7 +3,7 @@ using Sources.InfrastructureInterfaces.Upgrade;
 
 namespace Sources.InfrastructureInterfaces.Factory
 {
-	public interface IShopItemFactory : IService
+	public interface IUpgradeDataFactory : IService
 	{
 		IUpgradeItemData[] LoadItems();
 	}

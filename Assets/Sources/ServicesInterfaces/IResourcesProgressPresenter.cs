@@ -7,10 +7,11 @@ namespace Sources.ServicesInterfaces
 	{
 		IResource<int>    SoftCurrency { get; }
 
-		bool TryAddSand(int newScore);
-		void SellSand();
-		void AddMoney(int          count);
-		void DecreaseMoney(int     count);
-		int  GetDecreasedMoney(int count);
+		bool               TryAddSand(int newScore);
+		void               SellSand();
+		void               AddMoney(int          count);
+		void               DecreaseMoney(int     count);
+		int                GetDecreasedMoney(int count);
+		
 	}
 }

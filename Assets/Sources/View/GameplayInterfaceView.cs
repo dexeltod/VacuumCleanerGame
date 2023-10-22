@@ -4,7 +4,6 @@ using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Sources.Services
@@ -21,54 +20,47 @@ namespace Sources.Services
 
 		[SerializeField] private Button _goToNextLevelButton;
 
-		[SerializeField] private Slider   _scoreSlider;
+		[SerializeField] private Image    _scoreFillBar;
 		[SerializeField] private Joystick _joystick;
 
-		[FormerlySerializedAs("_scoresSprite")] [SerializeField]
-		private Image _globalScoreImage;
+		[SerializeField] private Image _globalScoreImage;
 
 		private Canvas _canvas;
-		private int    _maxCashScore;
-		private int    _globalScore;
-		private bool   _isInitialized;
+
+		private int _cashScore;
+		private int _maxCashScore;
+		private int _globalScore;
+		private int _maxGlobalScore = 1000; //TODO: Need config for global score
+
+		private bool                          _isInitialized;
+		private IResourceProgressEventHandler _resourceProgressEventHandler;
 
 		public TextMeshProUGUI ScoreText => _scoreCash;
 		public TextMeshProUGUI MoneyText => _moneyText;
 
 		public Joystick   Joystick    => _joystick;
-		public Slider     ScoreSlider => _scoreSlider;
-		public GameObject GameObject  => gameObject;
+		public Image      ScoreSlider => _scoreFillBar;
 		public Canvas     Canvas      => _canvas;
+		public GameObject GameObject  { get; private set; }
 
 		public event Action GoToTextLevelButtonClicked;
+		public event Action ButtonDestroying;
+		public event Action Destroying;
 
 		~GameplayInterfaceView() =>
 			Unsubscribe();
 
-		public void Dispose()
-		{
-			Unsubscribe();
-			GC.SuppressFinalize(this);
-		}
-
-		public void SetGlobalScore(int newScore)
-		{
-			_globalScore = newScore;
-
-			float value = MaxFillAmount / _maxCashScore * _globalScore;
-			_globalScoreImage.fillAmount = value;
-
-			_globalScoreText.SetText($"{_globalScore}");
-		}
-
 		public void Construct
 		(
-			int maxScore,
-			int moneyCount
+			int                           maxScore,
+			int                           moneyCount,
+			IResourceProgressEventHandler resourcesProgressPresenter
 		)
 		{
 			if (_isInitialized == true)
 				return;
+
+			_resourceProgressEventHandler = resourcesProgressPresenter;
 
 			_goToNextLevelButton.gameObject.SetActive(false);
 			const int StartScore = 0;
@@ -80,52 +72,110 @@ namespace Sources.Services
 			Subscribe();
 
 			_maxCashScore = maxScore;
-			SetScoreText(StartScore);
+			SetCashScoreText(StartScore);
 			enabled = true;
+
+			OnSetMaxGlobalScore(_maxGlobalScore);
+
+			GameObject = gameObject;
 
 			_isInitialized = true;
 		}
 
-		private void Subscribe() =>
-			_goToNextLevelButton.onClick.AddListener(OnGoToNextLevelButtonClicked);
-
-		private void Unsubscribe() =>
-			_goToNextLevelButton.onClick.RemoveListener(OnGoToNextLevelButtonClicked);
-
-		public void SetActiveGoToNextLevelButton(bool isActive) =>
-			_goToNextLevelButton.gameObject.SetActive(isActive);
-
-		public void SetMaxCashScore(int newMaxScore)
+		public void Dispose()
 		{
-			_maxCashScore = newMaxScore;
-			_maxGlobalScoreText.SetText($"{newMaxScore}");
+			Unsubscribe();
+			GC.SuppressFinalize(this);
 		}
 
-		public void SetMoney(int newMoney) =>
+		private void OnDestroy()
+		{
+			Unsubscribe();
+			ButtonDestroying?.Invoke();
+			Destroying?.Invoke();
+		}
+
+		private void OnSetCashScore(int newScore)
+		{
+			SetCashScoreValue(newScore);
+			SetCashScoreText(newScore);
+		}
+
+		private void OnSetGlobalScore(int newScore)
+		{
+			_globalScore = newScore;
+
+			_globalScoreImage.fillAmount = CalculateValue(MaxFillAmount, _globalScore, _maxGlobalScore);
+
+			_globalScoreText.SetText($"{_globalScore}");
+		}
+
+		private void OnSetMaxCashScore(int newScore)
+		{
+			_maxCashScore = newScore;
+			_maxGlobalScoreText.SetText($"{_maxCashScore}");
+		}
+
+		private void SetActiveGoToNextLevelButton(bool isActive) =>
+			_goToNextLevelButton.gameObject.SetActive(isActive);
+
+		private void OnSetMaxGlobalScore(int newMaxScore)
+		{
+			_maxGlobalScore = newMaxScore;
+			_maxGlobalScoreText.SetText($"{_maxGlobalScore}");
+		}
+
+		private void OnSetSoftCurrency(int newMoney) =>
 			_moneyText.SetText(newMoney.ToString());
 
 		public void SetCurrentLevel(int newLevel) =>
 			_currentLevel.SetText($"{newLevel}");
 
-		public void SetScore(int newScore)
+		private void SetCashScoreValue(int newScore)
 		{
-			SetSliderValue(newScore);
-			SetScoreText(newScore);
+			_cashScore = newScore;
+			float value = CalculateValue(MaxFillAmount, _cashScore, _maxCashScore);
+			_scoreFillBar.fillAmount = value;
 		}
 
-		private void SetSliderValue(int newScore)
-		{
-			float value = CalculateValue(newScore);
-			_scoreSlider.value = value;
-		}
+		private float CalculateValue(float maxValue, int newScore, int currentMaxScore) =>
+			maxValue / currentMaxScore * newScore;
 
-		private float CalculateValue(int newScore) =>
-			_scoreSlider.maxValue / _maxCashScore * newScore;
-
-		private void SetScoreText(int newScore) =>
+		private void SetCashScoreText(int newScore) =>
 			_scoreCash.SetText($"{newScore}/{_maxCashScore}");
 
-		private void OnGoToNextLevelButtonClicked() =>
+		private void OnGoToNextLevelButtonClicked()
+		{
+			Debug.Assert
+			(
+				GoToTextLevelButtonClicked != null,
+				nameof(GoToTextLevelButtonClicked) + " != null"
+			);
 			GoToTextLevelButtonClicked.Invoke();
+		}
+
+		private void Subscribe()
+		{
+			_goToNextLevelButton.onClick.AddListener(OnGoToNextLevelButtonClicked);
+
+			_resourceProgressEventHandler.CashScoreChanged       += OnSetCashScore;
+			_resourceProgressEventHandler.GlobalScoreChanged     += OnSetGlobalScore;
+			_resourceProgressEventHandler.MaxCashScoreChanged    += OnSetMaxCashScore;
+			_resourceProgressEventHandler.MaxGlobalScoreChanged  += OnSetMaxGlobalScore;
+			_resourceProgressEventHandler.SoftCurrencyChanged    += OnSetSoftCurrency;
+			_resourceProgressEventHandler.HalfGlobalScoreReached += SetActiveGoToNextLevelButton;
+		}
+
+		private void Unsubscribe()
+		{
+			_goToNextLevelButton.onClick.RemoveListener(OnGoToNextLevelButtonClicked);
+
+			_resourceProgressEventHandler.CashScoreChanged       -= OnSetCashScore;
+			_resourceProgressEventHandler.GlobalScoreChanged     -= OnSetGlobalScore;
+			_resourceProgressEventHandler.MaxCashScoreChanged    -= OnSetMaxCashScore;
+			_resourceProgressEventHandler.MaxGlobalScoreChanged  -= OnSetMaxGlobalScore;
+			_resourceProgressEventHandler.SoftCurrencyChanged    -= OnSetSoftCurrency;
+			_resourceProgressEventHandler.HalfGlobalScoreReached -= SetActiveGoToNextLevelButton;
+		}
 	}
 }

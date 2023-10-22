@@ -34,9 +34,9 @@ namespace Sources.Application
 
 		private void Start()
 		{
-			_gameStateMachine      = GameServices.Container.Get<IGameStateMachine>();
-			_levelConfigGetter     = GameServices.Container.Get<ILevelConfigGetter>();
-			_localization          = GameServices.Container.Get<ILocalizationService>();
+			_gameStateMachine      = ServiceLocator.Container.Get<IGameStateMachine>();
+			_levelConfigGetter     = ServiceLocator.Container.Get<ILevelConfigGetter>();
+			_localization          = ServiceLocator.Container.Get<ILocalizationService>();
 			_uiElementGetter       = GetComponent<UIElementGetterFacade>();
 			_visualElementSwitcher = new VisualElementSwitcher();
 

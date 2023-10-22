@@ -11,17 +11,17 @@ namespace Sources.Services.Localization
 {
 	public class LocalizationService : ILocalizationService
 	{
-		private const string StartLanguage = "Russian";
+		private const    string   StartLanguage = "Russian";
 		private readonly string[] _phraseNames;
 		private readonly string[] _languages;
 
-		public LocalizationService()
+		public LocalizationService(IAssetProvider provider)
 		{
-			IAssetProvider assetProvider = GameServices.Container.Get<IAssetProvider>();
+			IAssetProvider assetProvider = provider;
 
 			LeanLocalization leanLocalization = LoadAssets(assetProvider, out var localizationData);
 
-			_languages = new string[localizationData.Languages.Count];
+			_languages   = new string[localizationData.Languages.Count];
 			_phraseNames = new string[localizationData.Phrases.Count];
 
 			AddLanguages(localizationData, leanLocalization);
@@ -56,10 +56,13 @@ namespace Sources.Services.Localization
 		private LeanLocalization LoadAssets(IAssetProvider assetProvider, out LocalizationRoot localizationData)
 		{
 			LeanLocalization leanLocalization =
-				assetProvider.InstantiateAndGetComponent<LeanLocalization>(ResourcesAssetPath.GameObjects
-					.LeanLocalization);
+				assetProvider.InstantiateAndGetComponent<LeanLocalization>
+				(
+					ResourcesAssetPath.GameObjects
+						.LeanLocalization
+				);
 
-			string config = assetProvider.Load<TextAsset>(ResourcesAssetPath.Configs.Localization).text;
+			string config = assetProvider.LoadFromResources<TextAsset>(ResourcesAssetPath.Configs.Localization).text;
 
 			localizationData = JsonUtility.FromJson<LocalizationRoot>(config);
 			return leanLocalization;
@@ -85,7 +88,8 @@ namespace Sources.Services.Localization
 				{
 					Phrase phraseData = localizationData.Phrases[x];
 
-					phrase.AddEntry(
+					phrase.AddEntry
+					(
 						phraseData.Translations[i].Language,
 						phraseData.Translations[i].Text
 					);

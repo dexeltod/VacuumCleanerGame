@@ -1,3 +1,4 @@
+using System;
 using Joystick_Pack.Scripts.Base;
 using Sources.ServicesInterfaces;
 using TMPro;
@@ -10,21 +11,18 @@ namespace Sources.PresentationInterfaces
 	{
 		public GameObject      GameObject  { get; }
 		public Canvas          Canvas      { get; }
-		public Slider          ScoreSlider { get; }
+		public Image           ScoreSlider { get; }
 		public TextMeshProUGUI ScoreText   { get; }
 		public TextMeshProUGUI MoneyText   { get; }
 		public Joystick        Joystick    { get; }
-		void                   SetGlobalScore(int newScore);
+
+		event Action Destroying;
 
 		void Construct
 		(
-			int maxScore,
-			int moneyCount
+			int                           maxScore,
+			int                           moneyCount,
+			IResourceProgressEventHandler resourcesProgressPresenter
 		);
-
-		void SetMoney(int                      newMoney);
-		void SetScore(int                      newScore);
-		void SetCurrentLevel(int               newLevel);
-		void SetActiveGoToNextLevelButton(bool isActive);
 	}
 }

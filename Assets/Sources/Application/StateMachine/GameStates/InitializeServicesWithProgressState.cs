@@ -9,6 +9,7 @@ using Sources.Infrastructure.Shop;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Factory;
+using Sources.InfrastructureInterfaces.Scene;
 using Sources.PresentationInterfaces;
 using Sources.Services;
 using Sources.Services.Interfaces;
@@ -21,18 +22,18 @@ namespace Sources.Application.StateMachine.GameStates
 	public class InitializeServicesWithProgressState : IGameState
 	{
 		private readonly IGameStateMachine _gameStateMachine;
-		private readonly GameServices      _gameServices;
+		private readonly ServiceLocator    _serviceLocator;
 		private readonly LoadingCurtain    _loadingCurtain;
 
 		public InitializeServicesWithProgressState
 		(
 			IGameStateMachine gameStateMachine,
-			GameServices      gameServices,
+			ServiceLocator    serviceLocator,
 			LoadingCurtain    loadingCurtain
 		)
 		{
 			_gameStateMachine = gameStateMachine;
-			_gameServices     = gameServices;
+			_serviceLocator   = serviceLocator;
 			_loadingCurtain   = loadingCurtain;
 		}
 
@@ -46,86 +47,47 @@ namespace Sources.Application.StateMachine.GameStates
 
 		private void RegisterServiceAndResources()
 		{
-			IAssetProvider             assetProvider   = _gameServices.Get<IAssetProvider>();
-			IShopItemFactory           shopItemFactory = _gameServices.Get<IShopItemFactory>();
-			IPersistentProgressService progressService = _gameServices.Get<IPersistentProgressService>();
+			//================================================================
+			IAssetProvider             assetProvider      = _serviceLocator.Get<IAssetProvider>();
+			IUpgradeDataFactory        upgradeDataFactory = _serviceLocator.Get<IUpgradeDataFactory>();
+			IPersistentProgressService progressService    = _serviceLocator.Get<IPersistentProgressService>();
+			//================================================================
 
-			IGameplayInterfaceView gameplayInterfaceView = CreateUIServices().GameplayInterface;
+			PlayerStatsFactory statsFactory = new PlayerStatsFactory(upgradeDataFactory, _loadingCurtain);
 
-			PlayerStatsFactory statsFactory = new PlayerStatsFactory(shopItemFactory, _loadingCurtain);
+			_serviceLocator.Register<IPlayerStatsService>(statsFactory.CreatePlayerStats(progressService));
 
-			_gameServices.Register<IPlayerStatsService>(statsFactory.CreatePlayerStats(progressService));
-
-			_gameServices.Register<IPlayerProgressProvider>
+			_serviceLocator.Register<IPlayerProgressProvider>
 			(
 				new PlayerProgressProvider
 				(
-					GameServices.Container.Get<IPlayerStatsService>()
+					ServiceLocator.Container.Get<IPlayerStatsService>()
 				)
 			);
 
-			IResourcesProgressPresenter resourcesProgressPresenter =
-				_gameServices.Register<IResourcesProgressPresenter>
-				(
-					new ResourcesProgressPresenter(progressService.GameProgress.ResourcesModel, gameplayInterfaceView)
-				);
+			_serviceLocator.Register<ILevelConfigGetter>(new LevelConfigGetter(assetProvider));
 
-			ILevelProgressPresenter levelProgressPresenter =
-				_gameServices.Register<ILevelProgressPresenter>
-				(
-					new LevelProgressPresenter
-						(progressService.GameProgress.LevelProgress, gameplayInterfaceView)
-				);
+			_serviceLocator.Register<IShopProgressProvider>
+				(new ShopProgressProvider());
 
-			// LevelChanger levelChanger = new LevelChanger
-			// 	(gameplayInterfaceView, levelProgressPresenter, _gameStateMachine);
-
-			_gameServices.Register<IShopProgressProvider>(new ShopProgressProvider());
-
-			CreateUpgradeWindow
-			(
-				assetProvider,
-				shopItemFactory,
-				resourcesProgressPresenter,
-				progressService
-			);
-
-			_gameServices.Register<IPlayerFactory>
+			_serviceLocator.Register<IPlayerFactory>
 			(
 				new PlayerFactory
 				(
-					_gameServices.Get<IAssetProvider>()
+					_serviceLocator.Get<IAssetProvider>()
 				)
 			);
 
+			ILevelProgressFacade levelProgressFacade =
+				_serviceLocator.Register<ILevelProgressFacade>
+				(
+					new LevelProgressFacade
+					(
+						progressService.GameProgress.LevelProgress
+					)
+				);
+
 			_loadingCurtain.SetText("");
-		}
-
-		private void CreateUpgradeWindow
-		(
-			IAssetProvider              assetProvider,
-			IShopItemFactory            shopItemFactory,
-			IResourcesProgressPresenter resourcesProgressPresenter,
-			IPersistentProgressService  progressService
-		)
-		{
-			UpgradeWindowFactory upgradeWindowFactory = new
-			(
-				assetProvider,
-				shopItemFactory,
-				resourcesProgressPresenter,
-				progressService.GameProgress
-			);
-
-			_gameServices.Register<IUpgradeWindowFactory>(upgradeWindowFactory);
-			_gameServices.Register<IUpgradeWindowGetter>(upgradeWindowFactory);
-		}
-
-		private IUIGetter CreateUIServices()
-		{
-			UIFactory uiFactory = new UIFactory();
-			_gameServices.Register<IUIFactory>(uiFactory);
-			return _gameServices.Register<IUIGetter>(uiFactory);
 		}
 	}
 }
