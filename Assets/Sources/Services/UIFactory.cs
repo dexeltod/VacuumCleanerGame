@@ -16,6 +16,8 @@ namespace Sources.Services
 		private readonly IResourceProgressEventHandler _resourceProgressEventHandler;
 		private readonly IPersistentProgressService    _gameProgress;
 
+		private bool _isActiveOnStart = true;
+
 		public IGameplayInterfaceView GameplayInterface { get; private set; }
 
 		public UIFactory
@@ -50,9 +52,11 @@ namespace Sources.Services
 		private void Construct(IResourcesModel model) =>
 			GameplayInterface.Construct
 			(
+				model.CurrentCashScore,
 				model.MaxCashScore,
 				model.SoftCurrency.Count,
-				_resourceProgressEventHandler
+				_resourceProgressEventHandler,
+				_isActiveOnStart
 			);
 
 		private IResourcesModel GetModel() =>

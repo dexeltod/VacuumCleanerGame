@@ -16,34 +16,34 @@ namespace Sources.Application.UI
 	public class UpgradeWindowFactory : IUpgradeWindowFactory
 	{
 		private readonly IResourcesProgressPresenter _resourceProgressPresenter;
-		private readonly IUpgradeDataFactory            _upgradeDataFactory;
-		private readonly IAssetProvider              _assetProvider;
-		private readonly IGameProgressModel          _progress;
-		private readonly IShopProgressProvider       _shopProgressProvider;
-		private readonly IPlayerProgressProvider     _playerProgressProvider;
+		private readonly IUpgradeDataFactory _upgradeDataFactory;
+		private readonly IAssetProvider _assetProvider;
+		private readonly IGameProgressModel _progress;
+		private readonly IShopProgressProvider _shopProgressProvider;
+		private readonly IPlayerProgressProvider _playerProgressProvider;
 
-		private ShopElementFactory         _shopElementFactory;
+		private ShopElementFactory _shopElementFactory;
 		private List<UpgradeElementPrefabView> _upgradeElementsPrefabs;
 
-		private GameObject     _upgradeWindow;
-		public  IUpgradeWindow UpgradeWindow { get; private set; }
+		private GameObject _upgradeWindow;
+		public IUpgradeWindow UpgradeWindow { get; private set; }
 
 		public UpgradeWindowFactory
 		(
-			IAssetProvider              assetProvider,
-			IUpgradeDataFactory            upgradeDataFactory,
+			IAssetProvider assetProvider,
+			IUpgradeDataFactory upgradeDataFactory,
 			IResourcesProgressPresenter resourceProgressPresenter,
-			IGameProgressModel          progress,
-			IShopProgressProvider       shopProgressProvider,
-			IPlayerProgressProvider     playerProgressProvider
+			IGameProgressModel progress,
+			IShopProgressProvider shopProgressProvider,
+			IPlayerProgressProvider playerProgressProvider
 		)
 		{
-			_assetProvider             = assetProvider;
-			_upgradeDataFactory           = upgradeDataFactory;
+			_assetProvider = assetProvider;
+			_upgradeDataFactory = upgradeDataFactory;
 			_resourceProgressPresenter = resourceProgressPresenter;
-			_progress                  = progress;
-			_shopProgressProvider      = shopProgressProvider;
-			_playerProgressProvider    = playerProgressProvider;
+			_progress = progress;
+			_shopProgressProvider = shopProgressProvider;
+			_playerProgressProvider = playerProgressProvider;
 		}
 
 		public GameObject Create()
@@ -77,7 +77,7 @@ namespace Sources.Application.UI
 		private void InstantiateWindow()
 		{
 			_shopElementFactory ??= new ShopElementFactory(_progress.ShopProgress);
-			_upgradeWindow      =   _assetProvider.Instantiate(ResourcesAssetPath.Scene.UIResources.UpgradeWindow);
+			_upgradeWindow = _assetProvider.Instantiate(ResourcesAssetPath.Scene.UIResources.UpgradeWindow);
 		}
 
 		private void InitButtons() =>
@@ -86,7 +86,7 @@ namespace Sources.Application.UI
 
 		private void ConstructWindow()
 		{
-			IResource<int> resource = _resourceProgressPresenter.SoftCurrency;
+			IResourceReadOnly<int> resource = _resourceProgressPresenter.SoftCurrency;
 
 			UpgradeWindow = _upgradeWindow.GetComponent<UpgradeWindow>();
 			UpgradeWindow.Construct(resource);

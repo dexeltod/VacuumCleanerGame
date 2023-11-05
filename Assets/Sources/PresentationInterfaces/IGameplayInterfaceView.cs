@@ -20,9 +20,11 @@ namespace Sources.PresentationInterfaces
 
 		void Construct
 		(
+			int                           startCashScore,
 			int                           maxScore,
 			int                           moneyCount,
-			IResourceProgressEventHandler resourcesProgressPresenter
+			IResourceProgressEventHandler resourcesProgressPresenter,
+			bool                          isActiveOnStart
 		);
 	}
 }

@@ -19,22 +19,22 @@ using Sources.View.SceneEntity;
 
 namespace Sources.Application.StateMachine.GameStates
 {
-	public class InitializeServicesWithProgressState : IGameState
+	public sealed class InitializeServicesWithProgressState : IGameState
 	{
 		private readonly IGameStateMachine _gameStateMachine;
-		private readonly ServiceLocator    _serviceLocator;
-		private readonly LoadingCurtain    _loadingCurtain;
+		private readonly ServiceLocator _serviceLocator;
+		private readonly LoadingCurtain _loadingCurtain;
 
 		public InitializeServicesWithProgressState
 		(
 			IGameStateMachine gameStateMachine,
-			ServiceLocator    serviceLocator,
-			LoadingCurtain    loadingCurtain
+			ServiceLocator serviceLocator,
+			LoadingCurtain loadingCurtain
 		)
 		{
 			_gameStateMachine = gameStateMachine;
-			_serviceLocator   = serviceLocator;
-			_loadingCurtain   = loadingCurtain;
+			_serviceLocator = serviceLocator;
+			_loadingCurtain = loadingCurtain;
 		}
 
 		public void Enter()
@@ -47,11 +47,16 @@ namespace Sources.Application.StateMachine.GameStates
 
 		private void RegisterServiceAndResources()
 		{
-			//================================================================
-			IAssetProvider             assetProvider      = _serviceLocator.Get<IAssetProvider>();
-			IUpgradeDataFactory        upgradeDataFactory = _serviceLocator.Get<IUpgradeDataFactory>();
-			IPersistentProgressService progressService    = _serviceLocator.Get<IPersistentProgressService>();
-			//================================================================
+			#region GettingServices
+
+			IAssetProvider assetProvider = _serviceLocator.Get<IAssetProvider>();
+			IUpgradeDataFactory upgradeDataFactory = _serviceLocator.Get<IUpgradeDataFactory>();
+			IPersistentProgressService progressService = _serviceLocator.Get<IPersistentProgressService>();
+			IProgressLoadDataService progressLoadDataService = _serviceLocator.Get<IProgressLoadDataService>();
+
+			#endregion
+
+			#region RegisterServices
 
 			PlayerStatsFactory statsFactory = new PlayerStatsFactory(upgradeDataFactory, _loadingCurtain);
 
@@ -68,7 +73,13 @@ namespace Sources.Application.StateMachine.GameStates
 			_serviceLocator.Register<ILevelConfigGetter>(new LevelConfigGetter(assetProvider));
 
 			_serviceLocator.Register<IShopProgressProvider>
-				(new ShopProgressProvider());
+			(
+				new ShopProgressProvider
+				(
+					progressService.GameProgress.ShopProgress,
+					progressLoadDataService
+				)
+			);
 
 			_serviceLocator.Register<IPlayerFactory>
 			(
@@ -86,6 +97,8 @@ namespace Sources.Application.StateMachine.GameStates
 						progressService.GameProgress.LevelProgress
 					)
 				);
+
+			#endregion
 
 			_loadingCurtain.SetText("");
 		}

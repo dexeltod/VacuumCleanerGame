@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
 using Sources.DIService;
 using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Upgrade;
@@ -19,9 +20,9 @@ namespace Sources.Application
 		private readonly List<UpgradeElementPrefabView> _upgradeElements;
 
 		private readonly IResourcesProgressPresenter _resourcesProgress;
-		private readonly IPlayerProgressProvider     _playerProgress;
-		private readonly IShopProgressProvider       _shopProgressProvider;
-		private readonly IUpgradeWindow              _upgradeWindow;
+		private readonly IPlayerProgressProvider _playerProgress;
+		private readonly IShopProgressProvider _shopProgressProvider;
+		private readonly IUpgradeWindow _upgradeWindow;
 
 		private readonly Dictionary<string, UpgradeElementPrefabView> _prefabsByNames =
 			new Dictionary<string, UpgradeElementPrefabView>();
@@ -30,25 +31,25 @@ namespace Sources.Application
 
 		public ShopPurchaseController
 		(
-			IUpgradeWindow                 upgradeWindow,
+			IUpgradeWindow upgradeWindow,
 			List<UpgradeElementPrefabView> upgradeElements,
-			IResourcesProgressPresenter    resourcesProgress,
-			IShopProgressProvider          shopProgressProvider,
-			IPlayerProgressProvider        playerProgressProvider
+			IResourcesProgressPresenter resourcesProgress,
+			IShopProgressProvider shopProgressProvider,
+			IPlayerProgressProvider playerProgressProvider
 		)
 		{
-			_resourcesProgress    = resourcesProgress;
+			_resourcesProgress = resourcesProgress;
 			_shopProgressProvider = shopProgressProvider;
-			_playerProgress       = playerProgressProvider;
+			_playerProgress = playerProgressProvider;
 
-			_upgradeWindow   = upgradeWindow;
+			_upgradeWindow = upgradeWindow;
 			_upgradeElements = upgradeElements;
 
 			foreach (UpgradeElementPrefabView element in _upgradeElements)
 				_prefabsByNames.Add(element.IdName, element);
 
 			_upgradeWindow.ActiveChanged += OnActiveChanged;
-			_upgradeWindow.Destroyed     += OnDestroyed;
+			_upgradeWindow.Destroyed += OnDestroyed;
 		}
 
 		public void Dispose() =>
@@ -64,18 +65,22 @@ namespace Sources.Application
 
 		private void OnDestroyed()
 		{
-			_upgradeWindow.Destroyed     -= OnDestroyed;
+			_upgradeWindow.Destroyed -= OnDestroyed;
 			_upgradeWindow.ActiveChanged -= OnActiveChanged;
 		}
 
-		private void SubscribeOnButtons(List<UpgradeElementPrefabView> elements)
+		private void SubscribeOnButtons([NotNull] List<UpgradeElementPrefabView> elements)
 		{
+			if (elements == null) throw new ArgumentNullException(nameof(elements));
+
 			foreach (UpgradeElementPrefabView element in elements)
 				element.BuyButtonPressed += OnButtonPressed;
 		}
 
-		private void UnsubscribeFromButtons(List<UpgradeElementPrefabView> elements)
+		private void UnsubscribeFromButtons([NotNull] List<UpgradeElementPrefabView> elements)
 		{
+			if (elements == null) throw new ArgumentNullException(nameof(elements));
+			
 			foreach (UpgradeElementPrefabView element in elements)
 				element.BuyButtonPressed -= OnButtonPressed;
 		}

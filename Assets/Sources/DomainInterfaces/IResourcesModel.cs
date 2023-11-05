@@ -4,18 +4,22 @@ namespace Sources.DomainInterfaces
 {
 	public interface IResourcesModel
 	{
-		IResource<int> SoftCurrency { get; }
-		IResource<int> HardCurrency { get; }
-		IResource<int> Score        { get; }
+		IResourceReadOnly<int> SoftCurrency { get; }
+		IResourceReadOnly<int> GlobalScore { get; }
+		IResourceReadOnly<int> Score { get; }
+		IResourceReadOnly<int> HardCurrency { get; }
 
-		int  MaxCashScore    { get; }
-		int  MaxModifier { get; }
-		void AddSand(int newValue);
+		int MaxCashScore { get; }
+		int MaxModifier { get; }
+		int CurrentCashScore { get; }
+		int GlobalSandCount { get; }
+		int PercentOfScore { get; }
 
-		int  CurrentCashScore { get; }
-		int  GlobalSandCount  { get; }
-		void DecreaseSand(int  newValue);
-		void AddMoney(int      newValue);
+		void SetCashScore(int newValue);
+		void AddCashScore(int newValue);
+		void DecreaseCashScore(int newValue);
+		void AddMoney(int newValue);
 		void DecreaseMoney(int newValue);
+		void ClearScores();
 	}
 }

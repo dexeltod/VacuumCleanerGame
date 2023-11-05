@@ -10,7 +10,7 @@ namespace Sources.Application
 		{
 			Bootstrapper bootstrapper = FindObjectOfType<Bootstrapper>();
 
-			if (bootstrapper == null) 
+			if (bootstrapper == null)
 				Instantiate(_bootstrapperPrefab);
 		}
 	}

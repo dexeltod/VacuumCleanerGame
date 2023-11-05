@@ -15,15 +15,11 @@ namespace Sources.Infrastructure.Shop
 		private readonly IGameProgress            _shopProgress;
 		private readonly IProgressLoadDataService _progressLoadService;
 
-		public ShopProgressProvider()
+		public ShopProgressProvider(IGameProgress shopProgress, IProgressLoadDataService progressLoadDataService)
 		{
-			_shopProgress = ServiceLocator
-				.Container
-				.Get<IPersistentProgressService>()
-				.GameProgress
-				.ShopProgress;
+			_shopProgress = shopProgress;
 
-			_progressLoadService = ServiceLocator.Container.Get<IProgressLoadDataService>();
+			_progressLoadService = progressLoadDataService; 
 		}
 
 		public async UniTask AddProgressPoint(string progressName, Action succeededCallback)

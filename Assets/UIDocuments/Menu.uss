@@ -1,0 +1,16 @@
+.playButton {
+    width: 80px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url('project://database/Assets/GUI/2DCasualUI/Sprite/GUI.png?fileID=-70052783&guid=1eaee135ce037439d925cee5e41ce026&type=3#GUI_10');
+    font-size: 10px;
+    -unity-font-definition: url('project://database/Assets/Fonts/MakiSans-fontasset.asset?fileID=11400000&guid=7f1a707293ec39147a6bb5b3f321c7e3&type=2#MakiSans-fontasset');
+    color: rgba(0, 0, 0, 255);
+}
+
+.functionButtons {
+    width: 20px;
+    height: 25px;
+    background-color: rgba(0, 0, 0, 0);
+    -unity-font-definition: url('project://database/Assets/Fonts/MakiSans-fontasset.asset?fileID=11400000&guid=7f1a707293ec39147a6bb5b3f321c7e3&type=2#MakiSans-fontasset');
+}

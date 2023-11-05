@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UIDocuments/Menu.uss?fileID=7433441132597879392&amp;guid=93bc728ff47f05943862917164c376ac&amp;type=3#Menu" />
+    <ui:VisualElement name="Background" style="width: 100%; height: 100%; color: rgba(60, 33, 33, 255); opacity: 1; background-color: rgb(31, 123, 41);">
+        <ui:VisualElement name="MainMenu" style="align-items: center; justify-content: space-around; width: 100%; height: 100%;">
+            <ui:VisualElement name="Logo" style="background-image: url(&apos;project://database/Assets/Prefabs/Test/KonstantinVoronon.png?fileID=2800000&amp;guid=ed9ff50f5333cc64b9c6cf6ddf9360e2&amp;type=3#KonstantinVoronon&apos;); width: 87px; height: 63px;" />
+            <ui:Button text="PlayButton" display-tooltip-when-elided="true" name="PlayButton" class="playButton" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0;" />
+            <ui:VisualElement name="FunctionButtons" style="width: 70%; height: 100px; align-items: center; justify-content: center; flex-wrap: wrap-reverse; flex-direction: row;">
+                <ui:Button display-tooltip-when-elided="true" name="LeadersButton" class="functionButtons" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; background-image: url(&apos;project://database/Assets/GUI/2DCasualUI/Sprite/GUI.png?fileID=-405075096&amp;guid=1eaee135ce037439d925cee5e41ce026&amp;type=3#GUI_68&apos;);" />
+                <ui:Button display-tooltip-when-elided="true" name="SettingsButton" class="functionButtons" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; background-image: url(&apos;project://database/Assets/GUI/2DCasualUI/Sprite/GUI.png?fileID=-583279580&amp;guid=1eaee135ce037439d925cee5e41ce026&amp;type=3#GUI_51&apos;);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

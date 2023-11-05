@@ -13,14 +13,14 @@ namespace Sources.Infrastructure.Factories.Player
 {
 	public class PlayerFactory : IPlayerFactory
 	{
-		private readonly AnimationHasher            _hasher;
-		private readonly IAssetProvider             _assetProvider;
+		private readonly AnimationHasher _hasher;
+		private readonly IAssetProvider _assetProvider;
 		private readonly IPersistentProgressService _progressService;
 
-		private Joystick            _joystick;
-		private Animator            _animator;
-		private AnimationHasher     _animationHasher;
-		private AnimatorFacade      _animatorFacade;
+		private Joystick _joystick;
+		private Animator _animator;
+		private AnimationHasher _animationHasher;
+		private AnimatorFacade _animatorFacade;
 		private PlayerStatesFactory _playerStatesFactory;
 		private IPlayerStatsService _playerStats;
 
@@ -29,30 +29,32 @@ namespace Sources.Infrastructure.Factories.Player
 		public PlayerFactory(IAssetProvider assetProvider)
 		{
 			_progressService = ServiceLocator.Container.Get<IPersistentProgressService>();
-			_assetProvider   = assetProvider;
+			_assetProvider = assetProvider;
 		}
 
-		public void Instantiate
+		public GameObject Create
 		(
-			GameObject          initialPoint,
-			Joystick            joystick,
+			GameObject initialPoint,
+			Joystick joystick,
 			IPlayerStatsService stats,
-			Action              onErrorCallback = null
+			Action onErrorCallback = null
 		)
 		{
 			try
 			{
 				_playerStats = stats;
-				_joystick    = joystick;
-				Create(initialPoint);
+				_joystick = joystick;
+				return Create(initialPoint);
 			}
 			catch (Exception e)
 			{
 				onErrorCallback?.Invoke();
 			}
+
+			throw new NullReferenceException("GameObject is null");
 		}
 
-		private void Create(GameObject initialPoint)
+		private GameObject Create(GameObject initialPoint)
 		{
 			Player playerPresenter = _assetProvider.InstantiateAndGetComponent<Player>
 			(
@@ -66,6 +68,8 @@ namespace Sources.Infrastructure.Factories.Player
 
 			PlayerTransformable playerTransformable = new(Player.transform, _joystick, _playerStats);
 			playerPresenter.Init(playerTransformable, rigidbody);
+
+			return character;
 		}
 	}
 }

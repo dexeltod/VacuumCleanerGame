@@ -10,7 +10,7 @@ namespace Sources.Domain.Progress.Player
 		public PlayerProgress
 		(
 			List<ProgressUpgradeData> progress,
-			int                       maxUpgradePointsCount = 0
+			int maxUpgradePointsCount = 0
 		)
 			: base(progress, maxUpgradePointsCount) { }
 	}

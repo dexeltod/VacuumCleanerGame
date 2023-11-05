@@ -29,6 +29,7 @@ namespace Sources.Application.StateMachine
 
 		private TState ChangeState<TState>() where TState : class, IExitState
 		{
+			
 			_activeState?.Exit();
 
 			TState state = GetState<TState>();

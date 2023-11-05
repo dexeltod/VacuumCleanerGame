@@ -16,28 +16,29 @@ namespace Sources.Infrastructure.Factories
 	[Serializable] public class ProgressFactory : IDisposable
 	{
 		private const int StartMoneyCount = 99999;
+		private const int MaxUpgradePointsCount = 6;
 
-		private readonly IProgressLoadDataService                _progressLoadDataService;
+		private readonly IProgressLoadDataService _progressLoadDataService;
 		private readonly IPersistentProgressServiceConstructable _persistentProgressService;
-		private readonly IUpgradeDataFactory                        _shopFactory;
-		private readonly IProgressClearable                      _progressClearable;
-		private readonly IResourceService                        _resourceService;
+		private readonly IUpgradeDataFactory _shopFactory;
+		private readonly IProgressClearable _progressClearable;
+		private readonly IResourceService _resourceService;
 
 		public ProgressFactory
 		(
-			IProgressLoadDataService                progressLoadDataService,
+			IProgressLoadDataService progressLoadDataService,
 			IPersistentProgressServiceConstructable persistentProgressService,
-			IUpgradeDataFactory                        upgradeDataFactory,
-			IProgressClearable                      progressClearable, 
+			IUpgradeDataFactory upgradeDataFactory,
+			IProgressClearable progressClearable,
 			IResourceService resourceService
 		)
 		{
-			_progressLoadDataService           =  progressLoadDataService;
-			_persistentProgressService         =  persistentProgressService;
-			_shopFactory                       =  upgradeDataFactory;
-			_progressClearable                 =  progressClearable;
-			_resourceService                   =  resourceService;
-			
+			_progressLoadDataService = progressLoadDataService;
+			_persistentProgressService = persistentProgressService;
+			_shopFactory = upgradeDataFactory;
+			_progressClearable = progressClearable;
+			_resourceService = resourceService;
+
 			_progressClearable.ProgressCleared += CreateNewProgress;
 		}
 
@@ -79,8 +80,8 @@ namespace Sources.Infrastructure.Factories
 
 		private GameProgressModel CreateNewProgress()
 		{
-			IUpgradeItemData[] itemsList   = _shopFactory.LoadItems();
-			GameProgressModel  newProgress = CreateProgress(itemsList);
+			IUpgradeItemData[] itemsList = _shopFactory.LoadItems();
+			GameProgressModel newProgress = CreateProgress(itemsList);
 
 			_persistentProgressService.Construct(newProgress);
 
@@ -90,25 +91,26 @@ namespace Sources.Infrastructure.Factories
 		private GameProgressModel CreateProgress(IUpgradeItemData[] itemsList)
 		{
 			string progressName = "CurrentLevel";
-			
-			Resource<int> soft  = GetResource(ResourceType.Soft);
-			Resource<int> hard  = GetResource(ResourceType.Hard);
-			Resource<int> score = GetResource(ResourceType.Score);
 
-			Debug.Log("Resources loaded");
+			Resource<int> soft = GetResource(ResourceType.Soft);
+			Resource<int> hard = GetResource(ResourceType.Hard);
+			Resource<int> cashScore = GetResource(ResourceType.CashScore);
+			Resource<int> globalScore = GetResource(ResourceType.GlobalScore);
 
 			ResourcesModel resourcesModel = new ResourcesModel
 			(
 				soft,
 				hard,
-				score,
+				cashScore,
+				globalScore,
 				StartMoneyCount,
 				0
 			);
 
 			PlayerProgress playerProgressModel = new PlayerProgress(CreateNewUpgradeProgressData(itemsList));
 
-			UpgradeProgressModel upgradeProgressModelModel = new(CreateNewUpgradeProgressData(itemsList), 6);
+			UpgradeProgressModel upgradeProgressModelModel
+				= new(CreateNewUpgradeProgressData(itemsList), MaxUpgradePointsCount);
 
 			LevelProgress levelProgressModel = new
 			(

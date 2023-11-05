@@ -21,10 +21,10 @@ namespace Sources.Application
 		[SerializeField] private Button _deleteSavesButton;
 		[SerializeField] private Button _addScoreButton;
 
-		private IGameStateMachine        _gameStateMachine;
-		private ILevelConfigGetter       _levelConfigGetter;
+		private IGameStateMachine _gameStateMachine;
+		private ILevelConfigGetter _levelConfigGetter;
 		private IProgressLoadDataService _progressLoadDataService;
-		private ILeaderBoardService      _leaderBoardService;
+		private ILeaderBoardService _leaderBoardService;
 
 		private ILevelProgressFacade _levelProgress;
 
@@ -44,11 +44,11 @@ namespace Sources.Application
 
 		private void Start()
 		{
-			_levelProgress           = ServiceLocator.Container.Get<ILevelProgressFacade>();
+			_levelProgress = ServiceLocator.Container.Get<ILevelProgressFacade>();
 			_progressLoadDataService = ServiceLocator.Container.Get<IProgressLoadDataService>();
-			_leaderBoardService      = ServiceLocator.Container.Get<ILeaderBoardService>();
-			_gameStateMachine        = ServiceLocator.Container.Get<IGameStateMachine>();
-			_levelConfigGetter       = ServiceLocator.Container.Get<ILevelConfigGetter>();
+			_leaderBoardService = ServiceLocator.Container.Get<ILeaderBoardService>();
+			_gameStateMachine = ServiceLocator.Container.Get<IGameStateMachine>();
+			_levelConfigGetter = ServiceLocator.Container.Get<ILevelConfigGetter>();
 		}
 
 		public void Dispose() =>

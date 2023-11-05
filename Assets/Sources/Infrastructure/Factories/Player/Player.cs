@@ -1,6 +1,7 @@
 using System.Collections;
 using Sources.DIService;
 using Sources.InfrastructureInterfaces;
+using Sources.PresentationInterfaces;
 using Sources.Services.Triggers;
 using Sources.ServicesInterfaces;
 using UnityEngine;
@@ -9,6 +10,8 @@ namespace Sources.Infrastructure.Factories.Player
 {
 	public class Player : Presenter, IPlayer
 	{
+		[SerializeField] private GameObject _sand;
+		
 		private IResourcesProgressPresenter _progressPresenter;
 		private Coroutine _sellRoutine;
 

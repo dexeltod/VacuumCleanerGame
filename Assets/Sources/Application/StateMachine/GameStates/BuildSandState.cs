@@ -14,7 +14,7 @@ using Sources.View.SceneEntity;
 
 namespace Sources.Application.StateMachine.GameStates
 {
-	public class BuildSandState : IPayloadState<LevelConfig>
+	public sealed class BuildSandState : IPayloadState<LevelConfig>
 	{
 		private readonly GameStateMachine _gameStateMachine;
 		private readonly LoadingCurtain   _loadingCurtain;

@@ -1,14 +1,8 @@
 using System;
 using System.Collections.Generic;
-using PlasticGui;
 using Sources.Application.StateMachine;
 using Sources.Application.StateMachine.GameStates;
-using Sources.Application.UI;
 using Sources.DIService;
-using Sources.DomainInterfaces;
-using Sources.InfrastructureInterfaces.DTO;
-using Sources.InfrastructureInterfaces.Factory;
-using Sources.ServicesInterfaces;
 using Sources.View.SceneEntity;
 using UnityEngine;
 
@@ -16,7 +10,7 @@ namespace Sources.Application
 {
 	public class Bootstrapper : MonoBehaviour, ICoroutineRunner
 	{
-		[SerializeField] private LoadingCurtain             _loadingCurtain;
+		[SerializeField] private LoadingCurtain _loadingCurtain;
 		[SerializeField] private YandexAuthorizationHandler _authorizationHandler;
 
 		private Game _game;

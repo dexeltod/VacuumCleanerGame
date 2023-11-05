@@ -17,17 +17,21 @@ using Sources.ServicesInterfaces.UI;
 
 namespace Sources.Application.StateMachine
 {
-	public class InitializeServicesWithViewState : IGameState
+	public sealed class InitializeServicesWithViewState : IGameState
 	{
 		private readonly GameStateMachine _gameStateMachine;
-		private readonly ServiceLocator   _serviceLocator;
+		private readonly ServiceLocator _serviceLocator;
 
 		private bool _isServicesInitialized;
 
-		public InitializeServicesWithViewState(GameStateMachine gameStateMachine, ServiceLocator serviceLocator)
+		public InitializeServicesWithViewState
+		(
+			GameStateMachine gameStateMachine,
+			ServiceLocator serviceLocator
+		)
 		{
 			_gameStateMachine = gameStateMachine;
-			_serviceLocator   = serviceLocator;
+			_serviceLocator = serviceLocator;
 
 			_isServicesInitialized = false;
 		}
@@ -49,18 +53,24 @@ namespace Sources.Application.StateMachine
 
 		private void InitializeServices()
 		{
-			//================================================================
+			#region GettingServices
+
 			IAssetProvider assetProvider = _serviceLocator.Get<IAssetProvider>();
 			IPlayerFactory playerFactory = _serviceLocator.Get<IPlayerFactory>();
 			IUpgradeDataFactory upgradeDataFactory = _serviceLocator.Get<IUpgradeDataFactory>();
-			IResourceProgressEventHandler resourceHandler = _serviceLocator.Get<IResourceProgressEventHandler>();
 			IPersistentProgressService progressService = _serviceLocator.Get<IPersistentProgressService>();
 			IShopProgressProvider shopProgressProvider = _serviceLocator.Get<IShopProgressProvider>();
 			IPlayerProgressProvider playerProgressProvider = _serviceLocator.Get<IPlayerProgressProvider>();
 			IResourcesProgressPresenter resourcesProgressPresenter = _serviceLocator.Get<IResourcesProgressPresenter>();
-			//================================================================
 
-			UIFactory uiFactory = new UIFactory(assetProvider, resourceHandler, progressService);
+			#endregion
+
+			UIFactory uiFactory = new UIFactory
+			(
+				assetProvider,
+				resourcesProgressPresenter as IResourceProgressEventHandler,
+				progressService
+			);
 
 			_serviceLocator.Register<IUIFactory>(uiFactory);
 			_serviceLocator.Register<IUIGetter>(uiFactory);
@@ -82,12 +92,12 @@ namespace Sources.Application.StateMachine
 
 		private void CreateUpgradeWindowService
 		(
-			IAssetProvider              assetProvider,
-			IUpgradeDataFactory         upgradeDataFactory,
+			IAssetProvider assetProvider,
+			IUpgradeDataFactory upgradeDataFactory,
 			IResourcesProgressPresenter resourcesProgressPresenter,
-			IPersistentProgressService  progressService,
-			IShopProgressProvider       shopProgressProvider,
-			IPlayerProgressProvider     playerProgressProvider
+			IPersistentProgressService progressService,
+			IShopProgressProvider shopProgressProvider,
+			IPlayerProgressProvider playerProgressProvider
 		)
 		{
 			UpgradeWindowFactory upgradeWindowFactory = new

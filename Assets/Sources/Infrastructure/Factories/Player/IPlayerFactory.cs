@@ -10,7 +10,7 @@ namespace Sources.Infrastructure.Factories.Player
 	{
 		GameObject Player { get; }
 
-		void Instantiate
+		GameObject Create
 		(
 			GameObject          initialPoint,
 			Joystick            joystick,

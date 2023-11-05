@@ -7,6 +7,7 @@ namespace Sources.Utils
 	{
 		Soft,
 		Hard,
-		Score,
+		CashScore,
+		GlobalScore
 	}
 }

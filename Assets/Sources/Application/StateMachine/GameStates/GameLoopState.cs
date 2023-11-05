@@ -7,16 +7,16 @@ using UnityEngine;
 
 namespace Sources.Application.StateMachine.GameStates
 {
-	public class GameLoopState : IGameState
+	public sealed class GameLoopState : IGameState
 	{
-		private readonly GameStateMachine       _gameStateMachine;
-		private readonly LoadingCurtain         _loadingCurtain;
-		private          IGameplayInterfaceView _gameplayInterface;
+		private readonly GameStateMachine _gameStateMachine;
+		private readonly LoadingCurtain _loadingCurtain;
+		private IGameplayInterfaceView _gameplayInterface;
 
 		public GameLoopState(GameStateMachine gameStateMachine, LoadingCurtain loadingCurtain)
 		{
 			_gameStateMachine = gameStateMachine;
-			_loadingCurtain   = loadingCurtain;
+			_loadingCurtain = loadingCurtain;
 		}
 
 		public void Enter()

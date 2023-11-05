@@ -28,11 +28,10 @@ using Sources.Services.DomainServices.YandexLeaderboard;
 using Agava.YandexGames;
 using Sources.Application.YandexSDK;
 #endif
-using Leaderboard = UnityEngine.SocialPlatforms.Impl.Leaderboard;
 
 namespace Sources.Application.StateMachine.GameStates
 {
-	public class InitializeServicesAndProgressState : IGameState
+	public sealed class InitializeServicesAndProgressState : IGameState
 	{
 		private readonly UnityServicesController _unityServicesController;
 #if YANDEX_GAMES && !UNITY_EDITOR
@@ -40,26 +39,26 @@ namespace Sources.Application.StateMachine.GameStates
 #endif
 
 		private readonly GameStateMachine _gameStateMachine;
-		private readonly ServiceLocator     _serviceLocator;
-		private readonly SceneLoader      _sceneLoader;
-		private readonly MusicSetter      _musicSetter;
+		private readonly ServiceLocator _serviceLocator;
+		private readonly SceneLoader _sceneLoader;
+		private readonly MusicSetter _musicSetter;
 
 		private bool _isServicesRegistered;
 
 		public InitializeServicesAndProgressState
 		(
 			IYandexAuthorizationHandler yandexAuthorizationHandler,
-			GameStateMachine            gameStateMachine,
-			ServiceLocator                serviceLocator,
-			SceneLoader                 sceneLoader
+			GameStateMachine gameStateMachine,
+			ServiceLocator serviceLocator,
+			SceneLoader sceneLoader
 		)
 		{
 #if YANDEX_GAMES && !UNITY_EDITOR
 			_yandexAuthorizationHandler = yandexAuthorizationHandler;
 #endif
 			_gameStateMachine = gameStateMachine;
-			_serviceLocator     = serviceLocator;
-			_sceneLoader      = sceneLoader;
+			_serviceLocator = serviceLocator;
+			_sceneLoader = sceneLoader;
 		}
 
 		public void Exit() { }
@@ -82,16 +81,17 @@ namespace Sources.Application.StateMachine.GameStates
 
 			CreateLeaderBoardService();
 
-			IUpgradeDataFactory shopFactory = _serviceLocator.Register<IUpgradeDataFactory>(new UpgradeDataFactory(assetProvider));
+			IUpgradeDataFactory shopFactory = _serviceLocator.Register<IUpgradeDataFactory>
+				(new UpgradeDataFactory(assetProvider));
 
 			IPersistentProgressService persistentProgressService = CreatPersistentProgressService();
 			ISaveLoader saveLoader = await GetSaveLoader
-									 (
+			(
 #if YANDEX_GAMES && !UNITY_EDITOR
 										 yandexSdk,
 #endif
-										 persistentProgressService
-									 );
+				persistentProgressService
+			);
 
 			IProgressLoadDataService progressLoadDataService = CreateProgressLoadDataService
 				(saveLoader, persistentProgressService);
@@ -104,7 +104,6 @@ namespace Sources.Application.StateMachine.GameStates
 				(persistentProgressService.GameProgress.ResourcesModel);
 
 			_serviceLocator.Register<IResourcesProgressPresenter>(resourcesProgressPresenter);
-			_serviceLocator.Register<IResourceProgressEventHandler>(resourcesProgressPresenter);
 
 			CreateSceneLoadServices();
 			_isServicesRegistered = true;
@@ -112,10 +111,10 @@ namespace Sources.Application.StateMachine.GameStates
 
 		private async UniTask CreateProgress
 		(
-			IProgressLoadDataService   progressLoadDataService,
+			IProgressLoadDataService progressLoadDataService,
 			IPersistentProgressService persistentProgressService,
-			IUpgradeDataFactory           upgradeDataFactory,
-			IResourceService           resourceService
+			IUpgradeDataFactory upgradeDataFactory,
+			IResourceService resourceService
 		)
 		{
 			ProgressFactory progressFactory = CreateProgressFactory
@@ -139,10 +138,10 @@ namespace Sources.Application.StateMachine.GameStates
 
 		private ProgressFactory CreateProgressFactory
 		(
-			IProgressLoadDataService   progressLoadDataService,
+			IProgressLoadDataService progressLoadDataService,
 			IPersistentProgressService persistentProgressService,
-			IUpgradeDataFactory           upgradeDataFactory,
-			IResourceService           resourceService
+			IUpgradeDataFactory upgradeDataFactory,
+			IResourceService resourceService
 		)
 		{
 			ProgressFactory progressFactory = new ProgressFactory
@@ -164,19 +163,22 @@ namespace Sources.Application.StateMachine.GameStates
 				(
 					new PersistentProgressService()
 				);
-			
+
 			return persistentProgressService;
 		}
 
 		private IProgressLoadDataService CreateProgressLoadDataService
-			(ISaveLoader saveLoader, IPersistentProgressService persistentProgressService)
+		(
+			ISaveLoader saveLoader,
+			IPersistentProgressService persistentProgressService
+		)
 		{
 			IProgressLoadDataService progressLoadDataService =
 				_serviceLocator.Register<IProgressLoadDataService>
 				(
 					new ProgressLoadDataService(saveLoader, persistentProgressService)
 				);
-			
+
 			return progressLoadDataService;
 		}
 
@@ -184,7 +186,7 @@ namespace Sources.Application.StateMachine.GameStates
 		{
 			ResourceServiceFactory resourceServiceFactory = new ResourceServiceFactory();
 
-			Dictionary<ResourceType, IResource<int>>   intResources   = resourceServiceFactory.GetIntResources();
+			Dictionary<ResourceType, IResource<int>> intResources = resourceServiceFactory.GetIntResources();
 			Dictionary<ResourceType, IResource<float>> floatResources = resourceServiceFactory.GetFloatResources();
 
 			return _serviceLocator.Register<IResourceService>
