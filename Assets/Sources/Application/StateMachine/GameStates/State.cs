@@ -1,7 +1,6 @@
 using System;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Factories.Player;
-using Sources.Services.Character;
 using Sources.ServicesInterfaces.StateMachine;
 using UnityEngine;
 
@@ -9,23 +8,22 @@ namespace Sources.Application.StateMachine.GameStates
 {
 	public abstract class State : IState
 	{
-		protected readonly Animator        Animator;
+		protected readonly Animator Animator;
 		protected readonly AnimationHasher AnimationHasher;
 
 		private readonly IStateTransition[] _transitions;
-		private          int                _currentAnimationHash;
-		public event Action<IState>         StateChanged;
+		private int _currentAnimationHash;
+		public event Action<IState> StateChanged;
 
-		protected State
-		(
-			Animator           animator,
-			AnimationHasher    hasher,
+		protected State(
+			Animator animator,
+			AnimationHasher hasher,
 			IStateTransition[] transitions
 		)
 		{
-			Animator        = animator;
-			AnimationHasher = hasher;
-			_transitions    = transitions;
+			Animator = animator ? animator : throw new ArgumentNullException(nameof(animator));
+			AnimationHasher = hasher ?? throw new ArgumentNullException(nameof(hasher));
+			_transitions = transitions ?? throw new ArgumentNullException(nameof(transitions));
 		}
 
 		public void Enter()
@@ -54,7 +52,8 @@ namespace Sources.Application.StateMachine.GameStates
 
 		protected virtual void OnExit() { }
 
-		private void OnStateChanging(IState state) => StateChanged?.Invoke(state);
+		private void OnStateChanging(IState state) =>
+			StateChanged?.Invoke(state);
 
 		public void Dispose()
 		{

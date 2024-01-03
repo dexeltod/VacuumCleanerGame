@@ -2,14 +2,17 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-namespace Sources.View.SceneEntity
+namespace Sources.Presentation.SceneEntity
 {
 	public class LoadingCurtain : MonoBehaviour
 	{
 		[SerializeField] private CanvasGroup _curtain;
 		[SerializeField] private TextMeshProUGUI _infoText;
 
-		public void SetText(string empty) => 
+		private void Awake() =>
+			DontDestroyOnLoad(gameObject);
+
+		public void SetText(string empty) =>
 			_infoText.text = empty;
 
 		public void Show()
@@ -24,19 +27,19 @@ namespace Sources.View.SceneEntity
 			_curtain.alpha = 0;
 		}
 
-		public void HideSlowly() => 
-			StartCoroutine(HideCurtain());
+		public void HideSlowly() =>
+			StartCoroutine(StartHiding());
 
-		private IEnumerator HideCurtain()
+		private IEnumerator StartHiding()
 		{
-			var waitForSeconds = new WaitForSeconds(0.01F);
+			WaitForSeconds waitForSeconds = new WaitForSeconds(0.01F);
 
 			while (_curtain.alpha > 0)
 			{
 				_curtain.alpha -= 0.03F;
 				yield return waitForSeconds;
 			}
-			
+
 			gameObject.SetActive(false);
 		}
 	}

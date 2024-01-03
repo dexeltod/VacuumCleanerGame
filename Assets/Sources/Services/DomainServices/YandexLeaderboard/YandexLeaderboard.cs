@@ -15,16 +15,15 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 		{
 			Dictionary<string, int> playersLeaders = new Dictionary<string, int>();
 
-			bool                          isResponseReceived  = false;
+			bool isResponseReceived = false;
 			LeaderboardGetEntriesResponse leaderboardResponse = null;
 
-			Leaderboard.GetEntries
-			(
+			Leaderboard.GetEntries(
 				BoardName,
 				onSuccessCallback: response =>
 				{
 					leaderboardResponse = response;
-					isResponseReceived  = true;
+					isResponseReceived = true;
 				},
 				errorResponse =>
 				{
@@ -66,7 +65,7 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 
 		public async UniTask<Tuple<string, int>> GetPlayer()
 		{
-			bool                     isResponseReceived  = false;
+			bool isResponseReceived = false;
 			LeaderboardEntryResponse leaderboardResponse = null;
 
 			async void ErrorCallback(string errorResponse)
@@ -76,13 +75,12 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 				await UniTask.WaitWhile(() => isResponseReceived == false);
 			}
 
-			Leaderboard.GetPlayerEntry
-			(
+			Leaderboard.GetPlayerEntry(
 				BoardName,
 				response =>
 				{
 					leaderboardResponse = response;
-					isResponseReceived  = true;
+					isResponseReceived = true;
 				},
 				ErrorCallback
 			);
@@ -94,16 +92,15 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 
 		private async UniTask<LeaderboardEntryResponse> GetPlayerEntry()
 		{
-			bool                     isResponseReceived  = false;
+			bool isResponseReceived = false;
 			LeaderboardEntryResponse leaderboardResponse = null;
 
-			Leaderboard.GetPlayerEntry
-			(
+			Leaderboard.GetPlayerEntry(
 				BoardName,
 				response =>
 				{
 					leaderboardResponse = response;
-					isResponseReceived  = true;
+					isResponseReceived = true;
 				},
 				async errorResponse =>
 				{

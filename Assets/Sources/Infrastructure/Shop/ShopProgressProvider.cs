@@ -11,15 +11,15 @@ namespace Sources.Infrastructure.Shop
 {
 	public class ShopProgressProvider : IShopProgressProvider
 	{
-		private const    int                      Point = 1;
-		private readonly IGameProgress            _shopProgress;
+		private const int Point = 1;
+		private readonly IGameProgress _shopProgress;
 		private readonly IProgressLoadDataService _progressLoadService;
 
 		public ShopProgressProvider(IGameProgress shopProgress, IProgressLoadDataService progressLoadDataService)
 		{
 			_shopProgress = shopProgress;
 
-			_progressLoadService = progressLoadDataService; 
+			_progressLoadService = progressLoadDataService;
 		}
 
 		public async UniTask AddProgressPoint(string progressName, Action succeededCallback)

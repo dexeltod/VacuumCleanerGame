@@ -4,7 +4,7 @@ using Sources.ServicesInterfaces;
 using TMPro;
 using UnityEngine;
 
-namespace UseCases.Scene
+namespace Sources.Services.Localization
 {
 	[RequireComponent(typeof(TextMeshProUGUI))]
 	public class TmpLocalizationBehaviour : MonoBehaviour

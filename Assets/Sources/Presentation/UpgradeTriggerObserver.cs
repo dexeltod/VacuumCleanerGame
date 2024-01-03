@@ -6,7 +6,7 @@ using Sources.InfrastructureInterfaces.Scene;
 using Sources.ServicesInterfaces.UI;
 using UnityEngine;
 
-namespace Sources.View
+namespace Sources.Presentation
 {
 	public class UpgradeTriggerObserver : MonoBehaviour, IDisposable
 	{

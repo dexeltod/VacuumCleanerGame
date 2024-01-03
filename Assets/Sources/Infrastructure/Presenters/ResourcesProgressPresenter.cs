@@ -5,7 +5,7 @@ using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using UnityEngine;
 
-namespace Sources.Infrastructure.DataViewModel
+namespace Sources.Infrastructure.Presenters
 {
 	public class ResourcesProgressPresenter : IResourcesProgressPresenter, IResourceProgressEventHandler
 	{
@@ -31,8 +31,7 @@ namespace Sources.Infrastructure.DataViewModel
 		public event Action<int> MaxCashScoreChanged;
 		public event Action<bool> HalfGlobalScoreReached;
 
-		public ResourcesProgressPresenter
-		(
+		public ResourcesProgressPresenter(
 			IResourcesModel persistentProgressService
 		) =>
 			_resourcesData = persistentProgressService;
@@ -56,12 +55,18 @@ namespace Sources.Infrastructure.DataViewModel
 
 			int score = Mathf.Clamp(newScore, 0, _resourcesData.MaxCashScore);
 
+			int lastCashScore = _resourcesData.CurrentCashScore;
 			_resourcesData.AddCashScore(score);
 
-			GlobalScore = _resourcesData.GlobalSandCount;
+			if (lastCashScore != _resourcesData.CurrentCashScore)
+				OnCashScoreChanged();
 
-			OnCashScoreChanged();
-			OnGlobalScoreChanged();
+			if (GlobalScore != _resourcesData.GlobalSandCount)
+			{
+				GlobalScore = _resourcesData.GlobalSandCount;
+				OnGlobalScoreChanged();
+			}
+
 			OnHalfScoreReached();
 
 			return true;
@@ -113,7 +118,8 @@ namespace Sources.Infrastructure.DataViewModel
 
 		public int GetDecreasedMoney(int count)
 		{
-			if (count <= 0) throw new ArgumentOutOfRangeException(nameof(count));
+			if (count <= 0)
+				throw new ArgumentOutOfRangeException(nameof(count));
 
 			return _resourcesData.SoftCurrency.Count - count;
 		}

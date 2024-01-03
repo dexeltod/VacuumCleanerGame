@@ -1,5 +1,5 @@
 using Sources.DIService;
-using Sources.Utils.Configs;
+using Sources.Utils.Configs.Scripts;
 
 namespace Sources.InfrastructureInterfaces.Scene
 {

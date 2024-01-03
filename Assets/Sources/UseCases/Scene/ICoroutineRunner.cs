@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Sources.Application
+namespace Sources.UseCases.Scene
 {
 	public interface ICoroutineRunner
 	{

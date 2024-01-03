@@ -1,26 +1,36 @@
+using System;
 using Sources.Infrastructure.Scene;
+using Sources.Services;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Factories.Player
 {
-	[RequireComponent(typeof(Rigidbody))]
-	public abstract class Presenter : MonoBehaviour
+	[RequireComponent(typeof(Rigidbody))] public abstract class Presenter : MonoBehaviour
 	{
 		private Rigidbody _rigidbody;
 		private Transformable _model;
+		private Animator _animator;
 
 		private IUpdatable _updatable = null;
 		private bool _isMove = true;
+		private AnimationHasher _animationHasher;
+		private ParticleSystem _particleSystem;
+		private MeshDeformationPresenter _meshDeformationPresenter;
 
-		public Transformable Model => _model;
-
-		public void Init(Transformable model, Rigidbody rigidbody)
+		public void Initialize(
+			Transformable model,
+			Rigidbody physic,
+			Animator animator,
+			AnimationHasher animationHasher
+		)
 		{
-			_rigidbody = rigidbody;
-			_model = model;
+			_animationHasher = animationHasher ?? throw new ArgumentNullException(nameof(animationHasher));
+			_model = model ?? throw new ArgumentNullException(nameof(model));
+			_rigidbody = physic ? physic : throw new ArgumentNullException(nameof(physic));
+			_animator = animator ? animator : throw new ArgumentNullException(nameof(animator));
 
-			if (_model is IUpdatable)
-				_updatable = (IUpdatable)_model;
+			if (_model is IUpdatable updatable)
+				_updatable = updatable;
 
 			enabled = true;
 
@@ -46,13 +56,16 @@ namespace Sources.Infrastructure.Factories.Player
 
 		private void Update()
 		{
-			if (_isMove) 
-				_updatable?.Update(Time.deltaTime);
+			_updatable?.Update(Time.deltaTime);
+			_animator.Play(_isMove ? _animationHasher.Run : _animationHasher.Idle);
 		}
 
 		private void OnLookAt(Vector3 direction)
 		{
-			transform.rotation = Quaternion.LookRotation(direction);
+			if (direction != Vector3.zero)
+				transform.rotation = Quaternion.LookRotation(direction);
+
+			_isMove = direction != Vector3.zero;
 		}
 
 		private void OnMoved(Vector3 newPosition) =>

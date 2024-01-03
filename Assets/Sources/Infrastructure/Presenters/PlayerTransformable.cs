@@ -1,9 +1,11 @@
 using Joystick_Pack.Scripts.Base;
 using Sources.DomainInterfaces;
+using Sources.Infrastructure.Factories.Player;
+using Sources.Infrastructure.Scene;
 using Sources.ServicesInterfaces;
 using UnityEngine;
 
-namespace Sources.Infrastructure.Scene
+namespace Sources.Infrastructure.Presenters
 {
 	public class PlayerTransformable : Transformable, IUpdatable
 	{
@@ -18,7 +20,11 @@ namespace Sources.Infrastructure.Scene
 
 		private Vector3 _offset;
 
-		public PlayerTransformable(Transform transform, Joystick joystick, IPlayerStatsService stats) : base(transform)
+		public PlayerTransformable(
+			Transform transform,
+			Joystick joystick,
+			IPlayerStatsService stats
+		) : base(transform)
 		{
 			_speedStat = stats.GetPlayerStat(SpeedName);
 			_speedStat.ValueChanged += OnPlayerStatChanged;
@@ -46,9 +52,7 @@ namespace Sources.Infrastructure.Scene
 				_offset.y = MaxTransformHeight;
 
 			MoveTo(_offset);
-
-			if (joystickDirection != Vector3.zero)
-				LookAt(direction);
+			LookAt(direction);
 		}
 	}
 }

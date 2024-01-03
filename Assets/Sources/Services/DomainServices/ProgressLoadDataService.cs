@@ -9,8 +9,7 @@ using Sources.Services.DomainServices.DTO;
 
 namespace Sources.Services.DomainServices
 {
-	[Serializable]
-	public class ProgressLoadDataService : IProgressLoadDataService
+	[Serializable] public class ProgressLoadDataService : IProgressLoadDataService
 	{
 		private const string SavesDirectory = "/Saves/";
 
@@ -23,7 +22,7 @@ namespace Sources.Services.DomainServices
 		private IGameProgressModel _gameProgress;
 
 		public bool IsCallbackReceived { get; private set; }
-		
+
 		public event Func<IGameProgressModel> ProgressCleared;
 
 		public ProgressLoadDataService(ISaveLoader saveLoader, IPersistentProgressServiceConstructable progressService)
@@ -43,7 +42,7 @@ namespace Sources.Services.DomainServices
 		{
 			if (model != null)
 				await SaveWithCallback(model);
-			
+
 			succeededCallback?.Invoke();
 		}
 

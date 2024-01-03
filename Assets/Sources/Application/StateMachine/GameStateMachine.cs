@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Sources.Application.StateMachine.GameStates;
-using Sources.Application.StateMachineInterfaces;
+using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 
 namespace Sources.Application.StateMachine
 {
@@ -12,7 +11,7 @@ namespace Sources.Application.StateMachine
 		private Dictionary<Type, IExitState> _states;
 
 		public void Initialize(Dictionary<Type, IExitState> states) =>
-			_states = states;
+			_states = states ?? throw new ArgumentNullException(nameof(states));
 
 		public void Enter<TState>() where TState : class, IGameState
 		{
@@ -29,7 +28,6 @@ namespace Sources.Application.StateMachine
 
 		private TState ChangeState<TState>() where TState : class, IExitState
 		{
-			
 			_activeState?.Exit();
 
 			TState state = GetState<TState>();

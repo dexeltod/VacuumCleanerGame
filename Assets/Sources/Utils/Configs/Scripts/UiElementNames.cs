@@ -1,4 +1,4 @@
-namespace Sources.Utils.Configs
+namespace Sources.Utils.Configs.Scripts
 {
 	public class UiElementNames
 	{

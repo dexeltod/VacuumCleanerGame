@@ -3,21 +3,22 @@ using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.UpgradeShop;
 using Sources.InfrastructureInterfaces.Upgrade;
+using Sources.Presentation.UI.Shop;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs;
-using Sources.View.UI.Shop;
+using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Factories
 {
 	public class ShopElementFactory
 	{
-		private readonly IGameProgress  _shopProgress;
+		private readonly IGameProgress _shopProgress;
 		private readonly IAssetProvider _assetProvider;
 
 		public ShopElementFactory(IGameProgress shopProgress)
 		{
-			_shopProgress  = shopProgress;
+			_shopProgress = shopProgress;
 			_assetProvider = ServiceLocator.Container.Get<IAssetProvider>();
 		}
 
@@ -25,23 +26,22 @@ namespace Sources.Infrastructure.Factories
 		{
 			List<IUpgradeProgressData> progress = _shopProgress.GetAll();
 
-			UpgradeItemList items = _assetProvider.LoadFromResources<UpgradeItemList>(ResourcesAssetPath.GameObjects.ShopItems);
+			UpgradeItemList items
+				= _assetProvider.LoadFromResources<UpgradeItemList>(ResourcesAssetPath.GameObjects.ShopItems);
 			SetUpgradeLevelsToItems(progress, items);
 
 			return Instantiate(transform, items, progress);
 		}
 
-		private void InstantiateButtons
-		(
-			Transform                  transform,
-			UpgradeItemList            items,
+		private void InstantiateButtons(
+			Transform transform,
+			UpgradeItemList items,
 			List<UpgradeElementPrefabView> buttons,
-			int                        itemIndex
+			int itemIndex
 		)
 		{
 			UpgradeElementPrefabView button =
-				Object.Instantiate
-				(
+				Object.Instantiate(
 					items.ReadOnlyItems[itemIndex].PrefabView,
 					transform.transform
 				);
@@ -57,10 +57,9 @@ namespace Sources.Infrastructure.Factories
 				upgradeItems.Items[i].SetUpgradeLevel(progress[i].Value);
 		}
 
-		private List<UpgradeElementPrefabView> Instantiate
-		(
-			Transform                  transform,
-			UpgradeItemList            items,
+		private List<UpgradeElementPrefabView> Instantiate(
+			Transform transform,
+			UpgradeItemList items,
 			List<IUpgradeProgressData> progress
 		)
 		{
@@ -70,10 +69,9 @@ namespace Sources.Infrastructure.Factories
 			return buttons;
 		}
 
-		private void InitButtons
-		(
-			Transform                  transform,
-			UpgradeItemList            items,
+		private void InitButtons(
+			Transform transform,
+			UpgradeItemList items,
 			List<IUpgradeProgressData> progress,
 			List<UpgradeElementPrefabView> buttons
 		)

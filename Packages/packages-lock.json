@@ -8,11 +8,11 @@
       "hash": "8b3ff533346e27727613880171be328b15cb4e84"
     },
     "com.agava.yandexgames": {
-      "version": "https://github.com/forcepusher/com.agava.yandexgames.git#13.2.0",
+      "version": "https://github.com/forcepusher/com.agava.yandexgames.git#16.0.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "fa31f21513b73c1cf117bf8d9fccd6f01b2772b7"
+      "hash": "faf20595c0f18f4a471e6b27fbd5fbf5fd05d7a2"
     },
     "com.cysharp.unitask": {
       "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",

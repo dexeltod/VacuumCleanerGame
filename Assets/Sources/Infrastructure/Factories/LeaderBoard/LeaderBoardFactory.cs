@@ -1,15 +1,17 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
+using Sources.Presentation.UI.MainMenu.LeaderBoard;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs;
+using Sources.Utils.Configs.Scripts;
 
 namespace Sources.Infrastructure.Factories.LeaderBoard
 {
 	public class LeaderBoardFactory
 	{
 		private const int LeaderBoardPlayersCount = 5;
-		
+
 		private readonly IAssetProvider _assetProvider;
 		private readonly ILeaderBoardService _leaderBoardService;
 
@@ -32,10 +34,10 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 			);
 
 			InstantiateLeaders(await _leaderBoardService.GetLeaders(LeaderBoardPlayersCount));
-			
+
 			return _leaderBoardBehaviour;
 		}
-		
+
 		private void InstantiateLeaders(Dictionary<string, int> leaders) =>
 			_leaderBoardBehaviour.InstantiatePanels(leaders);
 	}

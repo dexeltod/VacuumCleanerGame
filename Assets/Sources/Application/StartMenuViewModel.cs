@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Sources.Application.MainMenu;
-using Sources.Application.StateMachineInterfaces;
+using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.DIService;
 using Sources.Infrastructure.UI;
 using Sources.InfrastructureInterfaces;
@@ -16,28 +16,28 @@ namespace Sources.Application
 	[RequireComponent(typeof(UIElementGetterFacade))]
 	public class StartMenuViewModel : MonoBehaviour
 	{
-		[SerializeField] private AudioMixer  _audioMixer;
+		[SerializeField] private AudioMixer _audioMixer;
 		[SerializeField] private AudioSource _buttonSound;
 
 		private const string MainMenu = "MainMenu";
 		private const string Settings = "Settings";
 
-		private VisualElement         _startMenu;
+		private VisualElement _startMenu;
 		private UIElementGetterFacade _uiElementGetter;
 
 		private VisualElementSwitcher _visualElementSwitcher;
 
-		private List<Button>         _allButtons = new();
-		private ILevelConfigGetter   _levelConfigGetter;
-		private IGameStateMachine    _gameStateMachine;
+		private List<Button> _allButtons = new();
+		private ILevelConfigGetter _levelConfigGetter;
+		private IGameStateMachine _gameStateMachine;
 		private ILocalizationService _localization;
 
 		private void Start()
 		{
-			_gameStateMachine      = ServiceLocator.Container.Get<IGameStateMachine>();
-			_levelConfigGetter     = ServiceLocator.Container.Get<ILevelConfigGetter>();
-			_localization          = ServiceLocator.Container.Get<ILocalizationService>();
-			_uiElementGetter       = GetComponent<UIElementGetterFacade>();
+			_gameStateMachine = ServiceLocator.Container.Get<IGameStateMachine>();
+			_levelConfigGetter = ServiceLocator.Container.Get<ILevelConfigGetter>();
+			_localization = ServiceLocator.Container.Get<ILocalizationService>();
+			_uiElementGetter = GetComponent<UIElementGetterFacade>();
 			_visualElementSwitcher = new VisualElementSwitcher();
 
 			CreateMenuWindows();
@@ -45,7 +45,8 @@ namespace Sources.Application
 			SubscribeOnButtons();
 		}
 
-		private void OnDestroy() => UnsubscribeFromButtons();
+		private void OnDestroy() =>
+			UnsubscribeFromButtons();
 
 		private void CreateMenuWindows()
 		{
@@ -71,6 +72,7 @@ namespace Sources.Application
 				button.clicked -= PlayButtonSound;
 		}
 
-		private void PlayButtonSound() => _buttonSound.Play();
+		private void PlayButtonSound() =>
+			_buttonSound.Play();
 	}
 }

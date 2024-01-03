@@ -14,7 +14,7 @@ namespace Sources.Services.DomainServices
 
 		public YandexSaveLoader(IYandexSDKController yandexController)
 		{
-			_yandexController = yandexController;
+			_yandexController = yandexController ?? throw new ArgumentNullException(nameof(yandexController));
 		}
 
 		public async UniTask Save(IGameProgressModel @object, Action succeededCallback)

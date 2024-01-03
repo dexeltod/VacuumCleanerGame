@@ -19,7 +19,7 @@ namespace Sources.Infrastructure.DataViewModel
 				.GameProgress
 				.PlayerProgress;
 
-			_playerStats = playerStats; 
+			_playerStats = playerStats;
 		}
 
 		public void SetProgress(string progressName)
@@ -29,7 +29,6 @@ namespace Sources.Infrastructure.DataViewModel
 
 			_playerStats.Set(upgradeProgress.Name, newProgressValue);
 			_playerProgress.SetProgress(progressName, newProgressValue);
-			
 		}
 	}
 }

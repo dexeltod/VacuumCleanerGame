@@ -8,10 +8,8 @@ namespace Sources.Services.PlayerServices
 	{
 		private IResourcesProgressPresenter _resourcesProgress;
 
-		private void Awake()
-		{
+		private void Awake() =>
 			_resourcesProgress = ServiceLocator.Container.Get<IResourcesProgressPresenter>();
-		}
 
 		public void SellSand() =>
 			_resourcesProgress.SellSand();

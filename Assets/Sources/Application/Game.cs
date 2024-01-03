@@ -7,10 +7,7 @@ namespace Sources.Application
 	{
 		private readonly GameStateMachine _gameStateMachine;
 
-		public Game
-		(
-			GameStateMachine gameStateMachine
-		) =>
+		public Game(GameStateMachine gameStateMachine) =>
 			_gameStateMachine = gameStateMachine;
 
 		public void Start() =>

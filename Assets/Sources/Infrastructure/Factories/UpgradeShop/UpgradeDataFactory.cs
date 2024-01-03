@@ -2,9 +2,10 @@ using System;
 using Sources.DIService;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Upgrade;
+using Sources.Presentation.SceneEntity;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs;
-using Sources.View.SceneEntity;
+using Sources.Utils.Configs.Scripts;
 
 namespace Sources.Infrastructure.Factories.UpgradeShop
 {

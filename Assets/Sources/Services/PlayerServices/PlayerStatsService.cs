@@ -9,19 +9,22 @@ namespace Sources.Services.PlayerServices
 	public class PlayerStatsService : IPlayerStatsService
 	{
 		private readonly ShopPointsToStatsConverter _converter;
-		
+
 		private readonly List<IUpgradeProgressData> _progress;
 		private readonly string[] _statNames;
 		private readonly IPlayerStatChangeable[] _playerStats;
 
-		public PlayerStatsService(string[] statNames, IPlayerStatChangeable[] playerPlayerStats,
+		public PlayerStatsService(
+			string[] statNames,
+			IPlayerStatChangeable[] playerPlayerStats,
 			List<IUpgradeProgressData> progress,
-			ShopPointsToStatsConverter statsConverter)
+			ShopPointsToStatsConverter statsConverter
+		)
 		{
-			_statNames = statNames;
-			_playerStats = playerPlayerStats;
-			_progress = progress;
-			_converter = statsConverter;
+			_statNames = statNames ?? throw new ArgumentNullException(nameof(statNames));
+			_playerStats = playerPlayerStats ?? throw new ArgumentNullException(nameof(playerPlayerStats));
+			_progress = progress ?? throw new ArgumentNullException(nameof(progress));
+			_converter = statsConverter ?? throw new ArgumentNullException(nameof(statsConverter));
 		}
 
 		public IPlayerStat GetPlayerStat(string progressName)

@@ -1,25 +1,25 @@
 using UnityEngine;
 
-namespace Sources.View
+namespace Sources.Presentation
 {
 	[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))] [RequireComponent(typeof(MeshCollider))]
 	public class SandGenerator : MonoBehaviour
 	{
 		[SerializeField] private float _cellSize = 0.2f;
-		[SerializeField] private int   _xSize;
-		[SerializeField] private int   _zSize;
-		[SerializeField] private int   _slopeLenght;
+		[SerializeField] private int _xSize;
+		[SerializeField] private int _zSize;
+		[SerializeField] private int _slopeLenght;
 		[SerializeField] private float _middleHeight;
 
 		private MeshCollider _meshCollider;
-		private MeshFilter   _meshFilter;
-		private Mesh         _mesh;
+		private MeshFilter _meshFilter;
+		private Mesh _mesh;
 
 		private Vector3[] _vertices;
 		private Vector2[] _uvs;
-		private float     _maxY;
-		private float     _minY;
-		private int[]     _triangles;
+		private float _maxY;
+		private float _minY;
+		private int[] _triangles;
 
 		private void Start()
 		{
@@ -44,17 +44,17 @@ namespace Sources.View
 		{
 			_vertices = new Vector3[(_xSize + 1) * (_zSize + 1)];
 
-			Vector2[] uvs      = new Vector2[_vertices.Length];
+			Vector2[] uvs = new Vector2[_vertices.Length];
 			Vector4[] tangents = new Vector4[_vertices.Length];
-			Vector4   tangent  = new Vector4(1f, 0f, 0f, -1f);
+			Vector4 tangent = new Vector4(1f, 0f, 0f, -1f);
 
 			for (int i = 0, z = 0; z <= _zSize; z++)
 			{
 				for (int x = 0; x <= _xSize; x++, i++)
 				{
 					_vertices[i] = new Vector3(x, z);
-					uvs[i]       = new Vector2((float)x / _xSize, (float)z / _zSize);
-					tangents[i]  = tangent;
+					uvs[i] = new Vector2((float)x / _xSize, (float)z / _zSize);
+					tangents[i] = tangent;
 
 					var y = SetHeight(x, z);
 
@@ -64,7 +64,7 @@ namespace Sources.View
 
 			_mesh.vertices = _vertices;
 
-			_mesh.uv       = uvs;
+			_mesh.uv = uvs;
 			_mesh.tangents = tangents;
 		}
 
@@ -73,7 +73,7 @@ namespace Sources.View
 			float y;
 
 			if (x < _slopeLenght || z < _slopeLenght || z > _zSize - _slopeLenght ||
-			    x > _xSize                                         - _slopeLenght)
+				x > _xSize - _slopeLenght)
 				y = 0;
 			else
 				y = _middleHeight;
@@ -88,7 +88,7 @@ namespace Sources.View
 			{
 				for (int x = 0; x < _xSize; x++, ti += 6, vi++)
 				{
-					_triangles[ti]     = vi;
+					_triangles[ti] = vi;
 					_triangles[ti + 1] = _triangles[ti + 4] = vi + _xSize + 1;
 					_triangles[ti + 2] = _triangles[ti + 3] = vi + 1;
 					_triangles[ti + 5] = vi + _xSize + 2;
@@ -100,9 +100,9 @@ namespace Sources.View
 
 		private void CreateMesh()
 		{
-			_mesh                           = new Mesh();
+			_mesh = new Mesh();
 			GetComponent<MeshFilter>().mesh = _mesh;
-			_mesh.name                      = "Grid";
+			_mesh.name = "Grid";
 		}
 	}
 }

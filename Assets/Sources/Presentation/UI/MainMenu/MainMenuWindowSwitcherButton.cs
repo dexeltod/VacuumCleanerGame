@@ -1,17 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Sources.View.UI.MainMenu
+namespace Sources.Presentation.UI.MainMenu
 {
-	[RequireComponent(typeof(Button))]
-	public class MainMenuWindowSwitcherButton : MonoBehaviour
+	[RequireComponent(typeof(Button))] public class MainMenuWindowSwitcherButton : MonoBehaviour
 	{
 		[SerializeField] private GameObject _disabledObject;
 		[SerializeField] private GameObject _enabledObject;
-		
+
 		private Button _button;
 
-		public void Awake() => 
+		public void Awake() =>
 			_button = GetComponent<Button>();
 
 		private void OnEnable() =>

@@ -6,9 +6,9 @@ namespace Sources.Services.DomainServices
 	[Serializable] public class PersistentProgressService : IPersistentProgressService
 	{
 		private IGameProgressModel _gameProgress;
-		public  IGameProgressModel GameProgress => _gameProgress;
+		public IGameProgressModel GameProgress => _gameProgress;
 
 		public void Construct(IGameProgressModel gameProgress) =>
-			_gameProgress = gameProgress;
+			_gameProgress = gameProgress ?? throw new ArgumentNullException(nameof(gameProgress));
 	}
 }

@@ -6,10 +6,10 @@ using JetBrains.Annotations;
 using Sources.DIService;
 using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Upgrade;
+using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
-using Sources.View.UI.Shop;
 
 namespace Sources.Application
 {

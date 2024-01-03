@@ -1,24 +1,25 @@
-using Sources.Application.StateMachineInterfaces;
+using System;
 using Sources.ApplicationServicesInterfaces;
+using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.DIService;
 using Sources.Infrastructure.Factories.LeaderBoard;
+using Sources.Presentation.SceneEntity;
 using Sources.ServicesInterfaces;
-using Sources.Utils.Configs;
-using Sources.View.SceneEntity;
+using Sources.Utils.Configs.Scripts;
 
 namespace Sources.Application.StateMachine.GameStates
 {
 	public sealed class MenuState : IGameState
 	{
-		private readonly SceneLoader _sceneLoader;
+		private readonly ISceneLoader _sceneLoader;
 		private readonly LoadingCurtain _loadingCurtain;
 		private readonly ServiceLocator _serviceLocator;
 
-		public MenuState(SceneLoader sceneLoader, LoadingCurtain loadingCurtain, ServiceLocator serviceLocator)
+		public MenuState(ISceneLoader sceneLoader, LoadingCurtain loadingCurtain, ServiceLocator serviceLocator)
 		{
-			_sceneLoader = sceneLoader;
-			_loadingCurtain = loadingCurtain;
-			_serviceLocator = serviceLocator;
+			_sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
+			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
+			_serviceLocator = serviceLocator ?? throw new ArgumentNullException(nameof(serviceLocator));
 		}
 
 		public async void Enter()
@@ -26,6 +27,9 @@ namespace Sources.Application.StateMachine.GameStates
 			#region GettingServices
 
 			IAssetProvider assetProvider = _serviceLocator.Get<IAssetProvider>();
+#if !UNITY_EDITOR
+			_serviceLocator.Get<IYandexSDKController>().SetStatusInitialized();
+#endif
 			ILeaderBoardService leaderBoardService = _serviceLocator.Get<ILeaderBoardService>();
 
 			#endregion
@@ -33,9 +37,7 @@ namespace Sources.Application.StateMachine.GameStates
 			LeaderBoardFactory leaderBoardFactory = new LeaderBoardFactory(assetProvider, leaderBoardService);
 
 			await _sceneLoader.Load(ConstantNames.MenuScene);
-#if !UNITY_EDITOR
 			await leaderBoardFactory.Create();
-#endif
 
 			_loadingCurtain.HideSlowly();
 		}

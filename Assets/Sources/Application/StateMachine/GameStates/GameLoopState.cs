@@ -1,8 +1,9 @@
-using Sources.Application.StateMachineInterfaces;
+using System;
+using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.DIService;
+using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
 using Sources.Services.Interfaces;
-using Sources.View.SceneEntity;
 using UnityEngine;
 
 namespace Sources.Application.StateMachine.GameStates
@@ -15,8 +16,8 @@ namespace Sources.Application.StateMachine.GameStates
 
 		public GameLoopState(GameStateMachine gameStateMachine, LoadingCurtain loadingCurtain)
 		{
-			_gameStateMachine = gameStateMachine;
-			_loadingCurtain = loadingCurtain;
+			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
+			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
 		public void Enter()

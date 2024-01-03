@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -18,6 +19,7 @@ namespace Sources.Services
 
 		public List<T> GetChildren<T>(string elementName) where T : VisualElement
 		{
+			if (string.IsNullOrWhiteSpace(elementName)) throw new ArgumentNullException(nameof(elementName));
 			VisualElement parentElement = _uiDocument.rootVisualElement.Q<VisualElement>(elementName);
 			IEnumerable<VisualElement> children = parentElement.Children();
 
@@ -44,7 +46,7 @@ namespace Sources.Services
 			foreach (var child in children)
 				if (child.Q<VisualElement>(elementName) != null)
 					return child.Q<T>(elementName);
-			
+
 			return null;
 		}
 

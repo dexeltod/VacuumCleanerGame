@@ -1,5 +1,7 @@
-using Sources.Application.StateMachineInterfaces;
+using System;
 using Sources.Application.UI;
+using Sources.ApplicationServicesInterfaces;
+using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure;
@@ -10,12 +12,12 @@ using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
+using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
 using Sources.Services;
 using Sources.Services.Interfaces;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
-using Sources.View.SceneEntity;
 
 namespace Sources.Application.StateMachine.GameStates
 {
@@ -25,16 +27,15 @@ namespace Sources.Application.StateMachine.GameStates
 		private readonly ServiceLocator _serviceLocator;
 		private readonly LoadingCurtain _loadingCurtain;
 
-		public InitializeServicesWithProgressState
-		(
+		public InitializeServicesWithProgressState(
 			IGameStateMachine gameStateMachine,
 			ServiceLocator serviceLocator,
 			LoadingCurtain loadingCurtain
 		)
 		{
-			_gameStateMachine = gameStateMachine;
-			_serviceLocator = serviceLocator;
-			_loadingCurtain = loadingCurtain;
+			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
+			_serviceLocator = serviceLocator ?? throw new ArgumentNullException(nameof(serviceLocator));
+			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
 		public void Enter()
@@ -74,8 +75,7 @@ namespace Sources.Application.StateMachine.GameStates
 
 			_serviceLocator.Register<IShopProgressProvider>
 			(
-				new ShopProgressProvider
-				(
+				new ShopProgressProvider(
 					progressService.GameProgress.ShopProgress,
 					progressLoadDataService
 				)
@@ -99,8 +99,6 @@ namespace Sources.Application.StateMachine.GameStates
 				);
 
 			#endregion
-
-			_loadingCurtain.SetText("");
 		}
 	}
 }

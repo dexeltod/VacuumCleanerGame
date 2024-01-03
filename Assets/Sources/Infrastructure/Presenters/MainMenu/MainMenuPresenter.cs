@@ -1,4 +1,4 @@
-using Sources.View.UI.VisualElementCases.MainMenu;
+using Sources.Presentation.UI.VisualElementCases.MainMenu;
 
 namespace Sources.Infrastructure.Presenters.MainMenu
 {
@@ -9,7 +9,6 @@ namespace Sources.Infrastructure.Presenters.MainMenu
 		public MainMenuPresenter(MainMenuPresentation mainMenuPresentation)
 		{
 			_mainMenuPresentation = mainMenuPresentation;
-		}		
-		
+		}
 	}
 }

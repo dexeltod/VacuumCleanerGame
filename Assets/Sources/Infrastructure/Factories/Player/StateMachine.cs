@@ -6,7 +6,7 @@ namespace Sources.Infrastructure.Factories.Player
 	{
 		private IState _currentState;
 
-		public StateMachine(IState state) => 
+		public StateMachine(IState state) =>
 			ChangeState(state);
 
 		~StateMachine()

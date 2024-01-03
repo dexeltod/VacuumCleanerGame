@@ -1,6 +1,6 @@
 using System;
 
-namespace Sources.DomainInterfaces
+namespace Sources.DomainInterfaces.DomainServicesInterfaces
 {
 	public interface IProgressClearable
 	{

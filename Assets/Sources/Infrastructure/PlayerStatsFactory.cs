@@ -5,22 +5,22 @@ using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Upgrade;
+using Sources.Presentation.SceneEntity;
 using Sources.Services;
 using Sources.Services.PlayerServices;
 using Sources.ServicesInterfaces;
-using Sources.View.SceneEntity;
 
 namespace Sources.Infrastructure
 {
 	public class PlayerStatsFactory
 	{
-		private readonly IUpgradeDataFactory   _shopFactory;
-		private readonly LoadingCurtain     _loadingCurtain;
-		private          PlayerStatsService _playerStatsService;
+		private readonly IUpgradeDataFactory _shopFactory;
+		private readonly LoadingCurtain _loadingCurtain;
+		private PlayerStatsService _playerStatsService;
 
 		public PlayerStatsFactory(IUpgradeDataFactory upgradeDataFactory, LoadingCurtain loadingCurtain)
 		{
-			_shopFactory    = upgradeDataFactory;
+			_shopFactory = upgradeDataFactory;
 			_loadingCurtain = loadingCurtain;
 		}
 
@@ -35,7 +35,7 @@ namespace Sources.Infrastructure
 
 			List<IUpgradeProgressData> progress = persistentProgressService.GameProgress.PlayerProgress.GetAll();
 
-			string[]                statNames   = new string[progress.Count];
+			string[] statNames = new string[progress.Count];
 			IPlayerStatChangeable[] playerStats = new IPlayerStatChangeable[progress.Count];
 
 			ShopPointsToStatsConverter converter = new ShopPointsToStatsConverter(stats);
@@ -57,11 +57,10 @@ namespace Sources.Infrastructure
 			return stats;
 		}
 
-		private void InitArrays
-		(
+		private void InitArrays(
 			List<IUpgradeProgressData> progress,
-			string[]                   statNames,
-			IPlayerStatChangeable[]    playerStats,
+			string[] statNames,
+			IPlayerStatChangeable[] playerStats,
 			ShopPointsToStatsConverter shopPointsToStatsConverter
 		)
 		{
@@ -69,19 +68,16 @@ namespace Sources.Infrastructure
 			CreateStats(progress, playerStats, shopPointsToStatsConverter);
 		}
 
-		private void CreateStats
-		(
+		private void CreateStats(
 			List<IUpgradeProgressData> progress,
-			IPlayerStatChangeable[]    playerStats,
+			IPlayerStatChangeable[] playerStats,
 			ShopPointsToStatsConverter converter
 		)
 		{
 			for (int i = 0; i < progress.Count; i++)
-				playerStats[i] = new PlayerStat
-				(
+				playerStats[i] = new PlayerStat(
 					progress[i].Name,
-					converter.GetConverted
-					(
+					converter.GetConverted(
 						progress[i].Name,
 						progress[i].Value
 					)

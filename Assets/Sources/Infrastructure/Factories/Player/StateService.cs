@@ -12,7 +12,7 @@ namespace Sources.Infrastructure.Factories.Player
 		{
 			if (_states.ContainsKey(typeof(T)))
 				throw new InvalidOperationException();
-			
+
 			_states.Add(typeof(T), instance);
 		}
 

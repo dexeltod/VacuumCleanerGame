@@ -9,63 +9,72 @@ using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Unity.Services.CloudSave;
 using UnityEngine;
 
-public class EditorSaveLoader : ISaveLoader
+namespace Sources.Services.DomainServices
 {
-	private const string GameProgressKey = "GameProgress";
-
-	private readonly IPersistentProgressService _progressService;
-	private readonly IUnityServicesController _unityServicesController;
-
-	public EditorSaveLoader(IPersistentProgressService progressService,
-		IUnityServicesController unityServicesController)
+	public class EditorSaveLoader : ISaveLoader
 	{
-		_progressService = progressService;
-		_unityServicesController = unityServicesController;
-	}
+		private const string GameProgressKey = "GameProgress";
 
-	public async UniTask Save(IGameProgressModel @object, Action succeededCallback)
-	{
-		GameProgressModel model = _progressService.GameProgress as GameProgressModel;
-		string dataJsonUtility = JsonUtility.ToJson(model);
+		private readonly IPersistentProgressService _progressService;
+		private readonly IUnityServicesController _unityServicesController;
 
-		await CloudSaveService.Instance.Data.ForceSaveAsync(new Dictionary<string, object>
-			{
-				{ GameProgressKey, dataJsonUtility }
-			}
-		);
-	}
-
-	public async UniTask<IGameProgressModel> Load(Action callback)
-	{
-		Dictionary<string, string> keyAndJsonSaves = await CloudSaveService
-			.Instance
-			.Data
-			.LoadAsync
-			(
-				new HashSet<string> { GameProgressKey }
-			);
-
-		string jsonSave = keyAndJsonSaves.Values.LastOrDefault();
-
-		return DeserializeJson(jsonSave);
-	}
-
-	public async UniTask ClearSaves(IGameProgressModel gameProgressModel) => 
-		await CloudSaveService.Instance.Data.ForceDeleteAsync(GameProgressKey);
-
-	private IGameProgressModel DeserializeJson(string jsonSave)
-	{
-		try
+		public EditorSaveLoader(
+			IPersistentProgressService progressService,
+			IUnityServicesController unityServicesController
+		)
 		{
-			GameProgressModel model = JsonUtility.FromJson<GameProgressModel>(jsonSave);
-
-			return model;
+			_progressService = progressService;
+			_unityServicesController = unityServicesController;
 		}
-		catch (Exception e)
+
+		public async UniTask Save(IGameProgressModel @object, Action succeededCallback)
 		{
-			Debug.LogException(e);
-			Debug.Log("New progress will be created");
-			return null;
+			GameProgressModel model = _progressService.GameProgress as GameProgressModel;
+			string dataJsonUtility = JsonUtility.ToJson(model);
+
+			await CloudSaveService.Instance.Data.ForceSaveAsync(
+				new Dictionary<string, object>
+				{
+					{ GameProgressKey, dataJsonUtility }
+				}
+			);
+		}
+
+		public async UniTask<IGameProgressModel> Load(Action callback)
+		{
+			Dictionary<string, string> keyAndJsonSaves = await CloudSaveService
+				.Instance
+				.Data
+				.LoadAsync
+				(
+					new HashSet<string>
+					{
+						GameProgressKey
+					}
+				);
+
+			string jsonSave = keyAndJsonSaves.Values.LastOrDefault();
+
+			return DeserializeJson(jsonSave);
+		}
+
+		public async UniTask ClearSaves(IGameProgressModel gameProgressModel) =>
+			await CloudSaveService.Instance.Data.ForceDeleteAsync(GameProgressKey);
+
+		private IGameProgressModel DeserializeJson(string jsonSave)
+		{
+			try
+			{
+				GameProgressModel model = JsonUtility.FromJson<GameProgressModel>(jsonSave);
+
+				return model;
+			}
+			catch (Exception e)
+			{
+				Debug.LogException(e);
+				Debug.Log("New progress will be created");
+				return null;
+			}
 		}
 	}
 }

@@ -1,12 +1,13 @@
 using System;
 using Sources.Application.StateMachine.GameStates;
-using Sources.Application.StateMachineInterfaces;
+using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.Infrastructure.UI;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.Services;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs;
+using Sources.Utils.Configs.Scripts;
 using UnityEngine.UIElements;
 
 namespace Sources.Application.MainMenu

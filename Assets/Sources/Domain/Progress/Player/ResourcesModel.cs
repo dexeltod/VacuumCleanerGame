@@ -1,37 +1,53 @@
 using System;
-using Newtonsoft.Json;
 using Sources.Domain.Progress.ResourcesData;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Utils.Configs;
+using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 
 namespace Sources.Domain.Progress.Player
 {
 	[Serializable] public class ResourcesModel : IResourcesModel
 	{
+		private const int HundredPercent = 100;
+
 		[SerializeField] private IntResource _softCurrency;
 		[SerializeField] private IntResource _hardCurrency;
 		[SerializeField] private IntResource _cashScore;
 		[SerializeField] private IntResource _globalScore;
 
-		[SerializeField] private int _maxModifier;
+		[SerializeField] private int _maxCashScoreModifier;
+		[SerializeField] private int _maxGlobalScoreModifier;
 
-		public IResourceReadOnly<int> Score        => _cashScore;
+		public ResourcesModel(
+			Resource<int> softCurrency,
+			Resource<int> hardCurrency,
+			Resource<int> cashScore,
+			Resource<int> globalScore,
+			int startCount,
+			int globalScoreCount
+		)
+		{
+			_hardCurrency = hardCurrency as IntResource ?? throw new ArgumentNullException(nameof(hardCurrency));
+			_softCurrency = softCurrency as IntResource ?? throw new ArgumentNullException(nameof(softCurrency));
+			_cashScore = cashScore as IntResource ?? throw new ArgumentNullException(nameof(cashScore));
+			_globalScore = globalScore as IntResource ?? throw new ArgumentNullException(nameof(globalScore));
+
+			_cashScore.Set(startCount);
+			_hardCurrency.Set(startCount);
+			_softCurrency.Set(startCount);
+			_globalScore.Set(globalScoreCount);
+		}
+
+		public IResourceReadOnly<int> Score => _cashScore;
 		public IResourceReadOnly<int> SoftCurrency => _softCurrency;
-		public IResourceReadOnly<int> GlobalScore  => _globalScore;
+		public IResourceReadOnly<int> GlobalScore => _globalScore;
 		public IResourceReadOnly<int> HardCurrency => _hardCurrency;
 
-		public int PercentOfScore => GetPercentOfScore();
+		public int PercentOfScore => GetPercentMaxCashScore();
 
-		[JsonProperty(nameof(MaxCashScore))]
-		public int MaxCashScore => MaxModifier + GameConfig.DefaultMaxSandFillCount;
-
-		public int MaxModifier
-		{
-			get => _maxModifier;
-			private set => _maxModifier = value;
-		}
+		public int MaxCashScore => _maxCashScoreModifier + GameConfig.DefaultMaxSandFillCount;
+		public int MaxGlobalScore => _maxGlobalScoreModifier + GameConfig.DefaultMaxGlobalScore;
 
 		public int CurrentCashScore
 		{
@@ -45,45 +61,32 @@ namespace Sources.Domain.Progress.Player
 			private set => _globalScore.Set(value);
 		}
 
-		public ResourcesModel
-		(
-			Resource<int> softCurrency,
-			Resource<int> hardCurrency,
-			Resource<int> cashScore,
-			Resource<int> globalScore,
-			int           startCount,
-			int           globalScoreCount
-		)
-		{
-			_hardCurrency = hardCurrency as IntResource;
-			_softCurrency = softCurrency as IntResource;
-			_cashScore    = cashScore as IntResource;
-			_globalScore  = globalScore as IntResource;
-
-			_hardCurrency.Set(startCount);
-			_softCurrency.Set(startCount);
-			_globalScore.Set(globalScoreCount);
-		}
-
-		public void SetCashScore(int newValue) =>
-			_cashScore.Set(newValue);
-
 		public void AddCashScore(int newValue)
 		{
+			if (newValue <= 0) throw new ArgumentOutOfRangeException(nameof(newValue));
 			CurrentCashScore += newValue;
-			GlobalSandCount  += newValue;
+			GlobalSandCount += newValue;
 
 			_cashScore.Set(CurrentCashScore);
 		}
 
-		public void DecreaseCashScore(int newValue) =>
+		public void DecreaseCashScore(int newValue)
+		{
+			if (newValue <= 0) throw new ArgumentOutOfRangeException(nameof(newValue));
 			CurrentCashScore -= newValue;
+		}
 
-		public void AddMoney(int newValue) =>
+		public void AddMoney(int newValue)
+		{
+			if (newValue <= 0) throw new ArgumentOutOfRangeException(nameof(newValue));
 			_softCurrency.Set(newValue + _softCurrency.Count);
+		}
 
-		public void DecreaseMoney(int newValue) =>
+		public void DecreaseMoney(int newValue)
+		{
+			if (newValue < 0) throw new ArgumentOutOfRangeException(nameof(newValue));
 			_softCurrency.Set(_softCurrency.Count - newValue);
+		}
 
 		public void ClearScores()
 		{
@@ -91,9 +94,7 @@ namespace Sources.Domain.Progress.Player
 			_globalScore.Set(0);
 		}
 
-		private int GetPercentOfScore()
-		{
-			return (_cashScore.Count / 100) * MaxCashScore;
-		}
+		private int GetPercentMaxCashScore() =>
+			(_cashScore.Count / HundredPercent) * MaxCashScore;
 	}
 }

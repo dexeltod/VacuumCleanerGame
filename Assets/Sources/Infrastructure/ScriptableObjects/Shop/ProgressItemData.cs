@@ -13,13 +13,13 @@ namespace Sources.Infrastructure.ScriptableObjects.Shop
 
 		[SerializeField] private string _title;
 		[SerializeField] private string _description;
-		[SerializeField] private int[]  _stats;
+		[SerializeField] private int[] _stats;
 
 		private int _pointIndex;
 
-		public string Description   => _description;
-		public int    MaxPointLevel => MaxPoint;
-		public int    PointLevel    => _pointIndex;
+		public string Description => _description;
+		public int MaxPointLevel => MaxPoint;
+		public int PointLevel => _pointIndex;
 
 		public int Price
 		{
@@ -27,15 +27,15 @@ namespace Sources.Infrastructure.ScriptableObjects.Shop
 			{
 				if (_pointIndex < _prices.Count - 1)
 					return _prices[_pointIndex];
-				
+
 				_pointIndex = _prices.Count - 1;
 				return _prices[_pointIndex];
 			}
 		}
 
-		public int[]  Stats  => _stats;
+		public int[] Stats => _stats;
 		public string IdName => name;
-		public string Title  => _title;
+		public string Title => _title;
 
 		public event Action<int> PriceChanged;
 

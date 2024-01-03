@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Sources.View.UI.Shop
+namespace Sources.Presentation.UI.Shop
 {
 	public class UpgradeWindowEnabler : MonoBehaviour
 	{

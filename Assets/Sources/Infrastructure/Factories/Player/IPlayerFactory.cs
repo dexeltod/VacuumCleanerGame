@@ -10,12 +10,11 @@ namespace Sources.Infrastructure.Factories.Player
 	{
 		GameObject Player { get; }
 
-		GameObject Create
-		(
-			GameObject          initialPoint,
-			Joystick            joystick,
+		GameObject Create(
+			GameObject initialPoint,
+			Joystick joystick,
 			IPlayerStatsService stats,
-			Action              onErrorCallback = null
+			Action onErrorCallback = null
 		);
 	}
 }

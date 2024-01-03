@@ -11,10 +11,8 @@ namespace Sources.Services
 
 		private int _currentSpeedPoint;
 
-		public ShopPointsToStatsConverter(Dictionary<string, int[]> stats)
-		{
-			_stats = stats;
-		}
+		public ShopPointsToStatsConverter(Dictionary<string, int[]> stats) =>
+			_stats = stats ?? throw new ArgumentNullException(nameof(stats));
 
 		public int GetConverted(string name, int value)
 		{

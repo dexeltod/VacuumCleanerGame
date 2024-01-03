@@ -1,7 +1,7 @@
 using Sources.Utils;
 using UnityEngine.UIElements;
 
-namespace Sources.View.UI.VisualElementCases.MainMenu
+namespace Sources.Presentation.UI.VisualElementCases.MainMenu
 {
 	public class MainMenuPresentation
 	{
@@ -10,14 +10,10 @@ namespace Sources.View.UI.VisualElementCases.MainMenu
 
 		private VisualElement _mainMenu;
 
-		public MainMenuPresentation(VisualElementGetter visualElementGetter)
-		{
+		public MainMenuPresentation(VisualElementGetter visualElementGetter) =>
 			_visualElementGetter = visualElementGetter;
-		}
 
-		public void Initialize()
-		{
+		public void Initialize() =>
 			_mainMenu = _visualElementGetter.GetFirst<VisualElement>(MainMenuName);
-		}
 	}
 }

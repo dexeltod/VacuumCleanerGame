@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Sources.Services
+namespace Sources.Presentation
 {
 	public class GameplayInterfaceView : MonoBehaviour, IDisposable, IGameplayInterfaceView
 	{
@@ -20,7 +20,7 @@ namespace Sources.Services
 
 		[SerializeField] private Button _goToNextLevelButton;
 
-		[SerializeField] private Image    _scoreFillBar;
+		[SerializeField] private Image _scoreFillBar;
 		[SerializeField] private Joystick _joystick;
 
 		[SerializeField] private Image _globalScoreImage;
@@ -30,18 +30,19 @@ namespace Sources.Services
 		private int _cashScore;
 		private int _maxCashScore;
 		private int _globalScore;
-		private int _maxGlobalScore = 1000; //TODO: Need config for global score
+		private int _maxGlobalScore;
 
-		private bool                          _isInitialized;
+		private bool _isInitialized;
+
 		private IResourceProgressEventHandler _resourceProgressEventHandler;
 
 		public TextMeshProUGUI ScoreText => _scoreCash;
 		public TextMeshProUGUI MoneyText => _moneyText;
 
-		public Joystick   Joystick    => _joystick;
-		public Image      ScoreSlider => _scoreFillBar;
-		public Canvas     Canvas      => _canvas;
-		public GameObject GameObject  { get; private set; }
+		public Joystick Joystick => _joystick;
+		public Image ScoreSlider => _scoreFillBar;
+		public Canvas Canvas => _canvas;
+		public GameObject GameObject { get; private set; }
 
 		public event Action GoToTextLevelButtonClicked;
 		public event Action ButtonDestroying;
@@ -50,19 +51,24 @@ namespace Sources.Services
 		~GameplayInterfaceView() =>
 			Unsubscribe();
 
-		public void Construct
-		(
-			int                           startCashScore,
-			int                           maxScore,
-			int                           moneyCount,
-			IResourceProgressEventHandler resourcesProgressPresenter,
+		public void Construct(
+			int startCashScore,
+			int maxCashScore,
+			int maxGlobalScore,
+			int moneyCount,
+			IResourceProgressEventHandler resourceProgressEventHandler,
 			bool isActiveOnStart
 		)
 		{
+			if (resourceProgressEventHandler == null)
+				throw new ArgumentNullException(nameof(resourceProgressEventHandler));
+			if (startCashScore < 0) throw new ArgumentOutOfRangeException(nameof(startCashScore));
+			if (maxCashScore < 0) throw new ArgumentOutOfRangeException(nameof(maxCashScore));
+
 			if (_isInitialized == true)
 				return;
 
-			_resourceProgressEventHandler = resourcesProgressPresenter;
+			_resourceProgressEventHandler = resourceProgressEventHandler;
 
 			_goToNextLevelButton.gameObject.SetActive(false);
 
@@ -72,11 +78,11 @@ namespace Sources.Services
 
 			Subscribe();
 
-			_maxCashScore = maxScore;
+			_maxCashScore = maxCashScore;
 			SetCashScoreText(startCashScore);
 			enabled = true;
 
-			OnSetMaxGlobalScore(_maxGlobalScore);
+			OnSetMaxGlobalScore(maxGlobalScore);
 
 			GameObject = gameObject;
 
@@ -104,10 +110,10 @@ namespace Sources.Services
 
 		private void OnSetGlobalScore(int newScore)
 		{
+			if (newScore < 0) throw new ArgumentOutOfRangeException(nameof(newScore));
 			_globalScore = newScore;
 
-			_globalScoreImage.fillAmount = CalculateValue
-			(
+			_globalScoreImage.fillAmount = NormalizeValue(
 				MaxFillAmount,
 				_globalScore,
 				_maxGlobalScore
@@ -118,6 +124,7 @@ namespace Sources.Services
 
 		private void OnSetMaxCashScore(int newScore)
 		{
+			if (newScore < 0) throw new ArgumentOutOfRangeException(nameof(newScore));
 			_maxCashScore = newScore;
 			_maxGlobalScoreText.SetText($"{_maxCashScore}");
 		}
@@ -127,38 +134,49 @@ namespace Sources.Services
 
 		private void OnSetMaxGlobalScore(int newMaxScore)
 		{
+			if (newMaxScore < 0) throw new ArgumentOutOfRangeException(nameof(newMaxScore));
 			_maxGlobalScore = newMaxScore;
 			_maxGlobalScoreText.SetText($"{_maxGlobalScore}");
 		}
 
-		private void OnSetSoftCurrency(int newMoney) =>
+		private void OnSetSoftCurrency(int newMoney)
+		{
+			if (newMoney < 0) throw new ArgumentOutOfRangeException(nameof(newMoney));
 			_moneyText.SetText(newMoney.ToString());
+		}
 
-		public void SetCurrentLevel(int newLevel) =>
+		public void SetCurrentLevel(int newLevel)
+		{
+			if (newLevel < 0) throw new ArgumentOutOfRangeException(nameof(newLevel));
 			_currentLevel.SetText($"{newLevel}");
+		}
 
 		private void SetCashScoreValue(int newScore)
 		{
 			_cashScore = newScore;
-			float value = CalculateValue
-			(
+
+			float value = NormalizeValue(
 				MaxFillAmount,
 				_cashScore,
 				_maxCashScore
 			);
+
 			_scoreFillBar.fillAmount = value;
 		}
 
-		private float CalculateValue(float maxValue, int newScore, int currentMaxScore) =>
-			maxValue / currentMaxScore * newScore;
+		private float NormalizeValue(
+			float topValue,
+			int newScore,
+			int currentMaxScore
+		) =>
+			topValue / currentMaxScore * newScore;
 
 		private void SetCashScoreText(int newScore) =>
 			_scoreCash.SetText($"{newScore}/{_maxCashScore}");
 
 		private void OnGoToNextLevelButtonClicked()
 		{
-			Debug.Assert
-			(
+			Debug.Assert(
 				GoToTextLevelButtonClicked != null,
 				nameof(GoToTextLevelButtonClicked) + " != null"
 			);
@@ -169,11 +187,11 @@ namespace Sources.Services
 		{
 			_goToNextLevelButton.onClick.AddListener(OnGoToNextLevelButtonClicked);
 
-			_resourceProgressEventHandler.CashScoreChanged       += OnSetCashScore;
-			_resourceProgressEventHandler.GlobalScoreChanged     += OnSetGlobalScore;
-			_resourceProgressEventHandler.MaxCashScoreChanged    += OnSetMaxCashScore;
-			_resourceProgressEventHandler.MaxGlobalScoreChanged  += OnSetMaxGlobalScore;
-			_resourceProgressEventHandler.SoftCurrencyChanged    += OnSetSoftCurrency;
+			_resourceProgressEventHandler.CashScoreChanged += OnSetCashScore;
+			_resourceProgressEventHandler.GlobalScoreChanged += OnSetGlobalScore;
+			_resourceProgressEventHandler.MaxCashScoreChanged += OnSetMaxCashScore;
+			_resourceProgressEventHandler.MaxGlobalScoreChanged += OnSetMaxGlobalScore;
+			_resourceProgressEventHandler.SoftCurrencyChanged += OnSetSoftCurrency;
 			_resourceProgressEventHandler.HalfGlobalScoreReached += SetActiveGoToNextLevelButton;
 		}
 
@@ -181,11 +199,11 @@ namespace Sources.Services
 		{
 			_goToNextLevelButton.onClick.RemoveListener(OnGoToNextLevelButtonClicked);
 
-			_resourceProgressEventHandler.CashScoreChanged       -= OnSetCashScore;
-			_resourceProgressEventHandler.GlobalScoreChanged     -= OnSetGlobalScore;
-			_resourceProgressEventHandler.MaxCashScoreChanged    -= OnSetMaxCashScore;
-			_resourceProgressEventHandler.MaxGlobalScoreChanged  -= OnSetMaxGlobalScore;
-			_resourceProgressEventHandler.SoftCurrencyChanged    -= OnSetSoftCurrency;
+			_resourceProgressEventHandler.CashScoreChanged -= OnSetCashScore;
+			_resourceProgressEventHandler.GlobalScoreChanged -= OnSetGlobalScore;
+			_resourceProgressEventHandler.MaxCashScoreChanged -= OnSetMaxCashScore;
+			_resourceProgressEventHandler.MaxGlobalScoreChanged -= OnSetMaxGlobalScore;
+			_resourceProgressEventHandler.SoftCurrencyChanged -= OnSetSoftCurrency;
 			_resourceProgressEventHandler.HalfGlobalScoreReached -= SetActiveGoToNextLevelButton;
 		}
 	}

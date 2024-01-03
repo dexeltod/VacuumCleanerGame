@@ -1,6 +1,6 @@
 using Sources.Utils;
 
-namespace Sources.View.UI.VisualElementCases.MainMenu
+namespace Sources.Presentation.UI.VisualElementCases.MainMenu.VisualElements
 {
 	public class MainMenuVisualElement
 	{

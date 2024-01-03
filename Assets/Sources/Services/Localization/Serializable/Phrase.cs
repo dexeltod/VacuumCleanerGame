@@ -4,8 +4,7 @@ using UnityEngine;
 
 namespace Sources.Services.Localization.Serializable
 {
-	[Serializable]
-	public class Phrase
+	[Serializable] public class Phrase
 	{
 		[SerializeField] public string Name;
 		[SerializeField] public List<Translation> Translations;

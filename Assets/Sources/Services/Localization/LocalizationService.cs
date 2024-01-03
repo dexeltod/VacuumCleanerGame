@@ -5,13 +5,14 @@ using Sources.DIService;
 using Sources.Services.Localization.Serializable;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs;
+using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 
 namespace Sources.Services.Localization
 {
 	public class LocalizationService : ILocalizationService
 	{
-		private const    string   StartLanguage = "Russian";
+		private const string StartLanguage = "Russian";
 		private readonly string[] _phraseNames;
 		private readonly string[] _languages;
 
@@ -21,7 +22,7 @@ namespace Sources.Services.Localization
 
 			LeanLocalization leanLocalization = LoadAssets(assetProvider, out var localizationData);
 
-			_languages   = new string[localizationData.Languages.Count];
+			_languages = new string[localizationData.Languages.Count];
 			_phraseNames = new string[localizationData.Phrases.Count];
 
 			AddLanguages(localizationData, leanLocalization);
@@ -88,8 +89,7 @@ namespace Sources.Services.Localization
 				{
 					Phrase phraseData = localizationData.Phrases[x];
 
-					phrase.AddEntry
-					(
+					phrase.AddEntry(
 						phraseData.Translations[i].Language,
 						phraseData.Translations[i].Text
 					);

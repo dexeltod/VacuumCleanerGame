@@ -5,10 +5,11 @@ using Sources.Infrastructure.Factories;
 using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Upgrade;
+using Sources.Presentation.UI.Shop;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
 using Sources.Utils.Configs;
-using Sources.View.UI.Shop;
+using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 
 namespace Sources.Application.UI

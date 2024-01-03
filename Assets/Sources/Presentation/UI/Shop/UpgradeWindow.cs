@@ -3,31 +3,30 @@ using System.Collections.Generic;
 using Sources.DIService;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Services.Interfaces;
-using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Sources.View.UI.Shop
+namespace Sources.Presentation.UI.Shop
 {
 	[RequireComponent(typeof(UpgradeWindow))]
 	public class UpgradeWindow : MonoBehaviour, IUpgradeWindow
 	{
-		[SerializeField] private GameObject      _content;
+		[SerializeField] private GameObject _content;
 		[SerializeField] private TextMeshProUGUI _money;
 
-		[SerializeField] private Button     _closeMenuButton;
-		[SerializeField] private Button     _noButton;
+		[SerializeField] private Button _closeMenuButton;
+		[SerializeField] private Button _noButton;
 		[SerializeField] private GameObject _yesNoButtons;
 
-		private IUIGetter                  _uiGetter;
+		private IUIGetter _uiGetter;
 		private List<UpgradeElementPrefabView> _buttons;
 
 		public Transform ContainerTransform => _content.transform;
 
 		public event Action<bool> ActiveChanged;
-		public event Action       Destroyed;
+		public event Action Destroyed;
 
 		private void Awake() =>
 			enabled = false;
@@ -55,7 +54,7 @@ namespace Sources.View.UI.Shop
 		public void Construct(IResourceReadOnly<int> resource)
 		{
 			_uiGetter = ServiceLocator.Container.Get<IUIGetter>();
-			
+
 			resource.ResourceChanged += OnMoneyChanged;
 
 			_money.text = resource.Count.ToString();

@@ -8,14 +8,13 @@ namespace Sources.Services
 		private readonly IMeshDeformationPresenter _meshModifiable;
 		private readonly IResourcesProgressPresenter _resourceService;
 
-		public MeshPresenter
-		(
-			IMeshDeformationPresenter   meshModifiable,
+		public MeshPresenter(
+			IMeshDeformationPresenter meshModifiable,
 			IResourcesProgressPresenter resourceService
 		)
 		{
-			_resourceService = resourceService;
-			_meshModifiable = meshModifiable;
+			_resourceService = resourceService ?? throw new ArgumentNullException(nameof(resourceService));
+			_meshModifiable = meshModifiable ?? throw new ArgumentNullException(nameof(meshModifiable));
 			_meshModifiable.MeshDeformed += OnCollisionHappen;
 		}
 

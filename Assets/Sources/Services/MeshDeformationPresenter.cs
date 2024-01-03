@@ -14,46 +14,45 @@ namespace Sources.Services
 
 		public MeshDeformationPresenter(IMeshModifiable meshModifiable, IResourceMaxScore resourceMaxScore)
 		{
-			_meshModifiable = meshModifiable;
-			_resourceMaxScore = resourceMaxScore;
+			_meshModifiable = meshModifiable ?? throw new ArgumentNullException(nameof(meshModifiable));
+			_resourceMaxScore = resourceMaxScore ?? throw new ArgumentNullException(nameof(resourceMaxScore));
 			_meshModifiable.CollisionHappen += OnCollisionHappen;
 		}
 
-		public void Dispose() => 
+		public void Dispose() =>
 			_meshModifiable.CollisionHappen -= OnCollisionHappen;
 
 		private void OnCollisionHappen(int scoreCount, Transform transform)
 		{
 			if (_resourceMaxScore.CheckMaxScore() == false)
 				return;
-			
+
 			bool isDeforming = false;
 			Vector3[] vertices = _meshModifiable.Mesh.vertices;
 
 			for (int i = 0; i < _meshModifiable.Mesh.vertexCount; i++)
 			{
-				for (int j = 0; j < _meshModifiable.Collision.contacts.Length; j++)
+				foreach (ContactPoint contact in _meshModifiable.Collision.contacts)
 				{
-					Vector3 point = transform.InverseTransformPoint(_meshModifiable.Collision.contacts[j].point);
+					Vector3 point = transform.InverseTransformPoint(contact.point);
 					float distance = Vector3.Distance(point, vertices[i]);
 
-					if (distance < _meshModifiable.RadiusDeformation)
-					{
-						Vector3 newVertex = Calculate(distance);
-						vertices[i] += newVertex;
-						isDeforming = true;
-					}
+					if (!(distance < _meshModifiable.RadiusDeformation)) continue;
+
+					Vector3 newVertex = Calculate(distance);
+					vertices[i] += newVertex;
+					isDeforming = true;
 				}
 			}
 
-			if (isDeforming)
-			{
-				Recalculate(vertices);
-				MeshDeformed.Invoke(scoreCount);
-			}
+			if (!isDeforming)
+				return;
+
+			Recalculate(vertices);
+			MeshDeformed.Invoke(scoreCount);
 		}
 
-		private Vector3 Calculate(float distance) => 
+		private Vector3 Calculate(float distance) =>
 			(_meshModifiable.RadiusDeformation - distance) * Vector3.down;
 
 		private void Recalculate(Vector3[] vertices)

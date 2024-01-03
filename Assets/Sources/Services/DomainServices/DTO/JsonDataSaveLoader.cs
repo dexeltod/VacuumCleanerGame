@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace Sources.Services.DomainServices.DTO
 {
-	public class JsonDataSaveLoader 
+	public class JsonDataSaveLoader
 	{
 		private readonly string _fileFormat;
-		private  string _directoryPath => UnityEngine.Application.persistentDataPath + "/Data/";
+		private string _directoryPath => UnityEngine.Application.persistentDataPath + "/Data/";
 
 		public JsonDataSaveLoader()
 		{
@@ -66,7 +66,7 @@ namespace Sources.Services.DomainServices.DTO
 			if (File.Exists(filePath) == false)
 			{
 				var file = File.Create(filePath);
-				
+
 				using (var writer = new StreamWriter(file))
 				{
 					writer.WriteLine("");

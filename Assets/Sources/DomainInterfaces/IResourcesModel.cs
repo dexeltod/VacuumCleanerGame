@@ -10,12 +10,11 @@ namespace Sources.DomainInterfaces
 		IResourceReadOnly<int> HardCurrency { get; }
 
 		int MaxCashScore { get; }
-		int MaxModifier { get; }
 		int CurrentCashScore { get; }
 		int GlobalSandCount { get; }
 		int PercentOfScore { get; }
+		int MaxGlobalScore { get; }
 
-		void SetCashScore(int newValue);
 		void AddCashScore(int newValue);
 		void DecreaseCashScore(int newValue);
 		void AddMoney(int newValue);

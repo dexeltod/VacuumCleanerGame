@@ -14,7 +14,7 @@ namespace Sources.Infrastructure.Factories.UpgradeShop
 		private UpgradeItemPrefab[] _items;
 
 		public IReadOnlyList<UpgradeItemPrefab> ReadOnlyItems => _items;
-		
+
 		public IUpgradeItemData[] Items => _items;
 		public IUpgradeItemPrefab[] Prefabs => _items;
 	}

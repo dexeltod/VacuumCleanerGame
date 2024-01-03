@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Sources.View.SceneEntity
+namespace Sources.Presentation.SceneEntity
 {
 	public class VacuumColliderDisabler : MonoBehaviour
 	{
@@ -9,12 +9,13 @@ namespace Sources.View.SceneEntity
 
 		public void DisableColliders()
 		{
-			foreach (var collider in _colliders) 
+			foreach (var collider in _colliders)
 				collider.enabled = false;
 		}
+
 		public void EnableColliders()
 		{
-			foreach (var collider in _colliders) 
+			foreach (var collider in _colliders)
 				collider.enabled = true;
 		}
 	}

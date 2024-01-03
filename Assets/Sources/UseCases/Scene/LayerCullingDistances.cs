@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UseCases.Scene
+namespace Sources.UseCases.Scene
 {
 	[RequireComponent(typeof(Camera))]
 	public class LayerCullingDistances : MonoBehaviour

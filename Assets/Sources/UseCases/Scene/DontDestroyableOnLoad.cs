@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UseCases.Scene
+namespace Sources.UseCases.Scene
 {
 	public class DontDestroyableOnLoad : MonoBehaviour
 	{

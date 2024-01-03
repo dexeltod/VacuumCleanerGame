@@ -1,15 +1,13 @@
 using Sources.Application.StateMachine.GameStates;
-using Sources.Application.StateMachineInterfaces;
 using Sources.Application.UI;
+using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Player;
-using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
-using Sources.PresentationInterfaces;
 using Sources.Services;
 using Sources.Services.Interfaces;
 using Sources.ServicesInterfaces;
@@ -24,8 +22,7 @@ namespace Sources.Application.StateMachine
 
 		private bool _isServicesInitialized;
 
-		public InitializeServicesWithViewState
-		(
+		public InitializeServicesWithViewState(
 			GameStateMachine gameStateMachine,
 			ServiceLocator serviceLocator
 		)
@@ -65,8 +62,7 @@ namespace Sources.Application.StateMachine
 
 			#endregion
 
-			UIFactory uiFactory = new UIFactory
-			(
+			UIFactory uiFactory = new UIFactory(
 				assetProvider,
 				resourcesProgressPresenter as IResourceProgressEventHandler,
 				progressService
@@ -75,8 +71,7 @@ namespace Sources.Application.StateMachine
 			_serviceLocator.Register<IUIFactory>(uiFactory);
 			_serviceLocator.Register<IUIGetter>(uiFactory);
 
-			CreateUpgradeWindowService
-			(
+			CreateUpgradeWindowService(
 				assetProvider,
 				upgradeDataFactory,
 				resourcesProgressPresenter,
@@ -90,8 +85,7 @@ namespace Sources.Application.StateMachine
 			_isServicesInitialized = true;
 		}
 
-		private void CreateUpgradeWindowService
-		(
+		private void CreateUpgradeWindowService(
 			IAssetProvider assetProvider,
 			IUpgradeDataFactory upgradeDataFactory,
 			IResourcesProgressPresenter resourcesProgressPresenter,
@@ -100,8 +94,7 @@ namespace Sources.Application.StateMachine
 			IPlayerProgressProvider playerProgressProvider
 		)
 		{
-			UpgradeWindowFactory upgradeWindowFactory = new
-			(
+			UpgradeWindowFactory upgradeWindowFactory = new(
 				assetProvider,
 				upgradeDataFactory,
 				resourcesProgressPresenter,

@@ -5,7 +5,7 @@ using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using UnityEngine;
 
-namespace Sources.View.SceneEntity
+namespace Sources.Presentation.SceneEntity
 {
 	public class MeshModificator : MonoBehaviour, IMeshModifiable
 	{
@@ -15,19 +15,16 @@ namespace Sources.View.SceneEntity
 		private List<Vector3> _newVertices;
 		private IResourcesProgressPresenter _resourcesProgressPresenter;
 
-		public MeshModificator(Collision collision)
-		{
-			Collision = collision;
-		}
+		public MeshModificator(Collision collision) =>
+			Collision = collision ?? throw new ArgumentNullException(nameof(collision));
 
+		public Mesh Mesh { get; private set; }
 		public float RadiusDeformation => _radiusDeformation;
 
 		public int PointPerOneSand => _pointPerOneSand;
 
-		public Mesh Mesh { get; private set; }
-		public event Action<int, Transform> CollisionHappen;
-
 		public Collision Collision { get; private set; }
+		public event Action<int, Transform> CollisionHappen;
 
 		public MeshCollider GetMeshCollider() =>
 			GetComponent<MeshCollider>();

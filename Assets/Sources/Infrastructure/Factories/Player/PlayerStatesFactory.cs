@@ -1,5 +1,4 @@
 using Sources.Services;
-using Sources.Services.Character;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Factories.Player
@@ -7,8 +6,7 @@ namespace Sources.Infrastructure.Factories.Player
 	public class PlayerStatesFactory
 	{
 		private readonly StateService _stateService;
-		private readonly MusicSetter _musicSetter;
-		
+
 		private readonly Animator _animator;
 		private readonly AnimatorFacade _animatorFacade;
 		private readonly AnimationHasher _animationHasher;
@@ -16,8 +14,11 @@ namespace Sources.Infrastructure.Factories.Player
 		private IStateTransition _anyToRunTransition;
 		private IStateTransition _anyToIdleTransition;
 
-		public PlayerStatesFactory(  Animator animator,
-			AnimationHasher hasher, AnimatorFacade animatorFacade)
+		public PlayerStatesFactory(
+			Animator animator,
+			AnimationHasher hasher,
+			AnimatorFacade animatorFacade
+		)
 		{
 			_animator = animator;
 			_animationHasher = hasher;
@@ -29,12 +30,8 @@ namespace Sources.Infrastructure.Factories.Player
 		public void CreateStateMachineAndSetState() =>
 			new StateMachine(new StartState());
 
-		public void CreateTransitions()
-		{
-		}
+		public void CreateTransitions() { }
 
-		public void CreateStates()
-		{
-		}
+		public void CreateStates() { }
 	}
 }

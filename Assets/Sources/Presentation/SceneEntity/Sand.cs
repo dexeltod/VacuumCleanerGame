@@ -1,9 +1,6 @@
 using UnityEngine;
 
-namespace Sources.View.SceneEntity
+namespace Sources.Presentation.SceneEntity
 {
-	public class Sand : MonoBehaviour
-	{
-		
-	}
+	public class Sand : MonoBehaviour { }
 }

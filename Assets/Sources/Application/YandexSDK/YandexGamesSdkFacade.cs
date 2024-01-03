@@ -1,26 +1,27 @@
+using System;
 using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
 using Sources.DomainInterfaces;
-using Sources.PresentationInterfaces;
 using UnityEngine;
 
 namespace Sources.Application.YandexSDK
 {
 	public class YandexGamesSdkFacade : IYandexSDKController
 	{
-		private const    int                         Delay = 1500;
-		private readonly IYandexAuthorizationHandler _yandexAuthorizationHandler;
+		private const int Delay = 1500;
+		private readonly IYandexAuthorizationView _yandexAuthorizationView;
 
 		private PlayerAccountProfileDataResponse _playerAccount;
-		private IGameProgressModel               _gameProgress;
+		private IGameProgressModel _gameProgress;
 
 		private bool _isAuthorized;
 
-		public YandexGamesSdkFacade(IYandexAuthorizationHandler yandexAuthorizationHandler)
-		{
-			_yandexAuthorizationHandler = yandexAuthorizationHandler;
-		}
+		public YandexGamesSdkFacade(IYandexAuthorizationView yandexAuthorizationView) =>
+			_yandexAuthorizationView = yandexAuthorizationView;
+
+		public void SetStatusInitialized() =>
+			YandexGamesSdk.GameReady();
 
 		public async UniTask Initialize()
 		{
@@ -32,14 +33,11 @@ namespace Sources.Application.YandexSDK
 			if (PlayerAccount.IsAuthorized == false)
 			{
 				bool isNeedAuthorization = false;
-				bool isProcessCompleted  = false;
+				bool isProcessCompleted = false;
 
-				Debug.Log("Waiting");
-
-				_yandexAuthorizationHandler.IsWantsAuthorization
-				(
-					callback: isPlayerMadeChoice => isNeedAuthorization      = isPlayerMadeChoice,
-					isPlayerWantsAuthorizeCallback: () => isProcessCompleted = true
+				_yandexAuthorizationView.IsWantsAuthorization(
+					response => { isNeedAuthorization = response; },
+					() => isProcessCompleted = true
 				);
 
 				await UniTask.WaitWhile(() => isProcessCompleted == false);
@@ -50,8 +48,7 @@ namespace Sources.Application.YandexSDK
 				isProcessCompleted = false;
 
 				PlayerAccount.Authorize();
-				PlayerAccount.StartAuthorizationPolling
-				(
+				PlayerAccount.StartAuthorizationPolling(
 					Delay,
 					() => { isProcessCompleted = true; }
 				);
@@ -70,10 +67,11 @@ namespace Sources.Application.YandexSDK
 			PlayerAccountProfileDataResponse playerAccount = null;
 
 			PlayerAccount.GetProfileData
-			(response =>
+			(
+				response =>
 				{
 					playerAccount = response;
-					isReceived    = true;
+					isReceived = true;
 				}
 			);
 
@@ -82,6 +80,25 @@ namespace Sources.Application.YandexSDK
 			Debug.Log("PLAYER ACCOUNT NAME : " + playerAccount.publicName);
 
 			return playerAccount;
+		}
+
+		public async UniTask ShowAd(Action onOpenCallback, Action onRewardsCallback, Action onCloseCallback)
+		{
+			bool isClosed = false;
+			bool isRewarded = false;
+
+			VideoAd.Show(
+				() => onOpenCallback?.Invoke(),
+				() => isClosed = true,
+				() => isRewarded = true
+			);
+
+			await UniTask.WaitWhile(() => isClosed == true || isRewarded == true);
+
+			if (isClosed == true)
+				onCloseCallback.Invoke();
+			else if (isRewarded == true)
+				onRewardsCallback.Invoke();
 		}
 
 		public async UniTask Save(string json)
@@ -95,36 +112,35 @@ namespace Sources.Application.YandexSDK
 
 		public async UniTask<string> Load()
 		{
-			bool   isReceived = false;
-			string json       = "";
+			bool isCallbackReceived = false;
+			string json = "";
 
-			PlayerAccount.GetCloudSaveData
-			(
+			PlayerAccount.GetCloudSaveData(
 				successCallback =>
 				{
-					isReceived = true;
-					json       = successCallback;
+					isCallbackReceived = true;
+					json = successCallback;
 				},
 				errorCallback =>
 				{
 					Debug.LogError(errorCallback);
 
-					isReceived = true;
-					json       = null;
+					isCallbackReceived = true;
+					json = null;
 				}
 			);
 
-			await UniTask.WaitWhile(() => isReceived == false);
+			await UniTask.WaitWhile(() => isCallbackReceived == false);
 
 			return json;
 		}
 
 		public async UniTask DeleteSaves(IGameProgressModel gameProgressModel)
 		{
-			bool isReceived = false;
-			PlayerAccount.SetCloudSaveData("{}", () => isReceived = true);
+			bool isCallbackReceived = false;
+			PlayerAccount.SetCloudSaveData("{}", () => isCallbackReceived = true);
 
-			await UniTask.WaitWhile(() => isReceived == false);
+			await UniTask.WaitWhile(() => isCallbackReceived == false);
 
 			Debug.Log("DATA DELETED");
 		}

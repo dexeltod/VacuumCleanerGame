@@ -23,7 +23,7 @@ namespace Sources.Services.DomainServices.DTO
 		{
 			DeleteSaves();
 			SetUniqueSaveFilePath();
-			
+
 			using (FileStream saveFile = File.Create(_saveFilePath))
 			{
 				new BinaryFormatter().Serialize(saveFile, data);
@@ -34,10 +34,10 @@ namespace Sources.Services.DomainServices.DTO
 		{
 			string[] files = Directory.GetFiles(_directorySavePath);
 
-			if(files.Length == 0)
+			if (files.Length == 0)
 				return;
-			
-			foreach (string file in files) 
+
+			foreach (string file in files)
 				File.Delete(file);
 		}
 

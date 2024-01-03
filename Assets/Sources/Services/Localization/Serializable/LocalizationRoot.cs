@@ -4,8 +4,7 @@ using UnityEngine;
 
 namespace Sources.Services.Localization.Serializable
 {
-	[Serializable]
-	public class LocalizationRoot
+	[Serializable] public class LocalizationRoot
 	{
 		[SerializeField] public List<Phrase> Phrases;
 		[SerializeField] public List<string> Languages;
