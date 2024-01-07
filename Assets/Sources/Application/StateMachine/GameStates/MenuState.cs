@@ -3,6 +3,9 @@ using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.DIService;
 using Sources.Infrastructure.Factories.LeaderBoard;
+using Sources.Infrastructure.Presenters;
+using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Scene;
 using Sources.Presentation.SceneEntity;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs.Scripts;
@@ -14,6 +17,7 @@ namespace Sources.Application.StateMachine.GameStates
 		private readonly ISceneLoader _sceneLoader;
 		private readonly LoadingCurtain _loadingCurtain;
 		private readonly ServiceLocator _serviceLocator;
+		private MainMenuPresenter _mainMenuPresenter;
 
 		public MenuState(ISceneLoader sceneLoader, LoadingCurtain loadingCurtain, ServiceLocator serviceLocator)
 		{
@@ -27,6 +31,10 @@ namespace Sources.Application.StateMachine.GameStates
 			#region GettingServices
 
 			IAssetProvider assetProvider = _serviceLocator.Get<IAssetProvider>();
+			ILevelProgressFacade levelProgress = _serviceLocator.Get<ILevelProgressFacade>();
+			IGameStateMachine gameStateMachine = _serviceLocator.Get<IGameStateMachine>();
+			ILevelConfigGetter levelConfigGetter = _serviceLocator.Get<ILevelConfigGetter>();
+
 #if !UNITY_EDITOR
 			_serviceLocator.Get<IYandexSDKController>().SetStatusInitialized();
 #endif
@@ -34,11 +42,21 @@ namespace Sources.Application.StateMachine.GameStates
 
 			#endregion
 
-			LeaderBoardFactory leaderBoardFactory = new LeaderBoardFactory(assetProvider, leaderBoardService);
+			MainMenuFactory mainMenuFactory = new MainMenuFactory(assetProvider, leaderBoardService);
 
 			await _sceneLoader.Load(ConstantNames.MenuScene);
-			await leaderBoardFactory.Create();
+			await mainMenuFactory.Instantiate();
 
+			MainMenuBehaviour mainMenuBehaviour = mainMenuFactory.MainMenuBehaviour;
+
+			_mainMenuPresenter = new MainMenuPresenter(
+				mainMenuBehaviour,
+				levelProgress,
+				gameStateMachine,
+				levelConfigGetter
+			);
+
+			_mainMenuPresenter.Enable();
 			_loadingCurtain.HideSlowly();
 		}
 
@@ -46,6 +64,7 @@ namespace Sources.Application.StateMachine.GameStates
 		{
 			_loadingCurtain.Show();
 			_loadingCurtain.gameObject.SetActive(true);
+			_mainMenuPresenter.Disable();
 		}
 	}
 }

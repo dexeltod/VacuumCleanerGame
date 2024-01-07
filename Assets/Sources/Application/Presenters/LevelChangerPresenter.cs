@@ -9,6 +9,7 @@ using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs.Scripts;
 using UnityEngine;
+using VContainer;
 
 namespace Sources.Infrastructure.Presenters
 {
@@ -19,17 +20,18 @@ namespace Sources.Infrastructure.Presenters
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly IResourcesProgressPresenter _progressPresenter;
 		private readonly IProgressLoadDataService _progressLoadDataService;
-		private readonly IYandexSDKController _yandexSDKController;
+		private readonly IRewardService _rewardService;
 
 		private IGoToTextLevelButtonSubscribeable _button;
 
+		[Inject]
 		public LevelChangerPresenter(
 			ILevelProgressFacade levelProgressFacade,
 			IGameStateMachine gameStateMachine,
 			ILevelConfigGetter levelConfigGetter,
 			IResourcesProgressPresenter progressPresenter,
 			IProgressLoadDataService progressLoadDataService,
-			IYandexSDKController yandexSDKController
+			IRewardService rewardService
 		)
 		{
 			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
@@ -39,7 +41,7 @@ namespace Sources.Infrastructure.Presenters
 			_progressLoadDataService = progressLoadDataService ??
 				throw new ArgumentNullException(nameof(progressLoadDataService));
 
-			_yandexSDKController = yandexSDKController ?? throw new ArgumentNullException(nameof(yandexSDKController));
+			_rewardService = rewardService ?? throw new ArgumentNullException(nameof(rewardService));
 		}
 
 		public void Dispose() =>
@@ -59,13 +61,9 @@ namespace Sources.Infrastructure.Presenters
 			_button.GoToTextLevelButtonClicked -= OnGoToTextLevelButtonClicked;
 		}
 
-		private async void OnGoToTextLevelButtonClicked()
+		private void OnGoToTextLevelButtonClicked()
 		{
-			await _yandexSDKController.ShowAd(
-				OnAdShowed,
-				OnRewarded,
-				OnAdClosed
-			);
+			_rewardService.ShowAd(OnAdShowed, OnRewarded, OnAdClosed);
 		}
 
 		private void OnAdShowed()

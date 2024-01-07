@@ -10,15 +10,20 @@ namespace Sources.Application.YandexSDK
 	public class YandexGamesSdkFacade : IYandexSDKController
 	{
 		private const int Delay = 1500;
+		
 		private readonly IYandexAuthorizationView _yandexAuthorizationView;
+		private readonly IRewardService _rewardService;
 
 		private PlayerAccountProfileDataResponse _playerAccount;
 		private IGameProgressModel _gameProgress;
 
 		private bool _isAuthorized;
 
-		public YandexGamesSdkFacade(IYandexAuthorizationView yandexAuthorizationView) =>
+		public YandexGamesSdkFacade(IYandexAuthorizationView yandexAuthorizationView, IRewardService rewardService)
+		{
 			_yandexAuthorizationView = yandexAuthorizationView;
+			_rewardService = rewardService ?? throw new ArgumentNullException(nameof(rewardService));
+		}
 
 		public void SetStatusInitialized() =>
 			YandexGamesSdk.GameReady();

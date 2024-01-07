@@ -36,6 +36,17 @@ using Sources.Application.YandexSDK;
 
 namespace Sources.Application.StateMachine.GameStates
 {
+	internal class YandexRewardsService : IRewardService
+	{
+		public YandexRewardsService()
+		{
+			
+		}
+		
+		public void ShowAd(Action onOpened, Action onRewarded, Action onClosed) =>
+			throw new NotImplementedException();
+	}
+
 	public sealed class InitializeServicesAndProgressState : IGameState
 	{
 		private readonly UnityServicesController _unityServicesController;
@@ -81,7 +92,8 @@ namespace Sources.Application.StateMachine.GameStates
 
 			IAuthorization authorization = new AuthorizationFactory(assetProvider).Create();
 
-			await InitializeLeaderBoardService(authorization);
+			IRewardService rewardService = new YandexRewardsService();
+			await InitializeLeaderBoardService(authorization, rewardService);
 
 			IUpgradeDataFactory shopFactory = _serviceLocator.Register<IUpgradeDataFactory>
 				(new UpgradeDataFactory(assetProvider));
@@ -192,17 +204,18 @@ namespace Sources.Application.StateMachine.GameStates
 			);
 		}
 
-		private async UniTask InitializeLeaderBoardService(IAuthorization handler)
+		private async UniTask InitializeLeaderBoardService(IAuthorization handler, IRewardService rewardService)
 		{
 			LeaderBoard leaderBoardService = new LeaderBoard(GetLeaderboard());
 
 			_serviceLocator.Register<ILeaderBoardService>(leaderBoardService);
 
-			YandexGamesSdkFacade yandexSdk = new YandexGamesSdkFacade((IYandexAuthorizationView)handler);
-
+#if YANDEX_GAMES && !UNITY_EDITOR
+			YandexGamesSdkFacade yandexSdk = new YandexGamesSdkFacade((IYandexAuthorizationView)handler, rewardService);
 			await yandexSdk.Initialize();
 
 			_serviceLocator.Register<IYandexSDKController>(yandexSdk);
+#endif
 		}
 
 		private async UniTask<ISaveLoader> GetSaveLoader(
@@ -210,7 +223,7 @@ namespace Sources.Application.StateMachine.GameStates
 			IPersistentProgressService progressService
 		)
 		{
-#if !UNITY_EDITOR
+#if YANDEX_GAMES && !UNITY_EDITOR
 			return new YandexSaveLoader(sdkController);
 #endif
 

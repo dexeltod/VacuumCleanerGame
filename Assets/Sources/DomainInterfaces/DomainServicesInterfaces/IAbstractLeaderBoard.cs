@@ -7,9 +7,9 @@ namespace Sources.DomainInterfaces.DomainServicesInterfaces
 	public interface IAbstractLeaderBoard
 	{
 		UniTask AddScore(int newScore);
-		UniTask Set(int      score);
+		UniTask Set(int score);
 
 		UniTask<Dictionary<string, int>> GetPlayers(int playersCount);
-		UniTask<Tuple<string, int>>      GetPlayer();
+		UniTask<Tuple<string, int>> GetPlayer();
 	}
 }

@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace Sources.Services.DomainServices
 {
+#if YANDEX_GAMES && !UNITY_EDITOR
 	public class YandexSaveLoader : ISaveLoader
 	{
 		private readonly IYandexSDKController _yandexController;
@@ -59,4 +60,5 @@ namespace Sources.Services.DomainServices
 			succeededCallback.Invoke();
 		}
 	}
+#endif
 }

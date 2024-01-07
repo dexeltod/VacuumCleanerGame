@@ -1,4 +1,5 @@
 using System;
+using Sources.Application.YandexSDK;
 using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.DIService;
@@ -14,6 +15,7 @@ using Sources.ServicesInterfaces.UI;
 using Sources.UseCases.Scene;
 using Sources.Utils.Configs.Scripts;
 using UnityEngine;
+using VContainer;
 
 namespace Sources.Application.StateMachine.GameStates
 {
@@ -27,6 +29,7 @@ namespace Sources.Application.StateMachine.GameStates
 		private ISceneLoadInvoker _sceneLoadInvoker;
 		private LevelChangerPresenter _levelChangerPresenter;
 
+		[Inject]
 		public BuildSceneState(
 			GameStateMachine gameStateMachine,
 			ServiceLocator serviceLocator,
@@ -68,22 +71,15 @@ namespace Sources.Application.StateMachine.GameStates
 			IResourcesProgressPresenter resourcesProgress = _serviceLocator.Get<IResourcesProgressPresenter>();
 			IPersistentProgressService persistentProgress = _serviceLocator.Get<IPersistentProgressService>();
 
+#if !UNITY_EDITOR && YANDEX_GAMES
 			IYandexSDKController yandexSDKController = _serviceLocator.Get<IYandexSDKController>();
+#endif
 
 			#endregion
 
 			GameObject initialPoint = GameObject.FindWithTag(ConstantNames.PlayerSpawnPointTag);
 
 			IGameplayInterfaceView gameplayInterfaceView = uiFactory.Instantiate();
-
-			_levelChangerPresenter ??= new LevelChangerPresenter(
-				levelProgressFacade,
-				_gameStateMachine,
-				levelConfigGetter,
-				resourcesProgress,
-				progressLoadDataService,
-				yandexSDKController
-			);
 
 			_levelChangerPresenter.SetButton(gameplayInterfaceView);
 
