@@ -30,8 +30,7 @@ namespace Sources.Application
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
-		public GameStateMachine Create(
-		)
+		public GameStateMachine Create()
 		{
 			GameStateMachine gameStateMachine = new GameStateMachine();
 
@@ -66,7 +65,11 @@ namespace Sources.Application
 					[typeof(InitializeServicesWithViewState)]
 						= new InitializeServicesWithViewState(gameStateMachine, ServiceLocator.Container),
 
-					[typeof(BuildSceneState)] = new BuildSceneState(gameStateMachine, ServiceLocator.Container, _coroutineRunner),
+					[typeof(BuildSceneState)] = new BuildSceneState(
+						gameStateMachine,
+						ServiceLocator.Container,
+						_coroutineRunner
+					),
 
 					[typeof(GameLoopState)] = new GameLoopState(gameStateMachine, _loadingCurtain)
 				}

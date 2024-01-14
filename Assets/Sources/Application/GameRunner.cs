@@ -1,17 +1,18 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Sources.Application
 {
 	public class GameRunner : MonoBehaviour
 	{
-		[SerializeField] private Bootstrapper _bootstrapperPrefab;
+		[FormerlySerializedAs("_bootstrapperPrefab")] [SerializeField] private Boot _bootPrefab;
 
 		private void Awake()
 		{
-			Bootstrapper bootstrapper = FindObjectOfType<Bootstrapper>();
+			Boot boot = FindObjectOfType<Boot>();
 
-			if (bootstrapper == null)
-				Instantiate(_bootstrapperPrefab);
+			if (boot == null)
+				Instantiate(_bootPrefab);
 		}
 	}
 }

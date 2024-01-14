@@ -38,11 +38,8 @@ namespace Sources.Application.StateMachine.GameStates
 {
 	internal class YandexRewardsService : IRewardService
 	{
-		public YandexRewardsService()
-		{
-			
-		}
-		
+		public YandexRewardsService() { }
+
 		public void ShowAd(Action onOpened, Action onRewarded, Action onClosed) =>
 			throw new NotImplementedException();
 	}
