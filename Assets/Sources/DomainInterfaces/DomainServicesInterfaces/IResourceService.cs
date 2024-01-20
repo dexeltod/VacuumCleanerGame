@@ -1,9 +1,9 @@
-using Sources.DIService;
+
 using Sources.Utils;
 
 namespace Sources.DomainInterfaces.DomainServicesInterfaces
 {
-	public interface IResourceService : IService
+	public interface IResourceService 
 	{
 		IResource<T> GetResource<T>(ResourceType type);
 

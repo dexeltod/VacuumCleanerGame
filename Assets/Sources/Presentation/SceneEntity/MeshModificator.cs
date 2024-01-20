@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Sources.DIService;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using UnityEngine;
+using VContainer;
 
 namespace Sources.Presentation.SceneEntity
 {
@@ -29,10 +29,15 @@ namespace Sources.Presentation.SceneEntity
 		public MeshCollider GetMeshCollider() =>
 			GetComponent<MeshCollider>();
 
+		[Inject]
+		private void Construct(IResourcesProgressPresenter resourcesProgressPresenter)
+		{
+			_resourcesProgressPresenter = resourcesProgressPresenter;
+		}
+
 		private void Start()
 		{
 			Mesh = GetComponent<MeshFilter>().mesh;
-			_resourcesProgressPresenter = ServiceLocator.Container.Get<IResourcesProgressPresenter>();
 		}
 
 		private void OnCollisionEnter(Collision collision)

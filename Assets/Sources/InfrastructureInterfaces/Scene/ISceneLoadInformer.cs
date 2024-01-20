@@ -1,9 +1,9 @@
 using System;
-using Sources.DIService;
+
 
 namespace Sources.InfrastructureInterfaces.Scene
 {
-	public interface ISceneLoadInformer : IService
+	public interface ISceneLoadInformer 
 	{
 		event Action SceneLoaded;
 		bool IsSceneLoaded { get; }

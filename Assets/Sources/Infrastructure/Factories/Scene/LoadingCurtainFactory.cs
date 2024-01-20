@@ -14,7 +14,7 @@ namespace Sources.Application
 		public LoadingCurtainFactory(IAssetProvider provider) =>
 			_provider = provider ?? throw new ArgumentNullException(nameof(provider));
 
-		public LoadingCurtain Load() =>
+		public LoadingCurtain Create() =>
 			_provider.InstantiateAndGetComponent<LoadingCurtain>(ResourcesAssetPath.GameObjects.LoadinCrutain);
 	}
 }

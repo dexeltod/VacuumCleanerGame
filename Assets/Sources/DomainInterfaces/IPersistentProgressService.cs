@@ -1,9 +1,9 @@
-using Sources.DIService;
+
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 
 namespace Sources.DomainInterfaces
 {
-	public interface IPersistentProgressService : IPersistentProgressServiceConstructable, IService
+	public interface IPersistentProgressService : IPersistentProgressServiceConstructable
 	{
 		IGameProgressModel GameProgress { get; }
 	}

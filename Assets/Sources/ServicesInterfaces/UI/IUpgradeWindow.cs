@@ -14,6 +14,5 @@ namespace Sources.ServicesInterfaces.UI
 		void               OnDestroy();
 		void               SetActiveYesNoButtons(bool isActive);
 		Transform          ContainerTransform {get;}
-		void               Construct(IResourceReadOnly<int> resource);
 	}
 }

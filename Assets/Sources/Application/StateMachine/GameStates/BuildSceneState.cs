@@ -1,8 +1,5 @@
 using System;
-using Sources.Application.YandexSDK;
-using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
-using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.Player;
 using Sources.Infrastructure.Presenters;
@@ -22,23 +19,53 @@ namespace Sources.Application.StateMachine.GameStates
 	public sealed class BuildSceneState : IGameState
 	{
 		private readonly GameStateMachine _gameStateMachine;
-		private readonly ServiceLocator _serviceLocator;
 		private readonly ICoroutineRunner _coroutineRunner;
 
 		private ILocalizationService _leanLocalization;
-		private ISceneLoadInvoker _sceneLoadInvoker;
+		private readonly IUIFactory _uiFactory;
+		private readonly IPlayerStatsService _playerStats;
+		private readonly ICameraFactory _cameraFactory;
+		private readonly IPlayerFactory _playerFactory;
+		private readonly IUpgradeWindowFactory _upgradeWindowFactory;
+		private readonly IProgressLoadDataService _progressLoadDataService;
+		private readonly ILevelConfigGetter _levelConfigGetter;
+		private readonly ILevelProgressFacade _levelProgressFacade;
+		private readonly IResourcesProgressPresenter _resourcesProgress;
+		private readonly IPersistentProgressService _persistentProgress;
 		private LevelChangerPresenter _levelChangerPresenter;
 
 		[Inject]
 		public BuildSceneState(
 			GameStateMachine gameStateMachine,
-			ServiceLocator serviceLocator,
-			ICoroutineRunner coroutineRunner
+			ICoroutineRunner coroutineRunner,
+			ILocalizationService leanLocalization,
+			IUIFactory uiFactory,
+			IPlayerStatsService playerStats,
+			ICameraFactory cameraFactory,
+			IPlayerFactory playerFactory,
+			IUpgradeWindowFactory upgradeWindowFactory,
+			IProgressLoadDataService progressLoadDataService,
+			ILevelConfigGetter levelConfigGetter,
+			ILevelProgressFacade levelProgressFacade,
+			IResourcesProgressPresenter resourcesProgress,
+			IPersistentProgressService persistentProgress
 		)
 		{
 			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
-			_serviceLocator = serviceLocator ?? throw new ArgumentNullException(nameof(serviceLocator));
 			_coroutineRunner = coroutineRunner ?? throw new ArgumentNullException(nameof(coroutineRunner));
+			_leanLocalization = leanLocalization ?? throw new ArgumentNullException(nameof(leanLocalization));
+			_uiFactory = uiFactory ?? throw new ArgumentNullException(nameof(uiFactory));
+			_playerStats = playerStats ?? throw new ArgumentNullException(nameof(playerStats));
+			_cameraFactory = cameraFactory ?? throw new ArgumentNullException(nameof(cameraFactory));
+			_playerFactory = playerFactory ?? throw new ArgumentNullException(nameof(playerFactory));
+			_upgradeWindowFactory
+				= upgradeWindowFactory ?? throw new ArgumentNullException(nameof(upgradeWindowFactory));
+			_progressLoadDataService = progressLoadDataService ??
+				throw new ArgumentNullException(nameof(progressLoadDataService));
+			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
+			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
+			_resourcesProgress = resourcesProgress ?? throw new ArgumentNullException(nameof(resourcesProgress));
+			_persistentProgress = persistentProgress ?? throw new ArgumentNullException(nameof(persistentProgress));
 		}
 
 		public void Exit() { }
@@ -46,47 +73,22 @@ namespace Sources.Application.StateMachine.GameStates
 		public void Enter()
 		{
 			Build();
-
-			_sceneLoadInvoker.Invoke();
 			_leanLocalization.UpdateTranslations();
 			_gameStateMachine.Enter<GameLoopState>();
 		}
 
 		private void Build()
 		{
-			#region GettingServices
-
-			_leanLocalization = _serviceLocator.Get<ILocalizationService>();
-			_sceneLoadInvoker = _serviceLocator.Get<ISceneLoadInvoker>();
-
-			IUIFactory uiFactory = _serviceLocator.Get<IUIFactory>();
-			IPlayerStatsService playerStats = _serviceLocator.Get<IPlayerStatsService>();
-			ICameraFactory cameraFactory = _serviceLocator.Get<ICameraFactory>();
-			IPlayerFactory playerFactory = _serviceLocator.Get<IPlayerFactory>();
-			IUpgradeWindowFactory upgradeWindowFactory = _serviceLocator.Get<IUpgradeWindowFactory>();
-			IProgressLoadDataService progressLoadDataService = _serviceLocator.Get<IProgressLoadDataService>();
-
-			ILevelConfigGetter levelConfigGetter = _serviceLocator.Get<ILevelConfigGetter>();
-			ILevelProgressFacade levelProgressFacade = _serviceLocator.Get<ILevelProgressFacade>();
-			IResourcesProgressPresenter resourcesProgress = _serviceLocator.Get<IResourcesProgressPresenter>();
-			IPersistentProgressService persistentProgress = _serviceLocator.Get<IPersistentProgressService>();
-
-#if !UNITY_EDITOR && YANDEX_GAMES
-			IYandexSDKController yandexSDKController = _serviceLocator.Get<IYandexSDKController>();
-#endif
-
-			#endregion
-
 			GameObject initialPoint = GameObject.FindWithTag(ConstantNames.PlayerSpawnPointTag);
 
-			IGameplayInterfaceView gameplayInterfaceView = uiFactory.Instantiate();
+			IGameplayInterfaceView gameplayInterfaceView = _uiFactory.Instantiate();
 
 			_levelChangerPresenter.SetButton(gameplayInterfaceView);
 
-			GameObject playerGameObject = playerFactory.Create(
+			GameObject playerGameObject = _playerFactory.Create(
 				initialPoint,
-				uiFactory.GameplayInterface.Joystick,
-				playerStats
+				_uiFactory.GameplayInterface.Joystick,
+				_playerStats
 			);
 
 			ISandParticleSystem particleSystem = playerGameObject.GetComponentInChildren<ISandParticleSystem>();
@@ -94,15 +96,15 @@ namespace Sources.Application.StateMachine.GameStates
 			ISandContainerView sandContainerView = playerGameObject.GetComponent<ISandContainerView>();
 
 			new SandContainerPresenter(
-				persistentProgress.GameProgress.ResourcesModel,
+				_persistentProgress.GameProgress.ResourcesModel,
 				sandContainerView,
-				resourcesProgress as IResourceProgressEventHandler,
+				_resourcesProgress as IResourceProgressEventHandler,
 				particleSystem,
 				_coroutineRunner
 			);
 
-			upgradeWindowFactory.Create();
-			cameraFactory.CreateVirtualCamera();
+			_upgradeWindowFactory.Create();
+			_cameraFactory.CreateVirtualCamera();
 		}
 	}
 }

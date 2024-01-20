@@ -1,14 +1,15 @@
 using System;
-using Sources.DIService;
+
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.ServicesInterfaces.UI;
 using UnityEngine;
+using VContainer;
 
 namespace Sources.Presentation
 {
-	public class UpgradeTriggerObserver : MonoBehaviour, IDisposable
+	public class UpgradeTriggerObserver : MonoBehaviour
 	{
 		private IUpgradeWindowGetter _upgradeWindowGetter;
 		private IUpgradeWindow _upgradeWindow;
@@ -17,22 +18,21 @@ namespace Sources.Presentation
 
 		private bool _isCanSave;
 
-		private void Start()
+		[Inject]
+		private void Construct(
+			ISceneLoadInformer sceneLoadInformer,
+			IUpgradeWindowGetter upgradeWindowGetter,
+			IProgressLoadDataService progressLoadDataService
+		)
 		{
-			_sceneLoadInformer = ServiceLocator.Container.Get<ISceneLoadInformer>();
-			_sceneLoadInformer.SceneLoaded += OnLoaded;
+			_sceneLoadInformer = sceneLoadInformer;
+			_upgradeWindowGetter = upgradeWindowGetter;
+			_progressLoadService = progressLoadDataService;
 		}
 
-		private void OnDisable() =>
-			_sceneLoadInformer.SceneLoaded -= OnLoaded;
-
-		private void OnLoaded()
+		private void Start()
 		{
-			_upgradeWindowGetter = ServiceLocator.Container.Get<IUpgradeWindowGetter>();
-			_progressLoadService = ServiceLocator.Container.Get<IProgressLoadDataService>();
-
 			_upgradeWindow = _upgradeWindowGetter.UpgradeWindow;
-			_sceneLoadInformer.SceneLoaded -= OnLoaded;
 		}
 
 		private void OnTriggerEnter(Collider other)
@@ -57,8 +57,5 @@ namespace Sources.Presentation
 				await _progressLoadService.SaveToCloud(() => _isCanSave = true);
 			}
 		}
-
-		public void Dispose() =>
-			_sceneLoadInformer.SceneLoaded -= OnLoaded;
 	}
 }

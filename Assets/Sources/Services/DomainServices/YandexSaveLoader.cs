@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Sources.Services.DomainServices
 {
-#if YANDEX_GAMES && !UNITY_EDITOR
+#if YANDEX_GAMES && YANDEX_CODE
 	public class YandexSaveLoader : ISaveLoader
 	{
 		private readonly IYandexSDKController _yandexController;

@@ -1,11 +1,11 @@
 using System;
 using Cysharp.Threading.Tasks;
-using Sources.DIService;
+
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 
 namespace Sources.DomainInterfaces
 {
-	public interface IProgressLoadDataService : IProgressClearable, IService
+	public interface IProgressLoadDataService : IProgressClearable
 	{
 		void SaveProgressBinary();
 		IGameProgressModel LoadProgressBinary();

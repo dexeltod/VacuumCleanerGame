@@ -1,8 +1,8 @@
-using Sources.DIService;
+
 
 namespace Sources.ServicesInterfaces.UI
 {
-	public interface IUpgradeWindowGetter : IService
+	public interface IUpgradeWindowGetter 
 	{
 		IUpgradeWindow UpgradeWindow { get; }
 	}

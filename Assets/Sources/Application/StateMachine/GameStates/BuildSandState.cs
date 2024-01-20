@@ -1,7 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
-using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Player;
@@ -11,8 +10,8 @@ using Sources.PresentationInterfaces;
 using Sources.Services;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
-using Sources.Utils.Configs;
 using Sources.Utils.Configs.Scripts;
+using VContainer;
 
 namespace Sources.Application.StateMachine.GameStates
 {
@@ -20,7 +19,7 @@ namespace Sources.Application.StateMachine.GameStates
 	{
 		private readonly GameStateMachine _gameStateMachine;
 		private readonly LoadingCurtain _loadingCurtain;
-		private readonly ServiceLocator _serviceLocator;
+		private readonly IObjectResolver _container;
 		private readonly ISceneLoader _sceneLoader;
 
 		private IPlayerFactory _playerFactory;
@@ -36,21 +35,19 @@ namespace Sources.Application.StateMachine.GameStates
 		public BuildSandState(
 			GameStateMachine gameStateMachine,
 			ISceneLoader sceneLoader,
-			ServiceLocator serviceLocator,
 			LoadingCurtain loadingCurtain
 		)
 		{
 			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
 			_sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
-			_serviceLocator = serviceLocator ?? throw new ArgumentNullException(nameof(serviceLocator));
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
 		public async UniTask Enter(LevelConfig levelConfig)
 		{
 			if (levelConfig == null) throw new ArgumentNullException(nameof(levelConfig));
-			_resourcesProgress = _serviceLocator.Get<IResourcesProgressPresenter>();
-			_assetProvider = _serviceLocator.Get<IAssetProvider>();
+			_resourcesProgress = _container.Resolve<IResourcesProgressPresenter>();
+			_assetProvider = _container.Resolve<IAssetProvider>();
 
 			_loadingCurtain.Show();
 			_levelConfig = levelConfig;

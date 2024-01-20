@@ -1,21 +1,21 @@
 using System.Collections;
-using Sources.DIService;
-using Sources.Infrastructure.Scene;
+
 using Sources.InfrastructureInterfaces;
-using Sources.Services;
 using Sources.Services.Triggers;
 using Sources.ServicesInterfaces;
 using UnityEngine;
+using VContainer;
 
 namespace Sources.Infrastructure.Factories.Player
 {
 	public class PlayerBody : Presenter, IPlayer
 	{
 		private IResourcesProgressPresenter _progressPresenter;
-		private Coroutine _sellRoutine;
+		private UnityEngine.Coroutine _sellRoutine;
 
-		private void Awake() =>
-			_progressPresenter = ServiceLocator.Container.Get<IResourcesProgressPresenter>();
+		[Inject]
+		private void Construct(IResourcesProgressPresenter progressPresenter) =>
+			_progressPresenter = progressPresenter;
 
 		private void OnCollisionEnter(Collision collisionInfo)
 		{

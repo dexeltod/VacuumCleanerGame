@@ -1,10 +1,8 @@
 using System;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
-using Sources.DIService;
 using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
-using Sources.Services.Interfaces;
-using UnityEngine;
+using VContainer;
 
 namespace Sources.Application.StateMachine.GameStates
 {
@@ -14,19 +12,20 @@ namespace Sources.Application.StateMachine.GameStates
 		private readonly LoadingCurtain _loadingCurtain;
 		private IGameplayInterfaceView _gameplayInterface;
 
-		public GameLoopState(GameStateMachine gameStateMachine, LoadingCurtain loadingCurtain)
+		[Inject]
+		public GameLoopState(
+			GameStateMachine gameStateMachine,
+			LoadingCurtain loadingCurtain,
+			IGameplayInterfaceView gameplayInterface
+		)
 		{
 			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
+			_gameplayInterface = gameplayInterface;
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
 		public void Enter()
 		{
-			_gameplayInterface = ServiceLocator
-				.Container
-				.Get<IUIGetter>()
-				.GameplayInterface;
-
 			_gameplayInterface.GameObject.SetActive(true);
 
 			_loadingCurtain.HideSlowly();

@@ -1,9 +1,9 @@
-using Sources.DIService;
+
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 
 namespace Sources.ServicesInterfaces
 {
-	public interface IResourcesProgressPresenter : IResourceMaxScore, IService
+	public interface IResourcesProgressPresenter : IResourceMaxScore
 	{
 		IResourceReadOnly<int> SoftCurrency { get; }
 

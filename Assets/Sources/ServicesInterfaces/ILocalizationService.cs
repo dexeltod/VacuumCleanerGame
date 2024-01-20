@@ -1,8 +1,6 @@
-using Sources.DIService;
-
 namespace Sources.ServicesInterfaces
 {
-	public interface ILocalizationService : IService
+	public interface ILocalizationService
 	{
 		string GetTranslationText(string phrase);
 		void SetLocalLanguage(string language);

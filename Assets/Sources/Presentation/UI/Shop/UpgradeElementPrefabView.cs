@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Sources.DIService;
 using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
 
 namespace Sources.Presentation.UI.Shop
 {
@@ -34,10 +34,17 @@ namespace Sources.Presentation.UI.Shop
 
 		private int _boughtPoints;
 		private bool _isInit;
+		private ILocalizationService _localisation;
 
 		public string IdName => _itemData.IdName;
 
 		public event Action<IUpgradeItemData> BuyButtonPressed;
+
+		[Inject]
+		private void ConstructServices(ILocalizationService localisation)
+		{
+			_localisation = localisation ?? throw new ArgumentNullException(nameof(localisation));
+		}
 
 		public IUpgradeElementConstructable Construct(IUpgradeItemData itemData, IUpgradeItemPrefab viewInfo)
 		{
@@ -47,11 +54,9 @@ namespace Sources.Presentation.UI.Shop
 			_boughtPoints = itemData.PointLevel;
 			_itemData = itemData;
 
-			ILocalizationService localisation = ServiceLocator.Container.Get<ILocalizationService>();
-
-			_title.SetText(localisation.GetTranslationText(itemData.Title));
+			_title.SetText(_localisation.GetTranslationText(itemData.Title));
 			_price.SetText(itemData.Price.ToString());
-			_description.SetText(localisation.GetTranslationText(itemData.Description));
+			_description.SetText(_localisation.GetTranslationText(itemData.Description));
 
 			_icon.sprite = viewInfo.Icon;
 

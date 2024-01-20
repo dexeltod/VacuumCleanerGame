@@ -1,8 +1,8 @@
-using Sources.DIService;
+
 
 namespace Sources.InfrastructureInterfaces
 {
-	public interface ILevelProgressFacade : IService
+	public interface ILevelProgressFacade 
 	{
 		int CurrentLevelNumber { get; }
 

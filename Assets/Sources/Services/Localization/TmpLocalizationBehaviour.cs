@@ -1,8 +1,8 @@
 using System;
-using Sources.DIService;
 using Sources.ServicesInterfaces;
 using TMPro;
 using UnityEngine;
+using VContainer;
 
 namespace Sources.Services.Localization
 {
@@ -11,10 +11,14 @@ namespace Sources.Services.Localization
 	{
 		[SerializeField] private string _phraseName;
 		private ILocalizationService _localization;
+		
+		private void Construct(IObjectResolver container)
+		{
+			_localization = container.Resolve<ILocalizationService>();
+		}
 
 		private void Start()
 		{
-			_localization = ServiceLocator.Container.Get<ILocalizationService>();
 			TextMeshProUGUI textMeshPro = GetComponent<TextMeshProUGUI>();
 
 			if (string.IsNullOrEmpty(_phraseName) == false)

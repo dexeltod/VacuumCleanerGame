@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Services.DomainServices.DTO;
@@ -25,7 +24,11 @@ namespace Sources.Services.DomainServices
 
 		public event Func<IGameProgressModel> ProgressCleared;
 
-		public ProgressLoadDataService(ISaveLoader saveLoader, IPersistentProgressServiceConstructable progressService)
+		public ProgressLoadDataService(
+			ISaveLoader saveLoader,
+			IPersistentProgressServiceConstructable progressService,
+			IPersistentProgressService persistentProgressService
+		)
 		{
 			_saveLoader = saveLoader;
 			_progressService = progressService;
@@ -35,7 +38,7 @@ namespace Sources.Services.DomainServices
 			Directory.CreateDirectory(saveDirectoryPath);
 
 			_jsonDataLoader = new JsonDataSaveLoader();
-			_persistentProgress = ServiceLocator.Container.Get<IPersistentProgressService>();
+			_persistentProgress = persistentProgressService;
 		}
 
 		public async UniTask SaveToCloud(IGameProgressModel model, Action succeededCallback = null)

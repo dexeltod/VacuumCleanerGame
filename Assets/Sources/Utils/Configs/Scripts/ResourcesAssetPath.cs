@@ -18,6 +18,7 @@ namespace Sources.Utils.Configs.Scripts
 
 	public class GameObjects
 	{
+		public readonly string CoroutineRunner = "Game/Coroutine/CoroutineRunner";
 		public readonly Yandex Yandex = new();
 		public readonly string ModifiableMesh = "Game/Environment/Sand/SandGround";
 		public readonly string LeanLocalization = "Localization/LeanLocalization";

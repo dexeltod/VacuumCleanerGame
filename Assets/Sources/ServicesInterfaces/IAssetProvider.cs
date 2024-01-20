@@ -1,9 +1,9 @@
-using Sources.DIService;
+
 using UnityEngine;
 
 namespace Sources.ServicesInterfaces
 {
-	public interface IAssetProvider : IService
+	public interface IAssetProvider 
 	{
 		GameObject Instantiate(string path);
 		T LoadComponent<T>(string path);

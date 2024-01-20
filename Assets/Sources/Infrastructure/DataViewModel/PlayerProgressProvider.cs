@@ -1,7 +1,7 @@
-using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.DTO;
 using Sources.ServicesInterfaces;
+using VContainer;
 
 namespace Sources.Infrastructure.DataViewModel
 {
@@ -11,14 +11,9 @@ namespace Sources.Infrastructure.DataViewModel
 		private readonly IGameProgress _playerProgress;
 		private readonly IPlayerStatsService _playerStats;
 
+		[Inject]
 		public PlayerProgressProvider(IPlayerStatsService playerStats)
 		{
-			_playerProgress = ServiceLocator
-				.Container
-				.Get<IPersistentProgressService>()
-				.GameProgress
-				.PlayerProgress;
-
 			_playerStats = playerStats;
 		}
 

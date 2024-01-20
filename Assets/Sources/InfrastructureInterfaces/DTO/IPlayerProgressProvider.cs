@@ -1,8 +1,8 @@
-using Sources.DIService;
+
 
 namespace Sources.InfrastructureInterfaces.DTO
 {
-	public interface IPlayerProgressProvider : IService
+	public interface IPlayerProgressProvider 
 	{
 		void SetProgress(string progressName);
 	}

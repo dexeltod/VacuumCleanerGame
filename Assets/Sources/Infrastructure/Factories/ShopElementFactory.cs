@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Sources.DIService;
+
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.UpgradeShop;
 using Sources.InfrastructureInterfaces.Upgrade;
@@ -16,10 +16,10 @@ namespace Sources.Infrastructure.Factories
 		private readonly IGameProgress _shopProgress;
 		private readonly IAssetProvider _assetProvider;
 
-		public ShopElementFactory(IGameProgress shopProgress)
+		public ShopElementFactory(IGameProgress shopProgress, IAssetProvider assetProvider)
 		{
 			_shopProgress = shopProgress;
-			_assetProvider = ServiceLocator.Container.Get<IAssetProvider>();
+			_assetProvider = assetProvider;
 		}
 
 		public List<UpgradeElementPrefabView> InstantiateElementPrefabs(Transform transform)

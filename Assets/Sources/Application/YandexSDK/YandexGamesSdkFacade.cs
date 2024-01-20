@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
 using Sources.DomainInterfaces;
 using UnityEngine;
+using VContainer;
 
 namespace Sources.Application.YandexSDK
 {
@@ -19,9 +20,10 @@ namespace Sources.Application.YandexSDK
 
 		private bool _isAuthorized;
 
+		[Inject]
 		public YandexGamesSdkFacade(IYandexAuthorizationView yandexAuthorizationView, IRewardService rewardService)
 		{
-			_yandexAuthorizationView = yandexAuthorizationView;
+			_yandexAuthorizationView = yandexAuthorizationView ?? throw new ArgumentNullException(nameof(yandexAuthorizationView));
 			_rewardService = rewardService ?? throw new ArgumentNullException(nameof(rewardService));
 		}
 

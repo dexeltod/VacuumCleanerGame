@@ -1,7 +1,7 @@
+using System;
 using Sources.Application.StateMachine.GameStates;
 using Sources.Application.UI;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
-using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Player;
@@ -12,23 +12,48 @@ using Sources.Services;
 using Sources.Services.Interfaces;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
+using VContainer;
 
 namespace Sources.Application.StateMachine
 {
 	public sealed class InitializeServicesWithViewState : IGameState
 	{
 		private readonly GameStateMachine _gameStateMachine;
-		private readonly ServiceLocator _serviceLocator;
+		private readonly IAssetProvider _assetProvider;
+		private readonly IPlayerFactory _playerFactory;
+		private readonly IUpgradeDataFactory _upgradeDataFactory;
+		private readonly IPersistentProgressService _progressService;
+		private readonly IShopProgressProvider _shopProgressProvider;
+		private readonly IPlayerProgressProvider _playerProgressProvider;
+		private readonly IResourcesProgressPresenter _resourcesProgressPresenter;
+		private readonly ICameraFactory _cameraFactory;
 
 		private bool _isServicesInitialized;
 
 		public InitializeServicesWithViewState(
 			GameStateMachine gameStateMachine,
-			ServiceLocator serviceLocator
+			IAssetProvider assetProvider,
+			IPlayerFactory playerFactory,
+			IUpgradeDataFactory upgradeDataFactory,
+			IPersistentProgressService progressService,
+			IShopProgressProvider shopProgressProvider,
+			IPlayerProgressProvider playerProgressProvider,
+			IResourcesProgressPresenter resourcesProgressPresenter,
+			ICameraFactory cameraFactory
 		)
 		{
-			_gameStateMachine = gameStateMachine;
-			_serviceLocator = serviceLocator;
+			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
+			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
+			_playerFactory = playerFactory ?? throw new ArgumentNullException(nameof(playerFactory));
+			_upgradeDataFactory = upgradeDataFactory ?? throw new ArgumentNullException(nameof(upgradeDataFactory));
+			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
+			_shopProgressProvider
+				= shopProgressProvider ?? throw new ArgumentNullException(nameof(shopProgressProvider));
+			_playerProgressProvider = playerProgressProvider ??
+				throw new ArgumentNullException(nameof(playerProgressProvider));
+			_resourcesProgressPresenter = resourcesProgressPresenter ??
+				throw new ArgumentNullException(nameof(resourcesProgressPresenter));
+			_cameraFactory = cameraFactory ?? throw new ArgumentNullException(nameof(cameraFactory));
 
 			_isServicesInitialized = false;
 		}
@@ -50,37 +75,25 @@ namespace Sources.Application.StateMachine
 
 		private void InitializeServices()
 		{
-			#region GettingServices
-
-			IAssetProvider assetProvider = _serviceLocator.Get<IAssetProvider>();
-			IPlayerFactory playerFactory = _serviceLocator.Get<IPlayerFactory>();
-			IUpgradeDataFactory upgradeDataFactory = _serviceLocator.Get<IUpgradeDataFactory>();
-			IPersistentProgressService progressService = _serviceLocator.Get<IPersistentProgressService>();
-			IShopProgressProvider shopProgressProvider = _serviceLocator.Get<IShopProgressProvider>();
-			IPlayerProgressProvider playerProgressProvider = _serviceLocator.Get<IPlayerProgressProvider>();
-			IResourcesProgressPresenter resourcesProgressPresenter = _serviceLocator.Get<IResourcesProgressPresenter>();
-
-			#endregion
-
 			UIFactory uiFactory = new UIFactory(
-				assetProvider,
-				resourcesProgressPresenter as IResourceProgressEventHandler,
-				progressService
+				_assetProvider,
+				_resourcesProgressPresenter as IResourceProgressEventHandler,
+				_progressService
 			);
 
-			_serviceLocator.Register<IUIFactory>(uiFactory);
-			_serviceLocator.Register<IUIGetter>(uiFactory);
+			// _builder.RegisterInstance<IUIFactory>(uiFactory);
+			// _builder.RegisterInstance<IUIGetter>(uiFactory);
 
 			CreateUpgradeWindowService(
-				assetProvider,
-				upgradeDataFactory,
-				resourcesProgressPresenter,
-				progressService,
-				shopProgressProvider,
-				playerProgressProvider
+				_assetProvider,
+				_upgradeDataFactory,
+				_resourcesProgressPresenter,
+				_progressService,
+				_shopProgressProvider,
+				_playerProgressProvider
 			);
 
-			CreateCameraService(assetProvider, playerFactory);
+			CreateCameraService(_assetProvider, _playerFactory);
 
 			_isServicesInitialized = true;
 		}
@@ -103,15 +116,15 @@ namespace Sources.Application.StateMachine
 				playerProgressProvider
 			);
 
-			_serviceLocator.Register<IUpgradeWindowFactory>(upgradeWindowFactory);
-			_serviceLocator.Register<IUpgradeWindowGetter>(upgradeWindowFactory);
+			// _builder.RegisterInstance<IUpgradeWindowFactory>(upgradeWindowFactory);
+			// _builder.RegisterInstance<IUpgradeWindowGetter>(upgradeWindowFactory);
 		}
 
 		private void CreateCameraService(IAssetProvider assetProvider, IPlayerFactory playerFactory)
 		{
 			CameraFactory cameraFactory = new CameraFactory(assetProvider, playerFactory);
-			_serviceLocator.Register<ICameraFactory>(cameraFactory);
-			_serviceLocator.Register<ICamera>(cameraFactory);
+			// _builder.RegisterInstance<ICameraFactory>(cameraFactory);
+			// _builder.RegisterInstance<ICamera>(cameraFactory);
 		}
 	}
 }

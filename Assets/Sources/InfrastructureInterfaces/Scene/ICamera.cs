@@ -1,9 +1,8 @@
-using Sources.DIService;
 using UnityEngine;
 
 namespace Sources.InfrastructureInterfaces.Scene
 {
-	public interface ICamera : IService
+	public interface ICamera 
 	{
 		Camera Camera { get; }
 	}

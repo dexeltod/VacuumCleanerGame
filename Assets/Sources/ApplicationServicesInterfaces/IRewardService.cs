@@ -1,9 +1,9 @@
 using System;
-using Sources.DIService;
+
 
 namespace Sources.ApplicationServicesInterfaces
 {
-	public interface IRewardService : IService
+	public interface IRewardService 
 	{
 		void ShowAd(Action onOpened, Action onRewarded, Action onClosed);
 	}

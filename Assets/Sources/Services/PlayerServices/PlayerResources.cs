@@ -1,6 +1,7 @@
-using Sources.DIService;
+
 using Sources.ServicesInterfaces;
 using UnityEngine;
+using VContainer;
 
 namespace Sources.Services.PlayerServices
 {
@@ -8,8 +9,9 @@ namespace Sources.Services.PlayerServices
 	{
 		private IResourcesProgressPresenter _resourcesProgress;
 
-		private void Awake() =>
-			_resourcesProgress = ServiceLocator.Container.Get<IResourcesProgressPresenter>();
+		[Inject]
+		private void Construct(IResourcesProgressPresenter resourcesProgressPresenter) =>
+			_resourcesProgress = resourcesProgressPresenter;
 
 		public void SellSand() =>
 			_resourcesProgress.SellSand();

@@ -22,6 +22,7 @@ namespace Sources.Application.UI
 		private readonly IGameProgressModel _progress;
 		private readonly IShopProgressProvider _shopProgressProvider;
 		private readonly IPlayerProgressProvider _playerProgressProvider;
+		private readonly IGameProgress _shopProgress;
 
 		private ShopElementFactory _shopElementFactory;
 		private List<UpgradeElementPrefabView> _upgradeElementsPrefabs;
@@ -29,8 +30,7 @@ namespace Sources.Application.UI
 		private GameObject _upgradeWindow;
 		public IUpgradeWindow UpgradeWindow { get; private set; }
 
-		public UpgradeWindowFactory
-		(
+		public UpgradeWindowFactory(
 			IAssetProvider assetProvider,
 			IUpgradeDataFactory upgradeDataFactory,
 			IResourcesProgressPresenter resourceProgressPresenter,
@@ -45,6 +45,8 @@ namespace Sources.Application.UI
 			_progress = progress;
 			_shopProgressProvider = shopProgressProvider;
 			_playerProgressProvider = playerProgressProvider;
+
+			_shopProgress = _progress.ShopProgress;
 		}
 
 		public GameObject Create()
@@ -56,8 +58,7 @@ namespace Sources.Application.UI
 
 			IUpgradeItemData[] items = _upgradeDataFactory.LoadItems();
 
-			ShopPurchaseController shopPurchaseController = new ShopPurchaseController
-			(
+			ShopPurchaseController shopPurchaseController = new ShopPurchaseController(
 				UpgradeWindow,
 				_upgradeElementsPrefabs,
 				_resourceProgressPresenter,
@@ -71,26 +72,17 @@ namespace Sources.Application.UI
 		private void Initialize()
 		{
 			InstantiateWindow();
-			ConstructWindow();
 			InitButtons();
 		}
 
 		private void InstantiateWindow()
 		{
-			_shopElementFactory ??= new ShopElementFactory(_progress.ShopProgress);
+			_shopElementFactory ??= new ShopElementFactory(_shopProgress, _assetProvider);
 			_upgradeWindow = _assetProvider.Instantiate(ResourcesAssetPath.Scene.UIResources.UpgradeWindow);
 		}
 
 		private void InitButtons() =>
 			_upgradeElementsPrefabs = _shopElementFactory
 				.InstantiateElementPrefabs(UpgradeWindow.ContainerTransform);
-
-		private void ConstructWindow()
-		{
-			IResourceReadOnly<int> resource = _resourceProgressPresenter.SoftCurrency;
-
-			UpgradeWindow = _upgradeWindow.GetComponent<UpgradeWindow>();
-			UpgradeWindow.Construct(resource);
-		}
 	}
 }

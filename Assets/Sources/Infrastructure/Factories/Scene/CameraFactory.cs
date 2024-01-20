@@ -1,5 +1,5 @@
 using Cinemachine;
-using Sources.DIService;
+
 using Sources.Infrastructure.Factories.Player;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.ServicesInterfaces;

@@ -1,12 +1,11 @@
 using System;
 using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
-using Sources.DIService;
 using Sources.DomainInterfaces;
 
 namespace Sources.ApplicationServicesInterfaces
 {
-	public interface IYandexSDKController : IService
+	public interface IYandexSDKController
 	{
 		UniTask<PlayerAccountProfileDataResponse> GetPlayerAccount();
 		UniTask ShowAd(Action onOpenCallback, Action onRewardsCallback, Action onCloseCallback);

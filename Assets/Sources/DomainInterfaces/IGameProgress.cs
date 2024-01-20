@@ -4,9 +4,9 @@ namespace Sources.DomainInterfaces
 {
 	public interface IGameProgress
 	{
-		int                        MaxUpgradePointCount { get; }
+		int MaxUpgradePointCount { get; }
 		List<IUpgradeProgressData> GetAll();
-		IUpgradeProgressData       GetByName(string   name);
-		void                       SetProgress(string progressName, int progressValue);
+		IUpgradeProgressData GetByName(string name);
+		void SetProgress(string progressName, int progressValue);
 	}
 }

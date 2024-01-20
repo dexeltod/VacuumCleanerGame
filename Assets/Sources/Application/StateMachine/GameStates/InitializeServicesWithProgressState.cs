@@ -1,8 +1,5 @@
 using System;
-using Sources.Application.UI;
-using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
-using Sources.DIService;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure;
 using Sources.Infrastructure.DataViewModel;
@@ -13,28 +10,24 @@ using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.Presentation.SceneEntity;
-using Sources.PresentationInterfaces;
-using Sources.Services;
-using Sources.Services.Interfaces;
 using Sources.ServicesInterfaces;
-using Sources.ServicesInterfaces.UI;
+using VContainer;
 
 namespace Sources.Application.StateMachine.GameStates
 {
 	public sealed class InitializeServicesWithProgressState : IGameState
 	{
 		private readonly IGameStateMachine _gameStateMachine;
-		private readonly ServiceLocator _serviceLocator;
+		private readonly IObjectResolver _serviceLocator;
+		private readonly IContainerBuilder _builder;
 		private readonly LoadingCurtain _loadingCurtain;
 
 		public InitializeServicesWithProgressState(
 			IGameStateMachine gameStateMachine,
-			ServiceLocator serviceLocator,
 			LoadingCurtain loadingCurtain
 		)
 		{
 			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
-			_serviceLocator = serviceLocator ?? throw new ArgumentNullException(nameof(serviceLocator));
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
@@ -50,10 +43,10 @@ namespace Sources.Application.StateMachine.GameStates
 		{
 			#region GettingServices
 
-			IAssetProvider assetProvider = _serviceLocator.Get<IAssetProvider>();
-			IUpgradeDataFactory upgradeDataFactory = _serviceLocator.Get<IUpgradeDataFactory>();
-			IPersistentProgressService progressService = _serviceLocator.Get<IPersistentProgressService>();
-			IProgressLoadDataService progressLoadDataService = _serviceLocator.Get<IProgressLoadDataService>();
+			IAssetProvider assetProvider = _serviceLocator.Resolve<IAssetProvider>();
+			IUpgradeDataFactory upgradeDataFactory = _serviceLocator.Resolve<IUpgradeDataFactory>();
+			IPersistentProgressService progressService = _serviceLocator.Resolve<IPersistentProgressService>();
+			IProgressLoadDataService progressLoadDataService = _serviceLocator.Resolve<IProgressLoadDataService>();
 
 			#endregion
 
@@ -61,19 +54,13 @@ namespace Sources.Application.StateMachine.GameStates
 
 			PlayerStatsFactory statsFactory = new PlayerStatsFactory(upgradeDataFactory, _loadingCurtain);
 
-			_serviceLocator.Register<IPlayerStatsService>(statsFactory.CreatePlayerStats(progressService));
+			_builder.RegisterInstance<IPlayerStatsService>(statsFactory.CreatePlayerStats(progressService));
 
-			_serviceLocator.Register<IPlayerProgressProvider>
-			(
-				new PlayerProgressProvider
-				(
-					ServiceLocator.Container.Get<IPlayerStatsService>()
-				)
-			);
+			_builder.Register<IPlayerProgressProvider, PlayerProgressProvider>(Lifetime.Singleton);
 
-			_serviceLocator.Register<ILevelConfigGetter>(new LevelConfigGetter(assetProvider));
+			_builder.RegisterInstance<ILevelConfigGetter>(new LevelConfigGetter(assetProvider));
 
-			_serviceLocator.Register<IShopProgressProvider>
+			_builder.RegisterInstance<IShopProgressProvider>
 			(
 				new ShopProgressProvider(
 					progressService.GameProgress.ShopProgress,
@@ -81,22 +68,19 @@ namespace Sources.Application.StateMachine.GameStates
 				)
 			);
 
-			_serviceLocator.Register<IPlayerFactory>
+			_builder.RegisterInstance<IPlayerFactory>
 			(
 				new PlayerFactory
 				(
-					_serviceLocator.Get<IAssetProvider>()
+					_serviceLocator.Resolve<IAssetProvider>()
 				)
 			);
 
-			ILevelProgressFacade levelProgressFacade =
-				_serviceLocator.Register<ILevelProgressFacade>
-				(
-					new LevelProgressFacade
-					(
-						progressService.GameProgress.LevelProgress
-					)
-				);
+			_builder.RegisterInstance<ILevelProgressFacade>(
+				new LevelProgressFacade(
+					progressService.GameProgress.LevelProgress
+				)
+			);
 
 			#endregion
 		}

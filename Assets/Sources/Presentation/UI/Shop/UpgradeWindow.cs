@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Sources.DIService;
+
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Services.Interfaces;
 using Sources.ServicesInterfaces.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
 
 namespace Sources.Presentation.UI.Shop
 {
@@ -51,10 +52,10 @@ namespace Sources.Presentation.UI.Shop
 		public void SetActiveYesNoButtons(bool isActive) =>
 			_yesNoButtons.gameObject.SetActive(isActive);
 
-		public void Construct(IResourceReadOnly<int> resource)
+		[Inject]
+		private void Construct(IResourceReadOnly<int> resource, IUIGetter uiGetter)
 		{
-			_uiGetter = ServiceLocator.Container.Get<IUIGetter>();
-
+			_uiGetter = uiGetter;
 			resource.ResourceChanged += OnMoneyChanged;
 
 			_money.text = resource.Count.ToString();

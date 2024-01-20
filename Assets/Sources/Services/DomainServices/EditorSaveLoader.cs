@@ -58,6 +58,11 @@ namespace Sources.Services.DomainServices
 			return DeserializeJson(jsonSave);
 		}
 
+		public void Initialize()
+		{
+			throw new NotImplementedException();
+		}
+
 		public async UniTask ClearSaves(IGameProgressModel gameProgressModel) =>
 			await CloudSaveService.Instance.Data.ForceDeleteAsync(GameProgressKey);
 

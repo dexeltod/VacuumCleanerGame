@@ -1,30 +1,29 @@
 using Sources.Application.StateMachine;
-using Sources.Infrastructure;
-using Sources.ServicesInterfaces;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
 namespace Sources.Application
 {
-	public class Game : IStartable
+	public class Game : IInitializable, IStartable
 	{
-		private readonly GameStateMachine _gameStateMachine;
+		private readonly GameStateMachineFactory _gameStateMachineFactory;
+		private GameStateMachine _stateMachine;
 
-		// [Inject]
-		// public Game(GameStateMachine gameStateMachine) =>
-		// 	_gameStateMachine = gameStateMachine;
-		public Game(GameStateMachine assetProvider)
+		[Inject]
+		public Game(GameStateMachineFactory assetProvider)
 		{
-			_gameStateMachine = assetProvider;
+			_gameStateMachineFactory = assetProvider;
 		}
-			
 
 		public void Start()
 		{
-			Debug.Log("Game is starting");
+			Debug.Log("work");
+		}
 
-			// _gameStateMachine.Enter<InitializeServicesAndProgressState>();
+		public void Initialize()
+		{
+			_stateMachine = _gameStateMachineFactory.Create();
 		}
 	}
 }

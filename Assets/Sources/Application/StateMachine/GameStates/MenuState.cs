@@ -1,7 +1,7 @@
 using System;
+using System.Runtime.InteropServices;
 using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
-using Sources.DIService;
 using Sources.Infrastructure.Factories.LeaderBoard;
 using Sources.Infrastructure.Presenters;
 using Sources.InfrastructureInterfaces;
@@ -9,6 +9,7 @@ using Sources.InfrastructureInterfaces.Scene;
 using Sources.Presentation.SceneEntity;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs.Scripts;
+using VContainer;
 
 namespace Sources.Application.StateMachine.GameStates
 {
@@ -16,33 +17,37 @@ namespace Sources.Application.StateMachine.GameStates
 	{
 		private readonly ISceneLoader _sceneLoader;
 		private readonly LoadingCurtain _loadingCurtain;
-		private readonly ServiceLocator _serviceLocator;
+		private readonly IAssetProvider _assetProvider;
+		private readonly ILevelProgressFacade _levelProgressFacade;
+		private readonly IGameStateMachine _gameStateMachine;
+		private readonly ILevelConfigGetter _levelConfigGetter;
+		private readonly ILeaderBoardService _leaderBoardService;
+
 		private MainMenuPresenter _mainMenuPresenter;
 
-		public MenuState(ISceneLoader sceneLoader, LoadingCurtain loadingCurtain, ServiceLocator serviceLocator)
+		[Inject]
+		public MenuState(
+			ISceneLoader sceneLoader,
+			LoadingCurtain loadingCurtain,
+			IAssetProvider assetProvider,
+			ILevelProgressFacade levelProgressFacade,
+			IGameStateMachine gameStateMachine,
+			ILevelConfigGetter levelConfigGetter,
+			ILeaderBoardService leaderBoardService
+		)
 		{
+			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
+			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
+			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
+			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
+			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
 			_sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
-			_serviceLocator = serviceLocator ?? throw new ArgumentNullException(nameof(serviceLocator));
 		}
 
 		public async void Enter()
 		{
-			#region GettingServices
-
-			IAssetProvider assetProvider = _serviceLocator.Get<IAssetProvider>();
-			ILevelProgressFacade levelProgress = _serviceLocator.Get<ILevelProgressFacade>();
-			IGameStateMachine gameStateMachine = _serviceLocator.Get<IGameStateMachine>();
-			ILevelConfigGetter levelConfigGetter = _serviceLocator.Get<ILevelConfigGetter>();
-
-#if !UNITY_EDITOR
-			_serviceLocator.Get<IYandexSDKController>().SetStatusInitialized();
-#endif
-			ILeaderBoardService leaderBoardService = _serviceLocator.Get<ILeaderBoardService>();
-
-			#endregion
-
-			MainMenuFactory mainMenuFactory = new MainMenuFactory(assetProvider, leaderBoardService);
+			MainMenuFactory mainMenuFactory = new MainMenuFactory(_assetProvider, _leaderBoardService);
 
 			await _sceneLoader.Load(ConstantNames.MenuScene);
 			await mainMenuFactory.Instantiate();
@@ -51,9 +56,9 @@ namespace Sources.Application.StateMachine.GameStates
 
 			_mainMenuPresenter = new MainMenuPresenter(
 				mainMenuBehaviour,
-				levelProgress,
-				gameStateMachine,
-				levelConfigGetter
+				_levelProgressFacade,
+				_gameStateMachine,
+				_levelConfigGetter
 			);
 
 			_mainMenuPresenter.Enable();

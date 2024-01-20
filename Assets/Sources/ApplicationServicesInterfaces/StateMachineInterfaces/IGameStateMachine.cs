@@ -1,8 +1,8 @@
-using Sources.DIService;
+
 
 namespace Sources.ApplicationServicesInterfaces.StateMachineInterfaces
 {
-	public interface IGameStateMachine : IService
+	public interface IGameStateMachine 
 	{
 		void Enter<TState>() where TState : class, IGameState;
 

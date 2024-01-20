@@ -1,13 +1,14 @@
 using System;
 using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
-using Sources.DIService;
+
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.Presentation.UI;
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
 
 namespace Sources.Application
 {
@@ -20,14 +21,29 @@ namespace Sources.Application
 		[SerializeField] private Button _deleteSavesButton;
 		[SerializeField] private Button _addScoreButton;
 
-		private IGameStateMachine _gameStateMachine;
 		private ILevelConfigGetter _levelConfigGetter;
-		private IProgressLoadDataService _progressLoadDataService;
+		private IGameStateMachine _gameStateMachine;
 		private ILeaderBoardService _leaderBoardService;
-
-		private ILevelProgressFacade _levelProgress;
+		private IProgressLoadDataService _progressLoadDataService;
+		private ILevelProgressFacade _levelProgressFacade;
 
 		public event Action PlayButtonPressed;
+
+		[Inject]
+		private void Construct(
+			ILevelProgressFacade levelProgressFacade,
+			IProgressLoadDataService progressLoadDataService,
+			ILeaderBoardService leaderBoardService,
+			IGameStateMachine gameStateMachine,
+			ILevelConfigGetter levelConfigGetter
+		)
+		{
+			_levelConfigGetter = levelConfigGetter;
+			_gameStateMachine = gameStateMachine;
+			_leaderBoardService = leaderBoardService;
+			_progressLoadDataService = progressLoadDataService;
+			_levelProgressFacade = levelProgressFacade;
+		}
 
 		private void OnEnable()
 		{
@@ -41,15 +57,6 @@ namespace Sources.Application
 			_playButton.onClick.RemoveListener(OnPlay);
 			_addScoreButton.onClick.RemoveListener(OnAddLeader);
 			_deleteSavesButton.onClick.RemoveListener(OnDeleteSaves);
-		}
-
-		private void Start()
-		{
-			_levelProgress = ServiceLocator.Container.Get<ILevelProgressFacade>();
-			_progressLoadDataService = ServiceLocator.Container.Get<IProgressLoadDataService>();
-			_leaderBoardService = ServiceLocator.Container.Get<ILeaderBoardService>();
-			_gameStateMachine = ServiceLocator.Container.Get<IGameStateMachine>();
-			_levelConfigGetter = ServiceLocator.Container.Get<ILevelConfigGetter>();
 		}
 
 		public void Dispose() =>

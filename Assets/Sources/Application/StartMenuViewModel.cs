@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Sources.Application.MainMenu;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
-using Sources.DIService;
+
 using Sources.Infrastructure.UI;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Scene;
@@ -10,11 +10,13 @@ using Sources.ServicesInterfaces;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UIElements;
+using VContainer;
+using VContainer.Unity;
 
 namespace Sources.Application
 {
 	[RequireComponent(typeof(UIElementGetterFacade))]
-	public class StartMenuViewModel : MonoBehaviour
+	public class StartMenuViewModel : MonoBehaviour, IPostStartable
 	{
 		[SerializeField] private AudioMixer _audioMixer;
 		[SerializeField] private AudioSource _buttonSound;
@@ -32,13 +34,19 @@ namespace Sources.Application
 		private IGameStateMachine _gameStateMachine;
 		private ILocalizationService _localization;
 
-		private void Start()
+
+		private void Construct(
+			IGameStateMachine gameStateMachine,
+			ILevelConfigGetter levelConfigGetter,
+			ILocalizationService localization
+		)
 		{
-			_gameStateMachine = ServiceLocator.Container.Get<IGameStateMachine>();
-			_levelConfigGetter = ServiceLocator.Container.Get<ILevelConfigGetter>();
-			_localization = ServiceLocator.Container.Get<ILocalizationService>();
-			_uiElementGetter = GetComponent<UIElementGetterFacade>();
 			_visualElementSwitcher = new VisualElementSwitcher();
+		}
+
+		public void PostStart()
+		{
+			_uiElementGetter = GetComponent<UIElementGetterFacade>();
 
 			CreateMenuWindows();
 			_allButtons = _uiElementGetter.GetAllByType<Button>();

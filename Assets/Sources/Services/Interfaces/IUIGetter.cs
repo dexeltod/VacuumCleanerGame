@@ -1,9 +1,9 @@
-using Sources.DIService;
+
 using Sources.PresentationInterfaces;
 
 namespace Sources.Services.Interfaces
 {
-	public interface IUIGetter : IService
+	public interface IUIGetter 
 	{
 		IGameplayInterfaceView GameplayInterface { get; }
 	}
