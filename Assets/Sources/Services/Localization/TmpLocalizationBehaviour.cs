@@ -12,6 +12,7 @@ namespace Sources.Services.Localization
 		[SerializeField] private string _phraseName;
 		private ILocalizationService _localization;
 		
+		[Inject]
 		private void Construct(IObjectResolver container)
 		{
 			_localization = container.Resolve<ILocalizationService>();

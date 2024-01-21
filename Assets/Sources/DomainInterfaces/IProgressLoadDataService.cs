@@ -1,6 +1,5 @@
 using System;
 using Cysharp.Threading.Tasks;
-
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 
 namespace Sources.DomainInterfaces

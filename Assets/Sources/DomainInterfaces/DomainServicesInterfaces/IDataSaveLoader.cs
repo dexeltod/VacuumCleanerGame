@@ -2,9 +2,9 @@ namespace Sources.DomainInterfaces.DomainServicesInterfaces
 {
 	public interface IDataSaveLoader
 	{
-		void               Save(object data);
-		void               DeleteSaves();
+		void Save(object data);
+		void DeleteSaves();
 		IGameProgressModel LoadProgress();
-		void               SetUniqueSaveFilePath();
+		void SetUniqueSaveFilePath();
 	}
 }

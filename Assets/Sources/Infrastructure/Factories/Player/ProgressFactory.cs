@@ -49,7 +49,6 @@ namespace Sources.Infrastructure.Factories
 		public async UniTask InitializeProgress()
 		{
 			IGameProgressModel loadedSaves = await _progressLoadDataService.LoadFromCloud();
-
 			Initialize(loadedSaves);
 		}
 

@@ -1,23 +1,22 @@
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces;
+using VContainer;
 
 namespace Sources.Infrastructure
 {
 	public class LevelProgressFacade : ILevelProgressFacade
 	{
-		private const string CurrentLevelName = "CurrentLevel";
+		private const string CurrentLevelName = "Desert";
 		private const int OnePoint = 1;
 
 		private readonly IGameProgress _progressService;
 
 		public int CurrentLevelNumber { get; private set; }
 
-		public LevelProgressFacade(
-			IGameProgress progressService
-		)
+		[Inject]
+		public LevelProgressFacade(IPersistentProgressService progressService)
 		{
-			_progressService = progressService;
-
+			_progressService = progressService.GameProgress.LevelProgress;
 			CurrentLevelNumber = _progressService.GetByName(CurrentLevelName).Value;
 		}
 

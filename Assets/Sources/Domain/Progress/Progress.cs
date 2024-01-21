@@ -12,15 +12,15 @@ namespace Sources.Domain.Progress
 		[SerializeField] private int _maxUpgradePointsCount;
 
 		[SerializeField] private List<ProgressUpgradeData> _progressData;
-		[SerializeField] private List<string>              _progressNames;
+		[SerializeField] private List<string> _progressNames;
 
 		public int MaxUpgradePointCount => _maxUpgradePointsCount;
 
 		protected Progress(List<ProgressUpgradeData> progress, int maxUpgradePointsCount = 0)
 		{
 			_maxUpgradePointsCount = maxUpgradePointsCount;
-			_progressData          = progress;
-			_progressNames         = new List<string>();
+			_progressData = progress;
+			_progressNames = new List<string>();
 
 			for (int i = 0; i < progress.Count; i++)
 			{

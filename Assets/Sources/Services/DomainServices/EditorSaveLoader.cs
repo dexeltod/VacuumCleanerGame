@@ -42,20 +42,29 @@ namespace Sources.Services.DomainServices
 
 		public async UniTask<IGameProgressModel> Load(Action callback)
 		{
-			Dictionary<string, string> keyAndJsonSaves = await CloudSaveService
-				.Instance
-				.Data
-				.LoadAsync
-				(
-					new HashSet<string>
-					{
-						GameProgressKey
-					}
-				);
+			try
+			{
+				Dictionary<string, string> keyAndJsonSaves = await CloudSaveService
+					.Instance
+					.Data
+					.LoadAsync
+					(
+						new HashSet<string>
+						{
+							GameProgressKey
+						}
+					);
 
-			string jsonSave = keyAndJsonSaves.Values.LastOrDefault();
+				string jsonSave = keyAndJsonSaves.Values.LastOrDefault();
 
-			return DeserializeJson(jsonSave);
+				return DeserializeJson(jsonSave);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+				throw;
+			}
+			
 		}
 
 		public void Initialize()

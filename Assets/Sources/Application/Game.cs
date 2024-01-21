@@ -1,5 +1,6 @@
 using Sources.Application.StateMachine;
-using UnityEngine;
+using Sources.Application.StateMachine.GameStates;
+using Sources.Infrastructure.Factories;
 using VContainer;
 using VContainer.Unity;
 
@@ -8,21 +9,24 @@ namespace Sources.Application
 	public class Game : IInitializable, IStartable
 	{
 		private readonly GameStateMachineFactory _gameStateMachineFactory;
+		private readonly ProgressFactory _progressFactory;
 		private GameStateMachine _stateMachine;
 
 		[Inject]
-		public Game(GameStateMachineFactory assetProvider)
+		public Game(GameStateMachineFactory assetProvider, ProgressFactory progressFactory)
 		{
 			_gameStateMachineFactory = assetProvider;
+			_progressFactory = progressFactory;
 		}
 
-		public void Start()
+		public async void Start()
 		{
-			Debug.Log("work");
+			_stateMachine.Enter<MenuState>();
 		}
 
-		public void Initialize()
+		public async void Initialize()
 		{
+			await _progressFactory.InitializeProgress();
 			_stateMachine = _gameStateMachineFactory.Create();
 		}
 	}

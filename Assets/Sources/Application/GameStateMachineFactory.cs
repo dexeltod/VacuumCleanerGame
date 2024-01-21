@@ -21,6 +21,8 @@ namespace Sources.Application
 {
 	public class GameStateMachineFactory
 	{
+		#region Fields
+
 		private readonly ISceneLoader _sceneLoader;
 		private readonly IAssetProvider _assetProvider;
 		private readonly ICoroutineRunner _coroutineRunner;
@@ -38,6 +40,8 @@ namespace Sources.Application
 		private readonly ICameraFactory _cameraFactory;
 		private readonly ILocalizationService _localizationService;
 		private readonly LoadingCurtain _loadingCurtain;
+
+		#endregion
 
 		[Inject]
 		public GameStateMachineFactory(
@@ -101,24 +105,24 @@ namespace Sources.Application
 						_leaderBoardService
 					),
 
-					[typeof(BuildSandState)] = new BuildSandState(
-						gameStateMachine,
-						_sceneLoader,
-						_loadingCurtain
-					),
-
-					[typeof(InitializeServicesWithViewState)]
-						= new InitializeServicesWithViewState(
-							gameStateMachine,
-							_assetProvider,
-							_playerFactory,
-							_upgradeDataFactory,
-							_persistentProgressService,
-							_shopProgressProvider,
-							_playerProgressProvider,
-							_resourcesProgressPresenter,
-							_cameraFactory
-						),
+					// [typeof(BuildSandState)] = new BuildSandState(
+					// 	gameStateMachine,
+					// 	_sceneLoader,
+					// 	_loadingCurtain
+					// ),
+					//
+					// [typeof(InitializeServicesWithViewState)]
+					// 	= new InitializeServicesWithViewState(
+					// 		gameStateMachine,
+					// 		_assetProvider,
+					// 		_playerFactory,
+					// 		_upgradeDataFactory,
+					// 		_persistentProgressService,
+					// 		_shopProgressProvider,
+					// 		_playerProgressProvider,
+					// 		_resourcesProgressPresenter,
+					// 		_cameraFactory
+					// 	),
 
 					// [typeof(BuildSceneState)] = new BuildSceneState(
 					// 	gameStateMachine,

@@ -19,7 +19,6 @@ namespace Sources.Application.StateMachine.GameStates
 	{
 		private readonly GameStateMachine _gameStateMachine;
 		private readonly LoadingCurtain _loadingCurtain;
-		private readonly IObjectResolver _container;
 		private readonly ISceneLoader _sceneLoader;
 
 		private IPlayerFactory _playerFactory;
@@ -32,22 +31,25 @@ namespace Sources.Application.StateMachine.GameStates
 
 		private LevelConfig _levelConfig;
 
+		[Inject]
 		public BuildSandState(
 			GameStateMachine gameStateMachine,
 			ISceneLoader sceneLoader,
-			LoadingCurtain loadingCurtain
+			LoadingCurtain loadingCurtain,
+			IResourcesProgressPresenter resourcesProgress,
+			IAssetProvider assetProvider
 		)
 		{
 			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
 			_sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
+			_resourcesProgress = resourcesProgress ?? throw new ArgumentNullException(nameof(resourcesProgress));
+			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
 		public async UniTask Enter(LevelConfig levelConfig)
 		{
 			if (levelConfig == null) throw new ArgumentNullException(nameof(levelConfig));
-			_resourcesProgress = _container.Resolve<IResourcesProgressPresenter>();
-			_assetProvider = _container.Resolve<IAssetProvider>();
 
 			_loadingCurtain.Show();
 			_levelConfig = levelConfig;

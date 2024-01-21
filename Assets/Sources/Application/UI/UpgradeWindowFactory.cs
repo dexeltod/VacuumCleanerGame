@@ -83,6 +83,6 @@ namespace Sources.Application.UI
 
 		private void InitButtons() =>
 			_upgradeElementsPrefabs = _shopElementFactory
-				.InstantiateElementPrefabs(UpgradeWindow.ContainerTransform);
+				.Instantiate(UpgradeWindow.ContainerTransform);
 	}
 }

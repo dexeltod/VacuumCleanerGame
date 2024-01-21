@@ -8,6 +8,7 @@ namespace Sources.Services.DomainServices
 		private IGameProgressModel _gameProgress;
 		public IGameProgressModel GameProgress => _gameProgress;
 
+
 		public void Construct(IGameProgressModel gameProgress) =>
 			_gameProgress = gameProgress ?? throw new ArgumentNullException(nameof(gameProgress));
 	}

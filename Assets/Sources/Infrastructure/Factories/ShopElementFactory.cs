@@ -22,7 +22,7 @@ namespace Sources.Infrastructure.Factories
 			_assetProvider = assetProvider;
 		}
 
-		public List<UpgradeElementPrefabView> InstantiateElementPrefabs(Transform transform)
+		public List<UpgradeElementPrefabView> Instantiate(Transform transform)
 		{
 			List<IUpgradeProgressData> progress = _shopProgress.GetAll();
 
@@ -31,24 +31,6 @@ namespace Sources.Infrastructure.Factories
 			SetUpgradeLevelsToItems(progress, items);
 
 			return Instantiate(transform, items, progress);
-		}
-
-		private void InstantiateButtons(
-			Transform transform,
-			UpgradeItemList items,
-			List<UpgradeElementPrefabView> buttons,
-			int itemIndex
-		)
-		{
-			UpgradeElementPrefabView button =
-				Object.Instantiate(
-					items.ReadOnlyItems[itemIndex].PrefabView,
-					transform.transform
-				);
-
-			button.Construct(items.Items[itemIndex], items.ReadOnlyItems[itemIndex]);
-
-			buttons.Add(button);
 		}
 
 		private void SetUpgradeLevelsToItems(List<IUpgradeProgressData> progress, IUpgradeItemList upgradeItems)
@@ -78,6 +60,24 @@ namespace Sources.Infrastructure.Factories
 		{
 			for (int i = 0; i < progress.Count; i++)
 				InstantiateButtons(transform, items, buttons, i);
+		}
+
+		private void InstantiateButtons(
+			Transform transform,
+			UpgradeItemList items,
+			List<UpgradeElementPrefabView> buttons,
+			int itemIndex
+		)
+		{
+			UpgradeElementPrefabView button =
+				Object.Instantiate(
+					items.ReadOnlyItems[itemIndex].PrefabView,
+					transform.transform
+				);
+
+			button.Construct(items.Items[itemIndex], items.ReadOnlyItems[itemIndex]);
+
+			buttons.Add(button);
 		}
 	}
 }

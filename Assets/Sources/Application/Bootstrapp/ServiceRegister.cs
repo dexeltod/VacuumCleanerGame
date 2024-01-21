@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
 using Sources.Application.Leaderboard;
 using Sources.Application.StateMachine.GameStates;
-using Sources.Application.UnityApplicationServices;
 using Sources.Application.YandexSDK;
 using Sources.ApplicationServicesInterfaces;
 using Sources.DomainInterfaces;
@@ -23,41 +19,34 @@ using Sources.InfrastructureInterfaces.Scene;
 using Sources.Services;
 using Sources.Services.DomainServices;
 using Sources.Services.Localization;
-using Sources.Services.PlayerServices;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Authorization;
 using Sources.Utils;
-using Unity.Services.Core;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
 namespace Sources.Application
 {
-	public class Boot : LifetimeScope
+	public class ServiceRegister
 	{
-		private Game _game;
+		private readonly IContainerBuilder _builder;
 
-		public void StopCoroutineRunning(Coroutine coroutine)
+		public ServiceRegister(IContainerBuilder builder)
 		{
-			if (coroutine == null)
-				throw new ArgumentNullException(nameof(coroutine));
-
-			StopCoroutine(coroutine);
+			_builder = builder;
 		}
 
-		protected override async void Configure(IContainerBuilder builder)
+		public void Register()
 		{
-			base.Configure(builder);
-
 			#region BaseServices
 
-			builder.RegisterEntryPoint<Game>();
+			_builder.RegisterEntryPoint<Game>();
 
-			builder.Register<IAssetProvider, AssetProvider>(Lifetime.Singleton);
-			builder.Register<LoadingCurtainFactory>(Lifetime.Scoped);
+			_builder.Register<IAssetProvider, AssetProvider>(Lifetime.Singleton);
+			_builder.Register<LoadingCurtainFactory>(Lifetime.Scoped);
 
-			builder.Register(
+			_builder.Register(
 				container =>
 				{
 					var loadingCurtain = container.Resolve<LoadingCurtainFactory>().Create();
@@ -67,37 +56,37 @@ namespace Sources.Application
 				Lifetime.Singleton
 			).AsImplementedInterfaces().AsSelf();
 
-			builder.Register<CoroutineRunnerFactory>(Lifetime.Scoped);
-			builder.Register(
+			_builder.Register<CoroutineRunnerFactory>(Lifetime.Scoped);
+			_builder.Register(
 				container => container.Resolve<CoroutineRunnerFactory>().Create(),
 				Lifetime.Singleton
 			).AsImplementedInterfaces().AsSelf();
 
-			builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
-			builder.Register<GameStateMachineFactory>(Lifetime.Singleton);
+			_builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
+			_builder.Register<GameStateMachineFactory>(Lifetime.Singleton);
 
 			#endregion
 
 			#region InitializeServicesAndProgress
 
-			builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
+			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
 
-			builder.Register<AuthorizationFactory>(Lifetime.Scoped);
-			builder.Register<IAuthorization>(
+			_builder.Register<AuthorizationFactory>(Lifetime.Scoped);
+			_builder.Register<IAuthorization>(
 				container => container.Resolve<AuthorizationFactory>().Create(),
 				Lifetime.Scoped
 			);
 
-			builder.Register<IRewardService, YandexRewardsService>(Lifetime.Singleton);
-			InitializeLeaderBoardService(builder);
+			_builder.Register<IRewardService, YandexRewardsService>(Lifetime.Singleton);
+			InitializeLeaderBoardService(_builder);
 
-			builder.Register<IUpgradeDataFactory, UpgradeDataFactory>(Lifetime.Scoped);
+			_builder.Register<IUpgradeDataFactory, UpgradeDataFactory>(Lifetime.Scoped);
 
-			builder.Register<IPersistentProgressService, PersistentProgressService>(Lifetime.Singleton);
-			builder.Register<IProgressLoadDataService, ProgressLoadDataService>(Lifetime.Singleton);
-			builder.Register<SaveLoaderFactory>(Lifetime.Scoped);
+			_builder.Register<IPersistentProgressService, PersistentProgressService>(Lifetime.Singleton);
+			_builder.Register<IProgressLoadDataService, ProgressLoadDataService>(Lifetime.Singleton);
+			_builder.Register<SaveLoaderFactory>(Lifetime.Scoped);
 
-			builder.Register(
+			_builder.Register(
 				container =>
 				{
 					var saveLoaderFactory = container.Resolve<SaveLoaderFactory>();
@@ -106,44 +95,50 @@ namespace Sources.Application
 				Lifetime.Singleton
 			);
 
-			CreateResourceService(builder);
+			CreateResourceService(_builder);
 
-			builder.Register<ProgressFactory>(Lifetime.Singleton);
+			_builder.Register<ProgressFactory>(Lifetime.Singleton);
 
-			builder.Register(
+			_builder.Register(
 				container =>
 				{
-					var a = container.Resolve<IPersistentProgressService>().GameProgress.ResourcesModel;
-					return new ResourcesProgressPresenter(a);
+					var resourcesModel = container.Resolve<IPersistentProgressService>().GameProgress.ResourcesModel;
+					return new ResourcesProgressPresenter(resourcesModel);
 				},
 				Lifetime.Singleton
 			).AsImplementedInterfaces();
 
-			CreateSceneLoadServices(builder);
+			CreateSceneLoadServices(_builder);
 
 			#endregion
 
 			#region InitializeProgressServices
 
-			builder.Register<PlayerStatsFactory>(Lifetime.Scoped);
-			builder.Register(
+			_builder.Register<PlayerStatsFactory>(Lifetime.Scoped);
+			_builder.Register(
 				container => container.Resolve<PlayerStatsFactory>()
 					.CreatePlayerStats(container.Resolve<IPersistentProgressService>()),
 				Lifetime.Singleton
 			).AsImplementedInterfaces().AsSelf();
 
-			builder.Register<IPlayerProgressProvider, PlayerProgressProvider>(Lifetime.Singleton);
-			builder.Register<ILevelConfigGetter, LevelConfigGetter>(Lifetime.Singleton);
-			builder.Register<IShopProgressProvider, ShopProgressProvider>(Lifetime.Singleton);
-			builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Singleton);
-			builder.Register<ILevelProgressFacade, LevelProgressFacade>(Lifetime.Singleton);
-			builder.Register<ICameraFactory, CameraFactory>(Lifetime.Scoped);
+			_builder.Register<IPlayerProgressProvider, PlayerProgressProvider>(Lifetime.Singleton);
+			_builder.Register<ILevelConfigGetter, LevelConfigGetter>(Lifetime.Singleton);
+			_builder.Register<IShopProgressProvider, ShopProgressProvider>(Lifetime.Singleton);
+			_builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Singleton);
+			_builder.Register<ILevelProgressFacade, LevelProgressFacade>(Lifetime.Singleton);
+			_builder.Register<ICameraFactory, CameraFactory>(Lifetime.Scoped);
 
-			builder.Register<ShopElementFactory>(Lifetime.Scoped);
+			_builder.Register<ShopElementFactory>(Lifetime.Scoped);
 
 			#endregion
 
-			builder.RegisterEntryPointExceptionHandler(e => Debug.LogError(e.Data));
+			_builder.RegisterEntryPointExceptionHandler(
+				exception =>
+				{
+					Debug.LogError(exception.Message);
+					Debug.LogErrorFormat(exception.Message);
+				}
+			);
 		}
 
 		private void CreateSceneLoadServices(IContainerBuilder builder)
@@ -175,34 +170,7 @@ namespace Sources.Application
 			LeaderBoard leaderBoardService = new LeaderBoard(GetLeaderboard());
 
 			builder.RegisterInstance<ILeaderBoardService>(leaderBoardService);
-
-#if YANDEX_GAMES
 			builder.Register<IYandexSDKController, YandexGamesSdkFacade>(Lifetime.Singleton);
-#endif
-		}
-
-		private async UniTask<ISaveLoader> GetSaveLoader(
-			IYandexSDKController sdkController,
-			IPersistentProgressService progressService
-		)
-		{
-#if YANDEX_GAMES && YANDEX_CODE
-			return new YandexSaveLoader(sdkController);
-#endif
-
-#if UNITY_EDITOR
-			return await GetEditorSaveLoader(progressService);
-#endif
-		}
-
-		private async UniTask<EditorSaveLoader> GetEditorSaveLoader(IPersistentProgressService progressService)
-		{
-			IUnityServicesController controller = new UnityServicesController(new InitializationOptions());
-
-			await controller.InitializeUnityServices();
-
-			EditorSaveLoader saveLoader = new EditorSaveLoader(progressService, controller);
-			return saveLoader;
 		}
 
 		private IAbstractLeaderBoard GetLeaderboard()
