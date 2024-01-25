@@ -1,5 +1,5 @@
 using System;
-using System.Runtime.InteropServices;
+using Sources.Application.YandexSDK;
 using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.Infrastructure.Factories.LeaderBoard;
@@ -22,7 +22,9 @@ namespace Sources.Application.StateMachine.GameStates
 		private readonly IGameStateMachine _gameStateMachine;
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly ILeaderBoardService _leaderBoardService;
-
+		private readonly IRegisterWindowLoader _registerWindowLoader;
+		private readonly IAdvertisement _advertisement;
+		
 		private MainMenuPresenter _mainMenuPresenter;
 
 		[Inject]
@@ -33,11 +35,18 @@ namespace Sources.Application.StateMachine.GameStates
 			ILevelProgressFacade levelProgressFacade,
 			IGameStateMachine gameStateMachine,
 			ILevelConfigGetter levelConfigGetter,
-			ILeaderBoardService leaderBoardService
+			ILeaderBoardService leaderBoardService,
+			IRegisterWindowLoader registerWindowLoader,
+			IAdvertisement advertisement
 		)
 		{
 			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
+			
+			_registerWindowLoader
+				= registerWindowLoader ?? throw new ArgumentNullException(nameof(registerWindowLoader));
+			
+			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
 			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
 			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
@@ -47,20 +56,24 @@ namespace Sources.Application.StateMachine.GameStates
 
 		public async void Enter()
 		{
-			MainMenuFactory mainMenuFactory = new MainMenuFactory(_assetProvider, _leaderBoardService);
-
+#if YANDEX_CODE
+			YandexGamesSdkFacade yandexGamesSdkFacade = new YandexGamesSdkFacade(_registerWindowLoader.Load());
+#endif
+			
+			LeaderBoardFactory leaderBoardFactory = new LeaderBoardFactory(_assetProvider, _leaderBoardService);
+			
 			await _sceneLoader.Load(ConstantNames.MenuScene);
-			await mainMenuFactory.Instantiate();
-
-			MainMenuBehaviour mainMenuBehaviour = mainMenuFactory.MainMenuBehaviour;
-
+			await leaderBoardFactory.Instantiate();
+			
+			MainMenuBehaviour mainMenuBehaviour = leaderBoardFactory.MainMenuBehaviour;
+			
 			_mainMenuPresenter = new MainMenuPresenter(
 				mainMenuBehaviour,
 				_levelProgressFacade,
 				_gameStateMachine,
 				_levelConfigGetter
 			);
-
+			
 			_mainMenuPresenter.Enable();
 			_loadingCurtain.HideSlowly();
 		}

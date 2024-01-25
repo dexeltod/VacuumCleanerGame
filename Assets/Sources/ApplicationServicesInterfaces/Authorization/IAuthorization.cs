@@ -1,7 +1,11 @@
+using System;
+
 namespace Sources.ServicesInterfaces.Authorization
 {
 	public interface IAuthorization
 	{
-		void Authorize();
+		event Action<bool> AuthorizeCallback;
+		void EnableAuthorizeWindow();
+		void DisableAuthorizeWindow();
 	}
 }

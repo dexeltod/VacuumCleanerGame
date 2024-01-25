@@ -21,7 +21,7 @@ namespace Sources.Application.StateMachine
 		private readonly GameStateMachine _gameStateMachine;
 		private readonly IAssetProvider _assetProvider;
 		private readonly IPlayerFactory _playerFactory;
-		private readonly IUpgradeDataFactory _upgradeDataFactory;
+		private readonly IProgressUpgradeFactory _progressUpgradeFactory;
 		private readonly IPersistentProgressService _progressService;
 		private readonly IShopProgressProvider _shopProgressProvider;
 		private readonly IPlayerProgressProvider _playerProgressProvider;
@@ -30,11 +30,12 @@ namespace Sources.Application.StateMachine
 
 		private bool _isServicesInitialized;
 
+		[Inject]
 		public InitializeServicesWithViewState(
 			GameStateMachine gameStateMachine,
 			IAssetProvider assetProvider,
 			IPlayerFactory playerFactory,
-			IUpgradeDataFactory upgradeDataFactory,
+			IProgressUpgradeFactory progressUpgradeFactory,
 			IPersistentProgressService progressService,
 			IShopProgressProvider shopProgressProvider,
 			IPlayerProgressProvider playerProgressProvider,
@@ -45,7 +46,8 @@ namespace Sources.Application.StateMachine
 			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
 			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
 			_playerFactory = playerFactory ?? throw new ArgumentNullException(nameof(playerFactory));
-			_upgradeDataFactory = upgradeDataFactory ?? throw new ArgumentNullException(nameof(upgradeDataFactory));
+			_progressUpgradeFactory = progressUpgradeFactory ??
+				throw new ArgumentNullException(nameof(progressUpgradeFactory));
 			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
 			_shopProgressProvider
 				= shopProgressProvider ?? throw new ArgumentNullException(nameof(shopProgressProvider));
@@ -86,7 +88,7 @@ namespace Sources.Application.StateMachine
 
 			CreateUpgradeWindowService(
 				_assetProvider,
-				_upgradeDataFactory,
+				_progressUpgradeFactory,
 				_resourcesProgressPresenter,
 				_progressService,
 				_shopProgressProvider,
@@ -100,7 +102,7 @@ namespace Sources.Application.StateMachine
 
 		private void CreateUpgradeWindowService(
 			IAssetProvider assetProvider,
-			IUpgradeDataFactory upgradeDataFactory,
+			IProgressUpgradeFactory progressUpgradeFactory,
 			IResourcesProgressPresenter resourcesProgressPresenter,
 			IPersistentProgressService progressService,
 			IShopProgressProvider shopProgressProvider,
@@ -109,7 +111,7 @@ namespace Sources.Application.StateMachine
 		{
 			UpgradeWindowFactory upgradeWindowFactory = new(
 				assetProvider,
-				upgradeDataFactory,
+				progressUpgradeFactory,
 				resourcesProgressPresenter,
 				progressService.GameProgress,
 				shopProgressProvider,

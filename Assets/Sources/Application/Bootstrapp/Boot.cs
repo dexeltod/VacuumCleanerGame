@@ -7,11 +7,10 @@ namespace Sources.Application
 	{
 		private Game _game;
 
-		protected override async void Configure(IContainerBuilder builder)
+		protected override void Configure(IContainerBuilder builder)
 		{
 			base.Configure(builder);
 			new ServiceRegister(builder).Register();
 		}
-		
 	}
 }

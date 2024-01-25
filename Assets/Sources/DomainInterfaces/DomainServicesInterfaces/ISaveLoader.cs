@@ -7,6 +7,7 @@ namespace Sources.DomainInterfaces.DomainServicesInterfaces
 	{
 		UniTask Save(IGameProgressModel @object, Action succeededCallback);
 		UniTask<IGameProgressModel> Load(Action succeededCallback);
-		void Initialize();
+		UniTask ClearSaves(IGameProgressModel gameProgressModel, Action succeededCallback);
+		UniTask Initialize();
 	}
 }

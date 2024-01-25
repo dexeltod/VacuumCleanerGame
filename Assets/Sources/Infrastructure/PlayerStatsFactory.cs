@@ -14,13 +14,13 @@ namespace Sources.Infrastructure
 {
 	public class PlayerStatsFactory
 	{
-		private readonly IUpgradeDataFactory _shopFactory;
+		private readonly IProgressUpgradeFactory _shopFactory;
 		private readonly LoadingCurtain _loadingCurtain;
 		private PlayerStatsService _playerStatsService;
 
-		public PlayerStatsFactory(IUpgradeDataFactory upgradeDataFactory, LoadingCurtain loadingCurtain)
+		public PlayerStatsFactory(IProgressUpgradeFactory progressUpgradeFactory, LoadingCurtain loadingCurtain)
 		{
-			_shopFactory = upgradeDataFactory;
+			_shopFactory = progressUpgradeFactory;
 			_loadingCurtain = loadingCurtain;
 		}
 

@@ -1,35 +1,24 @@
 using System;
 using Sources.ApplicationServicesInterfaces;
+using Sources.ServicesInterfaces.Authorization;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Sources.Presentation.UI.YandexAuthorization
 {
-	public class YandexAuthorizationView : MonoBehaviour, IYandexAuthorizationView
+	public class YandexAuthorizationView : MonoBehaviour, IAuthorization
 	{
 		[SerializeField] private GameObject _yesNoButtons;
 		[SerializeField] private Button _yesButton;
 		[SerializeField] private Button _noButton;
 
-		private bool _isPlayerWantsAuthorize;
+		public event Action<bool> AuthorizeCallback;
 
-		private Action _callback;
-
-		public void Authorize()
-		{
-			IsWantsAuthorization();
-		}
-
-		public void IsWantsAuthorization(
-			Action<bool> isPlayerWantsAuthorizeCallback = null,
-			Action onProcessCompleted = null
-		)
-		{
+		public void EnableAuthorizeWindow() =>
 			_yesNoButtons.SetActive(true);
 
-			isPlayerWantsAuthorizeCallback.Invoke(_isPlayerWantsAuthorize);
-			onProcessCompleted.Invoke();
-		}
+		public void DisableAuthorizeWindow() =>
+			_yesNoButtons.SetActive(false);
 
 		private void OnEnable()
 		{
@@ -46,22 +35,10 @@ namespace Sources.Presentation.UI.YandexAuthorization
 		private void DisableWindow() =>
 			_yesNoButtons.gameObject.SetActive(false);
 
-		private void OnNoButtonClicked()
-		{
-			_isPlayerWantsAuthorize = false;
-			InvokeCallbackAndDisableWindow();
-		}
+		private void OnNoButtonClicked() =>
+			AuthorizeCallback.Invoke(false);
 
-		private void OnYesButtonClicked()
-		{
-			_isPlayerWantsAuthorize = true;
-			InvokeCallbackAndDisableWindow();
-		}
-
-		private void InvokeCallbackAndDisableWindow()
-		{
-			_callback.Invoke();
-			DisableWindow();
-		}
+		private void OnYesButtonClicked() =>
+			AuthorizeCallback.Invoke(true);
 	}
 }

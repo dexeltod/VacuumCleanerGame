@@ -1,4 +1,5 @@
 using System;
+using Sources.Application.StateMachine.GameStates;
 using Sources.ApplicationServicesInterfaces;
 using Sources.Presentation.UI.YandexAuthorization;
 using Sources.ServicesInterfaces;
@@ -6,32 +7,26 @@ using Sources.ServicesInterfaces.Authorization;
 using Sources.Utils.Configs.Scripts;
 using VContainer;
 
-namespace Sources.Application.StateMachine.GameStates
+namespace Sources.Application.UnityApplicationServices
 {
-	public class AuthorizationFactory
+	public class RegisterWindowLoader : IRegisterWindowLoader
 	{
 		private readonly IAssetProvider _assetProvider;
 
 		[Inject]
-		public AuthorizationFactory(IAssetProvider assetProvider) =>
+		public RegisterWindowLoader(IAssetProvider assetProvider) =>
 			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
 
-		public IAuthorization Create()
+		public IAuthorization Load()
 		{
-#if !UNITY_EDITOR
-			GetYandexAuthorizationHandler();
-#endif
-			return GetEditorAuthorizationView();
-		}
-
-		private IAuthorization GetYandexAuthorizationHandler() =>
-			_assetProvider.InstantiateAndGetComponent<YandexAuthorizationView>(
+#if YANDEX_CODE
+			return _assetProvider.InstantiateAndGetComponent<YandexAuthorizationView>(
 				ResourcesAssetPath.Scene.UIResources.Yandex.AuthHandler
 			);
-
-		private IAuthorization GetEditorAuthorizationView() =>
-			_assetProvider.InstantiateAndGetComponent<EditorAuthorization>(
+#endif
+			return _assetProvider.InstantiateAndGetComponent<EditorAuthorization>(
 				ResourcesAssetPath.Scene.UIResources.Editor.AuthHandler
 			);
+		}
 	}
 }

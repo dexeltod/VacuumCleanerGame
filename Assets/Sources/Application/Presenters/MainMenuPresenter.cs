@@ -5,6 +5,7 @@ using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.Presentation.UI;
 using Sources.Utils.Configs.Scripts;
+using VContainer;
 
 namespace Sources.Infrastructure.Presenters
 {
@@ -15,6 +16,7 @@ namespace Sources.Infrastructure.Presenters
 		private readonly IGameStateMachine _stateMachine;
 		private readonly ILevelConfigGetter _levelConfigGetter;
 
+		[Inject]
 		public MainMenuPresenter(
 			IMainMenuView mainMenu,
 			ILevelProgressFacade levelProgress,

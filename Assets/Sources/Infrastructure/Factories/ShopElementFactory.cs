@@ -16,6 +16,7 @@ namespace Sources.Infrastructure.Factories
 		private readonly IGameProgress _shopProgress;
 		private readonly IAssetProvider _assetProvider;
 
+		
 		public ShopElementFactory(IGameProgress shopProgress, IAssetProvider assetProvider)
 		{
 			_shopProgress = shopProgress;
@@ -27,7 +28,7 @@ namespace Sources.Infrastructure.Factories
 			List<IUpgradeProgressData> progress = _shopProgress.GetAll();
 
 			UpgradeItemList items
-				= _assetProvider.LoadFromResources<UpgradeItemList>(ResourcesAssetPath.GameObjects.ShopItems);
+				= _assetProvider.LoadFromResources<UpgradeItemList>(ResourcesAssetPath.Scene.UIResources.ShopItems);
 			SetUpgradeLevelsToItems(progress, items);
 
 			return Instantiate(transform, items, progress);

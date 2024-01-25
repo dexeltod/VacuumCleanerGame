@@ -17,7 +17,7 @@ namespace Sources.Application.UI
 	public class UpgradeWindowFactory : IUpgradeWindowFactory
 	{
 		private readonly IResourcesProgressPresenter _resourceProgressPresenter;
-		private readonly IUpgradeDataFactory _upgradeDataFactory;
+		private readonly IProgressUpgradeFactory _progressUpgradeFactory;
 		private readonly IAssetProvider _assetProvider;
 		private readonly IGameProgressModel _progress;
 		private readonly IShopProgressProvider _shopProgressProvider;
@@ -32,7 +32,7 @@ namespace Sources.Application.UI
 
 		public UpgradeWindowFactory(
 			IAssetProvider assetProvider,
-			IUpgradeDataFactory upgradeDataFactory,
+			IProgressUpgradeFactory progressUpgradeFactory,
 			IResourcesProgressPresenter resourceProgressPresenter,
 			IGameProgressModel progress,
 			IShopProgressProvider shopProgressProvider,
@@ -40,7 +40,7 @@ namespace Sources.Application.UI
 		)
 		{
 			_assetProvider = assetProvider;
-			_upgradeDataFactory = upgradeDataFactory;
+			_progressUpgradeFactory = progressUpgradeFactory;
 			_resourceProgressPresenter = resourceProgressPresenter;
 			_progress = progress;
 			_shopProgressProvider = shopProgressProvider;
@@ -56,7 +56,7 @@ namespace Sources.Application.UI
 
 			Initialize();
 
-			IUpgradeItemData[] items = _upgradeDataFactory.LoadItems();
+			IUpgradeItemData[] items = _progressUpgradeFactory.LoadItems();
 
 			ShopPurchaseController shopPurchaseController = new ShopPurchaseController(
 				UpgradeWindow,

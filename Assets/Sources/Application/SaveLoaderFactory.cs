@@ -11,24 +11,24 @@ namespace Sources.Application
 {
 	public class SaveLoaderFactory
 	{
-		private readonly IYandexSDKController _sdkController;
 		private readonly IPersistentProgressService _progressService;
+		private readonly ICloudSave _cloudSave;
 
 		[Inject]
 		public SaveLoaderFactory(
-			IYandexSDKController sdkController,
 			IPersistentProgressService
-				progressService
+				progressService,
+			ICloudSave cloudSave
 		)
 		{
-			_sdkController = sdkController;
 			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
+			_cloudSave = cloudSave ?? throw new ArgumentNullException(nameof(cloudSave));
 		}
 
 		public ISaveLoader GetSaveLoader()
 		{
-#if YANDEX_GAMES && YANDEX_CODE
-			return new YandexSaveLoader(sdkController);
+#if YANDEX_CODE
+			return new YandexSaveLoader(_cloudSave);
 #endif
 
 #if UNITY_EDITOR
@@ -36,12 +36,11 @@ namespace Sources.Application
 #endif
 		}
 
-		private EditorSaveLoader GetEditorSaveLoader()
+		private UnitySaveLoader GetEditorSaveLoader()
 		{
 			IUnityServicesController controller = new UnityServicesController(new InitializationOptions());
-			controller.InitializeUnityServices();
-
-			return new EditorSaveLoader(_progressService, controller);
+			
+			return new UnitySaveLoader(_progressService, controller, _cloudSave);
 		}
 	}
 }

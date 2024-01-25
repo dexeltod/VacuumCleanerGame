@@ -1,4 +1,5 @@
 using System;
+using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
 using Sources.Domain.Progress;
@@ -8,15 +9,60 @@ using UnityEngine;
 
 namespace Sources.Services.DomainServices
 {
-#if YANDEX_GAMES && YANDEX_CODE
+	public class YandexCloudSaveLoader : ICloudSave
+	{
+		public async UniTask Save(string json)
+		{
+			bool isCallbackReceived = false;
+
+			PlayerAccount.SetCloudSaveData(json, () => isCallbackReceived = true);
+			await UniTask.WaitWhile(() => isCallbackReceived == false);
+			Debug.Log("Player data saved" + json);
+		}
+
+		public async UniTask<string> Load()
+		{
+			bool isCallbackReceived = false;
+			string json = "";
+
+			PlayerAccount.GetCloudSaveData(
+				successCallback =>
+				{
+					isCallbackReceived = true;
+					json = successCallback;
+				},
+				errorCallback =>
+				{
+					Debug.LogError(errorCallback);
+
+					isCallbackReceived = true;
+					json = null;
+				}
+			);
+
+			await UniTask.WaitWhile(() => isCallbackReceived == false);
+
+			return json;
+		}
+
+		public async UniTask DeleteSaves(IGameProgressModel gameProgressModel)
+		{
+			bool isCallbackReceived = false;
+			PlayerAccount.SetCloudSaveData("{}", () => isCallbackReceived = true);
+
+			await UniTask.WaitWhile(() => isCallbackReceived == false);
+
+			Debug.Log("DATA DELETED");
+		}
+	}
+
+#if YANDEX_CODE
 	public class YandexSaveLoader : ISaveLoader
 	{
-		private readonly IYandexSDKController _yandexController;
+		private readonly ICloudSave _yandexController;
 
-		public YandexSaveLoader(IYandexSDKController yandexController)
-		{
-			_yandexController = yandexController ?? throw new ArgumentNullException(nameof(yandexController));
-		}
+		public YandexSaveLoader(ICloudSave yandexCloudSave) =>
+			_yandexController = yandexCloudSave ?? throw new ArgumentNullException(nameof(yandexCloudSave));
 
 		public async UniTask Save(IGameProgressModel @object, Action succeededCallback)
 		{
@@ -58,6 +104,11 @@ namespace Sources.Services.DomainServices
 		{
 			await _yandexController.DeleteSaves(gameProgressModel);
 			succeededCallback.Invoke();
+		}
+
+		public UniTask Initialize()
+		{
+			return UniTask.CompletedTask;
 		}
 	}
 #endif

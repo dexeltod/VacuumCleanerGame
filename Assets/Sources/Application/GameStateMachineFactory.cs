@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Sources.Application.StateMachine;
 using Sources.Application.StateMachine.GameStates;
+using Sources.Application.YandexSDK;
 using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.DomainInterfaces;
@@ -21,7 +22,7 @@ namespace Sources.Application
 {
 	public class GameStateMachineFactory
 	{
-		#region Fields
+#region Fields
 
 		private readonly ISceneLoader _sceneLoader;
 		private readonly IAssetProvider _assetProvider;
@@ -31,7 +32,7 @@ namespace Sources.Application
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly ILeaderBoardService _leaderBoardService;
 		private readonly IPlayerFactory _playerFactory;
-		private readonly IUpgradeDataFactory _upgradeDataFactory;
+		private readonly IProgressUpgradeFactory _progressUpgradeFactory;
 		private readonly IPersistentProgressService _persistentProgressService;
 		private readonly IShopProgressProvider _shopProgressProvider;
 		private readonly IPlayerProgressProvider _playerProgressProvider;
@@ -39,9 +40,11 @@ namespace Sources.Application
 		private readonly IUIGetter _uiGetter;
 		private readonly ICameraFactory _cameraFactory;
 		private readonly ILocalizationService _localizationService;
+		private readonly IRegisterWindowLoader _registerWindowLoader;
+		private readonly IAdvertisement _advertisement;
 		private readonly LoadingCurtain _loadingCurtain;
 
-		#endregion
+#endregion
 
 		[Inject]
 		public GameStateMachineFactory(
@@ -54,14 +57,16 @@ namespace Sources.Application
 			ILevelConfigGetter levelConfigGetter,
 			ILeaderBoardService leaderBoardService,
 			IPlayerFactory playerFactory,
-			IUpgradeDataFactory upgradeDataFactory,
+			IProgressUpgradeFactory progressUpgradeFactory,
 			IPersistentProgressService persistentProgressService,
 			IShopProgressProvider shopProgressProvider,
 			IPlayerProgressProvider playerProgressProvider,
 			IResourcesProgressPresenter resourcesProgressPresenter,
 			IUIGetter uiGetter,
 			ICameraFactory cameraFactory,
-			ILocalizationService localizationService
+			ILocalizationService localizationService,
+			IRegisterWindowLoader registerWindowLoader,
+			IAdvertisement advertisement
 		)
 		{
 			_sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
@@ -72,19 +77,30 @@ namespace Sources.Application
 			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
 			_playerFactory = playerFactory ?? throw new ArgumentNullException(nameof(playerFactory));
-			_upgradeDataFactory = upgradeDataFactory ?? throw new ArgumentNullException(nameof(upgradeDataFactory));
+			
+			_progressUpgradeFactory = progressUpgradeFactory ??
+				throw new ArgumentNullException(nameof(progressUpgradeFactory));
+			
 			_persistentProgressService = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
+			
 			_shopProgressProvider
 				= shopProgressProvider ?? throw new ArgumentNullException(nameof(shopProgressProvider));
+			
 			_playerProgressProvider = playerProgressProvider ??
 				throw new ArgumentNullException(nameof(playerProgressProvider));
+			
 			_resourcesProgressPresenter = resourcesProgressPresenter ??
 				throw new ArgumentNullException(nameof(resourcesProgressPresenter));
+			
 			_uiGetter = uiGetter ?? throw new ArgumentNullException(nameof(uiGetter));
 			_cameraFactory = cameraFactory ?? throw new ArgumentNullException(nameof(cameraFactory));
 			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
+			
+			_registerWindowLoader
+				= registerWindowLoader ?? throw new ArgumentNullException(nameof(registerWindowLoader));
+			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 		}
 
 		public GameStateMachine Create()
@@ -102,7 +118,9 @@ namespace Sources.Application
 						_levelProgressFacade,
 						_gameStateMachine,
 						_levelConfigGetter,
-						_leaderBoardService
+						_leaderBoardService,
+						_registerWindowLoader,
+						_advertisement
 					),
 
 					// [typeof(BuildSandState)] = new BuildSandState(

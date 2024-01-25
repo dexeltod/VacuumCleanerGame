@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
@@ -30,41 +29,43 @@ namespace Sources.Services.DomainServices
 			IPersistentProgressService persistentProgressService
 		)
 		{
-			_saveLoader = saveLoader;
-			_progressService = progressService;
+			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
+			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
+			_persistentProgress = persistentProgressService ??
+				throw new ArgumentNullException(nameof(persistentProgressService));
+
 			_binaryDataSaveLoader = new BinaryDataSaveLoader();
 
 			string saveDirectoryPath = UnityEngine.Application.persistentDataPath + SavesDirectory;
 			Directory.CreateDirectory(saveDirectoryPath);
 
 			_jsonDataLoader = new JsonDataSaveLoader();
-			_persistentProgress = persistentProgressService;
 		}
 
 		public async UniTask SaveToCloud(IGameProgressModel model, Action succeededCallback = null)
 		{
 			if (model != null)
-				await SaveWithCallback(model);
+				await Save(model);
 
 			succeededCallback?.Invoke();
 		}
 
 		public async UniTask SaveToCloud(Action succeededCallback = null)
 		{
-			await SaveWithCallback(_persistentProgress.GameProgress);
+			await Save(_persistentProgress.GameProgress);
 			succeededCallback?.Invoke();
 		}
 
 		public async UniTask ClearSaves()
 		{
 			IGameProgressModel clearSave = ProgressCleared.Invoke();
-			_progressService.Construct(clearSave);
+			_progressService.Set(clearSave);
 
-			await SaveWithCallback(clearSave);
+			await Save(clearSave);
 		}
 
 		public async UniTask<IGameProgressModel> LoadFromCloud() =>
-			await LoadWithCallback();
+			await Load();
 
 		public void SaveToJson(string fileName, object data) =>
 			_jsonDataLoader.Save(fileName, data);
@@ -84,13 +85,13 @@ namespace Sources.Services.DomainServices
 			return _gameProgress;
 		}
 
-		private async UniTask SaveWithCallback(IGameProgressModel model)
+		private async UniTask Save(IGameProgressModel model)
 		{
 			IsCallbackReceived = false;
 			await _saveLoader.Save(model, () => IsCallbackReceived = true);
 		}
 
-		private async UniTask<IGameProgressModel> LoadWithCallback()
+		private async UniTask<IGameProgressModel> Load()
 		{
 			IsCallbackReceived = false;
 			return await _saveLoader.Load(() => IsCallbackReceived = true);

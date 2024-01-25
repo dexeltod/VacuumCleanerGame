@@ -19,11 +19,13 @@ namespace Sources.Utils.Configs.Scripts
 	public class GameObjects
 	{
 		public readonly string CoroutineRunner = "Game/Coroutine/CoroutineRunner";
-		public readonly Yandex Yandex = new();
 		public readonly string ModifiableMesh = "Game/Environment/Sand/SandGround";
 		public readonly string LeanLocalization = "Localization/LeanLocalization";
-		public readonly string ShopItems = "UI/Shop/ShopItems";
-		public readonly string LoadinCrutain = "UI/LoadingCurtain";
+	}
+
+	public class EditorUi
+	{
+		public readonly string AuthHandler = "Game/Ui/EditorUi/AuthHandler";
 	}
 
 	public class Yandex
@@ -33,9 +35,13 @@ namespace Sources.Utils.Configs.Scripts
 
 	public class UIResources
 	{
+		public readonly string ShopItems = "Game/UI/Shop/ShopItems";
+		public readonly string LoadingCurtain = "Game/UI/LoadingCurtain";
+		public readonly Yandex Yandex = new();
+		public readonly EditorUi Editor = new();
 		public readonly string UI = "UI/GameplayInterface";
-		public readonly string UpgradeWindow = "UI/Shop/ShopItemList/UpgradeCanvas";
-		public readonly string MainMenuCanvas = "UI/MainMenu/MainMenuCanvas";
+		public readonly string UpgradeWindow = "Game/UI/Shop/ShopItemList/UpgradeCanvas";
+		public readonly string MainMenuCanvas = "Game/UI/MainMenu/MainMenuCanvas";
 	}
 
 	public class Configs

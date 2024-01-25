@@ -1,5 +1,6 @@
 using System;
 using Sources.Application.StateMachine.GameStates;
+using Sources.Application.YandexSDK;
 using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.DomainInterfaces;
@@ -20,7 +21,7 @@ namespace Sources.Infrastructure.Presenters
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly IResourcesProgressPresenter _progressPresenter;
 		private readonly IProgressLoadDataService _progressLoadDataService;
-		private readonly IRewardService _rewardService;
+		private readonly IAdvertisement _rewardService;
 
 		private IGoToTextLevelButtonSubscribeable _button;
 
@@ -31,7 +32,7 @@ namespace Sources.Infrastructure.Presenters
 			ILevelConfigGetter levelConfigGetter,
 			IResourcesProgressPresenter progressPresenter,
 			IProgressLoadDataService progressLoadDataService,
-			IRewardService rewardService
+			IAdvertisement _advertisement
 		)
 		{
 			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
@@ -41,7 +42,7 @@ namespace Sources.Infrastructure.Presenters
 			_progressLoadDataService = progressLoadDataService ??
 				throw new ArgumentNullException(nameof(progressLoadDataService));
 
-			_rewardService = rewardService ?? throw new ArgumentNullException(nameof(rewardService));
+			_rewardService = _advertisement ?? throw new ArgumentNullException(nameof(_advertisement));
 		}
 
 		public void Dispose() =>

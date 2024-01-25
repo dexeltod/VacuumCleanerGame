@@ -1,3 +1,4 @@
+using System;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces;
 using VContainer;
@@ -16,6 +17,8 @@ namespace Sources.Infrastructure
 		[Inject]
 		public LevelProgressFacade(IPersistentProgressService progressService)
 		{
+			if (progressService == null) throw new ArgumentNullException(nameof(progressService));
+			
 			_progressService = progressService.GameProgress.LevelProgress;
 			CurrentLevelNumber = _progressService.GetByName(CurrentLevelName).Value;
 		}

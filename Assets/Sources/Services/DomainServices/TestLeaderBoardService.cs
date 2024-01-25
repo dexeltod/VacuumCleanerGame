@@ -1,39 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Services.DomainServices;
 
 namespace Sources.Services.DomainServices
 {
-	public class LeadersPlug
-	{
-		private readonly Dictionary<string, int> _players;
-
-		public LeadersPlug() =>
-			_players = new Dictionary<string, int>()
-			{
-				{ "player1", 1 },
-				{ "player2", 2 },
-				{ "player3", 3 },
-				{ "player4", 4 },
-				{ "player5", 5 },
-			};
-
-		public Dictionary<string, int> GetTestLeaders() =>
-			_players;
-	}
-
 	public class TestLeaderBoardService : IAbstractLeaderBoard
 	{
 		private readonly Dictionary<string, int> _leaders;
 
-		public TestLeaderBoardService()
-		{
+		public TestLeaderBoardService() =>
 			_leaders = new LeadersPlug().GetTestLeaders();
-		}
 
 		public UniTask AddScore(int newScore)
 		{
