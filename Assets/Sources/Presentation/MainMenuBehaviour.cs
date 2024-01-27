@@ -5,6 +5,7 @@ using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.Presentation.UI;
+using Sources.Services.Localization;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
@@ -20,12 +21,15 @@ namespace Sources.Application
 		[SerializeField] private Button _deleteSavesButton;
 		[SerializeField] private Button _addScoreButton;
 
+		[SerializeField] private TmpPhrasesTranslatorBehaviour _translatorBehaviour;
+
 		private ILevelConfigGetter _levelConfigGetter;
 		private IGameStateMachine _gameStateMachine;
 		private ILeaderBoardService _leaderBoardService;
 		private IProgressLoadDataService _progressLoadDataService;
 		private ILevelProgressFacade _levelProgressFacade;
 
+		public TmpPhrasesTranslatorBehaviour TranslatorBehaviour => _translatorBehaviour;
 		public event Action PlayButtonPressed;
 
 		[Inject]
@@ -59,8 +63,12 @@ namespace Sources.Application
 			_deleteSavesButton.onClick.RemoveListener(OnDeleteSaves);
 		}
 
-		public void Dispose() =>
+		public void Dispose()
+		{
 			_playButton.onClick.RemoveListener(OnPlay);
+			_addScoreButton.onClick.RemoveListener(OnAddLeader);
+			_deleteSavesButton.onClick.RemoveListener(OnDeleteSaves);
+		}
 
 		private void OnPlay() =>
 			PlayButtonPressed.Invoke();

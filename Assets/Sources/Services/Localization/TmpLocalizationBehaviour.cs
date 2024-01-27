@@ -9,10 +9,10 @@ namespace Sources.Services.Localization
 	[RequireComponent(typeof(TextMeshProUGUI))]
 	public class TmpLocalizationBehaviour : MonoBehaviour
 	{
-		[Inject] private IObjectResolver _container;
 		[SerializeField] private string _phraseName;
 
-		private ILocalizationService _localization;
+		[Inject] private ILocalizationService _localization;
+		[Inject] private IAssetProvider _pizda;
 
 		private void Start()
 		{

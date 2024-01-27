@@ -7,6 +7,7 @@ using Sources.Infrastructure.Presenters;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.Presentation.SceneEntity;
+using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs.Scripts;
 using VContainer;
@@ -24,7 +25,8 @@ namespace Sources.Application.StateMachine.GameStates
 		private readonly ILeaderBoardService _leaderBoardService;
 		private readonly IRegisterWindowLoader _registerWindowLoader;
 		private readonly IAdvertisement _advertisement;
-		
+		private readonly ITranslatorService _translatorService;
+
 		private MainMenuPresenter _mainMenuPresenter;
 
 		[Inject]
@@ -37,16 +39,18 @@ namespace Sources.Application.StateMachine.GameStates
 			ILevelConfigGetter levelConfigGetter,
 			ILeaderBoardService leaderBoardService,
 			IRegisterWindowLoader registerWindowLoader,
-			IAdvertisement advertisement
+			IAdvertisement advertisement,
+			ITranslatorService translatorService
 		)
 		{
 			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
-			
+
 			_registerWindowLoader
 				= registerWindowLoader ?? throw new ArgumentNullException(nameof(registerWindowLoader));
-			
+
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
+			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
 			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
 			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
@@ -59,21 +63,25 @@ namespace Sources.Application.StateMachine.GameStates
 #if YANDEX_CODE
 			YandexGamesSdkFacade yandexGamesSdkFacade = new YandexGamesSdkFacade(_registerWindowLoader.Load());
 #endif
-			
-			MainMenuFactory mainMenuFactory = new MainMenuFactory(_assetProvider, _leaderBoardService);
-			
+
+			MainMenuFactory mainMenuFactory = new MainMenuFactory(
+				_assetProvider,
+				_leaderBoardService,
+				_translatorService
+			);
+
 			await _sceneLoader.Load(ConstantNames.MenuScene);
-			await mainMenuFactory.Instantiate();
-			
+			await mainMenuFactory.Create();
+
 			MainMenuBehaviour mainMenuBehaviour = mainMenuFactory.MainMenuBehaviour;
-			
+
 			_mainMenuPresenter = new MainMenuPresenter(
 				mainMenuBehaviour,
 				_levelProgressFacade,
 				_gameStateMachine,
 				_levelConfigGetter
 			);
-			
+
 			_mainMenuPresenter.Enable();
 			_loadingCurtain.HideSlowly();
 		}

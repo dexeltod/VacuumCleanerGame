@@ -14,6 +14,7 @@ using Sources.InfrastructureInterfaces.Scene;
 using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
 using Sources.Services.Interfaces;
+using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
 using Sources.UseCases.Scene;
@@ -46,6 +47,7 @@ namespace Sources.Application
 		private readonly IPlayerStatsService _playerStatsService;
 		private readonly IUpgradeWindowFactory _upgradeWindowFactory;
 		private readonly IProgressLoadDataService _progressLoadDataService;
+		private readonly ITranslatorService _translatorService;
 		private readonly LoadingCurtain _loadingCurtain;
 
 #endregion
@@ -76,7 +78,8 @@ namespace Sources.Application
 			IAdvertisement advertisement,
 			IPlayerStatsService playerStatsService,
 			IUpgradeWindowFactory upgradeWindowFactory,
-			IProgressLoadDataService progressLoadDataService
+			IProgressLoadDataService progressLoadDataService,
+			ITranslatorService translatorService
 
 #endregion
 
@@ -120,6 +123,7 @@ namespace Sources.Application
 			_upgradeWindowFactory = upgradeWindowFactory;
 			_progressLoadDataService = progressLoadDataService ??
 				throw new ArgumentNullException(nameof(progressLoadDataService));
+			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 
 #endregion
 		}
@@ -139,7 +143,8 @@ namespace Sources.Application
 						_levelConfigGetter,
 						_leaderBoardService,
 						_registerWindowLoader,
-						_advertisement
+						_advertisement,
+						_translatorService
 					),
 
 					[typeof(BuildSandState)] = new BuildSandState(

@@ -59,6 +59,7 @@ namespace Sources.Application
 #region BaseServices
 
 			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
+			_builder.Register<ITranslatorService, PhraseTranslatorService>(Lifetime.Singleton);
 
 			_builder.Register<IAssetProvider, AssetProvider>(Lifetime.Singleton);
 

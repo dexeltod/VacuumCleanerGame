@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using Joystick_Pack.Scripts.Base;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
@@ -8,6 +9,7 @@ using UnityEngine.UI;
 
 namespace Sources.Presentation
 {
+	[RequireComponent(typeof(Canvas))]
 	public class GameplayInterfaceView : MonoBehaviour, IDisposable, IGameplayInterfaceView
 	{
 		private const float MaxFillAmount = 1f;
@@ -25,6 +27,7 @@ namespace Sources.Presentation
 
 		[SerializeField] private Image _globalScoreImage;
 
+		private IResourceProgressEventHandler _resourceProgressEventHandler;
 		private Canvas _canvas;
 
 		private int _cashScore;
@@ -33,8 +36,6 @@ namespace Sources.Presentation
 		private int _maxGlobalScore;
 
 		private bool _isInitialized;
-
-		private IResourceProgressEventHandler _resourceProgressEventHandler;
 
 		public TextMeshProUGUI ScoreText => _scoreCash;
 		public TextMeshProUGUI MoneyText => _moneyText;

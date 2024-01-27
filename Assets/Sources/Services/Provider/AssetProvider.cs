@@ -28,6 +28,7 @@ namespace Sources.Services
 		{
 			GameObject @object = Resources.Load<GameObject>(path) ?? throw new ArgumentNullException(path);
 			CheckPathException(path, @object);
+			_objectResolver.Inject(@object);
 			return @object.GetComponent<T>();
 		}
 
@@ -36,7 +37,7 @@ namespace Sources.Services
 			T resource = Resources.Load<T>(path) ?? throw new ArgumentNullException(path);
 			T @object = Object.Instantiate(resource);
 
-			_objectResolver.Inject(@object);
+			_objectResolver.InjectGameObject(@object.gameObject);
 			CheckPathException(path, @object);
 			return @object;
 		}
@@ -49,7 +50,7 @@ namespace Sources.Services
 				Quaternion.identity
 			) ?? throw new ArgumentNullException(path);
 
-			_objectResolver.Inject(@object);
+			_objectResolver.InjectGameObject(@object.gameObject);
 
 			CheckPathException(path, @object);
 			return @object;
@@ -59,6 +60,7 @@ namespace Sources.Services
 		{
 			T @object = Resources.Load<T>(path) ?? throw new ArgumentNullException(path);
 			CheckPathException(path, @object);
+			_objectResolver.Inject(@object);
 			return @object;
 		}
 
@@ -74,6 +76,19 @@ namespace Sources.Services
 			);
 
 			_objectResolver.Inject(@object);
+
+			return gameObject;
+		}
+
+		public GameObject Instantiate(GameObject instanceObject, Vector3 position)
+		{
+			GameObject gameObject = Object.Instantiate(
+				instanceObject,
+				position,
+				Quaternion.identity
+			);
+
+			_objectResolver.Inject(gameObject);
 
 			return gameObject;
 		}

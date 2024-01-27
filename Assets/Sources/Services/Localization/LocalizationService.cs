@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Lean.Localization;
-
 using Sources.Services.Localization.Serializable;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs;
@@ -12,12 +11,14 @@ namespace Sources.Services.Localization
 {
 	public class LocalizationService : ILocalizationService
 	{
+		private readonly IAssetProvider _provider;
 		private const string StartLanguage = "Russian";
 		private readonly string[] _phraseNames;
 		private readonly string[] _languages;
 
 		public LocalizationService(IAssetProvider provider)
 		{
+			_provider = provider;
 			IAssetProvider assetProvider = provider;
 
 			LeanLocalization leanLocalization = LoadAssets(assetProvider, out var localizationData);
@@ -34,10 +35,8 @@ namespace Sources.Services.Localization
 			LeanLocalization.UpdateTranslations();
 		}
 
-		public void UpdateTranslations()
-		{
+		public void UpdateTranslations() =>
 			LeanLocalization.UpdateTranslations();
-		}
 
 		public string GetTranslationText(string phrase)
 		{
