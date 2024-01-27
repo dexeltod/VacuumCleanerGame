@@ -18,10 +18,12 @@ namespace Sources.Application.StateMachine.GameStates
 {
 	public sealed class BuildSceneState : IGameState
 	{
+#region Fields
+
 		private readonly GameStateMachine _gameStateMachine;
 		private readonly ICoroutineRunner _coroutineRunner;
+		private readonly ILocalizationService _leanLocalization;
 
-		private ILocalizationService _leanLocalization;
 		private readonly IUIFactory _uiFactory;
 		private readonly IPlayerStatsService _playerStats;
 		private readonly ICameraFactory _cameraFactory;
@@ -34,8 +36,13 @@ namespace Sources.Application.StateMachine.GameStates
 		private readonly IPersistentProgressService _persistentProgress;
 		private LevelChangerPresenter _levelChangerPresenter;
 
+#endregion
+
 		[Inject]
 		public BuildSceneState(
+
+#region Params
+
 			GameStateMachine gameStateMachine,
 			ICoroutineRunner coroutineRunner,
 			ILocalizationService leanLocalization,
@@ -49,8 +56,12 @@ namespace Sources.Application.StateMachine.GameStates
 			ILevelProgressFacade levelProgressFacade,
 			IResourcesProgressPresenter resourcesProgress,
 			IPersistentProgressService persistentProgress
+
+#endregion
 		)
 		{
+#region Construction
+
 			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
 			_coroutineRunner = coroutineRunner ?? throw new ArgumentNullException(nameof(coroutineRunner));
 			_leanLocalization = leanLocalization ?? throw new ArgumentNullException(nameof(leanLocalization));
@@ -66,6 +77,8 @@ namespace Sources.Application.StateMachine.GameStates
 			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
 			_resourcesProgress = resourcesProgress ?? throw new ArgumentNullException(nameof(resourcesProgress));
 			_persistentProgress = persistentProgress ?? throw new ArgumentNullException(nameof(persistentProgress));
+
+#endregion
 		}
 
 		public void Exit() { }

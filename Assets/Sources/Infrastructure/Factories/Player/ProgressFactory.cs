@@ -19,7 +19,8 @@ namespace Sources.Infrastructure.Factories
 		public ProgressFactory(
 			IProgressLoadDataService progressLoadDataService,
 			IPersistentProgressServiceConstructable persistentProgressService,
-			InitialProgressFactory initialProgressFactory
+			InitialProgressFactory initialProgressFactory,
+			ProgressConstantNames progressConstantNames
 		)
 		{
 			_progressLoadDataService = progressLoadDataService ??

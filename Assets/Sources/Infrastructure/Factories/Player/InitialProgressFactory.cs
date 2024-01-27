@@ -16,19 +16,23 @@ namespace Sources.Infrastructure.Factories
 	{
 		private const int StartCount = 99999;
 		private const int MaxUpgradePointsCount = 6;
+		private const int FirstLevelIndex = 1;
 
 		private readonly IProgressUpgradeFactory _progressUpgradeFactory;
 		private readonly IResourceService _resourceService;
+		private readonly ProgressConstantNames _progressConstantNames;
 
 		[Inject]
 		public InitialProgressFactory(
 			IProgressUpgradeFactory progressUpgradeFactory,
-			IResourceService resourceService
+			IResourceService resourceService,
+			ProgressConstantNames progressConstantNames
 		)
 		{
 			_progressUpgradeFactory = progressUpgradeFactory ??
 				throw new ArgumentNullException(nameof(progressUpgradeFactory));
 			_resourceService = resourceService ?? throw new ArgumentNullException(nameof(resourceService));
+			_progressConstantNames = progressConstantNames ?? throw new ArgumentNullException(nameof(progressConstantNames));
 		}
 
 		public IGameProgressModel Create()
@@ -40,21 +44,12 @@ namespace Sources.Infrastructure.Factories
 
 		private GameProgressModel CreateProgress(IUpgradeItemData[] itemsList)
 		{
-			string progressName = "CurrentLevel";
-
 			Resource<int> soft = GetResource(ResourceType.Soft);
 			Resource<int> hard = GetResource(ResourceType.Hard);
 			Resource<int> cashScore = GetResource(ResourceType.CashScore);
 			Resource<int> globalScore = GetResource(ResourceType.GlobalScore);
 
-			ResourcesModel resourcesModel = new ResourcesModel(
-				soft,
-				hard,
-				cashScore,
-				globalScore,
-				StartCount,
-				StartCount
-			);
+			ResourcesModel resourcesModel = CreateResourceModel(soft, hard, cashScore, globalScore);
 
 			PlayerProgress playerProgressModel = new PlayerProgress(CreateNewUpgradeProgressData(itemsList));
 
@@ -65,7 +60,7 @@ namespace Sources.Infrastructure.Factories
 			(
 				new List<ProgressUpgradeData>
 				{
-					new ProgressUpgradeData(progressName, 1)
+					new ProgressUpgradeData(_progressConstantNames.CurrentLevel, FirstLevelIndex)
 				}
 			);
 
@@ -78,6 +73,21 @@ namespace Sources.Infrastructure.Factories
 
 			return newProgress;
 		}
+
+		private ResourcesModel CreateResourceModel(
+			Resource<int> soft,
+			Resource<int> hard,
+			Resource<int> cashScore,
+			Resource<int> globalScore
+		) =>
+			new ResourcesModel(
+				soft,
+				hard,
+				cashScore,
+				globalScore,
+				StartCount,
+				StartCount
+			);
 
 		private List<ProgressUpgradeData> CreateNewUpgradeProgressData(IEnumerable<IUpgradeItemData> itemsList)
 		{

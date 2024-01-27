@@ -7,10 +7,9 @@ namespace Sources.Domain.Progress
 	[Serializable] public class UpgradeProgressModel : Progress
 	{
 		[JsonConstructor]
-		public UpgradeProgressModel
-		(
+		public UpgradeProgressModel(
 			List<ProgressUpgradeData> progress,
-			int                       maxUpgradePointsCount
+			int maxUpgradePointsCount
 		) : base(progress, maxUpgradePointsCount) { }
 	}
 }

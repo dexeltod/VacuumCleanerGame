@@ -60,12 +60,12 @@ namespace Sources.Application.StateMachine.GameStates
 			YandexGamesSdkFacade yandexGamesSdkFacade = new YandexGamesSdkFacade(_registerWindowLoader.Load());
 #endif
 			
-			LeaderBoardFactory leaderBoardFactory = new LeaderBoardFactory(_assetProvider, _leaderBoardService);
+			MainMenuFactory mainMenuFactory = new MainMenuFactory(_assetProvider, _leaderBoardService);
 			
 			await _sceneLoader.Load(ConstantNames.MenuScene);
-			await leaderBoardFactory.Instantiate();
+			await mainMenuFactory.Instantiate();
 			
-			MainMenuBehaviour mainMenuBehaviour = leaderBoardFactory.MainMenuBehaviour;
+			MainMenuBehaviour mainMenuBehaviour = mainMenuFactory.MainMenuBehaviour;
 			
 			_mainMenuPresenter = new MainMenuPresenter(
 				mainMenuBehaviour,

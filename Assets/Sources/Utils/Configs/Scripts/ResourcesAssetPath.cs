@@ -39,7 +39,7 @@ namespace Sources.Utils.Configs.Scripts
 		public readonly string LoadingCurtain = "Game/UI/LoadingCurtain";
 		public readonly Yandex Yandex = new();
 		public readonly EditorUi Editor = new();
-		public readonly string UI = "UI/GameplayInterface";
+		public readonly string UI = "Game/UI/GameplayInterface";
 		public readonly string UpgradeWindow = "Game/UI/Shop/ShopItemList/UpgradeCanvas";
 		public readonly string MainMenuCanvas = "Game/UI/MainMenu/MainMenuCanvas";
 	}

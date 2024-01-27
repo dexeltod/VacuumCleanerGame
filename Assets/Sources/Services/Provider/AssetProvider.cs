@@ -1,18 +1,27 @@
 using System;
 using Sources.ServicesInterfaces;
 using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 using Object = UnityEngine.Object;
 
 namespace Sources.Services
 {
 	public class AssetProvider : IAssetProvider
 	{
+		[Inject] private IObjectResolver _objectResolver;
+
 		public GameObject Instantiate(string path)
 		{
-			GameObject @object = Resources.Load<GameObject>(path) ??
-				throw new ArgumentNullException(path);
+			GameObject @object = Resources.Load<GameObject>(path) ?? throw new ArgumentNullException(path);
+
 			CheckPathException(path, @object);
-			return Object.Instantiate(@object);
+
+			GameObject gameObject = Object.Instantiate(@object);
+
+			_objectResolver.Inject(gameObject);
+
+			return gameObject;
 		}
 
 		public T LoadComponent<T>(string path)
@@ -26,6 +35,8 @@ namespace Sources.Services
 		{
 			T resource = Resources.Load<T>(path) ?? throw new ArgumentNullException(path);
 			T @object = Object.Instantiate(resource);
+
+			_objectResolver.Inject(@object);
 			CheckPathException(path, @object);
 			return @object;
 		}
@@ -37,6 +48,8 @@ namespace Sources.Services
 				position,
 				Quaternion.identity
 			) ?? throw new ArgumentNullException(path);
+
+			_objectResolver.Inject(@object);
 
 			CheckPathException(path, @object);
 			return @object;
@@ -54,11 +67,15 @@ namespace Sources.Services
 			GameObject @object = Resources.Load<GameObject>(path) ?? throw new ArgumentNullException(path);
 
 			CheckPathException(path, @object);
-			return Object.Instantiate(
+			GameObject gameObject = Object.Instantiate(
 				@object,
 				position,
 				Quaternion.identity
 			);
+
+			_objectResolver.Inject(@object);
+
+			return gameObject;
 		}
 
 		private void CheckPathException(string path, object @object)

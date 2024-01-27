@@ -7,8 +7,7 @@ namespace Sources.Domain.Progress.Player
 	[Serializable] public class PlayerProgress : Progress
 	{
 		[JsonConstructor]
-		public PlayerProgress
-		(
+		public PlayerProgress(
 			List<ProgressUpgradeData> progress,
 			int maxUpgradePointsCount = 0
 		)

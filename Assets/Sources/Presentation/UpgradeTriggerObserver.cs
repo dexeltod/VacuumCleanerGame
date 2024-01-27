@@ -1,5 +1,4 @@
 using System;
-
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Scene;
@@ -18,27 +17,23 @@ namespace Sources.Presentation
 
 		private bool _isCanSave;
 
+		private IUpgradeWindow UpgradeWindow => _upgradeWindowGetter.UpgradeWindow;
+
 		[Inject]
 		private void Construct(
-			ISceneLoadInformer sceneLoadInformer,
 			IUpgradeWindowGetter upgradeWindowGetter,
 			IProgressLoadDataService progressLoadDataService
 		)
 		{
-			_sceneLoadInformer = sceneLoadInformer;
-			_upgradeWindowGetter = upgradeWindowGetter;
-			_progressLoadService = progressLoadDataService;
-		}
-
-		private void Start()
-		{
-			_upgradeWindow = _upgradeWindowGetter.UpgradeWindow;
+			_upgradeWindowGetter = upgradeWindowGetter ?? throw new ArgumentNullException(nameof(upgradeWindowGetter));
+			_progressLoadService = progressLoadDataService ??
+				throw new ArgumentNullException(nameof(progressLoadDataService));
 		}
 
 		private void OnTriggerEnter(Collider other)
 		{
 			if (other.TryGetComponent(out IPlayer _))
-				_upgradeWindow.SetActiveYesNoButtons(true);
+				UpgradeWindow.SetActiveYesNoButtons(true);
 		}
 
 		private async void OnTriggerExit(Collider other)

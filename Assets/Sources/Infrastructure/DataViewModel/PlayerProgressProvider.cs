@@ -1,3 +1,4 @@
+using System;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.DTO;
 using Sources.ServicesInterfaces;
@@ -12,10 +13,8 @@ namespace Sources.Infrastructure.DataViewModel
 		private readonly IPlayerStatsService _playerStats;
 
 		[Inject]
-		public PlayerProgressProvider(IPlayerStatsService playerStats)
-		{
-			_playerStats = playerStats;
-		}
+		public PlayerProgressProvider(IPlayerStatsService playerStats) =>
+			_playerStats = playerStats ?? throw new ArgumentNullException(nameof(playerStats));
 
 		public void SetProgress(string progressName)
 		{

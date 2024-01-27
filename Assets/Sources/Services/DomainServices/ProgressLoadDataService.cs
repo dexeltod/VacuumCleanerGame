@@ -64,8 +64,11 @@ namespace Sources.Services.DomainServices
 			await Save(clearSave);
 		}
 
-		public async UniTask<IGameProgressModel> LoadFromCloud() =>
-			await Load();
+		public async UniTask<IGameProgressModel> LoadFromCloud()
+		{
+			IsCallbackReceived = false;
+			return await _saveLoader.Load(() => IsCallbackReceived = true);
+		}
 
 		public void SaveToJson(string fileName, object data) =>
 			_jsonDataLoader.Save(fileName, data);
@@ -89,12 +92,6 @@ namespace Sources.Services.DomainServices
 		{
 			IsCallbackReceived = false;
 			await _saveLoader.Save(model, () => IsCallbackReceived = true);
-		}
-
-		private async UniTask<IGameProgressModel> Load()
-		{
-			IsCallbackReceived = false;
-			return await _saveLoader.Load(() => IsCallbackReceived = true);
 		}
 	}
 }

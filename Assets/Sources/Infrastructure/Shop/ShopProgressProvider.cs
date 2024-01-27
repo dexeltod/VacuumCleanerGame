@@ -5,6 +5,7 @@ using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.DTO;
 using Sources.ServicesInterfaces;
+using VContainer;
 
 namespace Sources.Infrastructure.Shop
 {
@@ -14,9 +15,10 @@ namespace Sources.Infrastructure.Shop
 		private readonly IGameProgress _shopProgress;
 		private readonly IProgressLoadDataService _progressLoadService;
 
-		public ShopProgressProvider(IGameProgress shopProgress, IProgressLoadDataService progressLoadDataService)
+		[Inject]
+		public ShopProgressProvider(IPersistentProgressService shopProgress, IProgressLoadDataService progressLoadDataService)
 		{
-			_shopProgress = shopProgress;
+			_shopProgress = shopProgress.GameProgress.ShopProgress;
 
 			_progressLoadService = progressLoadDataService;
 		}

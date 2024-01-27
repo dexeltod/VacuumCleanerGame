@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
-
 using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.Presentation.UI.Shop;
@@ -29,8 +28,7 @@ namespace Sources.Application
 
 		private bool _isCanAddProgress = true;
 
-		public ShopPurchaseController
-		(
+		public ShopPurchaseController(
 			IUpgradeWindow upgradeWindow,
 			List<UpgradeElementPrefabView> upgradeElements,
 			IResourcesProgressPresenter resourcesProgress,
@@ -38,12 +36,12 @@ namespace Sources.Application
 			IPlayerProgressProvider playerProgressProvider
 		)
 		{
-			_resourcesProgress = resourcesProgress;
-			_shopProgressProvider = shopProgressProvider;
-			_playerProgress = playerProgressProvider;
+			_resourcesProgress = resourcesProgress ?? throw new ArgumentNullException(nameof(resourcesProgress));
+			_shopProgressProvider = shopProgressProvider ?? throw new ArgumentNullException(nameof(shopProgressProvider));
+			_playerProgress = playerProgressProvider ?? throw new ArgumentNullException(nameof(playerProgressProvider));
 
-			_upgradeWindow = upgradeWindow;
-			_upgradeElements = upgradeElements;
+			_upgradeWindow = upgradeWindow ?? throw new ArgumentNullException(nameof(upgradeWindow));
+			_upgradeElements = upgradeElements ?? throw new ArgumentNullException(nameof(upgradeElements));
 
 			foreach (UpgradeElementPrefabView element in _upgradeElements)
 				_prefabsByNames.Add(element.IdName, element);
@@ -80,7 +78,7 @@ namespace Sources.Application
 		private void UnsubscribeFromButtons([NotNull] List<UpgradeElementPrefabView> elements)
 		{
 			if (elements == null) throw new ArgumentNullException(nameof(elements));
-			
+
 			foreach (UpgradeElementPrefabView element in elements)
 				element.BuyButtonPressed -= OnButtonPressed;
 		}
@@ -121,8 +119,7 @@ namespace Sources.Application
 		{
 			_isCanAddProgress = false;
 
-			await _shopProgressProvider.AddProgressPoint
-			(
+			await _shopProgressProvider.AddProgressPoint(
 				upgradeElement.IdName,
 				succeededCallback: () =>
 				{

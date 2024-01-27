@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Sources.DomainInterfaces;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Sources.Domain.Progress
 {
@@ -18,8 +17,9 @@ namespace Sources.Domain.Progress
 
 		protected Progress(List<ProgressUpgradeData> progress, int maxUpgradePointsCount = 0)
 		{
+			if (maxUpgradePointsCount < 0) throw new ArgumentOutOfRangeException(nameof(maxUpgradePointsCount));
+			_progressData = progress ?? throw new ArgumentNullException(nameof(progress));
 			_maxUpgradePointsCount = maxUpgradePointsCount;
-			_progressData = progress;
 			_progressNames = new List<string>();
 
 			for (int i = 0; i < progress.Count; i++)
@@ -41,7 +41,7 @@ namespace Sources.Domain.Progress
 			IUpgradeProgressData foundedProgress = _progressData.FirstOrDefault(element => element.Name == name);
 
 			if (foundedProgress == null)
-				throw new InvalidOperationException("Invalid progress name: " + name);
+				throw new ArgumentNullException("Invalid progress name: " + name);
 
 			return foundedProgress;
 		}
@@ -56,7 +56,7 @@ namespace Sources.Domain.Progress
 			IUpgradeProgressData upgradeProgress = element;
 
 			if (upgradeProgress == null)
-				throw new Exception("upgradeProgress is null");
+				throw new ArgumentNullException("upgradeProgress is null");
 
 			upgradeProgress.Value = progressValue;
 		}

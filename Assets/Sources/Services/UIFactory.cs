@@ -8,6 +8,7 @@ using Sources.PresentationInterfaces;
 using Sources.Services.Interfaces;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs.Scripts;
+using VContainer;
 
 namespace Sources.Services
 {

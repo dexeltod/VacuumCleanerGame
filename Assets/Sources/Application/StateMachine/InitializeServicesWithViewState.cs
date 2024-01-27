@@ -83,8 +83,7 @@ namespace Sources.Application.StateMachine
 				_progressService
 			);
 
-			// _builder.RegisterInstance<IUIFactory>(uiFactory);
-			// _builder.RegisterInstance<IUIGetter>(uiFactory);
+			
 
 			CreateUpgradeWindowService(
 				_assetProvider,
@@ -113,7 +112,7 @@ namespace Sources.Application.StateMachine
 				assetProvider,
 				progressUpgradeFactory,
 				resourcesProgressPresenter,
-				progressService.GameProgress,
+				progressService,
 				shopProgressProvider,
 				playerProgressProvider
 			);

@@ -1,7 +1,6 @@
 using System;
 using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
-
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Scene;
@@ -38,11 +37,12 @@ namespace Sources.Application
 			ILevelConfigGetter levelConfigGetter
 		)
 		{
-			_levelConfigGetter = levelConfigGetter;
-			_gameStateMachine = gameStateMachine;
-			_leaderBoardService = leaderBoardService;
-			_progressLoadDataService = progressLoadDataService;
-			_levelProgressFacade = levelProgressFacade;
+			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
+			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
+			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
+			_progressLoadDataService = progressLoadDataService ??
+				throw new ArgumentNullException(nameof(progressLoadDataService));
+			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
 		}
 
 		private void OnEnable()

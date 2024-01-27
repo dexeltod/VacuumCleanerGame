@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
+using UnityEngine;
 
 namespace Sources.Application.StateMachine
 {
@@ -36,7 +37,12 @@ namespace Sources.Application.StateMachine
 			return state;
 		}
 
-		private TState GetState<TState>() where TState : class, IExitState =>
-			_states[typeof(TState)] as TState;
+		private TState GetState<TState>() where TState : class, IExitState
+		{
+			if (_states.ContainsKey(typeof(TState)))
+				return _states[typeof(TState)] as TState;
+
+			throw new ArgumentNullException($"State {nameof(TState)} not found");
+		}
 	}
 }

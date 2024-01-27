@@ -13,4 +13,4 @@ namespace Sources.Application
 			new ServiceRegister(builder).Register();
 		}
 	}
-}
+} 

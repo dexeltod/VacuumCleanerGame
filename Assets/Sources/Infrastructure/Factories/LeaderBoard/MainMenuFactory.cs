@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Sources.Infrastructure.Factories.LeaderBoard
 {
-	public class LeaderBoardFactory
+	public class MainMenuFactory
 	{
 		private const int LeaderBoardPlayersCount = 5;
 
@@ -21,7 +21,7 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 
 		public MainMenuBehaviour MainMenuBehaviour { get; private set; }
 
-		public LeaderBoardFactory(IAssetProvider assetProvider, ILeaderBoardService leaderBoardService)
+		public MainMenuFactory(IAssetProvider assetProvider, ILeaderBoardService leaderBoardService)
 		{
 			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));

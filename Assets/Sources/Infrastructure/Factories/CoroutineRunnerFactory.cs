@@ -9,10 +9,8 @@ namespace Sources.Infrastructure.Factories
 	{
 		private readonly IAssetProvider _assetProvider;
 
-		public CoroutineRunnerFactory(IAssetProvider assetProvider)
-		{
+		public CoroutineRunnerFactory(IAssetProvider assetProvider) =>
 			_assetProvider = assetProvider;
-		}
 
 		public ICoroutineRunner Create()
 		{

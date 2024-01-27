@@ -9,11 +9,11 @@ namespace Sources.Services.DomainServices
 		public LeadersPlug() =>
 			_players = new Dictionary<string, int>()
 			{
-				{ "player1", 1 },
-				{ "player2", 2 },
-				{ "player3", 3 },
-				{ "player4", 4 },
-				{ "player5", 5 },
+				{ "player1", 100 },
+				{ "player2", 300 },
+				{ "player3", 50 },
+				{ "player4", 300},
+				{ "player5", 200},
 			};
 
 		public Dictionary<string, int> GetTestLeaders() =>

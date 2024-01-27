@@ -1,5 +1,4 @@
 using Sources.ServicesInterfaces;
-using Sources.Utils.Configs;
 using Sources.Utils.Configs.Scripts;
 
 namespace Sources.InfrastructureInterfaces.Scene
