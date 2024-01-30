@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Sources.Infrastructure.ScriptableObjects.Shop
 {
-	[Serializable] public class ProgressItemData : ScriptableObject, IUpgradeItemData
+	[Serializable] public class ProgressItemData : ScriptableObject, IUpgradeItemData, IItemChangeable
 	{
 		private const int MaxPoint = 6;
 
@@ -42,11 +42,6 @@ namespace Sources.Infrastructure.ScriptableObjects.Shop
 		public void SetUpgradeLevel(int level)
 		{
 			_pointIndex = level;
-
-			// Debug.Log
-			// (
-			// 	$"_pointLevel {_pointLevel} PriceIndexBuffer - 1 {PriceIndexBuffer - 1} _currentPriceElementIndex {_currentPriceElementIndex} "
-			// );
 
 			PriceChanged?.Invoke(Price);
 		}

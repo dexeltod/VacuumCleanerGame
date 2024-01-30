@@ -78,6 +78,7 @@ namespace Sources.Application
 
 			InitializeLeaderBoardService(_builder);
 
+			_builder.Register<LevelChangerPresenter>(Lifetime.Singleton);
 			_builder.Register<IProgressUpgradeFactory, ProgressUpgradeFactory>(Lifetime.Scoped);
 			_builder.Register<IProgressLoadDataService, ProgressLoadDataService>(Lifetime.Singleton);
 

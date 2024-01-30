@@ -7,6 +7,7 @@ using Sources.InfrastructureInterfaces.Scene;
 using Sources.Presentation.UI;
 using Sources.Services.Localization;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using VContainer;
 
@@ -21,7 +22,7 @@ namespace Sources.Application
 		[SerializeField] private Button _deleteSavesButton;
 		[SerializeField] private Button _addScoreButton;
 
-		[SerializeField] private TmpPhrasesTranslatorBehaviour _translatorBehaviour;
+		[FormerlySerializedAs("_translatorBehaviour")] [SerializeField] private TmpPhrases _translator;
 
 		private ILevelConfigGetter _levelConfigGetter;
 		private IGameStateMachine _gameStateMachine;
@@ -29,7 +30,7 @@ namespace Sources.Application
 		private IProgressLoadDataService _progressLoadDataService;
 		private ILevelProgressFacade _levelProgressFacade;
 
-		public TmpPhrasesTranslatorBehaviour TranslatorBehaviour => _translatorBehaviour;
+		public TmpPhrases Translator => _translator;
 		public event Action PlayButtonPressed;
 
 		[Inject]

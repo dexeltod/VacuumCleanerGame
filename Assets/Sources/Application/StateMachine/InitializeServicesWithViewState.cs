@@ -10,6 +10,7 @@ using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.Services;
 using Sources.Services.Interfaces;
+using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
 using VContainer;
@@ -27,6 +28,7 @@ namespace Sources.Application.StateMachine
 		private readonly IPlayerProgressProvider _playerProgressProvider;
 		private readonly IResourcesProgressPresenter _resourcesProgressPresenter;
 		private readonly ICameraFactory _cameraFactory;
+		private readonly ITranslatorService _translatorService;
 
 		private bool _isServicesInitialized;
 
@@ -40,7 +42,8 @@ namespace Sources.Application.StateMachine
 			IShopProgressProvider shopProgressProvider,
 			IPlayerProgressProvider playerProgressProvider,
 			IResourcesProgressPresenter resourcesProgressPresenter,
-			ICameraFactory cameraFactory
+			ICameraFactory cameraFactory,
+			ITranslatorService translatorService
 		)
 		{
 			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
@@ -56,6 +59,7 @@ namespace Sources.Application.StateMachine
 			_resourcesProgressPresenter = resourcesProgressPresenter ??
 				throw new ArgumentNullException(nameof(resourcesProgressPresenter));
 			_cameraFactory = cameraFactory ?? throw new ArgumentNullException(nameof(cameraFactory));
+			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 
 			_isServicesInitialized = false;
 		}
@@ -83,42 +87,24 @@ namespace Sources.Application.StateMachine
 				_progressService
 			);
 
-			
-
-			CreateUpgradeWindowService(
-				_assetProvider,
-				_progressUpgradeFactory,
-				_resourcesProgressPresenter,
-				_progressService,
-				_shopProgressProvider,
-				_playerProgressProvider
-			);
+			CreateUpgradeWindowService();
 
 			CreateCameraService(_assetProvider, _playerFactory);
 
 			_isServicesInitialized = true;
 		}
 
-		private void CreateUpgradeWindowService(
-			IAssetProvider assetProvider,
-			IProgressUpgradeFactory progressUpgradeFactory,
-			IResourcesProgressPresenter resourcesProgressPresenter,
-			IPersistentProgressService progressService,
-			IShopProgressProvider shopProgressProvider,
-			IPlayerProgressProvider playerProgressProvider
-		)
+		private void CreateUpgradeWindowService()
 		{
 			UpgradeWindowFactory upgradeWindowFactory = new(
-				assetProvider,
-				progressUpgradeFactory,
-				resourcesProgressPresenter,
-				progressService,
-				shopProgressProvider,
-				playerProgressProvider
+				_assetProvider,
+				_progressUpgradeFactory,
+				_resourcesProgressPresenter,
+				_progressService,
+				_shopProgressProvider,
+				_playerProgressProvider,
+				_translatorService
 			);
-
-			// _builder.RegisterInstance<IUpgradeWindowFactory>(upgradeWindowFactory);
-			// _builder.RegisterInstance<IUpgradeWindowGetter>(upgradeWindowFactory);
 		}
 
 		private void CreateCameraService(IAssetProvider assetProvider, IPlayerFactory playerFactory)

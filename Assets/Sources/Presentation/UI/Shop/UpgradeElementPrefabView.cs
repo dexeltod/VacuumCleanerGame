@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Sources.Infrastructure.ScriptableObjects.Shop;
 using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
@@ -34,41 +35,36 @@ namespace Sources.Presentation.UI.Shop
 
 		private int _boughtPoints;
 		private bool _isInit;
-		private ILocalizationService _localisation;
+		private IItemChangeable _itemChangeable;
 
 		public string IdName => _itemData.IdName;
 
 		public event Action<IUpgradeItemData> BuyButtonPressed;
 
-		[Inject]
-		private void ConstructServices(ILocalizationService localisation)
-		{
-			_localisation = localisation ?? throw new ArgumentNullException(nameof(localisation));
-		}
-
-		public IUpgradeElementConstructable Construct(IUpgradeItemData itemData, IUpgradeItemPrefab viewInfo)
+		public IUpgradeElementConstructable Construct(IItemChangeable itemChangeable ,IUpgradeItemData itemData, IUpgradeItemPrefab viewInfo, string title, string description)
 		{
 			if (_isInit)
 				throw new InvalidOperationException($"{name} view is already constructed");
 
 			_boughtPoints = itemData.PointLevel;
 			_itemData = itemData;
+			_itemChangeable = itemChangeable;
 
-			_title.SetText(_localisation.GetTranslationText(itemData.Title));
+			_title.SetText(title);
 			_price.SetText(itemData.Price.ToString());
-			_description.SetText(_localisation.GetTranslationText(itemData.Description));
+			_description.SetText(description);
 
 			_icon.sprite = viewInfo.Icon;
 
 			InstantiatePoints();
-			itemData.PriceChanged += OnPriceChanged;
+			itemChangeable.PriceChanged += OnPriceChanged;
 			_isInit = true;
 
 			return this;
 		}
 
 		public void Dispose() =>
-			_itemData.PriceChanged -= OnPriceChanged;
+			_itemChangeable.PriceChanged -= OnPriceChanged;
 
 		public void AddProgressPointColor(int count) =>
 			AddPoints(count);
@@ -80,7 +76,7 @@ namespace Sources.Presentation.UI.Shop
 			_buttonBuy.onClick.RemoveListener(OnBuyButtonPressed);
 
 		private void OnDestroy() =>
-			_itemData.PriceChanged -= OnPriceChanged;
+			_itemChangeable.PriceChanged -= OnPriceChanged;
 
 		private void OnBuyButtonPressed() =>
 			BuyButtonPressed?.Invoke(_itemData);

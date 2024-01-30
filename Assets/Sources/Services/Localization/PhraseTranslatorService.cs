@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sources.ServicesInterfaces;
+using UnityEngine;
 
 namespace Sources.Services.Localization
 {
@@ -12,16 +13,18 @@ namespace Sources.Services.Localization
 		public PhraseTranslatorService(ILocalizationService localizationService) =>
 			_localizationService = localizationService;
 
-		public void Localize(ref string phrase)
+		public string Localize(string phrase)
 		{
 			if (string.IsNullOrWhiteSpace(phrase))
 				throw new ArgumentException("Value cannot be null or whitespace.", nameof(phrase));
 
-			phrase = _localizationService.GetTranslationText(phrase);
+			return _localizationService.GetTranslationText(phrase);
 		}
 
 		public void Localize(string[] phrases)
 		{
+			string[] result = new string[phrases.Length];
+			
 			for (int i = 0; i < phrases.Length; i++)
 			{
 				if (string.IsNullOrWhiteSpace(phrases[i]))
@@ -36,10 +39,14 @@ namespace Sources.Services.Localization
 			for (int i = 0; i < phrases.Count; i++)
 			{
 				if (string.IsNullOrWhiteSpace(phrases[i]))
-					throw new ArgumentException("Value cannot be null or whitespace.", (phrases[i]));
+					throw new ArgumentException($"Value cannot be null or whitespace. Phrase {(phrases[i])}");
 
-				var a  = _localizationService.GetTranslationText(phrases[i]);
-				phrases[i] = a;
+				var translatedText = _localizationService.GetTranslationText(phrases[i]);
+
+				if (string.IsNullOrWhiteSpace(translatedText))
+					Debug.LogAssertion($"not found phrase {phrases[i]}");
+
+				phrases[i] = translatedText;
 			}
 
 			return phrases;

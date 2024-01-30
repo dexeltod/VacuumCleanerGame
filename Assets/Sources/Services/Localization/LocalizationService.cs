@@ -40,7 +40,15 @@ namespace Sources.Services.Localization
 
 		public string GetTranslationText(string phrase)
 		{
-			string parsedPhrase = _phraseNames.FirstOrDefault(elem => elem == phrase);
+			string parsedPhrase = _phraseNames.FirstOrDefault(
+				elem =>
+				{
+					if (string.IsNullOrWhiteSpace(elem))
+						throw new ArgumentException("Value cannot be null or whitespace.", (elem));
+
+					return elem == phrase;
+				}
+			);
 
 			return LeanLocalization.GetTranslationText(parsedPhrase);
 		}

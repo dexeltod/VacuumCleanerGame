@@ -7,6 +7,7 @@ using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.Player;
+using Sources.Infrastructure.Presenters;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Factory;
@@ -48,6 +49,7 @@ namespace Sources.Application
 		private readonly IUpgradeWindowFactory _upgradeWindowFactory;
 		private readonly IProgressLoadDataService _progressLoadDataService;
 		private readonly ITranslatorService _translatorService;
+		private readonly LevelChangerPresenter _levelChangerPresenter;
 		private readonly LoadingCurtain _loadingCurtain;
 
 #endregion
@@ -79,7 +81,8 @@ namespace Sources.Application
 			IPlayerStatsService playerStatsService,
 			IUpgradeWindowFactory upgradeWindowFactory,
 			IProgressLoadDataService progressLoadDataService,
-			ITranslatorService translatorService
+			ITranslatorService translatorService,
+			LevelChangerPresenter levelChangerPresenter
 
 #endregion
 
@@ -124,6 +127,8 @@ namespace Sources.Application
 			_progressLoadDataService = progressLoadDataService ??
 				throw new ArgumentNullException(nameof(progressLoadDataService));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
+			_levelChangerPresenter
+				= levelChangerPresenter ?? throw new ArgumentNullException(nameof(levelChangerPresenter));
 
 #endregion
 		}
@@ -165,7 +170,8 @@ namespace Sources.Application
 							_shopProgressProvider,
 							_playerProgressProvider,
 							_resourcesProgressPresenter,
-							_cameraFactory
+							_cameraFactory,
+							_translatorService
 						),
 
 					[typeof(BuildSceneState)] = new BuildSceneState(
@@ -181,13 +187,14 @@ namespace Sources.Application
 						_levelConfigGetter,
 						_levelProgressFacade,
 						_resourcesProgressPresenter,
-						_persistentProgressService
+						_persistentProgressService,
+						_levelChangerPresenter
 					),
 
 					[typeof(GameLoopState)] = new GameLoopState(
 						gameStateMachine,
 						_loadingCurtain,
-						_uiFactory.GameplayInterface
+						_uiFactory
 					)
 				}
 			);

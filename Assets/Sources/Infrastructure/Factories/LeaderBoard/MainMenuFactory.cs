@@ -22,7 +22,7 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 		private LeaderBoardBehaviour _leaderBoardBehaviour;
 
 		public MainMenuBehaviour MainMenuBehaviour { get; private set; }
-		public List<string> Phrases => MainMenuBehaviour.TranslatorBehaviour.Phrases;
+		private List<string> Phrases => MainMenuBehaviour.Translator.Phrases;
 		private string MainMenuCanvas => ResourcesAssetPath.Scene.UIResources.MainMenuCanvas;
 
 		public MainMenuFactory(
@@ -33,7 +33,7 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 		{
 			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
-			_translatorService = translatorService;
+			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 		}
 
 		public async UniTask Create()
@@ -43,7 +43,7 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 			_leaderBoardBehaviour = gameObject.GetComponent<LeaderBoardBehaviour>();
 			MainMenuBehaviour = gameObject.GetComponent<MainMenuBehaviour>();
 
-			MainMenuBehaviour.TranslatorBehaviour.Phrases = _translatorService.Localize(MainMenuBehaviour.TranslatorBehaviour.Phrases);
+			MainMenuBehaviour.Translator.Phrases = _translatorService.Localize(MainMenuBehaviour.Translator.Phrases);
 			InstantiateAndLeaders(await _leaderBoardService.GetLeaders(LeaderBoardPlayersCount));
 		}
 
@@ -54,10 +54,10 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 				Vector3 containerPosition = _leaderBoardBehaviour.Container.position;
 				GameObject playerPanelGameObject = _leaderBoardBehaviour.PlayerPanel.gameObject;
 
-				var a = _assetProvider
+				var panel = _assetProvider
 					.Instantiate(playerPanelGameObject, containerPosition)
 					.GetComponent<LeaderBoardPlayerPanelBehaviour>();
-				a.Construct(player.Key, player.Value);
+				panel.Construct(player.Key, player.Value);
 			}
 		}
 	}

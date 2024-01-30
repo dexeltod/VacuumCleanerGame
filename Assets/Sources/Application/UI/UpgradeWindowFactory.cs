@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
@@ -6,6 +7,7 @@ using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.Presentation.UI.Shop;
+using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
 using Sources.Utils.Configs;
@@ -21,6 +23,7 @@ namespace Sources.Application.UI
 		private readonly IAssetProvider _assetProvider;
 		private readonly IShopProgressProvider _shopProgressProvider;
 		private readonly IPlayerProgressProvider _playerProgressProvider;
+		private readonly ITranslatorService _translatorService;
 		private readonly IPersistentProgressService _progress;
 
 		private ShopElementFactory _shopElementFactory;
@@ -29,6 +32,7 @@ namespace Sources.Application.UI
 		private GameObject _upgradeWindow;
 		public IUpgradeWindow UpgradeWindow { get; private set; }
 		private IGameProgress ShopProgress => _progress.GameProgress.ShopProgress;
+		private string UpgradeWindowPath => ResourcesAssetPath.Scene.UIResources.UpgradeWindow;
 
 		public UpgradeWindowFactory(
 			IAssetProvider assetProvider,
@@ -36,16 +40,22 @@ namespace Sources.Application.UI
 			IResourcesProgressPresenter resourceProgressPresenter,
 			IPersistentProgressService progress,
 			IShopProgressProvider shopProgressProvider,
-			IPlayerProgressProvider playerProgressProvider
+			IPlayerProgressProvider playerProgressProvider,
+			ITranslatorService translatorService
 		)
 		{
-			_assetProvider = assetProvider;
-			_progressUpgradeFactory = progressUpgradeFactory;
-			_resourceProgressPresenter = resourceProgressPresenter;
-			_shopProgressProvider = shopProgressProvider;
-			_playerProgressProvider = playerProgressProvider;
+			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
+			_progressUpgradeFactory = progressUpgradeFactory ??
+				throw new ArgumentNullException(nameof(progressUpgradeFactory));
+			_resourceProgressPresenter = resourceProgressPresenter ??
+				throw new ArgumentNullException(nameof(resourceProgressPresenter));
+			_shopProgressProvider
+				= shopProgressProvider ?? throw new ArgumentNullException(nameof(shopProgressProvider));
+			_playerProgressProvider = playerProgressProvider ??
+				throw new ArgumentNullException(nameof(playerProgressProvider));
+			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 
-			_progress = progress;
+			_progress = progress ?? throw new ArgumentNullException(nameof(progress));
 		}
 
 		public GameObject Create()
@@ -53,7 +63,15 @@ namespace Sources.Application.UI
 			if (_upgradeWindow != null)
 				return _upgradeWindow;
 
-			Initialize();
+			ShopElementFactory elementFactory = new ShopElementFactory(
+				ShopProgress,
+				_assetProvider,
+				_translatorService
+			);
+
+			_upgradeWindow = _assetProvider.Instantiate(UpgradeWindowPath);
+			UpgradeWindow = _upgradeWindow.GetComponent<IUpgradeWindow>();
+			InitButtons(elementFactory);
 
 			IUpgradeItemData[] items = _progressUpgradeFactory.LoadItems();
 
@@ -68,20 +86,7 @@ namespace Sources.Application.UI
 			return _upgradeWindow;
 		}
 
-		private void Initialize()
-		{
-			InstantiateWindow();
-			InitButtons();
-		}
-
-		private void InstantiateWindow()
-		{
-			_shopElementFactory ??= new ShopElementFactory(ShopProgress, _assetProvider);
-			_upgradeWindow = _assetProvider.Instantiate(ResourcesAssetPath.Scene.UIResources.UpgradeWindow);
-		}
-
-		private void InitButtons() =>
-			_upgradeElementsPrefabs = _shopElementFactory
-				.Instantiate(UpgradeWindow.ContainerTransform);
+		private void InitButtons(ShopElementFactory shopElementFactory) =>
+			_upgradeElementsPrefabs = shopElementFactory.Instantiate(UpgradeWindow.ContainerTransform);
 	}
 }

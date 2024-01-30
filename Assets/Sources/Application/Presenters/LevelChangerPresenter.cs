@@ -23,7 +23,7 @@ namespace Sources.Infrastructure.Presenters
 		private readonly IProgressLoadDataService _progressLoadDataService;
 		private readonly IAdvertisement _rewardService;
 
-		private IGoToTextLevelButtonSubscribeable _button;
+		private IGoToTextLevelButtonSubscribable _button;
 
 		[Inject]
 		public LevelChangerPresenter(
@@ -48,7 +48,7 @@ namespace Sources.Infrastructure.Presenters
 		public void Dispose() =>
 			_button.GoToTextLevelButtonClicked -= OnGoToTextLevelButtonClicked;
 
-		public void SetButton(IGoToTextLevelButtonSubscribeable button)
+		public void SetButton(IGoToTextLevelButtonSubscribable button)
 		{
 			_button = button ?? throw new ArgumentNullException(nameof(button));
 

@@ -1,10 +1,11 @@
 using System;
-using System.Runtime.CompilerServices;
 using Joystick_Pack.Scripts.Base;
 using Sources.PresentationInterfaces;
+using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Sources.Presentation
@@ -14,7 +15,8 @@ namespace Sources.Presentation
 	{
 		private const float MaxFillAmount = 1f;
 
-		[SerializeField] private TextMeshProUGUI _currentLevel;
+		[FormerlySerializedAs("_phrasesTranslator")] [SerializeField] private TmpPhrases _phrases;
+
 		[SerializeField] private TextMeshProUGUI _scoreCash;
 		[SerializeField] private TextMeshProUGUI _globalScoreText;
 		[SerializeField] private TextMeshProUGUI _maxGlobalScoreText;
@@ -37,6 +39,8 @@ namespace Sources.Presentation
 
 		private bool _isInitialized;
 
+		public TmpPhrases Phrases => _phrases;
+		public Button GoToNextLevelButton => _goToNextLevelButton;
 		public TextMeshProUGUI ScoreText => _scoreCash;
 		public TextMeshProUGUI MoneyText => _moneyText;
 
@@ -65,6 +69,7 @@ namespace Sources.Presentation
 				throw new ArgumentNullException(nameof(resourceProgressEventHandler));
 			if (startCashScore < 0) throw new ArgumentOutOfRangeException(nameof(startCashScore));
 			if (maxCashScore < 0) throw new ArgumentOutOfRangeException(nameof(maxCashScore));
+			if (maxGlobalScore < 0) throw new ArgumentOutOfRangeException(nameof(maxGlobalScore));
 
 			if (_isInitialized == true)
 				return;
@@ -144,12 +149,6 @@ namespace Sources.Presentation
 		{
 			if (newMoney < 0) throw new ArgumentOutOfRangeException(nameof(newMoney));
 			_moneyText.SetText(newMoney.ToString());
-		}
-
-		public void SetCurrentLevel(int newLevel)
-		{
-			if (newLevel < 0) throw new ArgumentOutOfRangeException(nameof(newLevel));
-			_currentLevel.SetText($"{newLevel}");
 		}
 
 		private void SetCashScoreValue(int newScore)

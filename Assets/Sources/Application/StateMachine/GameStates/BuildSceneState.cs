@@ -34,7 +34,7 @@ namespace Sources.Application.StateMachine.GameStates
 		private readonly ILevelProgressFacade _levelProgressFacade;
 		private readonly IResourcesProgressPresenter _resourcesProgress;
 		private readonly IPersistentProgressService _persistentProgress;
-		private LevelChangerPresenter _levelChangerPresenter;
+		private readonly LevelChangerPresenter _levelChangerPresenter;
 
 #endregion
 
@@ -55,9 +55,11 @@ namespace Sources.Application.StateMachine.GameStates
 			ILevelConfigGetter levelConfigGetter,
 			ILevelProgressFacade levelProgressFacade,
 			IResourcesProgressPresenter resourcesProgress,
-			IPersistentProgressService persistentProgress
+			IPersistentProgressService persistentProgress,
+			LevelChangerPresenter levelChangerPresenter
 
 #endregion
+
 		)
 		{
 #region Construction
@@ -77,6 +79,8 @@ namespace Sources.Application.StateMachine.GameStates
 			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
 			_resourcesProgress = resourcesProgress ?? throw new ArgumentNullException(nameof(resourcesProgress));
 			_persistentProgress = persistentProgress ?? throw new ArgumentNullException(nameof(persistentProgress));
+			_levelChangerPresenter
+				= levelChangerPresenter ?? throw new ArgumentNullException(nameof(levelChangerPresenter));
 
 #endregion
 		}

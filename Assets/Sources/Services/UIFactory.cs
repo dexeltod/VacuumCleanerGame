@@ -14,11 +14,13 @@ namespace Sources.Services
 {
 	public class UIFactory : IUIFactory
 	{
+		private const bool IsActiveOnStart = true;
+
 		private readonly IAssetProvider _assetProvider;
 		private readonly IResourceProgressEventHandler _resourceProgressEventHandler;
 		private readonly IPersistentProgressService _gameProgress;
 
-		private bool _isActiveOnStart = true;
+		private readonly string _uiResourcesUI = ResourcesAssetPath.Scene.UIResources.UI;
 
 		public IGameplayInterfaceView GameplayInterface { get; private set; }
 
@@ -37,20 +39,17 @@ namespace Sources.Services
 				throw new ArgumentNullException(nameof(persistentProgressService));
 		}
 
-		public IGameplayInterfaceView Instantiate() =>
-			Create();
-
-		public void SetActive(bool isActive) =>
-			GameplayInterface.GameObject.SetActive(isActive);
-
-		private IGameplayInterfaceView Create()
+		public IGameplayInterfaceView Instantiate()
 		{
-			LoadAndSet();
+			IGameplayInterfaceView gameplayInterfaceView = Load();
 			IResourcesModel model = GetModel();
 			Construct(model);
 
-			return GameplayInterface;
+			return gameplayInterfaceView;
 		}
+
+		public void SetActive(bool isActive) =>
+			GameplayInterface.GameObject.SetActive(isActive);
 
 		private void Construct(IResourcesModel model)
 		{
@@ -62,7 +61,7 @@ namespace Sources.Services
 				model.MaxGlobalScore,
 				model.SoftCurrency.Count,
 				_resourceProgressEventHandler,
-				_isActiveOnStart
+				IsActiveOnStart
 			);
 		}
 
@@ -71,15 +70,9 @@ namespace Sources.Services
 				.GameProgress
 				.ResourcesModel;
 
-		private void LoadAndSet() =>
+		private IGameplayInterfaceView Load() =>
 			GameplayInterface = _assetProvider
-				.Instantiate
-				(
-					ResourcesAssetPath
-						.Scene
-						.UIResources
-						.UI
-				)
+				.Instantiate(_uiResourcesUI)
 				.GetComponent<IGameplayInterfaceView>();
 	}
 }

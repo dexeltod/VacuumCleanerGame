@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Sources.Services.Localization
 {
-	public class TmpPhrasesTranslator : MonoBehaviour
+	public class TmpPhrases : MonoBehaviour
 	{
 		[SerializeField] private TextMeshProUGUI[] _phrases;
 
