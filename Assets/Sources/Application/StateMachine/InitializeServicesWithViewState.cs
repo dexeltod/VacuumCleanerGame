@@ -14,6 +14,7 @@ using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.UI;
 using VContainer;
+using UpgradeWindowFactory = Sources.Application.UI.UpgradeWindowFactory;
 
 namespace Sources.Application.StateMachine
 {

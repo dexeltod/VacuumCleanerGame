@@ -18,7 +18,7 @@ namespace Sources.Infrastructure.Presenters
 		private readonly ISandParticleSystem _sandParticle;
 		private readonly ICoroutineRunner _coroutineRunner;
 		private readonly WaitForSeconds _waitForSeconds;
-		
+
 		private Coroutine _currentRoutine;
 
 		public SandContainerPresenter(
@@ -46,6 +46,9 @@ namespace Sources.Infrastructure.Presenters
 
 		private void OnCashCoreChanged(int cashScore)
 		{
+			if (cashScore < 0 || cashScore > _resourcesModel.MaxCashScore)
+				throw new ArgumentOutOfRangeException(nameof(cashScore));
+
 			StartSandFalling();
 
 			float normalized = NormalizeValue(

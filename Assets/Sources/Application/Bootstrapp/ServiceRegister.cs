@@ -33,6 +33,7 @@ using Sources.Utils;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+using UpgradeWindowFactory = Sources.Application.UI.UpgradeWindowFactory;
 #if YANDEX_CODE
 using Sources.Services.DomainServices.YandexLeaderboard;
 #endif
@@ -189,14 +190,8 @@ namespace Sources.Application
 			);
 		}
 
-		private void RegisterCoroutineRunner()
-		{
+		private void RegisterCoroutineRunner() =>
 			_builder.Register<CoroutineRunnerFactory>(Lifetime.Scoped);
-			_builder.Register(
-				container => container.Resolve<CoroutineRunnerFactory>().Create(),
-				Lifetime.Singleton
-			).AsImplementedInterfaces().AsSelf();
-		}
 
 		private void RegisterLoadingCurtain()
 		{

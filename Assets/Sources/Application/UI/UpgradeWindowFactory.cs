@@ -58,10 +58,10 @@ namespace Sources.Application.UI
 			_progress = progress ?? throw new ArgumentNullException(nameof(progress));
 		}
 
-		public GameObject Create()
+		public IUpgradeWindow Create()
 		{
-			if (_upgradeWindow != null)
-				return _upgradeWindow;
+			if (UpgradeWindow != null)
+				return UpgradeWindow;
 
 			ShopElementFactory elementFactory = new ShopElementFactory(
 				ShopProgress,
@@ -83,7 +83,7 @@ namespace Sources.Application.UI
 				_playerProgressProvider
 			);
 
-			return _upgradeWindow;
+			return UpgradeWindow;
 		}
 
 		private void InitButtons(ShopElementFactory shopElementFactory) =>

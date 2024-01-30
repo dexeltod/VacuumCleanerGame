@@ -26,7 +26,7 @@ namespace Sources.Presentation.SceneEntity
 
 		public void SetSand(float normalizedCount)
 		{
-			if (normalizedCount < 0 || normalizedCount > 1)
+			if (normalizedCount is < 0 or > 1)
 				throw new ArgumentOutOfRangeException(nameof(normalizedCount));
 
 			_sand.transform.localPosition = Vector3.Lerp(_minPosition, _maxPosition, normalizedCount);

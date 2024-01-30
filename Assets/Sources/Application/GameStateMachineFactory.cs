@@ -6,6 +6,7 @@ using Sources.Application.YandexSDK;
 using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.DomainInterfaces;
+using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Player;
 using Sources.Infrastructure.Presenters;
 using Sources.InfrastructureInterfaces;
@@ -13,7 +14,6 @@ using Sources.InfrastructureInterfaces.DTO;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.Presentation.SceneEntity;
-using Sources.PresentationInterfaces;
 using Sources.Services.Interfaces;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
@@ -50,6 +50,7 @@ namespace Sources.Application
 		private readonly IProgressLoadDataService _progressLoadDataService;
 		private readonly ITranslatorService _translatorService;
 		private readonly LevelChangerPresenter _levelChangerPresenter;
+		private readonly CoroutineRunnerFactory _coroutineRunnerFactory;
 		private readonly LoadingCurtain _loadingCurtain;
 
 #endregion
@@ -62,7 +63,6 @@ namespace Sources.Application
 			ISceneLoader sceneLoader,
 			IAssetProvider assetProvider,
 			LoadingCurtain loadingCurtain,
-			ICoroutineRunner coroutineRunner,
 			ILevelProgressFacade levelProgressFacade,
 			IGameStateMachine gameStateMachine,
 			ILevelConfigGetter levelConfigGetter,
@@ -82,7 +82,8 @@ namespace Sources.Application
 			IUpgradeWindowFactory upgradeWindowFactory,
 			IProgressLoadDataService progressLoadDataService,
 			ITranslatorService translatorService,
-			LevelChangerPresenter levelChangerPresenter
+			LevelChangerPresenter levelChangerPresenter,
+			CoroutineRunnerFactory coroutineRunnerFactory
 
 #endregion
 
@@ -92,7 +93,6 @@ namespace Sources.Application
 
 			_sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
 			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
-			_coroutineRunner = coroutineRunner ?? throw new ArgumentNullException(nameof(coroutineRunner));
 			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
 			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
 			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
@@ -129,6 +129,8 @@ namespace Sources.Application
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 			_levelChangerPresenter
 				= levelChangerPresenter ?? throw new ArgumentNullException(nameof(levelChangerPresenter));
+			_coroutineRunnerFactory = coroutineRunnerFactory ??
+				throw new ArgumentNullException(nameof(coroutineRunnerFactory));
 
 #endregion
 		}
@@ -176,7 +178,6 @@ namespace Sources.Application
 
 					[typeof(BuildSceneState)] = new BuildSceneState(
 						gameStateMachine,
-						_coroutineRunner,
 						_localizationService,
 						_uiFactory,
 						_playerStatsService,
@@ -188,7 +189,9 @@ namespace Sources.Application
 						_levelProgressFacade,
 						_resourcesProgressPresenter,
 						_persistentProgressService,
-						_levelChangerPresenter
+						_assetProvider,
+						_levelChangerPresenter,
+						_coroutineRunnerFactory
 					),
 
 					[typeof(GameLoopState)] = new GameLoopState(
