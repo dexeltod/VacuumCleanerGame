@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -6,7 +5,7 @@ using UnityEngine;
 
 namespace Sources.Services.Localization
 {
-	public class TmpPhrasesTranslatorBehaviour : MonoBehaviour
+	public class TmpPhrasesTranslator : MonoBehaviour
 	{
 		[SerializeField] private TextMeshProUGUI[] _phrases;
 
@@ -16,12 +15,7 @@ namespace Sources.Services.Localization
 			set
 			{
 				for (int i = 0; i < _phrases.Length; i++)
-				{
-					if (string.IsNullOrWhiteSpace(value[i]))
-						throw new ArgumentException("Value cannot be null or whitespace.", (value[i]));
-
 					_phrases[i].SetText(value[i]);
-				}
 			}
 		}
 	}
