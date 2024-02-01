@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Sources.Presentation
 {
-	public class UpgradeTriggerObserver : MonoBehaviour
+	public class UpgradeTriggerObserver : MonoBehaviour, IUpgradeTriggerObserver
 	{
 		private bool _isCanSave;
 		public event Action<bool> TriggerEntered;

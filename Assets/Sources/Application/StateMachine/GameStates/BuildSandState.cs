@@ -69,7 +69,7 @@ namespace Sources.Application.StateMachine.GameStates
 		}
 
 		private void OnSceneLoaded() =>
-			_gameStateMachine.Enter<InitializeServicesWithViewState>();
+			_gameStateMachine.Enter<BuildSceneState>();
 
 		public void Exit() { }
 	}

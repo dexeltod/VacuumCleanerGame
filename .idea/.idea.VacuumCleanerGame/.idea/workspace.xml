@@ -2,19 +2,38 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e72b9b77-a85b-4195-b3c2-5f5bad8d4534" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/SandContainerPresenterFactory.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/SandContainerPresenterFactory.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UpgradeWindowPresenterBuilder.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UpgradeWindowPresenterBuilder.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Presenters/UpgradeWindowPresenter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Presenters/UpgradeWindowPresenter.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/GameObject.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Presenters.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Presenters/ILevelChangerPresenter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Presenters/ILevelChangerPresenter.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Ui.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/IUpgradeTriggerObserver.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/IUpgradeTriggerObserver.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/UI/IUpgradeWindowPresenter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/UI/IUpgradeWindowPresenter.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Game.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Game.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Game/Player/Player.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Game/Player/Player.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/Bootstrapp/Boot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/Bootstrapp/Boot.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/Bootstrapp/ServiceRegister.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/Bootstrapp/ServiceRegister.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/GameStateMachineFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/GameStateMachineFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/Presenters/LevelChangerPresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/Presenters/LevelChangerPresenter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/BuildSandState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/BuildSandState.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/BuildSceneState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/BuildSceneState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/InitializeServicesWithViewState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/InitializeServicesWithViewState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/UI/UpgradeWindowFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/UI/UpgradeWindowFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/CoroutineRunnerFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/CoroutineRunnerFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Presenters/SandContainerPresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Presenters/SandContainerPresenter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Presentation/SceneEntity/SandContainerView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Presentation/SceneEntity/SandContainerView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/GameLoopState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/GameLoopState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/IPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/GameObject/IPlayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/IPlayer.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/GameObject/IPlayer.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/IVisualElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Ui/IVisualElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/IVisualElement.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Ui/IVisualElement.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Presentation/UpgradeTriggerObserver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Presentation/UpgradeTriggerObserver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/UI/IUpgradeWindowFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/UI/IUpgradeWindowFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/ResourcesAssetPath.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/ResourcesAssetPath.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/PresentationInterfaces/IGameplayInterfaceView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/PresentationInterfaces/IGameplayInterfaceView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/PresentationInterfaces/IGoToTextLevelButtonSubscribable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/IGoToTextLevelButtonObserver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/PresentationInterfaces/IGoToTextLevelButtonSubscribable.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/IGoToTextLevelButtonObserver.cs.meta" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,6 +106,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ea01e77be99618395f448b16bd7cc2bd4248bd9e5d8474964b2d97f39c5d74/System.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7d303c2bf72cd4cec95665b89c457d265d2b8ef3ed6da17cd4f85587c2f9de7/System.Linq.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d44b17e136d09081da1e8fd0e8c83fde60e11818b9f2442d7ed8cb733fae895e/System.Collections.Generic.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/Documents/My Games/Terraria/tModLoader/ModSources/SVO/SVO.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/Application/Presenters/MainMenuPresenter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/ApplicationServicesInterfaces/StateMachineInterfaces/IGameState.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/DIService/ServiceLocator.cs" root0="FORCE_HIGHLIGHTING" />
@@ -220,10 +240,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="25044">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="15708">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="25044" />
+      <option name="pid" value="15708" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -506,7 +526,9 @@
       <workItem from="1706428767360" duration="1245000" />
       <workItem from="1706518816505" duration="10757000" />
       <workItem from="1706563946230" duration="311000" />
-      <workItem from="1706609265071" duration="17043000" />
+      <workItem from="1706609265071" duration="18868000" />
+      <workItem from="1706694147020" duration="6326000" />
+      <workItem from="1706790221837" duration="5549000" />
     </task>
     <servers />
   </component>
@@ -590,6 +612,32 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="269" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Sources/Presentation/UpgradeTriggerObserver.cs</url>
+          <line>14</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Presentation\UpgradeTriggerObserver.cs" initialLine="14" containingFunctionPresentation="method 'OnTriggerEnter'">
+            <startOffsets>
+              <option value="359" />
+            </startOffsets>
+            <endOffsets>
+              <option value="387" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="270" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Sources/Application/StateMachine/GameStates/BuildSceneState.cs</url>
+          <line>128</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Application\StateMachine\GameStates\BuildSceneState.cs" initialLine="125" containingFunctionPresentation="method 'Build'">
+            <startOffsets>
+              <option value="4911" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5056" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="275" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

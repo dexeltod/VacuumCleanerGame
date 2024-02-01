@@ -14,7 +14,7 @@ using VContainer;
 
 namespace Sources.Infrastructure.Presenters
 {
-	public class LevelChangerPresenter : IDisposable
+	public class LevelChangerPresenter : IDisposable, ILevelChangerPresenter
 	{
 		private readonly ILevelProgressFacade _levelProgressFacade;
 		private readonly IGameStateMachine _gameStateMachine;
@@ -23,7 +23,7 @@ namespace Sources.Infrastructure.Presenters
 		private readonly IProgressLoadDataService _progressLoadDataService;
 		private readonly IAdvertisement _rewardService;
 
-		private IGoToTextLevelButtonSubscribable _button;
+		private IGoToTextLevelButtonObserver _button;
 
 		[Inject]
 		public LevelChangerPresenter(
@@ -32,7 +32,7 @@ namespace Sources.Infrastructure.Presenters
 			ILevelConfigGetter levelConfigGetter,
 			IResourcesProgressPresenter progressPresenter,
 			IProgressLoadDataService progressLoadDataService,
-			IAdvertisement _advertisement
+			IAdvertisement advertisement
 		)
 		{
 			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
@@ -42,16 +42,23 @@ namespace Sources.Infrastructure.Presenters
 			_progressLoadDataService = progressLoadDataService ??
 				throw new ArgumentNullException(nameof(progressLoadDataService));
 
-			_rewardService = _advertisement ?? throw new ArgumentNullException(nameof(_advertisement));
+			_rewardService = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 		}
+
+		public void SetButton(IGoToTextLevelButtonObserver button) =>
+			_button = button ?? throw new ArgumentNullException(nameof(button));
 
 		public void Dispose() =>
 			_button.GoToTextLevelButtonClicked -= OnGoToTextLevelButtonClicked;
 
-		public void SetButton(IGoToTextLevelButtonSubscribable button)
+		public void Enable()
 		{
-			_button = button ?? throw new ArgumentNullException(nameof(button));
+			_button.GoToTextLevelButtonClicked += OnGoToTextLevelButtonClicked;
+			_button.ButtonDestroying += OnButtonDestroying;
+		}
 
+		public void Disable()
+		{
 			_button.GoToTextLevelButtonClicked += OnGoToTextLevelButtonClicked;
 			_button.ButtonDestroying += OnButtonDestroying;
 		}
@@ -62,10 +69,8 @@ namespace Sources.Infrastructure.Presenters
 			_button.GoToTextLevelButtonClicked -= OnGoToTextLevelButtonClicked;
 		}
 
-		private void OnGoToTextLevelButtonClicked()
-		{
+		private void OnGoToTextLevelButtonClicked() =>
 			_rewardService.ShowAd(OnAdShowed, OnRewarded, OnAdClosed);
-		}
 
 		private void OnAdShowed()
 		{

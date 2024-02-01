@@ -79,7 +79,7 @@ namespace Sources.Application
 
 			InitializeLeaderBoardService(_builder);
 
-			_builder.Register<LevelChangerPresenter>(Lifetime.Singleton);
+			_builder.Register<ILevelChangerPresenter, LevelChangerPresenter>(Lifetime.Singleton);
 			_builder.Register<IProgressUpgradeFactory, ProgressUpgradeFactory>(Lifetime.Scoped);
 			_builder.Register<IProgressLoadDataService, ProgressLoadDataService>(Lifetime.Singleton);
 
@@ -131,6 +131,7 @@ namespace Sources.Application
 
 			_builder.Register<ICameraFactory, CameraFactory>(Lifetime.Scoped);
 			_builder.Register<IRegisterWindowLoader, RegisterWindowLoader>(Lifetime.Singleton);
+			_builder.Register<IUpgradeWindowPresenter, UpgradeWindowPresenter>(Lifetime.Singleton);
 			_builder.Register<ShopElementFactory>(Lifetime.Scoped);
 
 			_builder.RegisterEntryPointExceptionHandler(

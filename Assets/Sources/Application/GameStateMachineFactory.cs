@@ -49,8 +49,9 @@ namespace Sources.Application
 		private readonly IUpgradeWindowFactory _upgradeWindowFactory;
 		private readonly IProgressLoadDataService _progressLoadDataService;
 		private readonly ITranslatorService _translatorService;
-		private readonly LevelChangerPresenter _levelChangerPresenter;
+		private readonly ILevelChangerPresenter _levelChangerPresenter;
 		private readonly CoroutineRunnerFactory _coroutineRunnerFactory;
+		private readonly IUpgradeWindowPresenter _upgradeWindowPresenter;
 		private readonly LoadingCurtain _loadingCurtain;
 
 #endregion
@@ -82,8 +83,9 @@ namespace Sources.Application
 			IUpgradeWindowFactory upgradeWindowFactory,
 			IProgressLoadDataService progressLoadDataService,
 			ITranslatorService translatorService,
-			LevelChangerPresenter levelChangerPresenter,
-			CoroutineRunnerFactory coroutineRunnerFactory
+			ILevelChangerPresenter levelChangerPresenter,
+			CoroutineRunnerFactory coroutineRunnerFactory,
+			IUpgradeWindowPresenter upgradeWindowPresenter
 
 #endregion
 
@@ -131,6 +133,8 @@ namespace Sources.Application
 				= levelChangerPresenter ?? throw new ArgumentNullException(nameof(levelChangerPresenter));
 			_coroutineRunnerFactory = coroutineRunnerFactory ??
 				throw new ArgumentNullException(nameof(coroutineRunnerFactory));
+			_upgradeWindowPresenter = upgradeWindowPresenter ??
+				throw new ArgumentNullException(nameof(upgradeWindowPresenter));
 
 #endregion
 		}
@@ -161,24 +165,8 @@ namespace Sources.Application
 						_resourcesProgressPresenter,
 						_assetProvider
 					),
-
-					[typeof(InitializeServicesWithViewState)]
-						= new InitializeServicesWithViewState(
-							gameStateMachine,
-							_assetProvider,
-							_playerFactory,
-							_progressUpgradeFactory,
-							_persistentProgressService,
-							_shopProgressProvider,
-							_playerProgressProvider,
-							_resourcesProgressPresenter,
-							_cameraFactory,
-							_translatorService
-						),
-
 					[typeof(BuildSceneState)] = new BuildSceneState(
 						gameStateMachine,
-						_localizationService,
 						_uiFactory,
 						_playerStatsService,
 						_cameraFactory,
@@ -191,13 +179,17 @@ namespace Sources.Application
 						_persistentProgressService,
 						_assetProvider,
 						_levelChangerPresenter,
-						_coroutineRunnerFactory
+						_coroutineRunnerFactory,
+						_upgradeWindowPresenter
 					),
 
 					[typeof(GameLoopState)] = new GameLoopState(
 						gameStateMachine,
 						_loadingCurtain,
-						_uiFactory
+						_uiFactory,
+						_upgradeWindowPresenter,
+						_levelChangerPresenter,
+						_localizationService
 					)
 				}
 			);
