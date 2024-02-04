@@ -1,8 +1,8 @@
 using System;
-using Sources.ServicesInterfaces.Authorization;
+using Sources.ApplicationServicesInterfaces.Authorization;
 using UnityEngine;
 
-namespace Sources.Application.StateMachine.GameStates
+namespace Sources.Infrastructure.Factories.LeaderBoard
 {
 	public class EditorAuthorization : MonoBehaviour, IAuthorization
 	{

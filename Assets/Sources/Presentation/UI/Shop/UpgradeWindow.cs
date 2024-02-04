@@ -1,50 +1,53 @@
 using System;
 using System.Collections.Generic;
-
-using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Services.Interfaces;
-using Sources.ServicesInterfaces.UI;
+using Sources.Controllers;
+using Sources.Presentation.Common;
+using Sources.PresentationInterfaces;
+using Sources.PresentersInterfaces;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using VContainer;
 
 namespace Sources.Presentation.UI.Shop
 {
 	[RequireComponent(typeof(UpgradeWindow))]
-	public class UpgradeWindow : MonoBehaviour, IUpgradeWindow
+	public class UpgradeWindow : PresentableView<IUpgradeWindowPresenter>, IUpgradeWindow
 	{
+		[SerializeField] private TmpPhrases _phrases;
+
 		[SerializeField] private GameObject _content;
 		[SerializeField] private TextMeshProUGUI _money;
 
 		[SerializeField] private Button _closeMenuButton;
 		[SerializeField] private Button _noButton;
 		[SerializeField] private GameObject _yesNoButtons;
-
-		private IUIGetter _uiGetter;
-		private List<UpgradeElementPrefabView> _buttons;
+		private IUpgradeWindow _upgradeWindowImplementation;
 
 		public Transform ContainerTransform => _content.transform;
 
+		public List<string> Phrases
+		{
+			get => _phrases.Phrases;
+			set => _phrases.Phrases = value;
+		}
+
 		public event Action<bool> ActiveChanged;
+
 		public event Action Destroyed;
+
+		public void Construct(IUpgradeWindowPresenter presenter)
+		{
+			base.Construct(presenter);
+		}
 
 		private void Awake() =>
 			enabled = false;
 
-		public void OnEnable()
-		{
-			_uiGetter.GameplayInterface.Canvas.enabled = false;
-			ActiveChanged?.Invoke(true);
-		}
+		public void OnEnable() =>
+			Presenter.Enable();
 
-		public void OnDisable()
-		{
-			if (_uiGetter.GameplayInterface.Canvas != null)
-				_uiGetter.GameplayInterface.Canvas.enabled = true;
-
-			ActiveChanged?.Invoke(false);
-		}
+		public void OnDisable() =>
+			Presenter.Disable();
 
 		public void OnDestroy() =>
 			Destroyed?.Invoke();
@@ -52,28 +55,20 @@ namespace Sources.Presentation.UI.Shop
 		public void SetActiveYesNoButtons(bool isActive) =>
 			_yesNoButtons.gameObject.SetActive(isActive);
 
-		[Inject]
-		private void Construct(IResourceReadOnly<int> resource, IUIGetter uiGetter)
-		{
-			_uiGetter = uiGetter;
-			resource.ResourceChanged += OnMoneyChanged;
-
-			_money.text = resource.Count.ToString();
-
-			_closeMenuButton.onClick.AddListener(OnEnableJoystick);
-			_noButton.onClick.AddListener(OnEnableJoystick);
-		}
-
-		~UpgradeWindow()
-		{
-			_closeMenuButton.onClick.RemoveListener(OnEnableJoystick);
-			_noButton.onClick.RemoveListener(OnEnableJoystick);
-		}
+		// private void Construct(IResourceReadOnly<int> resource)
+		// {
+		// 	resource.ResourceChanged += OnMoneyChanged;
+		//
+		// 	_money.text = resource.Count.ToString();
+		//
+		// 	_closeMenuButton.onClick.AddListener(OnEnableJoystick);
+		// 	_noButton.onClick.AddListener(OnEnableJoystick);
+		// }
 
 		private void OnMoneyChanged(int amount) =>
 			_money.text = amount.ToString();
 
 		private void OnEnableJoystick() =>
-			_uiGetter.GameplayInterface.Joystick.enabled = true;
+			Disable();
 	}
 }

@@ -1,35 +1,34 @@
 using Cinemachine;
-
 using Sources.Infrastructure.Factories.Player;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.ServicesInterfaces;
-using Sources.Utils.Configs;
 using Sources.Utils.Configs.Scripts;
+using Sources.Utils.ConstantNames;
 using UnityEngine;
 
-namespace Sources.Infrastructure.Factories
+namespace Sources.Infrastructure.Factories.Scene
 {
 	public class CameraFactory : ICameraFactory
 	{
 		private const string MainCameraPath = "MainCamera";
 		private const string VirtualCameraPath = "VirtualCamera";
 
-		private readonly IAssetProvider _assetProvider;
+		private readonly IAssetResolver _assetResolver;
 		private readonly IPlayerFactory _playerFactory;
 
 		private GameObject _characterObject;
 		public Camera Camera { get; private set; }
 
-		public CameraFactory(IAssetProvider assetProvider, IPlayerFactory playerFactory)
+		public CameraFactory(IAssetResolver assetResolver, IPlayerFactory playerFactory)
 		{
-			_assetProvider = assetProvider;
+			_assetResolver = assetResolver;
 			_playerFactory = playerFactory;
 		}
 
 		public CinemachineVirtualCamera CreateVirtualCamera()
 		{
 			_characterObject = _playerFactory.Player;
-			Camera = _assetProvider.InstantiateAndGetComponent<Camera>(ResourcesAssetPath.Scene.MainCamera);
+			Camera = _assetResolver.InstantiateAndGetComponent<Camera>(ResourcesAssetPath.Scene.MainCamera);
 
 			return GetVirtualCamera();
 		}
@@ -38,7 +37,7 @@ namespace Sources.Infrastructure.Factories
 		{
 			Collider bounds = GameObject.FindWithTag(ConstantNames.Confiner).GetComponent<Collider>();
 
-			GameObject camera = _assetProvider.Instantiate(ResourcesAssetPath.Scene.CinemachineVirtualCamera);
+			GameObject camera = _assetResolver.Instantiate(ResourcesAssetPath.Scene.CinemachineVirtualCamera);
 			CinemachineConfiner cinemachineConfiner = camera.GetComponent<CinemachineConfiner>();
 
 			CinemachineVirtualCamera virtualCamera = SetCameraBounds(cinemachineConfiner, bounds, camera);

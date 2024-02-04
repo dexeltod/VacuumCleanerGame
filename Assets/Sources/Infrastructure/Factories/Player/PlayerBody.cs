@@ -1,6 +1,7 @@
 using System.Collections;
 
 using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.GameObject;
 using Sources.Services.Triggers;
 using Sources.ServicesInterfaces;
 using UnityEngine;

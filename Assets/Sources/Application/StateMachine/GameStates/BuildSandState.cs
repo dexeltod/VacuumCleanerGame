@@ -1,17 +1,13 @@
 using System;
 using Cysharp.Threading.Tasks;
+using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
-using Sources.DomainInterfaces;
-using Sources.Infrastructure.Factories;
-using Sources.Infrastructure.Factories.Player;
-using Sources.InfrastructureInterfaces.Scene;
+using Sources.Infrastructure.Factories.Scene;
 using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
 using Sources.Services;
 using Sources.ServicesInterfaces;
-using Sources.ServicesInterfaces.UI;
 using Sources.Utils.Configs.Scripts;
-using VContainer;
 
 namespace Sources.Application.StateMachine.GameStates
 {
@@ -20,30 +16,21 @@ namespace Sources.Application.StateMachine.GameStates
 		private readonly GameStateMachine _gameStateMachine;
 		private readonly LoadingCurtain _loadingCurtain;
 		private readonly ISceneLoader _sceneLoader;
+		private readonly IAssetResolver _assetResolver;
+		private readonly IResourcesProgressPresenter _resourcesProgress;
 
-		private IPlayerFactory _playerFactory;
-
-		private IResourcesProgressPresenter _resourcesProgress;
-		private IUpgradeWindowFactory _upgradeWindowFactory;
-		private IProgressLoadDataService _progressLoadService;
-		private ICameraFactory _cameraFactory;
-		private IAssetProvider _assetProvider;
-
-		private LevelConfig _levelConfig;
-
-		[Inject]
 		public BuildSandState(
 			GameStateMachine gameStateMachine,
 			ISceneLoader sceneLoader,
 			LoadingCurtain loadingCurtain,
 			IResourcesProgressPresenter resourcesProgress,
-			IAssetProvider assetProvider
+			IAssetResolver assetResolver
 		)
 		{
 			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
 			_sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
 			_resourcesProgress = resourcesProgress ?? throw new ArgumentNullException(nameof(resourcesProgress));
-			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
+			_assetResolver = assetResolver ?? throw new ArgumentNullException(nameof(assetResolver));
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
@@ -52,7 +39,6 @@ namespace Sources.Application.StateMachine.GameStates
 			if (levelConfig == null) throw new ArgumentNullException(nameof(levelConfig));
 
 			_loadingCurtain.Show();
-			_levelConfig = levelConfig;
 
 			await _sceneLoader.Load(levelConfig.LevelName);
 			Create();
@@ -62,7 +48,7 @@ namespace Sources.Application.StateMachine.GameStates
 
 		private void Create()
 		{
-			IMeshModifiable meshModifiable = new SandFactory(_assetProvider).Create();
+			IMeshModifiable meshModifiable = new SandFactory(_assetResolver).Create();
 			IMeshDeformationPresenter presenter = new MeshDeformationPresenter(meshModifiable, _resourcesProgress);
 
 			new MeshPresenter(presenter, _resourcesProgress);

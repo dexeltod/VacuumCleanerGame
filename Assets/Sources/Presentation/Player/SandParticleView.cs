@@ -1,4 +1,4 @@
-using Sources.Infrastructure.Presenters;
+using Sources.PresentationInterfaces.Player;
 using UnityEngine;
 
 namespace Sources.Presentation.Player

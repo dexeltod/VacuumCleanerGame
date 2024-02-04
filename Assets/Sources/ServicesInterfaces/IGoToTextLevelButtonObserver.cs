@@ -1,6 +1,6 @@
 using System;
 
-namespace Sources.PresentationInterfaces
+namespace Sources.ServicesInterfaces
 {
 	public interface IGoToTextLevelButtonObserver
 	{

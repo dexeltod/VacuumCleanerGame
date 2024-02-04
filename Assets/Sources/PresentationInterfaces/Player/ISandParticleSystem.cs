@@ -1,6 +1,4 @@
-using UnityEngine;
-
-namespace Sources.Infrastructure.Presenters
+namespace Sources.PresentationInterfaces.Player
 {
 	public interface ISandParticleSystem
 	{

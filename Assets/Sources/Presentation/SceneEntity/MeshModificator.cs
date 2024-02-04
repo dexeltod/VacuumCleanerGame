@@ -26,29 +26,25 @@ namespace Sources.Presentation.SceneEntity
 		public Collision Collision { get; private set; }
 		public event Action<int, Transform> CollisionHappen;
 
+		[Inject]
+		public void Construct(IResourcesProgressPresenter resourcesProgressPresenter) =>
+			_resourcesProgressPresenter = resourcesProgressPresenter;
+
 		public MeshCollider GetMeshCollider() =>
 			GetComponent<MeshCollider>();
 
-		[Inject]
-		private void Construct(IResourcesProgressPresenter resourcesProgressPresenter)
-		{
-			_resourcesProgressPresenter = resourcesProgressPresenter;
-		}
-
-		private void Start()
-		{
+		private void Start() =>
 			Mesh = GetComponent<MeshFilter>().mesh;
-		}
 
 		private void OnCollisionEnter(Collision collision)
 		{
-			if (_resourcesProgressPresenter.CheckMaxScore() == false)
+			if (_resourcesProgressPresenter.IsMaxScoreReached == false)
 				return;
 
 			if (collision.collider.TryGetComponent(out VacuumTool _))
 			{
 				Collision = collision;
-				CollisionHappen.Invoke(_pointPerOneSand, transform);
+				CollisionHappen!.Invoke(_pointPerOneSand, transform);
 			}
 		}
 	}

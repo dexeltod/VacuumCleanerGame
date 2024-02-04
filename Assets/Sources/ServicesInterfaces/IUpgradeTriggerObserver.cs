@@ -1,6 +1,6 @@
 using System;
 
-namespace Sources.Presentation
+namespace Sources.ServicesInterfaces
 {
 	public interface IUpgradeTriggerObserver
 	{

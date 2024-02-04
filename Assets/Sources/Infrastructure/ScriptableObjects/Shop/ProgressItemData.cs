@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Sources.InfrastructureInterfaces.Upgrade;
+using Sources.ServicesInterfaces.Upgrade;
 using UnityEngine;
 
 namespace Sources.Infrastructure.ScriptableObjects.Shop

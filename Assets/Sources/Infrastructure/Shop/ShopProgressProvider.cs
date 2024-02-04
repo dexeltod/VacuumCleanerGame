@@ -3,8 +3,8 @@ using Cysharp.Threading.Tasks;
 using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces;
-using Sources.InfrastructureInterfaces.DTO;
 using Sources.ServicesInterfaces;
+using Sources.ServicesInterfaces.DTO;
 using VContainer;
 
 namespace Sources.Infrastructure.Shop
@@ -16,10 +16,12 @@ namespace Sources.Infrastructure.Shop
 		private readonly IProgressLoadDataService _progressLoadService;
 
 		[Inject]
-		public ShopProgressProvider(IPersistentProgressService shopProgress, IProgressLoadDataService progressLoadDataService)
+		public ShopProgressProvider(
+			IPersistentProgressService shopProgress,
+			IProgressLoadDataService progressLoadDataService
+		)
 		{
 			_shopProgress = shopProgress.GameProgress.ShopProgress;
-
 			_progressLoadService = progressLoadDataService;
 		}
 

@@ -4,17 +4,17 @@ using Sources.ServicesInterfaces;
 using Sources.Utils.Configs.Scripts;
 using VContainer;
 
-namespace Sources.Application
+namespace Sources.Infrastructure.Factories.Scene
 {
 	public class LoadingCurtainFactory
 	{
-		private readonly IAssetProvider _provider;
+		private readonly IAssetResolver _resolver;
 
 		[Inject]
-		public LoadingCurtainFactory(IAssetProvider provider) =>
-			_provider = provider ?? throw new ArgumentNullException(nameof(provider));
+		public LoadingCurtainFactory(IAssetResolver resolver) =>
+			_resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
 
 		public LoadingCurtain Create() =>
-			_provider.InstantiateAndGetComponent<LoadingCurtain>(ResourcesAssetPath.Scene.UIResources.LoadingCurtain);
+			_resolver.InstantiateAndGetComponent<LoadingCurtain>(ResourcesAssetPath.Scene.UIResources.LoadingCurtain);
 	}
 }

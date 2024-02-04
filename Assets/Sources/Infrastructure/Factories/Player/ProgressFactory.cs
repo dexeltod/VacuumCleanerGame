@@ -2,9 +2,10 @@ using System;
 using Cysharp.Threading.Tasks;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.Utils.ConstantNames;
 using UnityEngine;
 
-namespace Sources.Infrastructure.Factories
+namespace Sources.Infrastructure.Factories.Player
 {
 	[Serializable] public class ProgressFactory : IDisposable
 	{

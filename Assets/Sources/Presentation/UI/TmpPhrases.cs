@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using Sources.ServicesInterfaces;
 using TMPro;
 using UnityEngine;
 
-namespace Sources.Services.Localization
+namespace Sources.Presentation.UI
 {
-	public class TmpPhrases : MonoBehaviour
+	public class TmpPhrases : MonoBehaviour, ITmpPhrases
 	{
 		[SerializeField] private TextMeshProUGUI[] _phrases;
 

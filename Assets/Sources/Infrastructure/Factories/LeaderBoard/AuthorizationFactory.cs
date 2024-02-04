@@ -1,20 +1,19 @@
 using System;
-using Sources.ApplicationServicesInterfaces;
+using Sources.ApplicationServicesInterfaces.Authorization;
 using Sources.Presentation.UI.YandexAuthorization;
 using Sources.ServicesInterfaces;
-using Sources.ServicesInterfaces.Authorization;
 using Sources.Utils.Configs.Scripts;
 using VContainer;
 
-namespace Sources.Application.StateMachine.GameStates
+namespace Sources.Infrastructure.Factories.LeaderBoard
 {
 	public class AuthorizationFactory
 	{
-		private readonly IAssetProvider _assetProvider;
+		private readonly IAssetResolver _assetResolver;
 
 		[Inject]
-		public AuthorizationFactory(IAssetProvider assetProvider) =>
-			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
+		public AuthorizationFactory(IAssetResolver assetResolver) =>
+			_assetResolver = assetResolver ?? throw new ArgumentNullException(nameof(assetResolver));
 
 		public IAuthorization Create()
 		{
@@ -25,12 +24,12 @@ namespace Sources.Application.StateMachine.GameStates
 		}
 
 		private IAuthorization GetYandexAuthorizationHandler() =>
-			_assetProvider.InstantiateAndGetComponent<YandexAuthorizationView>(
+			_assetResolver.InstantiateAndGetComponent<YandexAuthorizationView>(
 				ResourcesAssetPath.Scene.UIResources.Yandex.AuthHandler
 			);
 
 		private IAuthorization GetEditorAuthorizationView() =>
-			_assetProvider.InstantiateAndGetComponent<EditorAuthorization>(
+			_assetResolver.InstantiateAndGetComponent<EditorAuthorization>(
 				ResourcesAssetPath.Scene.UIResources.Editor.AuthHandler
 			);
 	}

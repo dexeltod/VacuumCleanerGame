@@ -1,48 +1,51 @@
 using System;
+using Sources.Controllers;
 using Sources.DomainInterfaces;
-using Sources.Presentation;
+using Sources.Infrastructure.Factories.Common.Decorators;
+using Sources.InfrastructureInterfaces.Factory;
+using Sources.PresentationInterfaces;
+using Sources.PresentersInterfaces;
+using Sources.Services.Triggers;
 using Sources.ServicesInterfaces;
-using Sources.ServicesInterfaces.UI;
 using Sources.Utils.Configs.Scripts;
 
-namespace Sources.Application.StateMachine.GameStates
+namespace Sources.Infrastructure.Factories
 {
-	public class UpgradeWindowPresenterBuilder
+	public class UpgradeWindowPresenterBuilder : PresenterFactory<UpgradeWindowPresenter>
 	{
-		private readonly IAssetProvider _assetProvider;
-		private readonly IUpgradeWindow _upgradeWindow;
+		private readonly IUpgradeWindowFactory _upgradeWindowFactory;
+		private readonly IAssetResolver _assetResolver;
 		private readonly IProgressLoadDataService _progressLoadDataService;
 		private readonly IUpgradeWindowPresenter _upgradeWindowPresenter;
+
 		private string GameObjectsUpgradeTrigger => ResourcesAssetPath.GameObjects.UpgradeTrigger;
 
 		public UpgradeWindowPresenterBuilder(
-			IAssetProvider assetProvider,
-			IUpgradeWindow upgradeWindow,
-			IProgressLoadDataService progressLoadDataService,
-			IUpgradeWindowPresenter upgradeWindowPresenter
+			IUpgradeWindowFactory upgradeWindowFactory,
+			IAssetResolver assetResolver,
+			IProgressLoadDataService progressLoadDataService
 		)
 		{
-			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
-			_upgradeWindow = upgradeWindow ?? throw new ArgumentNullException(nameof(upgradeWindow));
+			_upgradeWindowFactory
+				= upgradeWindowFactory ?? throw new ArgumentNullException(nameof(upgradeWindowFactory));
+			_assetResolver = assetResolver ?? throw new ArgumentNullException(nameof(assetResolver));
 			_progressLoadDataService = progressLoadDataService ??
 				throw new ArgumentNullException(nameof(progressLoadDataService));
-			_upgradeWindowPresenter = upgradeWindowPresenter ??
-				throw new ArgumentNullException(nameof(upgradeWindowPresenter));
 		}
 
-		public IUpgradeWindowPresenter Build()
+		public override UpgradeWindowPresenter Create()
 		{
-			UpgradeTriggerObserver upgradeTrigger = _assetProvider.InstantiateAndGetComponent<UpgradeTriggerObserver>(
+			IUpgradeWindow upgradeWindow = _upgradeWindowFactory.Create();
+
+			UpgradeTriggerObserver upgradeTrigger = _assetResolver.InstantiateAndGetComponent<UpgradeTriggerObserver>(
 				GameObjectsUpgradeTrigger
 			);
 
-			_upgradeWindowPresenter.Initialize(
+			return new UpgradeWindowPresenter(
 				upgradeTrigger,
-				_upgradeWindow,
+				upgradeWindow,
 				_progressLoadDataService
 			);
-
-			return _upgradeWindowPresenter;
 		}
 	}
 }

@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0414\u0430"
+  m_text: Yes
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2b9004823d736ba47bca04fd2ece4c7a, type: 2}
   m_sharedMaterial: {fileID: -2096455649916167305, guid: 2b9004823d736ba47bca04fd2ece4c7a, type: 2}
@@ -622,7 +622,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u041D\u0435\u0442"
+  m_text: No
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2b9004823d736ba47bca04fd2ece4c7a, type: 2}
   m_sharedMaterial: {fileID: -2096455649916167305, guid: 2b9004823d736ba47bca04fd2ece4c7a, type: 2}
@@ -1556,6 +1556,7 @@ GameObject:
   - component: {fileID: 8019734606112025519}
   - component: {fileID: 7556559399934505653}
   - component: {fileID: 6562995465970624419}
+  - component: {fileID: 4310842572931284773}
   m_Layer: 5
   m_Name: UpgradeCanvas
   m_TagString: Untagged
@@ -1672,11 +1673,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea65d0d2f2eb4f50895652aaec672ccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _phrases: {fileID: 4310842572931284773}
   _content: {fileID: 8019734606496950766}
   _money: {fileID: 4005788355521801726}
   _closeMenuButton: {fileID: 6720603335193613160}
   _noButton: {fileID: 5835463110273751551}
   _yesNoButtons: {fileID: 8142371157510955385}
+--- !u!114 &4310842572931284773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8019734606112025518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a68fca56bee44e099f5676039ec4cabb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _phrases:
+  - {fileID: 8019734606638691931}
+  - {fileID: 239061103577403723}
+  - {fileID: 2382642211113124762}
+  - {fileID: 867331307468054969}
 --- !u!1 &8019734606256821789
 GameObject:
   m_ObjectHideFlags: 0
@@ -2298,7 +2317,7 @@ GameObject:
   - component: {fileID: 228042269356032458}
   - component: {fileID: 867331307468054969}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: ImproveCarText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2352,7 +2371,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0423\u043B\u0443\u0447\u0448\u0438\u0442\u044C \u043C\u0430\u0448\u0438\u043D\u0443?"
+  m_text: ImproveCarText
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2b9004823d736ba47bca04fd2ece4c7a, type: 2}
   m_sharedMaterial: {fileID: -2096455649916167305, guid: 2b9004823d736ba47bca04fd2ece4c7a, type: 2}

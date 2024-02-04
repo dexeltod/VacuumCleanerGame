@@ -1,4 +1,4 @@
-namespace Sources.Utils.Configs.Scripts
+namespace Sources.Utils.ConstantNames
 {
 	public static class ConstantNames
 	{

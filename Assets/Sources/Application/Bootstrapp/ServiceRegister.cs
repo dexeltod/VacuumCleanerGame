@@ -1,44 +1,50 @@
 using System;
 using System.Collections.Generic;
-using Sources.Application.Leaderboard;
+using Sources.Application.Services;
+using Sources.Application.Services.Leaderboard;
 using Sources.Application.StateMachine;
-using Sources.Application.StateMachine.GameStates;
-using Sources.Application.UI;
 using Sources.Application.UnityApplicationServices;
-using Sources.Application.YandexSDK;
 using Sources.ApplicationServicesInterfaces;
+using Sources.ApplicationServicesInterfaces.Authorization;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
+using Sources.Controllers;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure;
 using Sources.Infrastructure.DataViewModel;
 using Sources.Infrastructure.Factories;
+using Sources.Infrastructure.Factories.Domain;
+using Sources.Infrastructure.Factories.LeaderBoard;
 using Sources.Infrastructure.Factories.Player;
+using Sources.Infrastructure.Factories.Scene;
+using Sources.Infrastructure.Factories.UI;
 using Sources.Infrastructure.Factories.UpgradeShop;
-using Sources.Infrastructure.Presenters;
+using Sources.Infrastructure.Providers;
 using Sources.Infrastructure.Shop;
-using Sources.InfrastructureInterfaces;
-using Sources.InfrastructureInterfaces.DTO;
+using Sources.InfrastructureInterfaces.Common;
+using Sources.InfrastructureInterfaces.Common.Factories;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
+using Sources.Presentation.Providers;
 using Sources.Presentation.SceneEntity;
+using Sources.PresentationInterfaces;
+using Sources.PresentersInterfaces;
 using Sources.Services;
 using Sources.Services.DomainServices;
-using Sources.Services.Interfaces;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
-using Sources.ServicesInterfaces.Authorization;
-using Sources.ServicesInterfaces.UI;
+using Sources.ServicesInterfaces.Advertisement;
+using Sources.ServicesInterfaces.DTO;
 using Sources.Utils;
+using Sources.Utils.ConstantNames;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
-using UpgradeWindowFactory = Sources.Application.UI.UpgradeWindowFactory;
 #if YANDEX_CODE
 using Sources.Services.DomainServices.YandexLeaderboard;
 #endif
 
-namespace Sources.Application
+namespace Sources.Application.Bootstrapp
 {
 	public class ServiceRegister
 	{
@@ -62,14 +68,14 @@ namespace Sources.Application
 			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
 			_builder.Register<ITranslatorService, PhraseTranslatorService>(Lifetime.Singleton);
 
-			_builder.Register<IAssetProvider, AssetProvider>(Lifetime.Singleton);
+			_builder.Register<IAssetResolver, AssetResolver>(Lifetime.Singleton);
 
 			RegisterLoadingCurtain();
 			RegisterCoroutineRunner();
 
 			_builder.Register<IGameStateMachine, GameStateMachine>(Lifetime.Singleton);
 			_builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
-			_builder.Register<GameStateMachineFactory>(Lifetime.Singleton);
+			_builder.Register<GameStateMachineFactory>(Lifetime.Scoped);
 
 #endregion
 
@@ -79,9 +85,9 @@ namespace Sources.Application
 
 			InitializeLeaderBoardService(_builder);
 
-			_builder.Register<ILevelChangerPresenter, LevelChangerPresenter>(Lifetime.Singleton);
+			_builder.Register<ILevelChangerPresenter, LevelChangerPresenter>(Lifetime.Scoped);
 			_builder.Register<IProgressUpgradeFactory, ProgressUpgradeFactory>(Lifetime.Scoped);
-			_builder.Register<IProgressLoadDataService, ProgressLoadDataService>(Lifetime.Singleton);
+			_builder.Register<IProgressLoadDataService, ProgressLoadDataService>(Lifetime.Scoped);
 
 			RegisterCloudSavers();
 
@@ -90,6 +96,7 @@ namespace Sources.Application
 			CreateResourceService();
 
 			_builder.Register<InitialProgressFactory>(Lifetime.Scoped);
+			_builder.Register<GameplayInterfaceProvider>(Lifetime.Scoped).AsImplementedInterfaces();
 			_builder.Register<ProgressFactory>(Lifetime.Scoped);
 
 			_builder.Register<PersistentProgressService>(
@@ -127,11 +134,14 @@ namespace Sources.Application
 #endregion
 
 			_builder.Register<IUIFactory, UIFactory>(Lifetime.Scoped).AsImplementedInterfaces();
-			_builder.Register<IUpgradeWindowFactory, UpgradeWindowFactory>(Lifetime.Scoped).AsImplementedInterfaces();
+			
+			_builder
+				.Register<IPresentableFactory<IUpgradeWindow, IUpgradeWindowPresenter>, UpgradeWindowFactory>(
+					Lifetime.Scoped
+				).AsImplementedInterfaces();
 
 			_builder.Register<ICameraFactory, CameraFactory>(Lifetime.Scoped);
 			_builder.Register<IRegisterWindowLoader, RegisterWindowLoader>(Lifetime.Singleton);
-			_builder.Register<IUpgradeWindowPresenter, UpgradeWindowPresenter>(Lifetime.Singleton);
 			_builder.Register<ShopElementFactory>(Lifetime.Scoped);
 
 			_builder.RegisterEntryPointExceptionHandler(
@@ -154,10 +164,11 @@ namespace Sources.Application
 				{
 					IResourcesModel resourcesModel
 						= container.Resolve<IPersistentProgressService>().GameProgress.ResourcesModel;
+
 					return new ResourcesProgressPresenter(resourcesModel);
 				},
 				Lifetime.Singleton
-			).AsImplementedInterfaces();
+			).AsImplementedInterfaces().AsSelf();
 
 		private void RegisterSaveLoader()
 		{

@@ -1,6 +1,6 @@
 using System;
 using Sources.ApplicationServicesInterfaces;
-using Sources.ServicesInterfaces.Authorization;
+using Sources.ApplicationServicesInterfaces.Authorization;
 using UnityEngine;
 using UnityEngine.UI;
 

@@ -45,6 +45,8 @@ namespace Sources.Services.PlayerServices
 			if (_statNames.Contains(progressName) == false)
 				throw new InvalidOperationException("The progress name " + progressName + "not exists");
 
+			if (value < 0) throw new ArgumentOutOfRangeException(nameof(value));
+
 			IUpgradeProgressData progress = _progress.FirstOrDefault(elem => elem.Name == progressName);
 			IPlayerStatChangeable stat = _playerStats.FirstOrDefault(elem => elem.Name == progressName);
 

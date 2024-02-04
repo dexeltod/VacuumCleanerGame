@@ -1,20 +1,18 @@
 using System;
-using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
+using Sources.Controllers;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Player;
-using Sources.Infrastructure.Presenters;
-using Sources.InfrastructureInterfaces;
+using Sources.Infrastructure.Providers;
+using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.PresentationInterfaces;
-using Sources.Services.Interfaces;
+using Sources.PresentationInterfaces.Player;
+using Sources.PresentersInterfaces;
 using Sources.ServicesInterfaces;
-using Sources.ServicesInterfaces.UI;
-using Sources.UseCases.Scene;
-using Sources.Utils.Configs.Scripts;
+using Sources.Utils.ConstantNames;
 using UnityEngine;
-using VContainer;
 
 namespace Sources.Application.StateMachine.GameStates
 {
@@ -34,10 +32,15 @@ namespace Sources.Application.StateMachine.GameStates
 		private readonly ILevelProgressFacade _levelProgressFacade;
 		private readonly IResourcesProgressPresenter _resourcesProgress;
 		private readonly IPersistentProgressService _persistentProgress;
-		private readonly IAssetProvider _assetProvider;
+		private readonly IAssetResolver _assetResolver;
 		private readonly ILevelChangerPresenter _levelChangerPresenter;
 		private readonly CoroutineRunnerFactory _coroutineRunnerFactory;
 		private readonly IUpgradeWindowPresenter _upgradeWindowPresenter;
+		private readonly GameplayInterfaceProvider _gameplayInterfaceProvider;
+
+		private SandContainerPresenter _sandContainerPresenter;
+
+		private IGameplayInterfaceView GameplayInterface => _gameplayInterfaceProvider.Instance;
 
 #endregion
 
@@ -56,10 +59,11 @@ namespace Sources.Application.StateMachine.GameStates
 			ILevelProgressFacade levelProgressFacade,
 			IResourcesProgressPresenter resourcesProgress,
 			IPersistentProgressService persistentProgress,
-			IAssetProvider assetProvider,
+			IAssetResolver assetResolver,
 			ILevelChangerPresenter levelChangerPresenter,
 			CoroutineRunnerFactory coroutineRunnerFactory,
-			IUpgradeWindowPresenter upgradeWindowPresenter
+			IUpgradeWindowPresenter upgradeWindowPresenter,
+			GameplayInterfaceProvider gameplayInterfaceProvider
 
 #endregion
 
@@ -81,13 +85,15 @@ namespace Sources.Application.StateMachine.GameStates
 			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
 			_resourcesProgress = resourcesProgress ?? throw new ArgumentNullException(nameof(resourcesProgress));
 			_persistentProgress = persistentProgress ?? throw new ArgumentNullException(nameof(persistentProgress));
-			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
+			_assetResolver = assetResolver ?? throw new ArgumentNullException(nameof(assetResolver));
 			_levelChangerPresenter
 				= levelChangerPresenter ?? throw new ArgumentNullException(nameof(levelChangerPresenter));
 			_coroutineRunnerFactory = coroutineRunnerFactory ??
 				throw new ArgumentNullException(nameof(coroutineRunnerFactory));
 			_upgradeWindowPresenter = upgradeWindowPresenter ??
 				throw new ArgumentNullException(nameof(upgradeWindowPresenter));
+			_gameplayInterfaceProvider = gameplayInterfaceProvider ??
+				throw new ArgumentNullException(nameof(gameplayInterfaceProvider));
 
 #endregion
 		}
@@ -101,56 +107,81 @@ namespace Sources.Application.StateMachine.GameStates
 
 		private void Build()
 		{
-			var coroutineRunner = _coroutineRunnerFactory.Create();
 			GameObject initialPoint = GameObject.FindWithTag(ConstantNames.PlayerSpawnPointTag);
 
-			IGameplayInterfaceView gameplayInterfaceView = _uiFactory.Instantiate();
-
-			_levelChangerPresenter.SetButton(gameplayInterfaceView);
+			InitializeGameplayInterface();
 
 			GameObject playerGameObject = _playerFactory.Create(
 				initialPoint,
-				_uiFactory.GameplayInterface.Joystick,
+				GameplayInterface.Joystick,
 				_playerStats
 			);
 
 			ISandParticleSystem particleSystem = playerGameObject.GetComponentInChildren<ISandParticleSystem>();
-
 			ISandContainerView sandContainerView = playerGameObject.GetComponent<ISandContainerView>();
 
-			var sandContainerPresenter = CreateSandContainerPresenter(
+			new SandContainerPresenterFactory(
+				_persistentProgress.GameProgress.ResourcesModel,
 				sandContainerView,
+				_resourcesProgress as IResourceProgressEventHandler,
 				particleSystem,
-				coroutineRunner
-			);
-
-			IUpgradeWindow upgradeWindow = _upgradeWindowFactory.Create();
+				_coroutineRunnerFactory
+			).Create();
 
 			new UpgradeWindowPresenterBuilder(
-				_assetProvider,
-				upgradeWindow,
-				_progressLoadDataService,
-				_upgradeWindowPresenter
-			).Build();
+				_upgradeWindowFactory,
+				_assetResolver,
+				_progressLoadDataService
+			).Create();
 
 			_upgradeWindowPresenter.Enable();
 
 			_cameraFactory.CreateVirtualCamera();
 		}
 
-		private SandContainerPresenter CreateSandContainerPresenter(
-			ISandContainerView sandContainerView,
-			ISandParticleSystem particleSystem,
-			ICoroutineRunner coroutineRunner
-		) =>
-			new SandContainerPresenterFactory(
-				_persistentProgress.GameProgress.ResourcesModel,
-				sandContainerView,
-				_resourcesProgress as IResourceProgressEventHandler,
-				particleSystem,
-				coroutineRunner
-			).Create();
+		private void InitializeGameplayInterface()
+		{
+			_gameplayInterfaceProvider.Register(_uiFactory.Instantiate());
+			_levelChangerPresenter.SetButton(GameplayInterface);
+		}
 
 		public void Exit() { }
+	}
+
+	public class SandContainerPresenterFactory
+	{
+		private readonly IResourcesModel _gameProgressResourcesModel;
+		private readonly ISandContainerView _sandContainerView;
+		private readonly IResourceProgressEventHandler _resourcesProgress;
+		private readonly ISandParticleSystem _particleSystem;
+		private readonly CoroutineRunnerFactory _coroutineRunnerFactory;
+
+		public SandContainerPresenterFactory(
+			IResourcesModel gameProgressResourcesModel,
+			ISandContainerView sandContainerView,
+			IResourceProgressEventHandler resourcesProgress,
+			ISandParticleSystem particleSystem,
+			CoroutineRunnerFactory coroutineRunnerFactory
+		)
+		{
+			_gameProgressResourcesModel = gameProgressResourcesModel;
+			_sandContainerView = sandContainerView;
+			_resourcesProgress = resourcesProgress;
+			_particleSystem = particleSystem;
+			_coroutineRunnerFactory = coroutineRunnerFactory;
+		}
+
+		public void Create()
+		{
+			var coroutineRunner = _coroutineRunnerFactory.Create();
+
+			new SandContainerPresenter(
+				_gameProgressResourcesModel,
+				_sandContainerView,
+				_resourcesProgress,
+				_particleSystem,
+				coroutineRunner
+			);
+		}
 	}
 }

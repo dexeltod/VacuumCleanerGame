@@ -1,7 +1,7 @@
 using VContainer;
 using VContainer.Unity;
 
-namespace Sources.Application
+namespace Sources.Application.Bootstrapp
 {
 	public class Boot : LifetimeScope
 	{

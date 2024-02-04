@@ -276,6 +276,23 @@
           "Text": "Menzil"
         }
       ]
+    },
+    {
+      "Name": "ImproveCarText",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Улучшить машину?"
+        },
+        {
+          "Language": "English",
+          "Text": "Improve your car?"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Arabanızı geliştirmek mi istiyorsunuz?"
+        }
+      ]
     }
   ]
 }

@@ -1,6 +1,6 @@
 using System;
 
-namespace Sources.ServicesInterfaces.Authorization
+namespace Sources.ApplicationServicesInterfaces.Authorization
 {
 	public interface IAuthorization
 	{

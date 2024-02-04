@@ -1,6 +1,6 @@
 using Cysharp.Threading.Tasks;
 
-namespace Sources.Application
+namespace Sources.ApplicationServicesInterfaces
 {
 	public interface ISceneLoader
 	{

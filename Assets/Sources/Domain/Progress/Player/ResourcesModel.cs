@@ -24,8 +24,9 @@ namespace Sources.Domain.Progress.Player
 			Resource<int> hardCurrency,
 			Resource<int> cashScore,
 			Resource<int> globalScore,
-			int startCount,
-			int globalScoreCount
+			int startScoreCount,
+			int startCurrencyCount,
+			int startGlobalScoreCount
 		)
 		{
 			_hardCurrency = hardCurrency as IntResource ?? throw new ArgumentNullException(nameof(hardCurrency));
@@ -33,10 +34,10 @@ namespace Sources.Domain.Progress.Player
 			_cashScore = cashScore as IntResource ?? throw new ArgumentNullException(nameof(cashScore));
 			_globalScore = globalScore as IntResource ?? throw new ArgumentNullException(nameof(globalScore));
 
-			_cashScore.Set(startCount);
-			_hardCurrency.Set(startCount);
-			_softCurrency.Set(startCount);
-			_globalScore.Set(globalScoreCount);
+			_cashScore.Set(startScoreCount);
+			_hardCurrency.Set(startCurrencyCount);
+			_softCurrency.Set(startCurrencyCount);
+			_globalScore.Set(startGlobalScoreCount);
 		}
 
 		public IResourceReadOnly<int> Score => _cashScore;

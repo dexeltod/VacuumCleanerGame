@@ -24,7 +24,7 @@ namespace Sources.Services
 
 		private void OnCollisionHappen(int scoreCount, Transform transform)
 		{
-			if (_resourceMaxScore.CheckMaxScore() == false)
+			if (_resourceMaxScore.IsMaxScoreReached == false)
 				return;
 
 			bool isDeforming = false;

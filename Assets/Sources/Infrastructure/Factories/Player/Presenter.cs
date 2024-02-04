@@ -1,6 +1,8 @@
 using System;
-using Sources.Infrastructure.Scene;
+using Sources.Controllers.Common;
+using Sources.PresentationInterfaces;
 using Sources.Services;
+using Sources.Utils;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Factories.Player

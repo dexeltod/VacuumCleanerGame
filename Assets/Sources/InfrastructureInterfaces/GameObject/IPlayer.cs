@@ -1,4 +1,4 @@
-namespace Sources.InfrastructureInterfaces
+namespace Sources.InfrastructureInterfaces.GameObject
 {
 	public interface IPlayer
 	{

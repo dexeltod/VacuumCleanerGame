@@ -1,4 +1,4 @@
-using Sources.ServicesInterfaces.Authorization;
+using Sources.ApplicationServicesInterfaces.Authorization;
 
 namespace Sources.ApplicationServicesInterfaces
 {

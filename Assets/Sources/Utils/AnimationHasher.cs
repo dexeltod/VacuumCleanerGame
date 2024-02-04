@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Sources.Infrastructure.Factories.Player
+namespace Sources.Utils
 {
 	public class AnimationHasher
 	{

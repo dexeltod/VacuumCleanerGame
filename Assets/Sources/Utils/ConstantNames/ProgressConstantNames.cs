@@ -1,4 +1,4 @@
-namespace Sources.Infrastructure
+namespace Sources.Utils.ConstantNames
 {
 	public class ProgressConstantNames
 	{

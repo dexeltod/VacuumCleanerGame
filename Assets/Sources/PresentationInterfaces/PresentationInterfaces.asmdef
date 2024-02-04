@@ -2,10 +2,10 @@
     "name": "PresentationInterfaces",
     "rootNamespace": "",
     "references": [
-        "GUID:e75ebd4ddedebcc4196d3ac949e2a3fd",
         "GUID:51d21c2ab7b57024db68e31f2558cb12",
         "GUID:124d50db4e257fb43b814badf2ac648e",
-        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:5132de953b389c049a908fca7dd3d92d"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

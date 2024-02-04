@@ -11,17 +11,17 @@ namespace Sources.Services.Localization
 {
 	public class LocalizationService : ILocalizationService
 	{
-		private readonly IAssetProvider _provider;
+		private readonly IAssetResolver _resolver;
 		private const string StartLanguage = "Russian";
 		private readonly string[] _phraseNames;
 		private readonly string[] _languages;
 
-		public LocalizationService(IAssetProvider provider)
+		public LocalizationService(IAssetResolver resolver)
 		{
-			_provider = provider;
-			IAssetProvider assetProvider = provider;
+			_resolver = resolver;
+			IAssetResolver assetResolver = resolver;
 
-			LeanLocalization leanLocalization = LoadAssets(assetProvider, out var localizationData);
+			LeanLocalization leanLocalization = LoadAssets(assetResolver, out var localizationData);
 
 			_languages = new string[localizationData.Languages.Count];
 			_phraseNames = new string[localizationData.Phrases.Count];
@@ -61,16 +61,16 @@ namespace Sources.Services.Localization
 			LeanLocalization.SetCurrentLanguageAll(language);
 		}
 
-		private LeanLocalization LoadAssets(IAssetProvider assetProvider, out LocalizationRoot localizationData)
+		private LeanLocalization LoadAssets(IAssetResolver assetResolver, out LocalizationRoot localizationData)
 		{
 			LeanLocalization leanLocalization =
-				assetProvider.InstantiateAndGetComponent<LeanLocalization>
+				assetResolver.InstantiateAndGetComponent<LeanLocalization>
 				(
 					ResourcesAssetPath.GameObjects
 						.LeanLocalization
 				);
 
-			string config = assetProvider.LoadFromResources<TextAsset>(ResourcesAssetPath.Configs.Localization).text;
+			string config = assetResolver.LoadFromResources<TextAsset>(ResourcesAssetPath.Configs.Localization).text;
 
 			localizationData = JsonUtility.FromJson<LocalizationRoot>(config);
 			return leanLocalization;

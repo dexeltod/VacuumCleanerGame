@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Sources.Controllers;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.UpgradeShop;
-using Sources.Infrastructure.ScriptableObjects.Shop;
-using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.Presentation.UI.Shop;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
-using Sources.Utils.Configs;
+using Sources.ServicesInterfaces.Upgrade;
 using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -17,17 +16,17 @@ namespace Sources.Infrastructure.Factories
 	public class ShopElementFactory
 	{
 		private readonly IGameProgress _shopProgress;
-		private readonly IAssetProvider _assetProvider;
+		private readonly IAssetResolver _assetResolver;
 		private readonly ITranslatorService _translatorService;
 
 		public ShopElementFactory(
 			IGameProgress shopProgress,
-			IAssetProvider assetProvider,
+			IAssetResolver assetResolver,
 			ITranslatorService translatorService
 		)
 		{
 			_shopProgress = shopProgress ?? throw new ArgumentNullException(nameof(shopProgress));
-			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
+			_assetResolver = assetResolver ?? throw new ArgumentNullException(nameof(assetResolver));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 		}
 
@@ -36,7 +35,7 @@ namespace Sources.Infrastructure.Factories
 			List<IUpgradeProgressData> progress = _shopProgress.GetAll();
 
 			UpgradeItemList items
-				= _assetProvider.LoadFromResources<UpgradeItemList>(ResourcesAssetPath.Scene.UIResources.ShopItems);
+				= _assetResolver.LoadFromResources<UpgradeItemList>(ResourcesAssetPath.Scene.UIResources.ShopItems);
 			SetUpgradeLevelsToItems(progress, items);
 
 			return Instantiate(transform, items, progress);
@@ -78,6 +77,8 @@ namespace Sources.Infrastructure.Factories
 			int itemIndex
 		)
 		{
+			var presenter = new UpgradeElementPresenter();
+
 			UpgradeElementPrefabView button = Object.Instantiate(
 				items.ReadOnlyItems[itemIndex].PrefabView,
 				transform.transform
@@ -87,11 +88,13 @@ namespace Sources.Infrastructure.Factories
 			var description = Localize(items.Items[itemIndex].Description);
 
 			button.Construct(
+				presenter,
 				(IItemChangeable)items.Items[itemIndex],
 				items.Items[itemIndex],
 				items.ReadOnlyItems[itemIndex],
 				title,
-				description
+				description,
+				items.Items[itemIndex].IdName
 			);
 
 			buttons.Add(button);

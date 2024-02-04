@@ -1,9 +1,10 @@
 using System;
 using Sources.Application.StateMachine.GameStates;
 using Sources.ApplicationServicesInterfaces;
+using Sources.ApplicationServicesInterfaces.Authorization;
+using Sources.Infrastructure.Factories.LeaderBoard;
 using Sources.Presentation.UI.YandexAuthorization;
 using Sources.ServicesInterfaces;
-using Sources.ServicesInterfaces.Authorization;
 using Sources.Utils.Configs.Scripts;
 using VContainer;
 
@@ -11,11 +12,11 @@ namespace Sources.Application.UnityApplicationServices
 {
 	public class RegisterWindowLoader : IRegisterWindowLoader
 	{
-		private readonly IAssetProvider _assetProvider;
+		private readonly IAssetResolver _assetResolver;
 
 		[Inject]
-		public RegisterWindowLoader(IAssetProvider assetProvider) =>
-			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
+		public RegisterWindowLoader(IAssetResolver assetResolver) =>
+			_assetResolver = assetResolver ?? throw new ArgumentNullException(nameof(assetResolver));
 
 		public IAuthorization Load()
 		{
@@ -24,7 +25,7 @@ namespace Sources.Application.UnityApplicationServices
 				ResourcesAssetPath.Scene.UIResources.Yandex.AuthHandler
 			);
 #endif
-			return _assetProvider.InstantiateAndGetComponent<EditorAuthorization>(
+			return _assetResolver.InstantiateAndGetComponent<EditorAuthorization>(
 				ResourcesAssetPath.Scene.UIResources.Editor.AuthHandler
 			);
 		}

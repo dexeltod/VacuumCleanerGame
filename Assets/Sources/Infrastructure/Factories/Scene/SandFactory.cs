@@ -4,23 +4,25 @@ using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs.Scripts;
 
-namespace Sources.Infrastructure.Factories
+namespace Sources.Infrastructure.Factories.Scene
 {
 	public class SandFactory
 	{
-		private readonly IAssetProvider _assetProvider;
+		private readonly IAssetResolver _assetResolver;
 
-		public SandFactory(IAssetProvider assetProvider) =>
-			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
+		public SandFactory(IAssetResolver assetResolver) =>
+			_assetResolver = assetResolver ?? throw new ArgumentNullException(nameof(assetResolver));
 
 		public IMeshModifiable Create()
 		{
-			return _assetProvider.InstantiateAndGetComponent<MeshModificator>
+			var meshModificator = _assetResolver.InstantiateAndGetComponent<MeshModificator>
 			(
 				ResourcesAssetPath
 					.GameObjects
 					.ModifiableMesh
 			);
+
+			return meshModificator;
 		}
 	}
 }

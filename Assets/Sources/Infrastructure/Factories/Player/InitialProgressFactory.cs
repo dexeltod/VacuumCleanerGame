@@ -6,17 +6,19 @@ using Sources.Domain.Progress.ResourcesData;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
-using Sources.InfrastructureInterfaces.Upgrade;
+using Sources.ServicesInterfaces.Upgrade;
 using Sources.Utils;
+using Sources.Utils.ConstantNames;
 using VContainer;
 
-namespace Sources.Infrastructure.Factories
+namespace Sources.Infrastructure.Factories.Player
 {
 	public class InitialProgressFactory
 	{
-		private const int StartCount = 99999;
+		private const int StartCurrencyCount = 99999;
 		private const int MaxUpgradePointsCount = 6;
 		private const int FirstLevelIndex = 1;
+		private const int StartScoreCount = 0;
 
 		private readonly IProgressUpgradeFactory _progressUpgradeFactory;
 		private readonly IResourceService _resourceService;
@@ -32,7 +34,8 @@ namespace Sources.Infrastructure.Factories
 			_progressUpgradeFactory = progressUpgradeFactory ??
 				throw new ArgumentNullException(nameof(progressUpgradeFactory));
 			_resourceService = resourceService ?? throw new ArgumentNullException(nameof(resourceService));
-			_progressConstantNames = progressConstantNames ?? throw new ArgumentNullException(nameof(progressConstantNames));
+			_progressConstantNames
+				= progressConstantNames ?? throw new ArgumentNullException(nameof(progressConstantNames));
 		}
 
 		public IGameProgressModel Create()
@@ -85,8 +88,9 @@ namespace Sources.Infrastructure.Factories
 				hard,
 				cashScore,
 				globalScore,
-				StartCount,
-				StartCount
+				StartScoreCount,
+				StartCurrencyCount,
+				StartCurrencyCount
 			);
 
 		private List<ProgressUpgradeData> CreateNewUpgradeProgressData(IEnumerable<IUpgradeItemData> itemsList)

@@ -2,6 +2,6 @@ namespace Sources.ServicesInterfaces
 {
 	public interface IResourceMaxScore
 	{
-		bool CheckMaxScore();
+		bool IsMaxScoreReached { get; }
 	}
 }

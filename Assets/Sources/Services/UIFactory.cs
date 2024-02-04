@@ -4,8 +4,9 @@ using Agava.YandexGames;
 
 using System;
 using Sources.DomainInterfaces;
+using Sources.InfrastructureInterfaces.Factory;
 using Sources.PresentationInterfaces;
-using Sources.Services.Interfaces;
+using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs.Scripts;
 using VContainer;
@@ -16,27 +17,30 @@ namespace Sources.Services
 	{
 		private const bool IsActiveOnStart = true;
 
-		private readonly IAssetProvider _assetProvider;
+		private readonly IAssetResolver _assetResolver;
 		private readonly IResourceProgressEventHandler _resourceProgressEventHandler;
 		private readonly IPersistentProgressService _gameProgress;
+		private readonly ITranslatorService _translatorService;
 
 		private readonly string _uiResourcesUI = ResourcesAssetPath.Scene.UIResources.UI;
 
 		public IGameplayInterfaceView GameplayInterface { get; private set; }
 
 		public UIFactory(
-			IAssetProvider assetProvider,
+			IAssetResolver assetResolver,
 			IResourceProgressEventHandler resourceProgressEventHandler,
-			IPersistentProgressService persistentProgressService
+			IPersistentProgressService persistentProgressService,
+			 ITranslatorService translatorService
 		)
 		{
-			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
+			_assetResolver = assetResolver ?? throw new ArgumentNullException(nameof(assetResolver));
 
 			_resourceProgressEventHandler = resourceProgressEventHandler ??
 				throw new ArgumentNullException(nameof(resourceProgressEventHandler));
 
 			_gameProgress = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
+			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 		}
 
 		public IGameplayInterfaceView Instantiate()
@@ -63,6 +67,8 @@ namespace Sources.Services
 				_resourceProgressEventHandler,
 				IsActiveOnStart
 			);
+
+			GameplayInterface.Phrases.Phrases = _translatorService.Localize(GameplayInterface.Phrases.Phrases);
 		}
 
 		private IResourcesModel GetModel() =>
@@ -71,7 +77,7 @@ namespace Sources.Services
 				.ResourcesModel;
 
 		private IGameplayInterfaceView Load() =>
-			GameplayInterface = _assetProvider
+			GameplayInterface = _assetResolver
 				.Instantiate(_uiResourcesUI)
 				.GetComponent<IGameplayInterfaceView>();
 	}

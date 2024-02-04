@@ -1,7 +1,7 @@
 using System;
 using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
-using Sources.Application.YandexSDK;
+using Sources.ServicesInterfaces.Advertisement;
 
 namespace Sources.Application
 {

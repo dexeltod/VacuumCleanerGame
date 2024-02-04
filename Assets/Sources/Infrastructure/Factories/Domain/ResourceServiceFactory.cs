@@ -3,7 +3,7 @@ using Sources.Domain.Progress.ResourcesData;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Utils;
 
-namespace Sources.Infrastructure.Factories
+namespace Sources.Infrastructure.Factories.Domain
 {
 	public class ResourceServiceFactory
 	{

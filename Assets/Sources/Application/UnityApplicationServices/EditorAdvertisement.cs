@@ -1,6 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
-using Sources.Application.YandexSDK;
+using Sources.ServicesInterfaces.Advertisement;
 using UnityEngine;
 
 namespace Sources.Application.UnityApplicationServices
@@ -10,6 +10,8 @@ namespace Sources.Application.UnityApplicationServices
 		public UniTask ShowAd(Action onOpenCallback, Action onRewardsCallback, Action onCloseCallback)
 		{
 			Debug.Log("ShowAd");
+			
+			onRewardsCallback.Invoke();
 			return UniTask.CompletedTask;
 		}
 	}

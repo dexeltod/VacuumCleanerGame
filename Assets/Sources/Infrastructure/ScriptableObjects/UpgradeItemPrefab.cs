@@ -1,7 +1,7 @@
 using System;
 using Sources.Infrastructure.ScriptableObjects.Shop;
-using Sources.InfrastructureInterfaces.Upgrade;
 using Sources.Presentation.UI.Shop;
+using Sources.ServicesInterfaces.Upgrade;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -15,7 +15,6 @@ namespace Sources.Infrastructure.ScriptableObjects
 
 		[SerializeField] private Sprite _icon;
 		public Sprite Icon => _icon;
-		public IUpgradeElementConstructable ElementConstructable => _upgradeElementPrefabView;
 		public UpgradeElementPrefabView PrefabView => _upgradeElementPrefabView;
 	}
 }

@@ -1,12 +1,14 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Sources.Application.Services;
 using Sources.Application.StateMachine;
 using Sources.Application.StateMachine.GameStates;
 using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Factories;
+using Sources.Infrastructure.Factories.Player;
 using VContainer;
 using VContainer.Unity;
 

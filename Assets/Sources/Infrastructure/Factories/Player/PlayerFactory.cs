@@ -1,8 +1,9 @@
 using System;
 using Joystick_Pack.Scripts.Base;
-using Sources.Infrastructure.Presenters;
-using Sources.Services;
+using Sources.Controllers;
+using Sources.Services.Facade;
 using Sources.ServicesInterfaces;
+using Sources.Utils;
 using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace Sources.Infrastructure.Factories.Player
 	public class PlayerFactory : IPlayerFactory
 	{
 		private readonly AnimationHasher _hasher;
-		private readonly IAssetProvider _assetProvider;
+		private readonly IAssetResolver _assetResolver;
 
 		private Joystick _joystick;
 		private Animator _animator;
@@ -21,8 +22,8 @@ namespace Sources.Infrastructure.Factories.Player
 
 		public GameObject Player { get; private set; }
 
-		public PlayerFactory(IAssetProvider assetProvider) =>
-			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
+		public PlayerFactory(IAssetResolver assetResolver) =>
+			_assetResolver = assetResolver ?? throw new ArgumentNullException(nameof(assetResolver));
 
 		public GameObject Create(
 			GameObject initialPoint,
@@ -53,7 +54,7 @@ namespace Sources.Infrastructure.Factories.Player
 		{
 			AnimationHasher animationHasher = new AnimationHasher();
 
-			PlayerBody playerBodyPresenter = _assetProvider.InstantiateAndGetComponent<PlayerBody>(
+			PlayerBody playerBodyPresenter = _assetResolver.InstantiateAndGetComponent<PlayerBody>(
 				ResourcesAssetPath.Scene.Player,
 				initialPoint.transform.position
 			);

@@ -12,9 +12,10 @@ namespace Sources.Services.DomainServices
 		public TestLeaderBoardService() =>
 			_leaders = new LeadersPlug().GetTestLeaders();
 
-		public UniTask AddScore(int newScore)
+		public async UniTask AddScore(int newScore)
 		{
-			throw new NotImplementedException();
+			_leaders["player1"] = newScore;
+			await UniTask.CompletedTask;
 		}
 
 		public UniTask Set(int score) =>

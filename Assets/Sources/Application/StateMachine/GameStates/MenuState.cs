@@ -1,15 +1,19 @@
 using System;
-using Sources.Application.YandexSDK;
 using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
+using Sources.Controllers;
+using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.LeaderBoard;
-using Sources.Infrastructure.Presenters;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Scene;
+using Sources.Presentation;
+using Sources.Presentation.Implementation;
 using Sources.Presentation.SceneEntity;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
+using Sources.ServicesInterfaces.Advertisement;
 using Sources.Utils.Configs.Scripts;
+using Sources.Utils.ConstantNames;
 using VContainer;
 
 namespace Sources.Application.StateMachine.GameStates
@@ -18,7 +22,7 @@ namespace Sources.Application.StateMachine.GameStates
 	{
 		private readonly ISceneLoader _sceneLoader;
 		private readonly LoadingCurtain _loadingCurtain;
-		private readonly IAssetProvider _assetProvider;
+		private readonly IAssetResolver _assetResolver;
 		private readonly ILevelProgressFacade _levelProgressFacade;
 		private readonly IGameStateMachine _gameStateMachine;
 		private readonly ILevelConfigGetter _levelConfigGetter;
@@ -26,6 +30,7 @@ namespace Sources.Application.StateMachine.GameStates
 		private readonly IRegisterWindowLoader _registerWindowLoader;
 		private readonly IAdvertisement _advertisement;
 		private readonly ITranslatorService _translatorService;
+		private readonly IProgressLoadDataService _progressLoadDataService;
 
 		private MainMenuPresenter _mainMenuPresenter;
 
@@ -33,14 +38,15 @@ namespace Sources.Application.StateMachine.GameStates
 		public MenuState(
 			ISceneLoader sceneLoader,
 			LoadingCurtain loadingCurtain,
-			IAssetProvider assetProvider,
+			IAssetResolver assetResolver,
 			ILevelProgressFacade levelProgressFacade,
 			IGameStateMachine gameStateMachine,
 			ILevelConfigGetter levelConfigGetter,
 			ILeaderBoardService leaderBoardService,
 			IRegisterWindowLoader registerWindowLoader,
 			IAdvertisement advertisement,
-			ITranslatorService translatorService
+			ITranslatorService translatorService,
+			IProgressLoadDataService progressLoadDataService
 		)
 		{
 			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
@@ -51,9 +57,10 @@ namespace Sources.Application.StateMachine.GameStates
 
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
+			_progressLoadDataService = progressLoadDataService ?? throw new ArgumentNullException(nameof(progressLoadDataService));
 			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
 			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
-			_assetProvider = assetProvider ?? throw new ArgumentNullException(nameof(assetProvider));
+			_assetResolver = assetResolver ?? throw new ArgumentNullException(nameof(assetResolver));
 			_sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 		}
@@ -65,7 +72,7 @@ namespace Sources.Application.StateMachine.GameStates
 #endif
 
 			MainMenuFactory mainMenuFactory = new MainMenuFactory(
-				_assetProvider,
+				_assetResolver,
 				_leaderBoardService,
 				_translatorService
 			);
@@ -79,7 +86,8 @@ namespace Sources.Application.StateMachine.GameStates
 				mainMenuBehaviour,
 				_levelProgressFacade,
 				_gameStateMachine,
-				_levelConfigGetter
+				_levelConfigGetter,
+				 _progressLoadDataService
 			);
 
 			_mainMenuPresenter.Enable();
