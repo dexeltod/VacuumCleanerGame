@@ -8,13 +8,13 @@ namespace Sources.Infrastructure.Factories.Scene
 {
 	public class LoadingCurtainFactory
 	{
-		private readonly IAssetResolver _resolver;
+		private readonly IAssetFactory _factory;
 
 		[Inject]
-		public LoadingCurtainFactory(IAssetResolver resolver) =>
-			_resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
+		public LoadingCurtainFactory(IAssetFactory factory) =>
+			_factory = factory ?? throw new ArgumentNullException(nameof(factory));
 
 		public LoadingCurtain Create() =>
-			_resolver.InstantiateAndGetComponent<LoadingCurtain>(ResourcesAssetPath.Scene.UIResources.LoadingCurtain);
+			_factory.InstantiateAndGetComponent<LoadingCurtain>(ResourcesAssetPath.Scene.UIResources.LoadingCurtain);
 	}
 }

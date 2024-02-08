@@ -1,13 +1,15 @@
 using System;
+using Sources.Controllers.Common;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.InfrastructureInterfaces.Presenters;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using UnityEngine;
 
 namespace Sources.Controllers
 {
-	public class ResourcesProgressPresenter : IResourcesProgressPresenter, IResourceProgressEventHandler
+	public class ResourcesProgressPresenter : Presenter, IResourcesProgressPresenter, IResourceProgressEventHandler
 	{
 		private readonly IResourcesModel _resourcesData;
 		private readonly IGameplayInterfaceView _gameplayInterfaceView;
@@ -18,22 +20,22 @@ namespace Sources.Controllers
 
 		public int GlobalScore { get; private set; }
 
-		private bool _isHalfScoreAlreadyReached = false;
-
+		private int CurrentScore => _resourcesData.CurrentCashScore;
+		private bool IsHalfScore => IsHalfScoreReached();
 		public bool IsMaxScoreReached => CheckMaxScore();
 
-		public event Action<int> SoftCurrencyChanged;
 		public event Action<int> CashScoreChanged;
-		public event Action<int> GlobalScoreChanged;
-		public event Action<int> MaxGlobalScoreChanged;
-		public event Action<int> MaxCashScoreChanged;
-		public event Action<bool> HalfGlobalScoreReached;
 
 		public ResourcesProgressPresenter(
+			IGameplayInterfaceView gameplayInterfaceView,
 			IResourcesModel persistentProgressService
-		) =>
+		)
+		{
+			_gameplayInterfaceView
+				= gameplayInterfaceView ?? throw new ArgumentNullException(nameof(gameplayInterfaceView));
 			_resourcesData = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
+		}
 
 		public void ClearScores()
 		{
@@ -47,15 +49,12 @@ namespace Sources.Controllers
 
 		public bool TryAddSand(int newScore)
 		{
-			int currentScore = _resourcesData.CurrentCashScore;
-
-			if (currentScore > _resourcesData.MaxCashScore)
+			if (CurrentScore > _resourcesData.MaxCashScore)
 				return false;
 
 			int score = Mathf.Clamp(newScore, 0, _resourcesData.MaxCashScore);
 
-			int lastCashScore = _resourcesData.CurrentCashScore;
-			_resourcesData.AddCashScore(score);
+			int lastCashScore = AddCashScoreInData(score);
 
 			if (lastCashScore != _resourcesData.CurrentCashScore)
 				OnCashScoreChanged();
@@ -71,13 +70,20 @@ namespace Sources.Controllers
 			return true;
 		}
 
+		private int AddCashScoreInData(int score)
+		{
+			int lastCashScore = _resourcesData.CurrentCashScore;
+			_resourcesData.AddCashScore(score);
+			return lastCashScore;
+		}
+
 		private void OnGlobalScoreChanged() =>
-			GlobalScoreChanged.Invoke(_resourcesData.GlobalSandCount);
+			_gameplayInterfaceView.SetGlobalScore(GlobalScore);
 
 		private void OnHalfScoreReached()
 		{
-			if (IsHalfScoreReached() == true && !_isHalfScoreAlreadyReached)
-				HalfGlobalScoreReached(true);
+			if (IsHalfScore == true)
+				_gameplayInterfaceView.SetActiveGoToNextLevelButton(true);
 		}
 
 		public void SellSand()
@@ -124,10 +130,13 @@ namespace Sources.Controllers
 		}
 
 		private void OnMoneyChanged() =>
-			SoftCurrencyChanged.Invoke(SoftCurrency.Count);
+			_gameplayInterfaceView.SetSoftCurrency(SoftCurrency.Count);
 
-		private void OnCashScoreChanged() =>
-			CashScoreChanged.Invoke(_resourcesData.CurrentCashScore);
+		private void OnCashScoreChanged()
+		{
+			_gameplayInterfaceView.SetCashScore(_resourcesData.CurrentCashScore);
+			CashScoreChanged!.Invoke(_resourcesData.CurrentCashScore);
+		}
 
 		private bool IsHalfScoreReached()
 		{

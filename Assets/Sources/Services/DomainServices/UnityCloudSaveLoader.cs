@@ -51,7 +51,7 @@ namespace Sources.Services.DomainServices
 			}
 		}
 
-		public async UniTask DeleteSaves(IGameProgressModel gameProgressModel)
+		public async UniTask DeleteSaves(IGameProgressProvider gameProgressProvider)
 		{
 			
 		}

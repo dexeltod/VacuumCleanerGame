@@ -7,12 +7,15 @@ using UnityEngine;
 
 namespace Sources.Domain.Progress.Player
 {
+	public class FSDFSD { }
+
 	[Serializable] public class ResourcesModel : IResourcesModel
 	{
 		private const int HundredPercent = 100;
 
 		[SerializeField] private IntResource _softCurrency;
 		[SerializeField] private IntResource _hardCurrency;
+		
 		[SerializeField] private IntResource _cashScore;
 		[SerializeField] private IntResource _globalScore;
 

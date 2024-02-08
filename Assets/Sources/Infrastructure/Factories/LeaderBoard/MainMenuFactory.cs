@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
 using Sources.Presentation;
-using Sources.Presentation.Implementation;
+using Sources.Presentation.UI;
 using Sources.Presentation.UI.MainMenu.LeaderBoard;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
@@ -16,7 +16,7 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 	{
 		private const int LeaderBoardPlayersCount = 5;
 
-		private readonly IAssetResolver _assetResolver;
+		private readonly IAssetFactory _assetFactory;
 		private readonly ILeaderBoardService _leaderBoardService;
 		private readonly ITranslatorService _translatorService;
 
@@ -27,19 +27,19 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 		private string MainMenuCanvas => ResourcesAssetPath.Scene.UIResources.MainMenuCanvas;
 
 		public MainMenuFactory(
-			IAssetResolver assetResolver,
+			IAssetFactory assetFactory,
 			ILeaderBoardService leaderBoardService,
 			ITranslatorService translatorService
 		)
 		{
-			_assetResolver = assetResolver ?? throw new ArgumentNullException(nameof(assetResolver));
+			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 		}
 
 		public async UniTask Create()
 		{
-			GameObject gameObject = _assetResolver.Instantiate(MainMenuCanvas);
+			GameObject gameObject = _assetFactory.Instantiate(MainMenuCanvas);
 
 			_leaderBoardBehaviour = gameObject.GetComponent<LeaderBoardBehaviour>();
 			MainMenuBehaviour = gameObject.GetComponent<MainMenuBehaviour>();
@@ -55,7 +55,7 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 				Vector3 containerPosition = _leaderBoardBehaviour.Container.position;
 				GameObject playerPanelGameObject = _leaderBoardBehaviour.PlayerPanel.gameObject;
 
-				var panel = _assetResolver
+				var panel = _assetFactory
 					.Instantiate(playerPanelGameObject, containerPosition)
 					.GetComponent<LeaderBoardPlayerPanelBehaviour>();
 				panel.Construct(player.Key, player.Value);

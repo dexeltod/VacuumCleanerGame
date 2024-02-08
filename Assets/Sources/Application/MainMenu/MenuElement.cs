@@ -1,6 +1,6 @@
 using Sources.Infrastructure.UI;
 using Sources.InfrastructureInterfaces;
-using Sources.InfrastructureInterfaces.Ui;
+using Sources.InfrastructureInterfaces.UiToolkitElements;
 using Sources.Services;
 using UnityEngine.UIElements;
 

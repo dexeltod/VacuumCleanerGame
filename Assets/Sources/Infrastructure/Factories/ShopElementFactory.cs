@@ -9,33 +9,39 @@ using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Upgrade;
 using Sources.Utils.Configs.Scripts;
 using UnityEngine;
+using VContainer;
 using Object = UnityEngine.Object;
 
 namespace Sources.Infrastructure.Factories
 {
 	public class ShopElementFactory
 	{
-		private readonly IGameProgress _shopProgress;
-		private readonly IAssetResolver _assetResolver;
+		private readonly IPersistentProgressService _persistentProgressService;
+		private readonly IAssetFactory _assetFactory;
 		private readonly ITranslatorService _translatorService;
 
+		private string UIResourcesShopItems => ResourcesAssetPath.Scene.UIResources.ShopItems;
+		private IGameProgress ShopProgress => _persistentProgressService.GameProgress.ShopProgress;
+
+		[Inject]
 		public ShopElementFactory(
-			IGameProgress shopProgress,
-			IAssetResolver assetResolver,
+			IPersistentProgressService persistentProgressService,
+			IAssetFactory assetFactory,
 			ITranslatorService translatorService
 		)
 		{
-			_shopProgress = shopProgress ?? throw new ArgumentNullException(nameof(shopProgress));
-			_assetResolver = assetResolver ?? throw new ArgumentNullException(nameof(assetResolver));
+			_persistentProgressService = persistentProgressService ??
+				throw new ArgumentNullException(nameof(persistentProgressService));
+			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 		}
 
 		public List<UpgradeElementPrefabView> Instantiate(Transform transform)
 		{
-			List<IUpgradeProgressData> progress = _shopProgress.GetAll();
+			List<IUpgradeProgressData> progress = ShopProgress.GetAll();
 
 			UpgradeItemList items
-				= _assetResolver.LoadFromResources<UpgradeItemList>(ResourcesAssetPath.Scene.UIResources.ShopItems);
+				= _assetFactory.LoadFromResources<UpgradeItemList>(UIResourcesShopItems);
 			SetUpgradeLevelsToItems(progress, items);
 
 			return Instantiate(transform, items, progress);

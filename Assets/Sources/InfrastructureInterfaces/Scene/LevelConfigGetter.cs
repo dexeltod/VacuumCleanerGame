@@ -7,8 +7,8 @@ namespace Sources.InfrastructureInterfaces.Scene
 	{
 		private readonly LevelsConfig _levelConfigs;
 
-		public LevelConfigGetter(IAssetResolver assetResolver) =>
-			_levelConfigs = assetResolver.LoadFromResources<LevelsConfig>(ResourcesAssetPath.Configs.LevelsConfig);
+		public LevelConfigGetter(IAssetFactory assetFactory) =>
+			_levelConfigs = assetFactory.LoadFromResources<LevelsConfig>(ResourcesAssetPath.Configs.LevelsConfig);
 
 		public LevelConfig Get(int levelNumber) =>
 			_levelConfigs.Get(levelNumber);

@@ -4,7 +4,7 @@ namespace Sources.DomainInterfaces.DomainServicesInterfaces
 	{
 		void Save(object data);
 		void DeleteSaves();
-		IGameProgressModel LoadProgress();
+		IGameProgressProvider LoadProgress();
 		void SetUniqueSaveFilePath();
 	}
 }

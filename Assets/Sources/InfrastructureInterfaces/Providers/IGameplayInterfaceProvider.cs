@@ -3,5 +3,5 @@ using Sources.PresentationInterfaces;
 
 namespace Sources.InfrastructureInterfaces.Providers
 {
-	// public interface IGameplayInterfaceProvider : IProvider<IGameplayInterfaceView> { }
+	public interface IGameplayInterfaceProvider : IProvider<IGameplayInterfaceView> { }
 }

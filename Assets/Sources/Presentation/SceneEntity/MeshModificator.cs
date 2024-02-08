@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Sources.InfrastructureInterfaces.Presenters;
+using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using UnityEngine;
@@ -12,8 +14,10 @@ namespace Sources.Presentation.SceneEntity
 		[SerializeField] private float _radiusDeformation = 2;
 		[SerializeField] private int _pointPerOneSand = 1;
 
+		private IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 		private List<Vector3> _newVertices;
-		private IResourcesProgressPresenter _resourcesProgressPresenter;
+
+		private IResourcesProgressPresenter ResourcesProgressPresenter => _resourcesProgressPresenterProvider.Instance;
 
 		public MeshModificator(Collision collision) =>
 			Collision = collision ?? throw new ArgumentNullException(nameof(collision));
@@ -27,8 +31,8 @@ namespace Sources.Presentation.SceneEntity
 		public event Action<int, Transform> CollisionHappen;
 
 		[Inject]
-		public void Construct(IResourcesProgressPresenter resourcesProgressPresenter) =>
-			_resourcesProgressPresenter = resourcesProgressPresenter;
+		public void Construct(IResourcesProgressPresenterProvider resourcesProgressPresenterProvider) =>
+			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider;
 
 		public MeshCollider GetMeshCollider() =>
 			GetComponent<MeshCollider>();
@@ -38,7 +42,7 @@ namespace Sources.Presentation.SceneEntity
 
 		private void OnCollisionEnter(Collision collision)
 		{
-			if (_resourcesProgressPresenter.IsMaxScoreReached == false)
+			if (ResourcesProgressPresenter.IsMaxScoreReached == false)
 				return;
 
 			if (collision.collider.TryGetComponent(out VacuumTool _))

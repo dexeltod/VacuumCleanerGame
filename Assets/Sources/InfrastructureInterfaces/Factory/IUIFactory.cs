@@ -5,7 +5,6 @@ namespace Sources.InfrastructureInterfaces.Factory
 {
 	public interface IUIFactory
 	{
-		IGameplayInterfaceView Instantiate();
-		void SetActive(bool isActive);
+		IGameplayInterfaceView Create();
 	}
 }

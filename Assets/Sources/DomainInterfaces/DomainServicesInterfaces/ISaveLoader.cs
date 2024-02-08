@@ -5,9 +5,9 @@ namespace Sources.DomainInterfaces.DomainServicesInterfaces
 {
 	public interface ISaveLoader
 	{
-		UniTask Save(IGameProgressModel @object, Action succeededCallback);
-		UniTask<IGameProgressModel> Load(Action succeededCallback);
-		UniTask ClearSaves(IGameProgressModel gameProgressModel, Action succeededCallback);
+		UniTask Save(IGameProgressProvider @object, Action succeededCallback);
+		UniTask<IGameProgressProvider> Load(Action succeededCallback);
+		UniTask ClearSaves(IGameProgressProvider gameProgressProvider, Action succeededCallback);
 		UniTask Initialize();
 	}
 }

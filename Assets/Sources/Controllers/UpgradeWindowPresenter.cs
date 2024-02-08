@@ -1,29 +1,30 @@
 using System;
 using Sources.Controllers.Common;
+using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 
 namespace Sources.Controllers
 {
-	public class UpgradeWindowPresenter : Presenter, IDisposable
+	public class UpgradeWindowPresenter : Presenter, IDisposable, IUpgradeWindowPresenter
 	{
-		private IUpgradeWindow _upgradeWindow;
-		private IProgressLoadDataService _progressLoadService;
-		private IUpgradeTriggerObserver _observer;
+		private readonly IUpgradeWindow _upgradeWindow;
+		private readonly IProgressSaveLoadDataService _progressSaveLoadService;
+		private readonly IUpgradeTriggerObserver _observer;
 
 		private bool _isCanSave;
 
 		public UpgradeWindowPresenter(
 			IUpgradeTriggerObserver observer,
 			IUpgradeWindow upgradeWindow,
-			IProgressLoadDataService progressLoadDataService
+			IProgressSaveLoadDataService progressSaveLoadDataService
 		)
 		{
 			_observer = observer ?? throw new ArgumentNullException(nameof(observer));
 			_upgradeWindow = upgradeWindow ?? throw new ArgumentNullException(nameof(upgradeWindow));
-			_progressLoadService = progressLoadDataService ??
-				throw new ArgumentNullException(nameof(progressLoadDataService));
+			_progressSaveLoadService = progressSaveLoadDataService ??
+				throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 		}
 
 		public override void Enable() =>
@@ -39,7 +40,7 @@ namespace Sources.Controllers
 			if (isEntered != false || _isCanSave == false)
 				return;
 
-			await _progressLoadService.SaveToCloud(() => _isCanSave = true);
+			await _progressSaveLoadService.SaveToCloud(() => _isCanSave = true);
 		}
 
 		public void Dispose() =>

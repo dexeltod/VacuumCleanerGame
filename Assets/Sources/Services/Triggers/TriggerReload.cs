@@ -7,7 +7,7 @@ namespace Sources.Services.Triggers
 	{
 		private void OnTriggerStay(Collider other)
 		{
-			if (other.TryGetComponent(out PlayerResources playerMoney))
+			if (other.TryGetComponent(out IPlayerResources playerMoney))
 				playerMoney.SellSand();
 		}
 	}

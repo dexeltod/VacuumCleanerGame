@@ -45,7 +45,7 @@ namespace Sources.Services.DomainServices
 			return json;
 		}
 
-		public async UniTask DeleteSaves(IGameProgressModel gameProgressModel)
+		public async UniTask DeleteSaves(IGameProgressProvider gameProgressProvider)
 		{
 			bool isCallbackReceived = false;
 			PlayerAccount.SetCloudSaveData("{}", () => isCallbackReceived = true);

@@ -11,10 +11,10 @@ using UnityEngine.UI;
 namespace Sources.Presentation.UI.Shop
 {
 	public class UpgradeElementPrefabView : PresentableView<IUpgradeElementPresenter>,
-		IColorChangeable, IDisposable, IUpgradeElementPrefabView
+		IDisposable, IUpgradeElementPrefabView
 	{
 		private const int StartIndex = 0;
-		
+
 		[Header("Points")] [SerializeField] private int _maxPoints = 6;
 
 		[SerializeField] private GameObject _pointElement;
@@ -67,7 +67,7 @@ namespace Sources.Presentation.UI.Shop
 			_icon.sprite = viewInfo.Icon;
 
 			InstantiatePoints();
-			itemChangeable.PriceChanged += OnPriceChanged;
+
 			_isInit = true;
 		}
 
@@ -92,12 +92,14 @@ namespace Sources.Presentation.UI.Shop
 		{
 			Presenter.Enable();
 			_buttonBuy.onClick.AddListener(OnBuyButtonPressed);
+			_itemChangeable.PriceChanged += OnPriceChanged;
 		}
 
 		private void OnDisable()
 		{
 			Presenter.Disable();
 			_buttonBuy.onClick.RemoveListener(OnBuyButtonPressed);
+			_itemChangeable.PriceChanged -= OnPriceChanged;
 		}
 
 		private void OnDestroy() =>

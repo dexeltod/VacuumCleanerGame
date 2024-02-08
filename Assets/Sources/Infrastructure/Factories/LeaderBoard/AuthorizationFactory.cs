@@ -9,11 +9,11 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 {
 	public class AuthorizationFactory
 	{
-		private readonly IAssetResolver _assetResolver;
+		private readonly IAssetFactory _assetFactory;
 
 		[Inject]
-		public AuthorizationFactory(IAssetResolver assetResolver) =>
-			_assetResolver = assetResolver ?? throw new ArgumentNullException(nameof(assetResolver));
+		public AuthorizationFactory(IAssetFactory assetFactory) =>
+			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 
 		public IAuthorization Create()
 		{
@@ -24,12 +24,12 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 		}
 
 		private IAuthorization GetYandexAuthorizationHandler() =>
-			_assetResolver.InstantiateAndGetComponent<YandexAuthorizationView>(
+			_assetFactory.InstantiateAndGetComponent<YandexAuthorizationView>(
 				ResourcesAssetPath.Scene.UIResources.Yandex.AuthHandler
 			);
 
 		private IAuthorization GetEditorAuthorizationView() =>
-			_assetResolver.InstantiateAndGetComponent<EditorAuthorization>(
+			_assetFactory.InstantiateAndGetComponent<EditorAuthorization>(
 				ResourcesAssetPath.Scene.UIResources.Editor.AuthHandler
 			);
 	}

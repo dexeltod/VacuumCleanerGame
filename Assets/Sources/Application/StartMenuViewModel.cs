@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using Sources.Application.MainMenu;
-using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
-
 using Sources.Infrastructure.UI;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Scene;
@@ -31,12 +29,10 @@ namespace Sources.Application
 
 		private List<Button> _allButtons = new();
 		private ILevelConfigGetter _levelConfigGetter;
-		private IGameStateMachine _gameStateMachine;
 		private ILocalizationService _localization;
 
 
 		private void Construct(
-			IGameStateMachine gameStateMachine,
 			ILevelConfigGetter levelConfigGetter,
 			ILocalizationService localization
 		)
@@ -63,7 +59,6 @@ namespace Sources.Application
 				_uiElementGetter,
 				_visualElementSwitcher,
 				_levelConfigGetter,
-				_gameStateMachine,
 				_localization
 			);
 		}

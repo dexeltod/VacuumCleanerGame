@@ -1,7 +1,7 @@
 using System;
-using Sources.Presentation.Implementation;
+using Sources.ControllersInterfaces.Common;
+using Sources.Presentation.UI;
 using Sources.PresentationInterfaces.Common;
-using Sources.PresentersInterfaces;
 
 namespace Sources.Presentation.Common
 {
@@ -24,6 +24,5 @@ namespace Sources.Presentation.Common
 			Presenter = presenter;
 			Enable();
 		}
-
 	}
 }

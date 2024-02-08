@@ -1,7 +1,10 @@
-using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.Controllers;
+using Sources.Controllers.MainMenu;
 using Sources.DomainInterfaces;
-using Sources.Infrastructure.Factories.Common.Decorators;
+using Sources.Infrastructure.Common.Factory.Decorators;
+using Sources.Infrastructure.Providers;
+using Sources.InfrastructureInterfaces.Providers;
+using Sources.InfrastructureInterfaces.Services;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using VContainer;
@@ -12,33 +15,35 @@ namespace Sources.Infrastructure.Factories.Presenters
 	{
 		private readonly IMainMenuView _mainMenu;
 		private readonly ILevelProgressFacade _levelProgress;
-		private readonly IGameStateMachine _stateMachine;
+		private readonly IGameStateChangerProvider _stateMachineProvider;
 		private readonly ILevelConfigGetter _levelConfigGetter;
-		private readonly IProgressLoadDataService _progressLoadDataService;
+		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
+
+		private IGameStateChanger StateMachine => _stateMachineProvider.Instance;
 
 		[Inject]
 		public MainMenuPresenterFactory(
 			IMainMenuView mainMenu,
 			ILevelProgressFacade levelProgress,
-			IGameStateMachine stateMachine,
+			IGameStateChangerProvider stateMachineProvider,
 			ILevelConfigGetter levelConfigGetter,
-			IProgressLoadDataService progressLoadDataService
+			IProgressSaveLoadDataService progressSaveLoadDataService
 		)
 		{
 			_mainMenu = mainMenu;
 			_levelProgress = levelProgress;
-			_stateMachine = stateMachine;
+			_stateMachineProvider = stateMachineProvider;
 			_levelConfigGetter = levelConfigGetter;
-			_progressLoadDataService = progressLoadDataService;
+			_progressSaveLoadDataService = progressSaveLoadDataService;
 		}
 
 		public override MainMenuPresenter Create() =>
 			new(
 				_mainMenu,
 				_levelProgress,
-				_stateMachine,
+				StateMachine,
 				_levelConfigGetter,
-				_progressLoadDataService
+				_progressSaveLoadDataService
 			);
 	}
 }

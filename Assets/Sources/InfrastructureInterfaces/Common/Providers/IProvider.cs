@@ -2,7 +2,8 @@ namespace Sources.InfrastructureInterfaces.Common.Providers
 {
 	public interface IProvider<T>
 	{
-		T Instance { get; }
-		void Register(T instance);
+		public T Instance { get; }
+		public void Register(T instance);
+		void Unregister();
 	}
 }

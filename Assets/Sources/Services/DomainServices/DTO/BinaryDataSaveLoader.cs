@@ -41,7 +41,7 @@ namespace Sources.Services.DomainServices.DTO
 				File.Delete(file);
 		}
 
-		public IGameProgressModel LoadProgress()
+		public IGameProgressProvider LoadProgress()
 		{
 			string[] files = Directory.GetFiles(_directorySavePath);
 
@@ -55,7 +55,7 @@ namespace Sources.Services.DomainServices.DTO
 			using FileStream file = File.Open(lastSaveFilePath, FileMode.Open);
 			{
 				object loadedData = new BinaryFormatter().Deserialize(file);
-				GameProgressModel gameProgress = (GameProgressModel)loadedData;
+				GameProgressProvider gameProgress = (GameProgressProvider)loadedData;
 				return gameProgress;
 			}
 		}

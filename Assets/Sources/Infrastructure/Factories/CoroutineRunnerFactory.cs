@@ -9,15 +9,15 @@ namespace Sources.Infrastructure.Factories
 {
 	public class CoroutineRunnerFactory
 	{
-		private readonly IAssetResolver _assetResolver;
+		private readonly IAssetFactory _assetFactory;
 
 		private string CoroutineRunnerPath => ResourcesAssetPath.GameObjects.CoroutineRunner;
 
 		[Inject]
-		public CoroutineRunnerFactory(IAssetResolver assetResolver) =>
-			_assetResolver = assetResolver ?? throw new ArgumentNullException(nameof(assetResolver));
+		public CoroutineRunnerFactory(IAssetFactory assetFactory) =>
+			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 
 		public ICoroutineRunner Create() =>
-			_assetResolver.InstantiateAndGetComponent<CoroutineRunner>(CoroutineRunnerPath);
+			_assetFactory.InstantiateAndGetComponent<CoroutineRunner>(CoroutineRunnerPath);
 	}
 }

@@ -5,10 +5,10 @@ namespace Sources.Services.DomainServices
 {
 	[Serializable] public class PersistentProgressService : IPersistentProgressService
 	{
-		private IGameProgressModel _gameProgress;
-		public IGameProgressModel GameProgress => _gameProgress;
+		private IGameProgressProvider _gameProgress;
+		public IGameProgressProvider GameProgress => _gameProgress;
 
-		public void Set(IGameProgressModel gameProgress) =>
+		public void Set(IGameProgressProvider gameProgress) =>
 			_gameProgress = gameProgress ?? throw new ArgumentNullException(nameof(gameProgress));
 	}
 }

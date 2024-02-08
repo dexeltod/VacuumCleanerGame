@@ -1,13 +1,7 @@
-using Sources.Infrastructure.Common;
+using Sources.Infrastructure.Common.Provider;
 using Sources.PresentationInterfaces;
 
 namespace Sources.Infrastructure.Providers
 {
-	public class GameplayInterfaceProvider : Provider<IGameplayInterfaceView>
-	{
-		public  IGameplayInterfaceView Instance { get; protected set; }
-
-		public override void Register(IGameplayInterfaceView instance) =>
-			Instance = instance;
-	}
+	public sealed class GameplayInterfaceProvider : Provider<IGameplayInterfaceView> { }
 }

@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Sources.Application.Services;
 using Sources.Application.Services.Leaderboard;
-using Sources.Application.StateMachine;
 using Sources.Application.UnityApplicationServices;
 using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.Authorization;
-using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
-using Sources.Controllers;
+using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure;
@@ -21,17 +18,16 @@ using Sources.Infrastructure.Factories.UI;
 using Sources.Infrastructure.Factories.UpgradeShop;
 using Sources.Infrastructure.Providers;
 using Sources.Infrastructure.Shop;
-using Sources.InfrastructureInterfaces.Common;
+using Sources.Infrastructure.StateMachine.GameStates;
 using Sources.InfrastructureInterfaces.Common.Factories;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
-using Sources.Presentation.Providers;
 using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
-using Sources.PresentersInterfaces;
 using Sources.Services;
 using Sources.Services.DomainServices;
 using Sources.Services.Localization;
+using Sources.Services.Providers;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
 using Sources.ServicesInterfaces.DTO;
@@ -55,11 +51,23 @@ namespace Sources.Application.Bootstrapp
 
 		public void Register()
 		{
-			_builder.RegisterEntryPoint<Game>();
+			_builder.RegisterEntryPoint<GameBuilder>();
 
 #region ConstantNames
 
 			_builder.Register<ProgressConstantNames>(Lifetime.Singleton);
+
+#endregion
+
+#region Providers
+
+			_builder.Register<SandContainerPresenterProvider>(Lifetime.Singleton);
+			_builder.Register<GameStateChangerProvider>(Lifetime.Singleton).AsImplementedInterfaces();
+			_builder.Register<GameplayInterfaceProvider>(Lifetime.Singleton);
+			_builder.Register<UpgradeWindowPresenterProvider>(Lifetime.Singleton);
+			_builder.Register<IPlayerProgressProvider, PlayerProgressProvider>(Lifetime.Singleton);
+			_builder.Register<IShopProgressProvider, ShopProgressProvider>(Lifetime.Singleton);
+			_builder.Register<ResourcesProgressPresenterProvider>(Lifetime.Singleton);
 
 #endregion
 
@@ -68,14 +76,29 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
 			_builder.Register<ITranslatorService, PhraseTranslatorService>(Lifetime.Singleton);
 
-			_builder.Register<IAssetResolver, AssetResolver>(Lifetime.Singleton);
+			_builder.Register<IAssetFactory, AssetFactory>(Lifetime.Singleton);
 
 			RegisterLoadingCurtain();
 			RegisterCoroutineRunner();
 
-			_builder.Register<IGameStateMachine, GameStateMachine>(Lifetime.Singleton);
+#region States
+
+			_builder.Register<MenuState>(Lifetime.Singleton);
+			_builder.Register<BuildSceneState>(Lifetime.Singleton);
+			_builder.Register<GameLoopState>(Lifetime.Singleton);
+
+#endregion
+
+#region StateMachine
+
+			_builder.Register<GameStatesRepositoryFactory>(Lifetime.Scoped);
+			_builder.Register<GameStateContainerFactory>(Lifetime.Scoped);
+
+			_builder.Register<GameStateChangerFactory>(Lifetime.Scoped).AsImplementedInterfaces();
+
+#endregion
+
 			_builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
-			_builder.Register<GameStateMachineFactory>(Lifetime.Scoped);
 
 #endregion
 
@@ -85,9 +108,9 @@ namespace Sources.Application.Bootstrapp
 
 			InitializeLeaderBoardService(_builder);
 
-			_builder.Register<ILevelChangerPresenter, LevelChangerPresenter>(Lifetime.Scoped);
+			_builder.Register<ILevelChangerService, LevelChangerService>(Lifetime.Singleton);
 			_builder.Register<IProgressUpgradeFactory, ProgressUpgradeFactory>(Lifetime.Scoped);
-			_builder.Register<IProgressLoadDataService, ProgressLoadDataService>(Lifetime.Scoped);
+			_builder.Register<IProgressSaveLoadDataService, ProgressSaveLoadDataService>(Lifetime.Singleton);
 
 			RegisterCloudSavers();
 
@@ -95,22 +118,26 @@ namespace Sources.Application.Bootstrapp
 
 			CreateResourceService();
 
-			_builder.Register<InitialProgressFactory>(Lifetime.Scoped);
-			_builder.Register<GameplayInterfaceProvider>(Lifetime.Scoped).AsImplementedInterfaces();
 			_builder.Register<ProgressFactory>(Lifetime.Scoped);
 
-			_builder.Register<PersistentProgressService>(
-				container =>
-				{
-					PersistentProgressService persistentProgressService = new PersistentProgressService();
-					InitialProgressFactory initialProgressFactory = container.Resolve<InitialProgressFactory>();
-					persistentProgressService.Set(initialProgressFactory.Create());
+#region Progress
 
-					return persistentProgressService;
-				},
-				Lifetime.Singleton
-			).AsImplementedInterfaces().AsSelf();
-			RegisterResourceProgressPresenter();
+			_builder.Register<InitialProgressFactory>(Lifetime.Scoped);
+			_builder.Register<PersistentProgressService>(
+					container =>
+					{
+						PersistentProgressService persistentProgressService = new PersistentProgressService();
+						InitialProgressFactory initialProgressFactory = container.Resolve<InitialProgressFactory>();
+						persistentProgressService.Set(initialProgressFactory.Create());
+
+						return persistentProgressService;
+					},
+					Lifetime.Singleton
+				)
+				.AsImplementedInterfaces();
+
+#endregion
+
 			CreateSceneLoadServices();
 
 #endregion
@@ -124,21 +151,18 @@ namespace Sources.Application.Bootstrapp
 				Lifetime.Singleton
 			).AsImplementedInterfaces().AsSelf();
 
-			_builder.Register<IPlayerProgressProvider, PlayerProgressProvider>(Lifetime.Singleton);
 			_builder.Register<ILevelConfigGetter, LevelConfigGetter>(Lifetime.Singleton);
-			_builder.Register<IShopProgressProvider, ShopProgressProvider>(Lifetime.Singleton);
 			_builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Singleton);
 			_builder.Register<ILevelProgressFacade, LevelProgressFacade>(Lifetime.Singleton);
 			RegisterAdvertisement();
 
 #endregion
 
-			_builder.Register<IUIFactory, UIFactory>(Lifetime.Scoped).AsImplementedInterfaces();
-			
-			_builder
-				.Register<IPresentableFactory<IUpgradeWindow, IUpgradeWindowPresenter>, UpgradeWindowFactory>(
-					Lifetime.Scoped
-				).AsImplementedInterfaces();
+			_builder.Register<IUIFactory, UIFactory>(Lifetime.Scoped);
+
+			_builder.Register<IPresentableFactory<IUpgradeWindow, IUpgradeWindowPresenter>, UpgradeWindowViewFactory>(
+				Lifetime.Scoped
+			).AsImplementedInterfaces();
 
 			_builder.Register<ICameraFactory, CameraFactory>(Lifetime.Scoped);
 			_builder.Register<IRegisterWindowLoader, RegisterWindowLoader>(Lifetime.Singleton);
@@ -157,18 +181,6 @@ namespace Sources.Application.Bootstrapp
 #endif
 			_builder.Register<IAdvertisement, EditorAdvertisement>(Lifetime.Singleton);
 		}
-
-		private void RegisterResourceProgressPresenter() =>
-			_builder.Register<ResourcesProgressPresenter>(
-				container =>
-				{
-					IResourcesModel resourcesModel
-						= container.Resolve<IPersistentProgressService>().GameProgress.ResourcesModel;
-
-					return new ResourcesProgressPresenter(resourcesModel);
-				},
-				Lifetime.Singleton
-			).AsImplementedInterfaces().AsSelf();
 
 		private void RegisterSaveLoader()
 		{

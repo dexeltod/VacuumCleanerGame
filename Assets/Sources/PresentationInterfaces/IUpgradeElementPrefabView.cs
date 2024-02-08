@@ -1,6 +1,6 @@
-namespace Sources.Presentation.UI.Shop
+namespace Sources.PresentationInterfaces
 {
-	public interface IUpgradeElementPrefabView
+	public interface IUpgradeElementPrefabView :IColorChangeable
 	{
 		string IdName { get; }
 	}

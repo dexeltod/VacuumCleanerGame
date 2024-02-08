@@ -1,13 +1,7 @@
 using System;
-using Sources.Application.StateMachine.GameStates;
-using Sources.ApplicationServicesInterfaces.StateMachineInterfaces;
 using Sources.Infrastructure.UI;
-using Sources.InfrastructureInterfaces;
-using Sources.InfrastructureInterfaces.Scene;
 using Sources.Services;
 using Sources.ServicesInterfaces;
-using Sources.Utils.Configs;
-using Sources.Utils.Configs.Scripts;
 using Sources.Utils.ConstantNames;
 using UnityEngine.UIElements;
 
@@ -15,15 +9,14 @@ namespace Sources.Application.MainMenu
 {
 	public class MainMenuElement : MenuElement, IDisposable
 	{
-		private const string LevelsMenuElement   = "Levels";
+		private const string LevelsMenuElement = "Levels";
 		private const string SettingsMenuElement = "Settings";
-		private const string GameSceneName       = "Game";
+		private const string GameSceneName = "Game";
 
 		private readonly UIElementGetterFacade _uiElementGetter;
 		private readonly VisualElementSwitcher _visualElementSwitcher;
-		private readonly ILevelConfigGetter    _levelConfigGetter;
-		private readonly IGameStateMachine     _gameStateMachine;
-		private readonly ILocalizationService  _localizationService;
+		private readonly ILevelConfigGetter _levelConfigGetter;
+		private readonly ILocalizationService _localizationService;
 
 		private VisualElement _menuVisualElement;
 		private VisualElement _levelsVisualElement;
@@ -35,26 +28,22 @@ namespace Sources.Application.MainMenu
 
 		private Button _exitButton;
 
-		public MainMenuElement
-		(
-			VisualElement         thisElement,
+		public MainMenuElement(
+			VisualElement thisElement,
 			UIElementGetterFacade uiElementGetter,
 			VisualElementSwitcher visualElementSwitcher,
-			ILevelConfigGetter    levelConfigGetter,
-			IGameStateMachine     gameStateMachine,
-			ILocalizationService  localizationService
-		) : base
-		(
+			ILevelConfigGetter levelConfigGetter,
+			ILocalizationService localizationService
+		) : base(
 			thisElement,
 			visualElementSwitcher,
 			uiElementGetter
 		)
 		{
-			_uiElementGetter       = uiElementGetter;
+			_uiElementGetter = uiElementGetter;
 			_visualElementSwitcher = visualElementSwitcher;
-			_levelConfigGetter     = levelConfigGetter;
-			_gameStateMachine      = gameStateMachine;
-			_localizationService   = localizationService;
+			_levelConfigGetter = levelConfigGetter;
+			_localizationService = localizationService;
 			Initialize();
 		}
 

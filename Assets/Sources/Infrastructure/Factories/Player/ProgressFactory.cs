@@ -2,6 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.Infrastructure.Factories.Domain;
 using Sources.Utils.ConstantNames;
 using UnityEngine;
 
@@ -9,61 +10,58 @@ namespace Sources.Infrastructure.Factories.Player
 {
 	[Serializable] public class ProgressFactory : IDisposable
 	{
-#region Fields
-
-		private readonly IProgressLoadDataService _progressLoadDataService;
+		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IPersistentProgressServiceConstructable _persistentProgressService;
 		private readonly InitialProgressFactory _initialProgressFactory;
-
-#endregion
+		private readonly ProgressConstantNames _progressConstantNames;
 
 		public ProgressFactory(
-			IProgressLoadDataService progressLoadDataService,
+			IProgressSaveLoadDataService progressSaveLoadDataService,
 			IPersistentProgressServiceConstructable persistentProgressService,
 			InitialProgressFactory initialProgressFactory,
 			ProgressConstantNames progressConstantNames
 		)
 		{
-			_progressLoadDataService = progressLoadDataService ??
-				throw new ArgumentNullException(nameof(progressLoadDataService));
+			_progressSaveLoadDataService = progressSaveLoadDataService ??
+				throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 			_persistentProgressService = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
 			_initialProgressFactory = initialProgressFactory ??
 				throw new ArgumentNullException(nameof(initialProgressFactory));
+			_progressConstantNames
+				= progressConstantNames ?? throw new ArgumentNullException(nameof(progressConstantNames));
 
-			_progressLoadDataService.ProgressCleared += _initialProgressFactory.Create;
+			_progressSaveLoadDataService.ProgressCleared += _initialProgressFactory.Create;
 		}
 
 		public void Dispose() =>
-			_progressLoadDataService.ProgressCleared -= _initialProgressFactory.Create;
+			_progressSaveLoadDataService.ProgressCleared -= _initialProgressFactory.Create;
 
-		public async UniTask InitializeProgress()
+		public async UniTask Initialize()
 		{
-			IGameProgressModel loadedSaves = await _progressLoadDataService.LoadFromCloud();
-			Initialize(loadedSaves);
+			CreatNewIfNull(await _progressSaveLoadDataService.LoadFromCloud());
+
+			_persistentProgressService.Set(await _progressSaveLoadDataService.LoadFromCloud());
 		}
 
-		public async UniTask<IGameProgressModel> Load() =>
-			await _progressLoadDataService.LoadFromCloud();
+		public async UniTask<IGameProgressProvider> Load() =>
+			await _progressSaveLoadDataService.LoadFromCloud();
 
-		public void Save(IGameProgressModel model) =>
-			_progressLoadDataService.SaveToCloud(model);
+		public void Save(IGameProgressProvider provider) =>
+			_progressSaveLoadDataService.SaveToCloud(provider);
 
-		private void Initialize(IGameProgressModel loadedProgress)
+		public void LoadClearProgress() =>
+			Save(_initialProgressFactory.Create());
+
+		private IGameProgressProvider CreatNewIfNull(IGameProgressProvider loadedProgress)
 		{
-			loadedProgress = CreatNewIfNull(loadedProgress);
-			_persistentProgressService.Set(loadedProgress);
-		}
+			if (loadedProgress != null)
+				return loadedProgress;
 
-		private IGameProgressModel CreatNewIfNull(IGameProgressModel loadedProgress)
-		{
-			if (loadedProgress == null)
-			{
-				Debug.Log("new progress model");
+			Debug.Log("New progress model created");
 
-				loadedProgress = _initialProgressFactory.Create();
-				_progressLoadDataService.SaveToCloud(loadedProgress);
-			}
+			loadedProgress = _initialProgressFactory.Create();
+			_progressSaveLoadDataService.SaveToCloud(loadedProgress);
 
 			return loadedProgress;
 		}

@@ -8,14 +8,14 @@ namespace Sources.Infrastructure.Factories.Scene
 {
 	public class SandFactory
 	{
-		private readonly IAssetResolver _assetResolver;
+		private readonly IAssetFactory _assetFactory;
 
-		public SandFactory(IAssetResolver assetResolver) =>
-			_assetResolver = assetResolver ?? throw new ArgumentNullException(nameof(assetResolver));
+		public SandFactory(IAssetFactory assetFactory) =>
+			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 
 		public IMeshModifiable Create()
 		{
-			var meshModificator = _assetResolver.InstantiateAndGetComponent<MeshModificator>
+			var meshModificator = _assetFactory.InstantiateAndGetComponent<MeshModificator>
 			(
 				ResourcesAssetPath
 					.GameObjects

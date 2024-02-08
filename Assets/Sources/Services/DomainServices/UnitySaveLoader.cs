@@ -33,15 +33,15 @@ namespace Sources.Services.DomainServices
 				= unityCloudSaveLoader ?? throw new ArgumentNullException(nameof(unityCloudSaveLoader));
 		}
 
-		public async UniTask Save(IGameProgressModel @object, Action succeededCallback)
+		public async UniTask Save(IGameProgressProvider @object, Action succeededCallback)
 		{
-			GameProgressModel model = _progressService.GameProgress as GameProgressModel;
-			string json = JsonUtility.ToJson(model);
+			GameProgressProvider provider = _progressService.GameProgress as GameProgressProvider;
+			string json = JsonUtility.ToJson(provider);
 
 			await _unityCloudSaveLoader.Save(json);
 		}
 
-		public async UniTask<IGameProgressModel> Load(Action callback)
+		public async UniTask<IGameProgressProvider> Load(Action callback)
 		{
 			var json = await _unityCloudSaveLoader.Load();
 			callback.Invoke();
@@ -51,19 +51,19 @@ namespace Sources.Services.DomainServices
 		public async UniTask Initialize() =>
 			await _unityServicesController.InitializeUnityServices();
 
-		public async UniTask ClearSaves(IGameProgressModel gameProgressModel, Action succeededCallback)
+		public async UniTask ClearSaves(IGameProgressProvider gameProgressProvider, Action succeededCallback)
 		{
 			await CloudSaveService.Instance.Data.ForceDeleteAsync(GameProgressKey);
 			succeededCallback.Invoke();
 		}
 
-		private IGameProgressModel DeserializeJson(string jsonSave)
+		private IGameProgressProvider DeserializeJson(string jsonSave)
 		{
 			try
 			{
-				GameProgressModel model = JsonUtility.FromJson<GameProgressModel>(jsonSave);
+				GameProgressProvider provider = JsonUtility.FromJson<GameProgressProvider>(jsonSave);
 
-				return model;
+				return provider;
 			}
 			catch (Exception e)
 			{

@@ -1,7 +1,8 @@
 using System.Collections;
-
+using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.GameObject;
+using Sources.InfrastructureInterfaces.Presenters;
 using Sources.Services.Triggers;
 using Sources.ServicesInterfaces;
 using UnityEngine;
@@ -11,12 +12,13 @@ namespace Sources.Infrastructure.Factories.Player
 {
 	public class PlayerBody : Presenter, IPlayer
 	{
-		private IResourcesProgressPresenter _progressPresenter;
+		private ResourcesProgressPresenterProvider _progressPresenterProvider; 
 		private UnityEngine.Coroutine _sellRoutine;
+		private IResourcesProgressPresenter ProgressPresenter => _progressPresenterProvider.Instance;
 
 		[Inject]
-		private void Construct(IResourcesProgressPresenter progressPresenter) =>
-			_progressPresenter = progressPresenter;
+		private void Construct(ResourcesProgressPresenterProvider progressPresenter) =>
+			_progressPresenterProvider = progressPresenter;
 
 		private void OnCollisionEnter(Collision collisionInfo)
 		{
@@ -37,7 +39,7 @@ namespace Sources.Infrastructure.Factories.Player
 
 		private IEnumerator SellRoutine()
 		{
-			_progressPresenter.SellSand();
+			ProgressPresenter.SellSand();
 			yield return null;
 		}
 	}

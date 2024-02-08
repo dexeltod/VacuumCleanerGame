@@ -1,0 +1,19 @@
+{
+    "name": "ControllersInterfaces",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:2e1e7a8a594b8bc40be67d87dd026650",
+        "GUID:51d21c2ab7b57024db68e31f2558cb12",
+        "GUID:a0000ef288aab8d4080c4c9b058c2a30"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
