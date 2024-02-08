@@ -7,8 +7,6 @@ using UnityEngine;
 
 namespace Sources.Domain.Progress.Player
 {
-	public class FSDFSD { }
-
 	[Serializable] public class ResourcesModel : IResourcesModel
 	{
 		private const int HundredPercent = 100;

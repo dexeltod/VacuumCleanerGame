@@ -2,6 +2,7 @@ using System;
 using Joystick_Pack.Scripts.Base;
 using Sources.ControllersInterfaces;
 using Sources.Presentation.Common;
+using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using TMPro;
 using UnityEngine;
@@ -14,6 +15,7 @@ namespace Sources.Presentation.UI
 	//potato realisation ╕_╡
 	public class GameplayInterfaceView : PresentableView<IGameplayInterfacePresenter>, IDisposable,
 		IGameplayInterfaceView
+
 	{
 		private const float MaxFillAmount = 1f;
 

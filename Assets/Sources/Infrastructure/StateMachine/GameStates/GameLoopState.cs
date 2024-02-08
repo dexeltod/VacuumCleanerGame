@@ -2,6 +2,7 @@ using System;
 using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.States.StateMachineInterfaces;
 using Sources.Presentation.SceneEntity;
+using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using VContainer;
 

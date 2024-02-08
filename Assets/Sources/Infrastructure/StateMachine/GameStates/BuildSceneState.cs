@@ -12,6 +12,8 @@ using Sources.InfrastructureInterfaces.Presenters;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.InfrastructureInterfaces.States;
+using Sources.PresentationInterfaces;
+using Sources.PresentationInterfaces.Player;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs.Scripts;
 using Sources.Utils.ConstantNames;
