@@ -35,7 +35,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly ILevelProgressFacade _levelProgressFacade;
-		private readonly IResourcesProgressPresenter _resourcesProgress;
+		private readonly IResourcesProgressPresenterProvider _resourcesProgress;
 		private readonly IPersistentProgressService _persistentProgress;
 		private readonly IAssetFactory _assetFactory;
 		private readonly CoroutineRunnerFactory _coroutineRunnerFactory;
@@ -44,11 +44,18 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly SandContainerPresenterProvider _sandContainerPresenterProvider;
 		private readonly ResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 		private readonly ResourcesProgressPresenterFactory _resourcesProgressPresenterFactory;
+		private readonly MeshPresenterProvider _meshPresenterProvider;
 
 		private SandContainerPresenter _sandContainerPresenter;
 
-		private IUpgradeWindowPresenter UpgradeWindowPresenter => _upgradeWindowPresenterProvider.Instance;
-		private IGameplayInterfaceView GameplayInterface => _gameplayInterfaceProvider.Instance;
+		private IResourcesProgressPresenter ResourcesProgressPresenter =>
+			_resourcesProgress.GetContract<IResourcesProgressPresenter>();
+
+		private IUpgradeWindowPresenter UpgradeWindowPresenter => _upgradeWindowPresenterProvider.Implementation;
+		private IGameplayInterfaceView GameplayInterface => _gameplayInterfaceProvider.Implementation;
+
+		private IResourceProgressEventHandler ResourceProgressEventHandler =>
+			_resourcesProgress.GetContract<IResourceProgressEventHandler>();
 
 #endregion
 
@@ -65,7 +72,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			ILevelConfigGetter levelConfigGetter,
 			ILevelProgressFacade levelProgressFacade,
-			IResourcesProgressPresenter resourcesProgress,
+			IResourcesProgressPresenterProvider resourcesProgress,
 			IPersistentProgressService persistentProgress,
 			IAssetFactory assetFactory,
 			CoroutineRunnerFactory coroutineRunnerFactory,
@@ -73,7 +80,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			UpgradeWindowPresenterProvider upgradeWindowPresenterProvider,
 			SandContainerPresenterProvider sandContainerPresenterProvider,
 			ResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
-			ResourcesProgressPresenterFactory resourcesProgressPresenterFactory
+			ResourcesProgressPresenterFactory resourcesProgressPresenterFactory,
+			MeshPresenterProvider meshPresenterProvider
 
 #endregion
 
@@ -109,6 +117,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
 			_resourcesProgressPresenterFactory = resourcesProgressPresenterFactory ??
 				throw new ArgumentNullException(nameof(resourcesProgressPresenterFactory));
+			_meshPresenterProvider
+				= meshPresenterProvider ?? throw new ArgumentNullException(nameof(meshPresenterProvider));
 
 #endregion
 		}
@@ -117,7 +127,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		{
 			Build();
 
-			_gameStateMachine.Instance.Enter<GameLoopState>();
+			_gameStateMachine.Implementation.Enter<GameLoopState>();
 		}
 
 		private void Build()
@@ -143,9 +153,13 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			_resourcesProgressPresenterProvider.Register(_resourcesProgressPresenterFactory.Create());
 
 			IMeshModifiable meshModifiable = new SandFactory(_assetFactory).Create();
-			IMeshDeformationPresenter presenter = new MeshDeformationPresenter(meshModifiable, _resourcesProgress);
-
-			new MeshPresenter(presenter, _resourcesProgressPresenterProvider.Instance);
+			IMeshDeformationPresenter presenter = new MeshDeformationPresenter(
+				meshModifiable,
+				ResourcesProgressPresenter
+			);
+			
+			var meshPresenter = new MeshPresenter(presenter, _resourcesProgressPresenterProvider.Implementation);
+			_meshPresenterProvider.Register(meshPresenter);
 
 			_cameraFactory.CreateVirtualCamera();
 		}

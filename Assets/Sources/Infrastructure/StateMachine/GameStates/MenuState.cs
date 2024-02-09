@@ -32,7 +32,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 		private MainMenuPresenter _mainMenuPresenter;
 		private IGameStateChangerProvider _gameStateMachineProvider;
-		private IGameStateChanger GameStateMachine => _gameStateMachineProvider.Instance;
+		private IGameStateChanger GameStateMachine => _gameStateMachineProvider.Implementation;
 
 		[Inject]
 		public MenuState(

@@ -8,6 +8,7 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Common.Factory.Decorators;
 using Sources.InfrastructureInterfaces.Factory;
+using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
@@ -21,17 +22,20 @@ namespace Sources.Infrastructure.Factories.UI
 		private const bool IsActiveOnStart = true;
 
 		private readonly IAssetFactory _assetFactory;
-		private readonly IResourceProgressEventHandler _resourceProgressEventHandler;
+		private readonly IResourcesProgressPresenterProvider _resourceProgressPresenterProvider;
 		private readonly IPersistentProgressService _gameProgress;
 		private readonly ITranslatorService _translatorService;
 		private readonly ILevelChangerService _levelChangerService;
 
 		private readonly string _uiResourcesUI = ResourcesAssetPath.Scene.UIResources.UI;
 
+		private IResourceProgressEventHandler ResourceProgressEventHandler =>
+			_resourceProgressPresenterProvider.GetContract<IResourceProgressEventHandler>();
+
 		[Inject]
 		public UIFactory(
 			IAssetFactory assetFactory,
-			IResourceProgressEventHandler resourceProgressEventHandler,
+			IResourcesProgressPresenterProvider resourceProgressProgressPresenterProvider,
 			IPersistentProgressService persistentProgressService,
 			ITranslatorService translatorService,
 			ILevelChangerService levelChangerService
@@ -39,8 +43,8 @@ namespace Sources.Infrastructure.Factories.UI
 		{
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 
-			_resourceProgressEventHandler = resourceProgressEventHandler ??
-				throw new ArgumentNullException(nameof(resourceProgressEventHandler));
+			_resourceProgressPresenterProvider = resourceProgressProgressPresenterProvider ??
+				throw new ArgumentNullException(nameof(resourceProgressProgressPresenterProvider));
 
 			_gameProgress = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
@@ -70,7 +74,7 @@ namespace Sources.Infrastructure.Factories.UI
 				model.MaxCashScore,
 				model.MaxGlobalScore,
 				model.SoftCurrency.Count,
-				_resourceProgressEventHandler,
+				ResourceProgressEventHandler,
 				IsActiveOnStart
 			);
 

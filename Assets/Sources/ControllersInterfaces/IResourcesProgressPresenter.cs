@@ -4,8 +4,9 @@ using Sources.ServicesInterfaces;
 
 namespace Sources.InfrastructureInterfaces.Presenters
 {
-	public interface IResourcesProgressPresenter : IResourceMaxScore, IPresenter
+	public interface IResourcesProgressPresenter : IPresenter
 	{
+		bool IsMaxScoreReached { get; }
 		IResourceReadOnly<int> SoftCurrency { get; }
 
 		bool TryAddSand(int newScore);

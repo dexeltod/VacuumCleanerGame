@@ -65,7 +65,7 @@ namespace Sources.Application
 
 			_gameStateChangerProvider.Register(_gameStateChangerFactory.Create());
 
-			_gameStateChanger.Instance.Enter<MenuState>();
+			_gameStateChanger.Implementation.Enter<MenuState>();
 		}
 	}
 }

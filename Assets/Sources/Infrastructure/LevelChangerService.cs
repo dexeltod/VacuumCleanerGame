@@ -22,7 +22,7 @@ namespace Sources.Infrastructure
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IAdvertisement _rewardService;
 
-		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Instance;
+		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Implementation;
 
 		private int LevelNumber => _levelProgressFacade.CurrentLevelNumber;
 

@@ -72,9 +72,9 @@ namespace Sources.Infrastructure.Factories.UI
 
 		private IGameProgress ShopProgress => _persistentProgressService.GameProgress.ShopProgress;
 
-		private IGameplayInterfaceView GameplayInterface => _gameplayInterfaceView.Instance;
+		private IGameplayInterfaceView GameplayInterface => _gameplayInterfaceView.Implementation;
 
-		private IResourcesProgressPresenter ResourcesProgressPresenter => _resourceProgressPresenterProvider.Instance;
+		private IResourcesProgressPresenter ResourcesProgressPresenter => _resourceProgressPresenterProvider.Implementation;
 
 		private void Localize() =>
 			_upgradeWindow.Phrases = _translatorService.Localize(_upgradeWindow.Phrases);

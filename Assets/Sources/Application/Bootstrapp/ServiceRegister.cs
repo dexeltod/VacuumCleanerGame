@@ -64,10 +64,11 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<SandContainerPresenterProvider>(Lifetime.Singleton);
 			_builder.Register<GameStateChangerProvider>(Lifetime.Singleton).AsImplementedInterfaces();
 			_builder.Register<GameplayInterfaceProvider>(Lifetime.Singleton);
+			_builder.Register<MeshPresenterProvider>(Lifetime.Singleton);
 			_builder.Register<UpgradeWindowPresenterProvider>(Lifetime.Singleton);
 			_builder.Register<IPlayerProgressProvider, PlayerProgressProvider>(Lifetime.Singleton);
 			_builder.Register<IShopProgressProvider, ShopProgressProvider>(Lifetime.Singleton);
-			_builder.Register<ResourcesProgressPresenterProvider>(Lifetime.Singleton);
+			_builder.Register<ResourcesProgressPresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces();
 
 #endregion
 
@@ -84,7 +85,7 @@ namespace Sources.Application.Bootstrapp
 #region States
 
 			_builder.Register<MenuState>(Lifetime.Singleton);
-			_builder.Register<BuildSceneState>(Lifetime.Singleton);
+			_builder.Register<BuildSceneState>(Lifetime.Singleton).AsImplementedInterfaces();
 			_builder.Register<GameLoopState>(Lifetime.Singleton);
 
 #endregion

@@ -17,7 +17,7 @@ namespace Sources.Presentation.SceneEntity
 		private IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 		private List<Vector3> _newVertices;
 
-		private IResourcesProgressPresenter ResourcesProgressPresenter => _resourcesProgressPresenterProvider.Instance;
+		private IResourcesProgressPresenter ResourcesProgressPresenter => _resourcesProgressPresenterProvider.Implementation;
 
 		public MeshModificator(Collision collision) =>
 			Collision = collision ?? throw new ArgumentNullException(nameof(collision));

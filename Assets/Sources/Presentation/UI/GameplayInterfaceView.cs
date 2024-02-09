@@ -85,7 +85,7 @@ namespace Sources.Presentation.UI
 			SetCashScoreText(startCashScore);
 			enabled = true;
 
-			OnSetMaxGlobalScore(maxGlobalScore);
+			SetMaxGlobalScore(maxGlobalScore);
 
 			GameObject = gameObject;
 
@@ -131,7 +131,7 @@ namespace Sources.Presentation.UI
 		public void SetActiveGoToNextLevelButton(bool isActive) =>
 			_goToNextLevelButton.gameObject.SetActive(isActive);
 
-		public void OnSetMaxGlobalScore(int newMaxScore)
+		public void SetMaxGlobalScore(int newMaxScore)
 		{
 			if (newMaxScore < 0) throw new ArgumentOutOfRangeException(nameof(newMaxScore));
 			_maxGlobalScore = newMaxScore;

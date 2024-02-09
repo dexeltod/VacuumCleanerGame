@@ -13,7 +13,7 @@ namespace Sources.Infrastructure.Factories.Presenters
 		private readonly GameplayInterfaceProvider _gameplayInterfaceProvider;
 		private readonly IPersistentProgressService _persistentProgressService;
 
-		private IGameplayInterfaceView GameplayInterfaceView => _gameplayInterfaceProvider.Instance;
+		private IGameplayInterfaceView GameplayInterfaceView => _gameplayInterfaceProvider.Implementation;
 		private IResourcesModel Resources => _persistentProgressService.GameProgress.ResourcesModel;
 
 		public ResourcesProgressPresenterFactory(

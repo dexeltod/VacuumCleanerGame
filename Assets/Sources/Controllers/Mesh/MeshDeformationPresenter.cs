@@ -1,5 +1,6 @@
 using System;
 using Sources.ControllersInterfaces;
+using Sources.InfrastructureInterfaces.Presenters;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using UnityEngine;
@@ -9,11 +10,11 @@ namespace Sources.Controllers.Mesh
 	public class MeshDeformationPresenter : IMeshDeformationPresenter, IDisposable
 	{
 		private readonly IMeshModifiable _meshModifiable;
-		private readonly IResourceMaxScore _resourceMaxScore;
+		private readonly IResourcesProgressPresenter _resourceMaxScore;
 
 		public event Action<int> MeshDeformed;
 
-		public MeshDeformationPresenter(IMeshModifiable meshModifiable, IResourceMaxScore resourceMaxScore)
+		public MeshDeformationPresenter(IMeshModifiable meshModifiable, IResourcesProgressPresenter resourceMaxScore)
 		{
 			_meshModifiable = meshModifiable ?? throw new ArgumentNullException(nameof(meshModifiable));
 			_resourceMaxScore = resourceMaxScore ?? throw new ArgumentNullException(nameof(resourceMaxScore));

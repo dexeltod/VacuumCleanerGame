@@ -12,9 +12,9 @@ namespace Sources.Infrastructure.Factories.Player
 {
 	public class PlayerBody : Presenter, IPlayer
 	{
-		private ResourcesProgressPresenterProvider _progressPresenterProvider; 
+		private ResourcesProgressPresenterProvider _progressPresenterProvider;
 		private UnityEngine.Coroutine _sellRoutine;
-		private IResourcesProgressPresenter ProgressPresenter => _progressPresenterProvider.Instance;
+		private IResourcesProgressPresenter ProgressPresenter => _progressPresenterProvider.Implementation;
 
 		[Inject]
 		private void Construct(ResourcesProgressPresenterProvider progressPresenter) =>
@@ -22,13 +22,12 @@ namespace Sources.Infrastructure.Factories.Player
 
 		private void OnCollisionEnter(Collision collisionInfo)
 		{
-			if (collisionInfo.collider.TryGetComponent(out TriggerReload _))
-			{
-				if (_sellRoutine != null)
-					StopCoroutine(_sellRoutine);
+			if (!collisionInfo.collider.TryGetComponent(out TriggerReload _)) return;
 
-				_sellRoutine = StartCoroutine(SellRoutine());
-			}
+			if (_sellRoutine != null)
+				StopCoroutine(_sellRoutine);
+
+			_sellRoutine = StartCoroutine(SellRoutine());
 		}
 
 		private void OnCollisionExit(Collision collisionInfo)

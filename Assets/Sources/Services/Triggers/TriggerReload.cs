@@ -1,5 +1,4 @@
-using Sources.PresentationInterfaces.Player;
-using Sources.Services.PlayerServices;
+using Sources.InfrastructureInterfaces.GameObject;
 using UnityEngine;
 
 namespace Sources.Services.Triggers
@@ -8,7 +7,7 @@ namespace Sources.Services.Triggers
 	{
 		private void OnTriggerStay(Collider other)
 		{
-			if (other.TryGetComponent(out IPlayerResources playerMoney))
+			if (other.TryGetComponent(out IPlayer playerMoney))
 				playerMoney.SellSand();
 		}
 	}

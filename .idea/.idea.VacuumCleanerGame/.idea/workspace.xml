@@ -2,47 +2,36 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e72b9b77-a85b-4195-b3c2-5f5bad8d4534" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/ApplicationServicesInterfaces/ICloudSave.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/ApplicationServicesInterfaces/ICloudSave.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Controllers/IUpgradeElementPresenter.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Controllers/IUpgradeElementPresenter.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Domain/Progress/Player/FSDFSD.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Domain/Progress/Player/FSDFSD.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/Configs.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/Configs.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/EditorUi.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/EditorUi.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/GameObjects.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/GameObjects.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/LevelConfig.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/LevelConfig.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/SceneResources.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/SceneResources.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/UIResources.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/UIResources.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/Yandex.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/Yandex.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/ApplicationServicesInterfaces/IYandexSDKController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/ApplicationServicesInterfaces/IYandexSDKController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Controllers/UpgradeElementPresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Controllers/UpgradeElementPresenter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Domain/Progress/Player/ResourcesModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Domain/Progress/Player/ResourcesModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/SandContainerPresenterFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/SandContainerPresenterFactory.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Providers/MeshPresenterProvider.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Providers/MeshPresenterProvider.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/Bootstrapp/ServiceRegister.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/Bootstrapp/ServiceRegister.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/GameBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/GameBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Controllers/Mesh/MeshDeformationPresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Controllers/Mesh/MeshDeformationPresenter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/IResourcesProgressPresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/IResourcesProgressPresenter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Common/Provider/Provider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Common/Provider/Provider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/Player/PlayerBody.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/Player/PlayerBody.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/Presenters/MainMenuPresenterFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/Presenters/MainMenuPresenterFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/Presenters/ResourcesProgressPresenterFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/Presenters/ResourcesProgressPresenterFactory.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UI/UIFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UI/UIFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UI/UpgradeWindowViewFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UI/UpgradeWindowViewFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/LevelChangerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/LevelChangerService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/StateMachine/GameStates/BuildSceneState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/StateMachine/GameStates/BuildSceneState.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/StateMachine/GameStates/GameLoopState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/StateMachine/GameStates/GameLoopState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Presenters/IResourcesProgressPresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/IResourcesProgressPresenter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Presenters/IResourcesProgressPresenter.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/IResourcesProgressPresenter.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/StateMachine/GameStates/MenuState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/StateMachine/GameStates/MenuState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/StateMachine/GameStates/UpgradeWindowPresenterProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Providers/UpgradeWindowPresenterProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/StateMachine/GameStates/UpgradeWindowPresenterProvider.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Providers/UpgradeWindowPresenterProvider.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Common/Providers/IProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Common/Providers/IProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/GameObject/IPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/GameObject/IPlayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Presentation/Player/PlayerResources.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Presentation/Player/PlayerResources.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Presentation/SceneEntity/MeshModificator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Presentation/SceneEntity/MeshModificator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Presentation/UI/GameplayInterfaceView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Presentation/UI/GameplayInterfaceView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Presentation/UI/MainMenuBehaviour.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Presentation/UI/MainMenuBehaviour.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Presentation/UI/YandexAuthorization/IAuthorization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Presentation/UI/YandexAuthorization/YandexAuthorizationView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Presentation/UI/YandexAuthorization/IAuthorization.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Presentation/UI/YandexAuthorization/YandexAuthorizationView.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/PresentationInterfaces/Player/IPlayerResources.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/PresentationInterfaces/Player/IPlayerResources.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Services/DomainServices/YandexSaveLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/DomainServices/YandexCloudSaveLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Services/DomainServices/YandexSaveLoader.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/DomainServices/YandexCloudSaveLoader.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/PresentationInterfaces/Player/IPlayerResources.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/PresentationInterfaces/Player/IPlayerResources.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Services/Triggers/TriggerReload.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/Triggers/TriggerReload.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/LevelsConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/LevelsConfig.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/ResourcesAssetPath.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Utils/Configs/Scripts/ResourcesAssetPath.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Utils/ConstantNames/CommonConstantNames.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Utils/ConstantNames/ConstantNames.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Utils/ConstantNames/CommonConstantNames.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Utils/ConstantNames/ConstantNames.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/IResourceMaxScore.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/IResourceMaxScore.cs.meta" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,7 +121,6 @@
     <setting file="file://$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Factory/IProgressUpgradeFactory.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/States/StateMachineInterfaces/IGameState.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/States/StateMachineInterfaces/IGameStateContainer.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Sources/Presentation/Player/PlayerResources.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/Presentation/SceneEntity/VacuumColliderDisabler.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/Presentation/UI/MainMenu/LeaderBoard/LeaderBoardBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/Presentation/UI/Shop/UpgradeElementPrefabView.cs" root0="FORCE_HIGHLIGHTING" />
@@ -566,7 +554,9 @@
       <workItem from="1707262535832" duration="3901000" />
       <workItem from="1707314328626" duration="5182000" />
       <workItem from="1707324421338" duration="26303000" />
-      <workItem from="1707396578397" duration="1723000" />
+      <workItem from="1707396578397" duration="10217000" />
+      <workItem from="1707469291338" duration="676000" />
+      <workItem from="1707478928060" duration="7506000" />
     </task>
     <servers />
   </component>
@@ -629,10 +619,10 @@
           <line>92</line>
           <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Presentation\UI\GameplayInterfaceView.cs" initialLine="92" containingFunctionPresentation="method 'Construct'">
             <startOffsets>
-              <option value="2653" />
+              <option value="2651" />
             </startOffsets>
             <endOffsets>
-              <option value="2654" />
+              <option value="2652" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="386" />
@@ -642,10 +632,10 @@
           <line>105</line>
           <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Presentation\UI\GameplayInterfaceView.cs" initialLine="105" containingFunctionPresentation="method 'OnSetCashScore'">
             <startOffsets>
-              <option value="2834" />
+              <option value="2832" />
             </startOffsets>
             <endOffsets>
-              <option value="2864" />
+              <option value="2862" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="387" />
@@ -655,13 +645,26 @@
           <line>148</line>
           <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Presentation\UI\GameplayInterfaceView.cs" initialLine="148" containingFunctionPresentation="method 'SetCashScoreValue'">
             <startOffsets>
-              <option value="4015" />
+              <option value="4011" />
             </startOffsets>
             <endOffsets>
-              <option value="4037" />
+              <option value="4033" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="388" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Sources/Presentation/UI/GameplayInterfaceView.cs</url>
+          <line>73</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Presentation\UI\GameplayInterfaceView.cs" initialLine="73" containingFunctionPresentation="method 'Construct'">
+            <startOffsets>
+              <option value="2250" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2311" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="389" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -19,7 +19,7 @@ namespace Sources.Infrastructure.Factories.Presenters
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 
-		private IGameStateChanger StateMachine => _stateMachineProvider.Instance;
+		private IGameStateChanger StateMachine => _stateMachineProvider.Implementation;
 
 		[Inject]
 		public MainMenuPresenterFactory(
