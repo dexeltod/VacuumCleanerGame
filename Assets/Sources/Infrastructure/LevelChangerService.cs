@@ -1,7 +1,6 @@
 using System;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
-using Sources.InfrastructureInterfaces.Presenters;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.InfrastructureInterfaces.States;
@@ -18,7 +17,7 @@ namespace Sources.Infrastructure
 		private readonly ILevelProgressFacade _levelProgressFacade;
 		private readonly IGameStateChangerProvider _gameStateChangerProvider;
 		private readonly ILevelConfigGetter _levelConfigGetter;
-		private readonly IResourcesProgressPresenter _progressPresenter;
+		private readonly IResourcesProgressPresenterProvider _progressPresenter;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IAdvertisement _rewardService;
 
@@ -31,7 +30,7 @@ namespace Sources.Infrastructure
 			ILevelProgressFacade levelProgressFacade,
 			IGameStateChangerProvider gameStateMachine,
 			ILevelConfigGetter levelConfigGetter,
-			IResourcesProgressPresenter progressPresenter,
+			IResourcesProgressPresenterProvider progressPresenter,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			IAdvertisement advertisement
 		)
@@ -64,7 +63,7 @@ namespace Sources.Infrastructure
 		private async void OnRewarded()
 		{
 			_levelProgressFacade.SetNextLevel();
-			_progressPresenter.ClearScores();
+			_progressPresenter.Implementation.ClearScores();
 
 			await _progressSaveLoadDataService.SaveToCloud();
 

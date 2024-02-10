@@ -22,6 +22,8 @@ namespace Sources.Application
 		private readonly ISaveLoader _saveLoader;
 		private readonly IGameStateChangerProvider _gameStateChangerProvider;
 		private readonly IGameStateChangerFactory _gameStateChangerFactory;
+		private readonly ResourcePathConfigServiceFactory _resourcePathConfigServiceFactory;
+		private readonly ResourcePathConfigProvider _pathConfigProvider;
 		private readonly IYandexSDKController _yandexSDKController;
 
 		[Inject]
@@ -30,7 +32,9 @@ namespace Sources.Application
 			ProgressFactory progressFactory,
 			ISaveLoader saveLoader,
 			IGameStateChangerProvider gameStateChangerProvider,
-			IGameStateChangerFactory gameStateChangerFactory
+			IGameStateChangerFactory gameStateChangerFactory,
+			ResourcePathConfigServiceFactory resourcePathConfigServiceFactory,
+			ResourcePathConfigProvider pathConfigProvider
 
 #if YANDEX_CODE
 			, IYandexSDKController yandexSDKController
@@ -44,6 +48,9 @@ namespace Sources.Application
 				throw new ArgumentNullException(nameof(gameStateChangerProvider));
 			_gameStateChangerFactory = gameStateChangerFactory ??
 				throw new ArgumentNullException(nameof(gameStateChangerFactory));
+			_resourcePathConfigServiceFactory = resourcePathConfigServiceFactory ??
+				throw new ArgumentNullException(nameof(resourcePathConfigServiceFactory));
+			_pathConfigProvider = pathConfigProvider ?? throw new ArgumentNullException(nameof(pathConfigProvider));
 
 #if YANDEX_CODE
 			_yandexSDKController = yandexSDKController ?? throw new ArgumentNullException(nameof(yandexSDKController));
@@ -63,6 +70,7 @@ namespace Sources.Application
 			_yandexSDKController.SetStatusInitialized();
 #endif
 
+			_pathConfigProvider.Register(_resourcePathConfigServiceFactory.Create());
 			_gameStateChangerProvider.Register(_gameStateChangerFactory.Create());
 
 			_gameStateChanger.Implementation.Enter<MenuState>();

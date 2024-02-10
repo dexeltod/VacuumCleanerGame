@@ -18,7 +18,7 @@ namespace Sources.Infrastructure.Factories.Player
 		private bool _isMove = true;
 		private AnimationHasher _animationHasher;
 		private ParticleSystem _particleSystem;
-		private MeshDeformationPresenter _meshDeformationPresenter;
+		private MeshDeformationController _meshDeformationController;
 
 		public void Initialize(
 			Transformable model,

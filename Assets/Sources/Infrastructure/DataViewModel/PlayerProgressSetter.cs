@@ -6,7 +6,7 @@ using VContainer;
 
 namespace Sources.Infrastructure.DataViewModel
 {
-	public class PlayerProgressProvider : IPlayerProgressProvider
+	public class PlayerProgressSetter : IPlayerProgressProvider
 	{
 		private const int OnePoint = 1;
 
@@ -16,7 +16,7 @@ namespace Sources.Infrastructure.DataViewModel
 		private IGameProgress PlayerProgress => _progressService.GameProgress.PlayerProgress;
 
 		[Inject]
-		public PlayerProgressProvider(IPlayerStatsService playerStats, IPersistentProgressService progressService)
+		public PlayerProgressSetter(IPlayerStatsService playerStats, IPersistentProgressService progressService)
 		{
 			_playerStats = playerStats ?? throw new ArgumentNullException(nameof(playerStats));
 			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));

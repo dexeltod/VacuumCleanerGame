@@ -19,7 +19,6 @@ namespace Sources.PresentationInterfaces
 			int maxCashScore,
 			int maxGlobalScore,
 			int moneyCount,
-			IResourceProgressEventHandler resourceProgressEventHandler,
 			bool isActiveOnStart
 		);
 

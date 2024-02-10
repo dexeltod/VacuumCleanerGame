@@ -7,6 +7,7 @@ using Sources.ServicesInterfaces;
 using Sources.Utils;
 using Sources.Utils.Configs.Scripts;
 using UnityEngine;
+using VContainer;
 
 namespace Sources.Infrastructure.Factories.Player
 {
@@ -14,6 +15,7 @@ namespace Sources.Infrastructure.Factories.Player
 	{
 		private readonly AnimationHasher _hasher;
 		private readonly IAssetFactory _assetFactory;
+		private readonly IObjectResolver _objectResolver;
 
 		private Joystick _joystick;
 		private Animator _animator;
@@ -23,42 +25,36 @@ namespace Sources.Infrastructure.Factories.Player
 
 		public GameObject Player { get; private set; }
 
-		public PlayerFactory(IAssetFactory assetFactory) =>
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
-
-		public GameObject Create(
-			GameObject initialPoint,
-			Joystick joystick,
-			IPlayerStatsService stats,
-			Action onErrorCallback = null
-		)
+		[Inject]
+		public PlayerFactory(IAssetFactory assetFactory, IObjectResolver objectResolver)
 		{
-			if (initialPoint == null) throw new ArgumentNullException(nameof(initialPoint));
-			if (joystick == null) throw new ArgumentNullException(nameof(joystick));
-			if (stats == null) throw new ArgumentNullException(nameof(stats));
-
-			try
-			{
-				_playerStats = stats;
-				_joystick = joystick;
-				return Create(initialPoint);
-			}
-			catch (Exception)
-			{
-				onErrorCallback?.Invoke();
-			}
-
-			throw new NullReferenceException("GameObject is null");
+			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_objectResolver = objectResolver ?? throw new ArgumentNullException(nameof(objectResolver));
 		}
 
-		private GameObject Create(GameObject initialPoint)
+		public GameObject Create(
+			GameObject spawnPoint,
+			Joystick joystick,
+			IPlayerStatsService stats
+		)
+		{
+			if (spawnPoint == null) throw new ArgumentNullException(nameof(spawnPoint));
+			_joystick = joystick ? joystick : throw new ArgumentNullException(nameof(joystick));
+			_playerStats = stats ?? throw new ArgumentNullException(nameof(stats));
+
+			return Create(spawnPoint);
+		}
+
+		private GameObject Create(GameObject spawnPoint)
 		{
 			AnimationHasher animationHasher = new AnimationHasher();
 
 			PlayerBody playerBodyPresenter = _assetFactory.InstantiateAndGetComponent<PlayerBody>(
 				ResourcesAssetPath.Scene.Player,
-				initialPoint.transform.position
+				spawnPoint.transform.position
 			);
+
+			_objectResolver.Inject(playerBodyPresenter);
 
 			GameObject character = playerBodyPresenter.gameObject;
 			Player = character;

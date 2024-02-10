@@ -24,6 +24,15 @@ namespace Sources.Services.Providers
 			return gameObject;
 		}
 
+		public GameObject Instantiate(GameObject gameObject)
+		{
+			GameObject instantiated = Object.Instantiate(gameObject);
+
+			_objectResolver.InjectGameObject(instantiated);
+
+			return instantiated;
+		}
+
 		public T LoadComponent<T>(string path)
 		{
 			GameObject @object = Resources.Load<GameObject>(path) ?? throw new ArgumentNullException(path);
@@ -40,6 +49,14 @@ namespace Sources.Services.Providers
 			_objectResolver.InjectGameObject(@object.gameObject);
 			CheckPathException(path, @object);
 			return @object;
+		}
+
+		public T InstantiateAndGetComponent<T>(GameObject gameObject) where T : Behaviour
+		{
+			T component = Object.Instantiate(gameObject).GetComponent<T>();
+
+			_objectResolver.InjectGameObject(component.gameObject);
+			return component;
 		}
 
 		public T InstantiateAndGetComponent<T>(string path, Vector3 position) where T : Behaviour

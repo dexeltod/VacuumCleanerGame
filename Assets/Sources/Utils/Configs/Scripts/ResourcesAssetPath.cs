@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Sources.Utils.Configs.Scripts
 {
 	public static class ResourcesAssetPath

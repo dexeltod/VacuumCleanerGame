@@ -4,14 +4,13 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
-using Sources.InfrastructureInterfaces.Presenters;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces.DTO;
 using Sources.ServicesInterfaces.Upgrade;
 
 namespace Sources.Controllers
 {
-	public class ShopPurchasePresenter : Presenter, IShopPurchasePresenter
+	public sealed class ShopPurchasePresenter : Presenter, IShopPurchasePresenter
 	{
 		private const int Point = 1;
 

@@ -11,5 +11,7 @@ namespace Sources.ServicesInterfaces
 		GameObject Instantiate(GameObject instanceObject, Vector3 position);
 		T InstantiateAndGetComponent<T>(string path) where T : Behaviour;
 		T InstantiateAndGetComponent<T>(string path, Vector3 position) where T : Behaviour;
+		GameObject Instantiate(GameObject gameObject);
+		T InstantiateAndGetComponent<T>(GameObject gameObject) where T : Behaviour;
 	}
 }

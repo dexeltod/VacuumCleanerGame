@@ -17,7 +17,7 @@ namespace Sources.Presentation.UI
 		IGameplayInterfaceView
 
 	{
-		private const float MaxFillAmount = 1f;
+		private const float MaxNormilizeThreshold = 1f;
 
 		[FormerlySerializedAs("_phrasesTranslator")] [SerializeField]
 		private TmpPhrases _phrases;
@@ -34,7 +34,6 @@ namespace Sources.Presentation.UI
 
 		[SerializeField] private Image _globalScoreImage;
 
-		private IResourceProgressEventHandler _resourceProgressEventHandler;
 		private Canvas _canvas;
 
 		private int _cashScore;
@@ -56,12 +55,11 @@ namespace Sources.Presentation.UI
 			int maxCashScore,
 			int maxGlobalScore,
 			int moneyCount,
-			IResourceProgressEventHandler resourceProgressEventHandler,
 			bool isActiveOnStart
 		)
 		{
-			if (resourceProgressEventHandler == null)
-				throw new ArgumentNullException(nameof(resourceProgressEventHandler));
+			if (gameplayInterfacePresenter == null) throw new ArgumentNullException(nameof(gameplayInterfacePresenter));
+
 			if (startCashScore < 0) throw new ArgumentOutOfRangeException(nameof(startCashScore));
 			if (maxCashScore < 0) throw new ArgumentOutOfRangeException(nameof(maxCashScore));
 			if (maxGlobalScore < 0) throw new ArgumentOutOfRangeException(nameof(maxGlobalScore));
@@ -70,8 +68,6 @@ namespace Sources.Presentation.UI
 				return;
 
 			base.Construct(gameplayInterfacePresenter);
-
-			_resourceProgressEventHandler = resourceProgressEventHandler;
 
 			_goToNextLevelButton.gameObject.SetActive(false);
 
@@ -83,7 +79,7 @@ namespace Sources.Presentation.UI
 
 			_maxCashScore = maxCashScore;
 			SetCashScoreText(startCashScore);
-			enabled = true;
+			enabled = isActiveOnStart;
 
 			SetMaxGlobalScore(maxGlobalScore);
 
@@ -92,14 +88,14 @@ namespace Sources.Presentation.UI
 			_isInitialized = true;
 		}
 
-		public void Dispose()
-		{
+		public void Dispose() =>
 			Unsubscribe();
-			GC.SuppressFinalize(this);
-		}
 
 		private void OnDestroy() =>
 			Unsubscribe();
+
+		public void SetActiveGoToNextLevelButton(bool isActive) =>
+			_goToNextLevelButton.gameObject.SetActive(isActive);
 
 		public void SetCashScore(int newScore)
 		{
@@ -113,7 +109,7 @@ namespace Sources.Presentation.UI
 			_globalScore = newScore;
 
 			_globalScoreImage.fillAmount = NormalizeValue(
-				MaxFillAmount,
+				MaxNormilizeThreshold,
 				_globalScore,
 				_maxGlobalScore
 			);
@@ -127,9 +123,6 @@ namespace Sources.Presentation.UI
 			_maxCashScore = newScore;
 			_maxGlobalScoreText.SetText($"{_maxCashScore}");
 		}
-
-		public void SetActiveGoToNextLevelButton(bool isActive) =>
-			_goToNextLevelButton.gameObject.SetActive(isActive);
 
 		public void SetMaxGlobalScore(int newMaxScore)
 		{
@@ -149,7 +142,7 @@ namespace Sources.Presentation.UI
 			_cashScore = newScore;
 
 			float value = NormalizeValue(
-				MaxFillAmount,
+				MaxNormilizeThreshold,
 				_cashScore,
 				_maxCashScore
 			);

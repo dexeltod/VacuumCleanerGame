@@ -13,6 +13,7 @@ using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Domain;
 using Sources.Infrastructure.Factories.LeaderBoard;
 using Sources.Infrastructure.Factories.Player;
+using Sources.Infrastructure.Factories.Presenters;
 using Sources.Infrastructure.Factories.Scene;
 using Sources.Infrastructure.Factories.UI;
 using Sources.Infrastructure.Factories.UpgradeShop;
@@ -61,26 +62,59 @@ namespace Sources.Application.Bootstrapp
 
 #region Providers
 
-			_builder.Register<SandContainerPresenterProvider>(Lifetime.Singleton);
+		
+			
+			_builder.Register<SandCarContainerViewProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<GameStateChangerProvider>(Lifetime.Singleton).AsImplementedInterfaces();
-			_builder.Register<GameplayInterfaceProvider>(Lifetime.Singleton);
-			_builder.Register<MeshPresenterProvider>(Lifetime.Singleton);
+			_builder.Register<GameplayInterfaceProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+			_builder.Register<GameplayInterfacePresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+			
 			_builder.Register<UpgradeWindowPresenterProvider>(Lifetime.Singleton);
-			_builder.Register<IPlayerProgressProvider, PlayerProgressProvider>(Lifetime.Singleton);
+			_builder.Register<IPlayerProgressProvider, PlayerProgressSetter>(Lifetime.Singleton);
 			_builder.Register<IShopProgressProvider, ShopProgressProvider>(Lifetime.Singleton);
-			_builder.Register<ResourcesProgressPresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces();
+			_builder.Register<ResourcesProgressPresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces()
+				.AsSelf();
+			_builder.Register<ResourcePathConfigProvider>(Lifetime.Singleton);
+
+#endregion
+
+#region Factories
+
+			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Scoped);
+			_builder.Register<IPresentableFactory<IUpgradeWindow, IUpgradeWindowPresenter>, UpgradeWindowViewFactory>(
+				Lifetime.Scoped
+			).AsImplementedInterfaces();
+			_builder.Register<ICameraFactory, CameraFactory>(Lifetime.Scoped);
+			_builder.Register<ShopElementFactory>(Lifetime.Scoped);
+
+			_builder.Register<SaveLoaderFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
+			_builder.Register<CoroutineRunnerFactory>(Lifetime.Scoped);
+			_builder.Register<Coroutine>(Lifetime.Scoped);
+			_builder.Register<LoadingCurtainFactory>(Lifetime.Scoped);
+			_builder.Register<InitialProgressFactory>(Lifetime.Scoped);
+			_builder.Register<GameplayInterfacePresenterFactory>(Lifetime.Scoped);
+			_builder.Register<GameStatesRepositoryFactory>(Lifetime.Scoped);
+			_builder.Register<GameStateContainerFactory>(Lifetime.Scoped);
+			_builder.Register<IProgressUpgradeFactory, ProgressUpgradeFactory>(Lifetime.Scoped);
+			_builder.Register<GameStateChangerFactory>(Lifetime.Scoped).AsImplementedInterfaces();
+			_builder.Register<ProgressFactory>(Lifetime.Scoped);
+			_builder.Register<PlayerStatsFactory>(Lifetime.Scoped);
+
+			_builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Singleton);
+			_builder.Register<IAssetFactory, AssetFactory>(Lifetime.Singleton);
+
+			_builder.Register<ResourcesProgressPresenterFactory>(Lifetime.Singleton);
+			_builder.Register<ICoroutineRunnerProvider, CoroutineRunnerProvider>(Lifetime.Singleton).AsSelf();
 
 #endregion
 
 #region BaseServices
 
+			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Singleton);
 			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
 			_builder.Register<ITranslatorService, PhraseTranslatorService>(Lifetime.Singleton);
 
-			_builder.Register<IAssetFactory, AssetFactory>(Lifetime.Singleton);
-
 			RegisterLoadingCurtain();
-			RegisterCoroutineRunner();
 
 #region States
 
@@ -91,11 +125,6 @@ namespace Sources.Application.Bootstrapp
 #endregion
 
 #region StateMachine
-
-			_builder.Register<GameStatesRepositoryFactory>(Lifetime.Scoped);
-			_builder.Register<GameStateContainerFactory>(Lifetime.Scoped);
-
-			_builder.Register<GameStateChangerFactory>(Lifetime.Scoped).AsImplementedInterfaces();
 
 #endregion
 
@@ -110,7 +139,7 @@ namespace Sources.Application.Bootstrapp
 			InitializeLeaderBoardService(_builder);
 
 			_builder.Register<ILevelChangerService, LevelChangerService>(Lifetime.Singleton);
-			_builder.Register<IProgressUpgradeFactory, ProgressUpgradeFactory>(Lifetime.Scoped);
+
 			_builder.Register<IProgressSaveLoadDataService, ProgressSaveLoadDataService>(Lifetime.Singleton);
 
 			RegisterCloudSavers();
@@ -119,11 +148,8 @@ namespace Sources.Application.Bootstrapp
 
 			CreateResourceService();
 
-			_builder.Register<ProgressFactory>(Lifetime.Scoped);
-
 #region Progress
 
-			_builder.Register<InitialProgressFactory>(Lifetime.Scoped);
 			_builder.Register<PersistentProgressService>(
 					container =>
 					{
@@ -145,7 +171,6 @@ namespace Sources.Application.Bootstrapp
 
 #region InitializeProgressServices
 
-			_builder.Register<PlayerStatsFactory>(Lifetime.Scoped);
 			_builder.Register(
 				container => container.Resolve<PlayerStatsFactory>()
 					.CreatePlayerStats(container.Resolve<IPersistentProgressService>()),
@@ -153,21 +178,13 @@ namespace Sources.Application.Bootstrapp
 			).AsImplementedInterfaces().AsSelf();
 
 			_builder.Register<ILevelConfigGetter, LevelConfigGetter>(Lifetime.Singleton);
-			_builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Singleton);
+
 			_builder.Register<ILevelProgressFacade, LevelProgressFacade>(Lifetime.Singleton);
 			RegisterAdvertisement();
 
 #endregion
 
-			_builder.Register<IUIFactory, UIFactory>(Lifetime.Scoped);
-
-			_builder.Register<IPresentableFactory<IUpgradeWindow, IUpgradeWindowPresenter>, UpgradeWindowViewFactory>(
-				Lifetime.Scoped
-			).AsImplementedInterfaces();
-
-			_builder.Register<ICameraFactory, CameraFactory>(Lifetime.Scoped);
 			_builder.Register<IRegisterWindowLoader, RegisterWindowLoader>(Lifetime.Singleton);
-			_builder.Register<ShopElementFactory>(Lifetime.Scoped);
 
 			_builder.RegisterEntryPointExceptionHandler(
 				exception => Debug.LogError(exception.Message)
@@ -185,7 +202,6 @@ namespace Sources.Application.Bootstrapp
 
 		private void RegisterSaveLoader()
 		{
-			_builder.Register<SaveLoaderFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
 			_builder.Register(
 				container =>
 				{
@@ -215,12 +231,8 @@ namespace Sources.Application.Bootstrapp
 			);
 		}
 
-		private void RegisterCoroutineRunner() =>
-			_builder.Register<CoroutineRunnerFactory>(Lifetime.Scoped);
-
 		private void RegisterLoadingCurtain()
 		{
-			_builder.Register<LoadingCurtainFactory>(Lifetime.Scoped);
 			_builder.Register(
 				container =>
 				{

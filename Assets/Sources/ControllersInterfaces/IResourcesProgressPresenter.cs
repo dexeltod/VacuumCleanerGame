@@ -1,8 +1,7 @@
 using Sources.ControllersInterfaces.Common;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.ServicesInterfaces;
 
-namespace Sources.InfrastructureInterfaces.Presenters
+namespace Sources.ControllersInterfaces
 {
 	public interface IResourcesProgressPresenter : IPresenter
 	{

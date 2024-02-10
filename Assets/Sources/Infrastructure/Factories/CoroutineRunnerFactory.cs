@@ -1,5 +1,4 @@
 using System;
-using Sources.Infrastructure.Factories.Coroutine;
 using Sources.ServicesInterfaces;
 using Sources.UseCases.Scene;
 using Sources.Utils.Configs.Scripts;
@@ -18,6 +17,6 @@ namespace Sources.Infrastructure.Factories
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 
 		public ICoroutineRunner Create() =>
-			_assetFactory.InstantiateAndGetComponent<CoroutineRunner>(CoroutineRunnerPath);
+			_assetFactory.InstantiateAndGetComponent<CoroutineRunner.CoroutineRunner>(CoroutineRunnerPath);
 	}
 }

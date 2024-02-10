@@ -3,8 +3,8 @@ using Sources.ServicesInterfaces;
 
 namespace Sources.InfrastructureInterfaces.Factory
 {
-	public interface IUIFactory
-	{
-		IGameplayInterfaceView Create();
-	}
+	// public interface IUIFactory
+	// {
+	// 	GameplayInterfacePresenter Create();
+	// }
 }

@@ -1,22 +1,29 @@
 using System;
 using Sources.Controllers.Common;
+using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.InfrastructureInterfaces.Presenters;
+using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using UnityEngine;
 
 namespace Sources.Controllers
 {
-	public class ResourcesProgressPresenter : Presenter, IResourcesProgressPresenter, IResourceProgressEventHandler
+	public class ResourcesProgressPresenter : Presenter, IResourcesProgressPresenter
 	{
+		private const float NormalizeThreshold = 1;
+
 		private readonly IResourcesModel _resourcesData;
-		private readonly IGameplayInterfaceView _gameplayInterfaceView;
+		private readonly ISandContainerViewProvider _sandContainerViewProvider;
+		private readonly IGameplayInterfaceProvider _gameplayInterfaceView;
 
 		private int _increasedDelta;
 
 		public IResourceReadOnly<int> SoftCurrency => _resourcesData.SoftCurrency;
+
+		public IGameplayInterfaceView GameplayInterface => _gameplayInterfaceView.GetContract<IGameplayInterfaceView>();
+		public ISandContainerView SandContainerView => _sandContainerViewProvider.Implementation;
 
 		public int GlobalScore { get; private set; }
 
@@ -24,17 +31,18 @@ namespace Sources.Controllers
 		private bool IsHalfScore => IsHalfScoreReached();
 		public bool IsMaxScoreReached => CheckMaxScore();
 
-		public event Action<int> CashScoreChanged;
-
 		public ResourcesProgressPresenter(
-			IGameplayInterfaceView gameplayInterfaceView,
-			IResourcesModel persistentProgressService
+			IGameplayInterfaceProvider gameplayInterfaceView,
+			IResourcesModel persistentProgressService,
+			ISandContainerViewProvider sandCarContainerViewProvider
 		)
 		{
 			_gameplayInterfaceView
 				= gameplayInterfaceView ?? throw new ArgumentNullException(nameof(gameplayInterfaceView));
 			_resourcesData = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
+			_sandContainerViewProvider = sandCarContainerViewProvider ??
+				throw new ArgumentNullException(nameof(sandCarContainerViewProvider));
 		}
 
 		public void ClearScores()
@@ -54,7 +62,8 @@ namespace Sources.Controllers
 
 			int score = Mathf.Clamp(newScore, 0, _resourcesData.MaxCashScore);
 
-			int lastCashScore = AddCashScoreInData(score);
+			int lastCashScore = _resourcesData.CurrentCashScore;
+			_resourcesData.AddCashScore(score);
 
 			if (lastCashScore != _resourcesData.CurrentCashScore)
 				OnCashScoreChanged();
@@ -70,20 +79,13 @@ namespace Sources.Controllers
 			return true;
 		}
 
-		private int AddCashScoreInData(int score)
-		{
-			int lastCashScore = _resourcesData.CurrentCashScore;
-			_resourcesData.AddCashScore(score);
-			return lastCashScore;
-		}
-
 		private void OnGlobalScoreChanged() =>
-			_gameplayInterfaceView.SetGlobalScore(GlobalScore);
+			GameplayInterface.SetGlobalScore(GlobalScore);
 
 		private void OnHalfScoreReached()
 		{
 			if (IsHalfScore == true)
-				_gameplayInterfaceView.SetActiveGoToNextLevelButton(true);
+				GameplayInterface.SetActiveGoToNextLevelButton(true);
 		}
 
 		public void SellSand()
@@ -130,19 +132,22 @@ namespace Sources.Controllers
 		}
 
 		private void OnMoneyChanged() =>
-			_gameplayInterfaceView.SetSoftCurrency(SoftCurrency.Count);
+			GameplayInterface.SetSoftCurrency(SoftCurrency.Count);
 
 		private void OnCashScoreChanged()
 		{
-			_gameplayInterfaceView.SetCashScore(_resourcesData.CurrentCashScore);
-			CashScoreChanged!.Invoke(_resourcesData.CurrentCashScore);
+			GameplayInterface.SetCashScore(_resourcesData.CurrentCashScore);
+			SandContainerView.SetSand(NormalizeCashScore());
 		}
 
 		private bool IsHalfScoreReached()
 		{
-			int halfScore = _resourcesData.MaxCashScore / 2;
+			int halfScore = _resourcesData.MaxGlobalScore / 2;
 
 			return _resourcesData.Score.Count >= halfScore;
 		}
+
+		private float NormalizeCashScore() =>
+			NormalizeThreshold / _resourcesData.MaxCashScore * _resourcesData.CurrentCashScore;
 	}
 }
