@@ -44,7 +44,7 @@ namespace Sources.Presentation.SceneEntity
 		{
 			if (ResourcesProgressPresenter.IsMaxScoreReached == false)
 				return;
-
+		
 			if (collision.collider.TryGetComponent(out VacuumTool _))
 			{
 				Collision = collision;

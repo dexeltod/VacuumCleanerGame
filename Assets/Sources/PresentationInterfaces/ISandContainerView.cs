@@ -3,5 +3,6 @@ namespace Sources.PresentationInterfaces
 	public interface ISandContainerView
 	{
 		void SetSand(float normalizedCount);
+		void SetEnableSand(bool isEnabled);
 	}
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Sources.Controllers.Mesh
 {
-	public class MeshDeformationController : IMeshDeformationPresenter, IDisposable
+	public class MeshDeformationController : IMeshDeformationController, IDisposable
 	{
 		private readonly IMeshModifiable _meshModifiable;
 		private readonly IResourcesProgressPresenter _resourceMaxScore;
@@ -60,6 +60,7 @@ namespace Sources.Controllers.Mesh
 			_meshModifiable.Mesh.vertices = vertices;
 			_meshModifiable.Mesh.RecalculateNormals();
 			_meshModifiable.Mesh.RecalculateBounds();
+
 			_meshModifiable.GetMeshCollider().sharedMesh = _meshModifiable.Mesh;
 		}
 	}

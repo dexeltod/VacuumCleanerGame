@@ -2,7 +2,7 @@ using System;
 
 namespace Sources.ControllersInterfaces
 {
-	public interface IMeshDeformationPresenter
+	public interface IMeshDeformationController
 	{
 	
 	}

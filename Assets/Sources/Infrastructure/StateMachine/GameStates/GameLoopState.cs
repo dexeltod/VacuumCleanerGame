@@ -1,7 +1,10 @@
 using System;
+using Sources.Controllers;
+using Sources.ControllersInterfaces;
 using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.States.StateMachineInterfaces;
+using Sources.Presentation.Player;
 using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
@@ -17,9 +20,14 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly UpgradeWindowPresenterProvider _upgradeWindowPresenterProvider;
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
 		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
+		private readonly ShaderViewControllerProvider _shaderViewControllerProvider;
 		private readonly LoadingCurtain _loadingCurtain;
 
 		private IGameplayInterfaceView GameplayInterface => _gameplayInterfaceProvider.Implementation;
+		private ShaderViewController ShaderViewController => _shaderViewControllerProvider.Implementation;
+
+		private IResourcesProgressPresenter ResourcesProgressPresenter =>
+			_resourcesProgressPresenterProvider.Implementation;
 
 		[Inject]
 		public GameLoopState(
@@ -28,7 +36,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			ILocalizationService localizationService,
 			UpgradeWindowPresenterProvider upgradeWindowPresenterProvider,
 			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
-			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider
+			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
+			ShaderViewControllerProvider shaderViewControllerProvider
 		)
 		{
 			_gameplayInterfaceProvider = gameplayInterfaceProvider ??
@@ -37,11 +46,13 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			_upgradeWindowPresenterProvider
 				= upgradeWindowPresenterProvider ??
 				throw new ArgumentNullException(nameof(upgradeWindowPresenterProvider));
-			
+
 			_gameplayInterfacePresenterProvider = gameplayInterfacePresenterProvider ??
 				throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
 			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ??
 				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
+			_shaderViewControllerProvider = shaderViewControllerProvider ??
+				throw new ArgumentNullException(nameof(shaderViewControllerProvider));
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
@@ -57,7 +68,10 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			_upgradeWindowPresenterProvider.Implementation.Enable();
 			_gameplayInterfacePresenterProvider.Implementation.Enable();
 			_resourcesProgressPresenterProvider.Implementation.Enable();
+			ResourcesProgressPresenter.Enable();
 			_loadingCurtain.HideSlowly();
+
+			ShaderViewController.StartDissolving();
 		}
 
 		public void Exit()
@@ -67,6 +81,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			_upgradeWindowPresenterProvider.Implementation.Disable();
 			_gameplayInterfacePresenterProvider.Implementation.Disable();
 			_resourcesProgressPresenterProvider.Implementation.Disable();
+			ResourcesProgressPresenter.Disable();
 			_loadingCurtain.Show();
 		}
 	}

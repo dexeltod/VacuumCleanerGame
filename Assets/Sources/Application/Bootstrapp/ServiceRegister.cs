@@ -71,6 +71,7 @@ namespace Sources.Application.Bootstrapp
 			
 			_builder.Register<UpgradeWindowPresenterProvider>(Lifetime.Singleton);
 			_builder.Register<IPlayerProgressProvider, PlayerProgressSetter>(Lifetime.Singleton);
+			_builder.Register<ShaderViewControllerProvider>(Lifetime.Singleton);
 			_builder.Register<IShopProgressProvider, ShopProgressProvider>(Lifetime.Singleton);
 			_builder.Register<ResourcesProgressPresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces()
 				.AsSelf();

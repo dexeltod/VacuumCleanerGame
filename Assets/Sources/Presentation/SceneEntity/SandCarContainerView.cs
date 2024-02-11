@@ -1,6 +1,7 @@
 using System;
 using Sources.PresentationInterfaces;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 namespace Sources.Presentation.SceneEntity
 {
@@ -18,14 +19,23 @@ namespace Sources.Presentation.SceneEntity
 
 		[SerializeField] private bool _isDebug;
 
+		private float _normalizedCount = 0;
+
 		private void OnValidate()
 		{
 			if (_isDebug)
 				SetSand(_sandValueSliderTest);
 		}
 
+		public void SetEnableSand(bool isEnabled) =>
+			_sand.gameObject.SetActive(isEnabled);
+
 		public void SetSand(float normalizedCount)
 		{
+			_sand.gameObject.SetActive(_normalizedCount > 0);
+
+			_normalizedCount = normalizedCount;
+
 			if (normalizedCount < 0 || normalizedCount > 1)
 				throw new ArgumentOutOfRangeException(nameof(normalizedCount));
 

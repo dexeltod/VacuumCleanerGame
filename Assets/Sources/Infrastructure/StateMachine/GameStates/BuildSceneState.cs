@@ -14,6 +14,7 @@ using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.InfrastructureInterfaces.States;
+using Sources.Presentation.Player;
 using Sources.Presentation.SceneEntity;
 using Sources.Presentation.UI;
 using Sources.PresentationInterfaces;
@@ -50,6 +51,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
 		private readonly ISceneLoader _sceneLoader;
 		private readonly SandCarContainerViewProvider _sandCarContainerViewProvider;
+		private readonly ShaderViewControllerProvider _shaderViewControllerProvider;
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly ILevelProgressFacade _levelProgressFacade;
 
@@ -87,7 +89,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			ResourcePathConfigProvider resourcePathConfigProvider,
 			ICoroutineRunnerProvider coroutineRunnerProvider,
 			ISceneLoader sceneLoader,
-			SandCarContainerViewProvider sandCarContainerViewProvider
+			SandCarContainerViewProvider sandCarContainerViewProvider,
+			ShaderViewControllerProvider shaderViewControllerProvider
 
 #endregion
 
@@ -129,6 +132,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			_sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
 			_sandCarContainerViewProvider = sandCarContainerViewProvider ??
 				throw new ArgumentNullException(nameof(sandCarContainerViewProvider));
+			_shaderViewControllerProvider = shaderViewControllerProvider ??
+				throw new ArgumentNullException(nameof(shaderViewControllerProvider));
 
 #endregion
 		}
@@ -154,6 +159,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				_playerStats
 			);
 
+			RegisterShaderViewPresenterProvider(playerGameObject);
+
 			ResourcesProgressPresenter resourcesProgressPresenter = _resourcesProgressPresenterFactory.Create();
 			_resourcesProgressPresenterProvider.Register<IResourcesProgressPresenter>(resourcesProgressPresenter);
 
@@ -165,12 +172,22 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			RegisterUpgradeWindowPresenterProvider();
 
 			IMeshModifiable meshModifiable = new SandFactory(_assetFactory).Create();
-			IMeshDeformationPresenter presenter = new MeshDeformationController(
+			IMeshDeformationController controller = new MeshDeformationController(
 				meshModifiable,
 				resourcesProgressPresenter
 			);
 
 			_cameraFactory.CreateVirtualCamera();
+		}
+
+		private void RegisterShaderViewPresenterProvider(GameObject player)
+		{
+			var shaderView = player.GetComponent<IShaderView>();
+			var shaderViewController = new ShaderViewController(shaderView, _coroutineRunnerProvider);
+
+			shaderView.Construct(shaderViewController);
+
+			_shaderViewControllerProvider.Register<IShaderViewController>(shaderViewController);
 		}
 
 		private void RegisterUpgradeWindowPresenterProvider()

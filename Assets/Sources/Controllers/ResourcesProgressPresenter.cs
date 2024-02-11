@@ -45,6 +45,21 @@ namespace Sources.Controllers
 				throw new ArgumentNullException(nameof(sandCarContainerViewProvider));
 		}
 
+		public override void Enable()
+		{
+			base.Enable();
+			SetEnableSand();
+		}
+
+		public override void Disable()
+		{
+			base.Disable();
+			SetEnableSand();
+		}
+
+		private void SetEnableSand() =>
+			_sandContainerViewProvider.Implementation.SetEnableSand(_resourcesData.CurrentCashScore > 0);
+
 		public void ClearScores()
 		{
 			_resourcesData.ClearScores();
