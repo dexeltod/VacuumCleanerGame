@@ -6,6 +6,7 @@ using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.Presenters;
 using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Factory;
+using Sources.InfrastructureInterfaces.Providers;
 using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;
 using Sources.Services.Localization;
@@ -23,11 +24,11 @@ namespace Sources.Infrastructure.Factories.UI
 		private readonly ResourcesProgressPresenterProvider _resourceProgressPresenterProvider;
 		private readonly IProgressUpgradeFactory _progressUpgradeFactory;
 		private readonly IAssetFactory _assetFactory;
-		private readonly IShopProgressProvider _shopProgressProvider;
-		private readonly IPlayerProgressProvider _playerProgressProvider;
+		private readonly IShopProgressFacade _shopProgressFacade;
+		private readonly IPlayerProgressSetterFacadeProvider _playerProgressSetterFacade;
 		private readonly ITranslatorService _translatorService;
 		private readonly GameplayInterfaceProvider _gameplayInterfaceView;
-		private readonly IPersistentProgressService _persistentProgressService;
+		private readonly IPersistentProgressServiceProvider _persistentProgressService;
 		private readonly ShopElementFactory _shopElementFactory;
 
 		private List<UpgradeElementPrefabView> _upgradeElementsPrefabs;
@@ -40,9 +41,9 @@ namespace Sources.Infrastructure.Factories.UI
 			IAssetFactory assetFactory,
 			IProgressUpgradeFactory progressUpgradeFactory,
 			ResourcesProgressPresenterProvider resourceProgressPresenter,
-			IPersistentProgressService persistentProgressService,
-			IShopProgressProvider shopProgressProvider,
-			IPlayerProgressProvider playerProgressProvider,
+			IPersistentProgressServiceProvider persistentProgressService,
+			IShopProgressFacade shopProgressFacade,
+			IPlayerProgressSetterFacadeProvider playerProgressSetterFacade,
 			ITranslatorService translatorService,
 			GameplayInterfaceProvider gameplayInterfaceView,
 			ShopElementFactory shopElementFactory
@@ -53,10 +54,10 @@ namespace Sources.Infrastructure.Factories.UI
 				throw new ArgumentNullException(nameof(progressUpgradeFactory));
 			_resourceProgressPresenterProvider = resourceProgressPresenter ??
 				throw new ArgumentNullException(nameof(resourceProgressPresenter));
-			_shopProgressProvider
-				= shopProgressProvider ?? throw new ArgumentNullException(nameof(shopProgressProvider));
-			_playerProgressProvider = playerProgressProvider ??
-				throw new ArgumentNullException(nameof(playerProgressProvider));
+			_shopProgressFacade
+				= shopProgressFacade ?? throw new ArgumentNullException(nameof(shopProgressFacade));
+			_playerProgressSetterFacade = playerProgressSetterFacade ??
+				throw new ArgumentNullException(nameof(playerProgressSetterFacade));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 			_gameplayInterfaceView
 				= gameplayInterfaceView ?? throw new ArgumentNullException(nameof(gameplayInterfaceView));
@@ -67,14 +68,11 @@ namespace Sources.Infrastructure.Factories.UI
 		}
 
 		private string UIResourcesUpgradeWindow => ResourcesAssetPath.Scene.UIResources.UpgradeWindow;
-
 		private Transform UpgradeWindowContainerTransform => _upgradeWindow.ContainerTransform;
-
-		private IGameProgress ShopProgress => _persistentProgressService.GameProgress.ShopProgress;
-
 		private IGameplayInterfaceView GameplayInterface => _gameplayInterfaceView.Implementation;
 
-		private IResourcesProgressPresenter ResourcesProgressPresenter => _resourceProgressPresenterProvider.Implementation;
+		private IResourcesProgressPresenter ResourcesProgressPresenter =>
+			_resourceProgressPresenterProvider.Implementation;
 
 		private void Localize() =>
 			_upgradeWindow.Phrases = _translatorService.Localize(_upgradeWindow.Phrases);
@@ -84,19 +82,16 @@ namespace Sources.Infrastructure.Factories.UI
 			_upgradeWindow = _assetFactory.InstantiateAndGetComponent<UpgradeWindow>(UIResourcesUpgradeWindow);
 
 			Localize();
+			_shopElementFactory.Instantiate(UpgradeWindowContainerTransform);
 
-			IUpgradeItemData[] items = _progressUpgradeFactory.LoadItems();
-
-			List<UpgradeElementPrefabView> elements = _shopElementFactory.Instantiate(UpgradeWindowContainerTransform);
-
-			ShopPurchasePresenter presenter = new ShopPurchaseControllerFactory(
-				_assetFactory,
-				new List<IUpgradeElementPrefabView>(elements),
-				ResourcesProgressPresenter,
-				_shopProgressProvider,
-				_playerProgressProvider,
-				GameplayInterface
-			).Create();
+			// new ShopPurchaseControllerFactory(
+			// 	_assetFactory,
+			// 	new List<IUpgradeElementPrefabView>(elements),
+			// 	ResourcesProgressPresenter,
+			// 	_shopProgressFacade,
+			// 	_playerProgressSetterFacade,
+			// 	GameplayInterface
+			// ).Create();
 
 			return _upgradeWindow;
 		}

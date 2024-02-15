@@ -5,6 +5,7 @@ using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.GameObject;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.UseCases.Scene;
+using Sources.Utils;
 using UnityEngine;
 using VContainer;
 
@@ -15,16 +16,18 @@ namespace Sources.Services.Triggers
 		private IResourcesProgressPresenterProvider _progressPresenterProvider;
 		private ICoroutineRunnerProvider _coroutineRunnerProvider;
 		private Coroutine _coroutine;
-		private IPersistentProgressService _persistentProgressService;
+		private IPersistentProgressServiceProvider _persistentProgressService;
 		private ICoroutineRunner CoroutineRunner => _coroutineRunnerProvider.Implementation;
 		private IResourcesProgressPresenter ResourceProgress => _progressPresenterProvider.Implementation;
-		private int CurrentScore => _persistentProgressService.GameProgress.ResourcesModel.CurrentCashScore;
+
+		private int CurrentScore =>
+			_persistentProgressService.Implementation.GameProgress.ResourcesModel.CurrentCashScore;
 
 		[Inject]
 		private void Construct(
 			IResourcesProgressPresenterProvider progressPresenterProvider,
 			ICoroutineRunnerProvider coroutineRunner,
-			IPersistentProgressService persistentProgressService
+			IPersistentProgressServiceProvider persistentProgressService
 		)
 		{
 			_persistentProgressService = persistentProgressService ??

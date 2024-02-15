@@ -1,9 +1,11 @@
+using Sources.ControllersInterfaces;
 using Sources.Presentation.Common;
+using Sources.PresentationInterfaces;
 using UnityEngine;
 
 namespace Sources.Presentation.Player
 {
-	public class ShaderView : PresentableView<IShaderViewController>, IShaderView
+	public class DissolveDissolveShaderView : PresentableView<IDissolveShaderViewController>, IDissolveShaderView
 	{
 		[SerializeField] private Renderer[] _renderers;
 

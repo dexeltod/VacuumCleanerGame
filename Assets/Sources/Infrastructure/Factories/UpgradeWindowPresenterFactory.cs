@@ -4,7 +4,6 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Common.Factory.Decorators;
 using Sources.InfrastructureInterfaces.Factory;
-using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;
 using Sources.Services.Triggers;
 using Sources.ServicesInterfaces;

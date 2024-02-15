@@ -1,9 +1,6 @@
-
-using Sources.DomainInterfaces.DomainServicesInterfaces;
-
 namespace Sources.DomainInterfaces
 {
-	public interface IPersistentProgressService : IPersistentProgressServiceConstructable
+	public interface IPersistentProgressService
 	{
 		IGameProgressProvider GameProgress { get; }
 	}

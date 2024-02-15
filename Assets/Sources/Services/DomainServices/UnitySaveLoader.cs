@@ -6,6 +6,7 @@ using Sources.ApplicationServicesInterfaces;
 using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.InfrastructureInterfaces.Providers;
 using Unity.Services.CloudSave;
 using UnityEngine;
 
@@ -15,13 +16,13 @@ namespace Sources.Services.DomainServices
 	{
 		private const string GameProgressKey = "GameProgress";
 
-		private readonly IPersistentProgressService _progressService;
+		private readonly IPersistentProgressServiceProvider _progressService;
 		private readonly IUnityServicesController _unityServicesController;
 		private readonly ICloudSave _unityCloudSaveLoader;
 		private IUnityServicesController _controller;
 
 		public UnitySaveLoader(
-			IPersistentProgressService progressService,
+			IPersistentProgressServiceProvider progressService,
 			IUnityServicesController unityServicesController,
 			ICloudSave unityCloudSaveLoader
 		)
@@ -35,7 +36,7 @@ namespace Sources.Services.DomainServices
 
 		public async UniTask Save(IGameProgressProvider @object, Action succeededCallback)
 		{
-			GameProgressProvider provider = _progressService.GameProgress as GameProgressProvider;
+			GameProgressProvider provider = _progressService.Implementation.GameProgress as GameProgressProvider;
 			string json = JsonUtility.ToJson(provider);
 
 			await _unityCloudSaveLoader.Save(json);

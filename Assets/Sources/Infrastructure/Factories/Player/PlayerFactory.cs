@@ -2,6 +2,7 @@ using System;
 using Joystick_Pack.Scripts.Base;
 using Sources.Controllers;
 using Sources.InfrastructureInterfaces.Factory;
+using Sources.InfrastructureInterfaces.Providers;
 using Sources.Services.Facade;
 using Sources.ServicesInterfaces;
 using Sources.Utils;
@@ -16,31 +17,37 @@ namespace Sources.Infrastructure.Factories.Player
 		private readonly AnimationHasher _hasher;
 		private readonly IAssetFactory _assetFactory;
 		private readonly IObjectResolver _objectResolver;
+		private readonly IPlayerStatsServiceProvider _playerStatsServiceProvider;
 
 		private Joystick _joystick;
 		private Animator _animator;
 		private AnimationHasher _animationHasher;
 		private AnimatorFacade _animatorFacade;
-		private IPlayerStatsService _playerStats;
+
+		private IPlayerStatsService PlayerStatsService => _playerStatsServiceProvider.Implementation;
 
 		public GameObject Player { get; private set; }
 
 		[Inject]
-		public PlayerFactory(IAssetFactory assetFactory, IObjectResolver objectResolver)
+		public PlayerFactory(
+			IAssetFactory assetFactory,
+			IObjectResolver objectResolver,
+			IPlayerStatsServiceProvider playerStatsServiceProvider
+		)
 		{
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_objectResolver = objectResolver ?? throw new ArgumentNullException(nameof(objectResolver));
+			_playerStatsServiceProvider = playerStatsServiceProvider ??
+				throw new ArgumentNullException(nameof(playerStatsServiceProvider));
 		}
 
 		public GameObject Create(
 			GameObject spawnPoint,
-			Joystick joystick,
-			IPlayerStatsService stats
+			Joystick joystick
 		)
 		{
 			if (spawnPoint == null) throw new ArgumentNullException(nameof(spawnPoint));
 			_joystick = joystick ? joystick : throw new ArgumentNullException(nameof(joystick));
-			_playerStats = stats ?? throw new ArgumentNullException(nameof(stats));
 
 			return Create(spawnPoint);
 		}
@@ -49,23 +56,31 @@ namespace Sources.Infrastructure.Factories.Player
 		{
 			AnimationHasher animationHasher = new AnimationHasher();
 
-			PlayerBody playerBodyPresenter = _assetFactory.InstantiateAndGetComponent<PlayerBody>(
-				ResourcesAssetPath.Scene.Player,
-				spawnPoint.transform.position
-			);
+			PlayerBody playerBodyComponent = GetPlayerBodyComponent(spawnPoint);
 
-			_objectResolver.Inject(playerBodyPresenter);
+			_objectResolver.Inject(playerBodyComponent);
 
-			GameObject character = playerBodyPresenter.gameObject;
+			GameObject character = playerBodyComponent.gameObject;
 			Player = character;
-			Rigidbody rigidbody = Player.GetComponent<Rigidbody>();
+			Rigidbody body = Player.GetComponent<Rigidbody>();
 			Animator animator = Player.GetComponentInChildren<Animator>();
 
-			PlayerTransformable playerTransformable = new(Player.transform, _joystick, _playerStats);
-			playerBodyPresenter.Initialize(playerTransformable, rigidbody, animator, animationHasher);
-			playerBodyPresenter.gameObject.SetActive(true);
+			PlayerTransformable playerTransformable = new(
+				Player.transform,
+				_joystick,
+				PlayerStatsService
+			);
+
+			playerBodyComponent.Initialize(playerTransformable, body, animator, animationHasher);
+			playerBodyComponent.gameObject.SetActive(true);
 
 			return character;
 		}
+
+		private PlayerBody GetPlayerBodyComponent(GameObject spawnPoint) =>
+			_assetFactory.InstantiateAndGetComponent<PlayerBody>(
+				ResourcesAssetPath.Scene.Player,
+				spawnPoint.transform.position
+			);
 	}
 }

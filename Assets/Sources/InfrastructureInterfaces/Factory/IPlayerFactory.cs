@@ -1,6 +1,4 @@
-using System;
 using Joystick_Pack.Scripts.Base;
-using Sources.ServicesInterfaces;
 
 namespace Sources.InfrastructureInterfaces.Factory
 {
@@ -10,8 +8,7 @@ namespace Sources.InfrastructureInterfaces.Factory
 
 		UnityEngine.GameObject Create(
 			UnityEngine.GameObject initialPoint,
-			Joystick joystick,
-			IPlayerStatsService stats
+			Joystick joystick
 		);
 	}
 }

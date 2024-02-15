@@ -3,6 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Sources.Application.Services;
 using Sources.ApplicationServicesInterfaces;
+using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Player;
@@ -10,6 +11,7 @@ using Sources.Infrastructure.Providers;
 using Sources.Infrastructure.StateMachine.GameStates;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
+using Sources.ServicesInterfaces;
 using VContainer;
 using VContainer.Unity;
 
@@ -24,6 +26,8 @@ namespace Sources.Application
 		private readonly IGameStateChangerFactory _gameStateChangerFactory;
 		private readonly ResourcePathConfigServiceFactory _resourcePathConfigServiceFactory;
 		private readonly ResourcePathConfigProvider _pathConfigProvider;
+		private readonly PlayerStatsFactory _playerStatsFactory;
+		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
 		private readonly IYandexSDKController _yandexSDKController;
 
 		[Inject]
@@ -34,7 +38,10 @@ namespace Sources.Application
 			IGameStateChangerProvider gameStateChangerProvider,
 			IGameStateChangerFactory gameStateChangerFactory,
 			ResourcePathConfigServiceFactory resourcePathConfigServiceFactory,
-			ResourcePathConfigProvider pathConfigProvider
+			ResourcePathConfigProvider pathConfigProvider,
+			PlayerStatsFactory playerStatsFactory,
+			IPlayerStatsServiceProvider playerStatsServiceProvider,
+			IPersistentProgressServiceProvider persistentProgressService
 
 #if YANDEX_CODE
 			, IYandexSDKController yandexSDKController
@@ -51,6 +58,9 @@ namespace Sources.Application
 			_resourcePathConfigServiceFactory = resourcePathConfigServiceFactory ??
 				throw new ArgumentNullException(nameof(resourcePathConfigServiceFactory));
 			_pathConfigProvider = pathConfigProvider ?? throw new ArgumentNullException(nameof(pathConfigProvider));
+			_playerStatsFactory = playerStatsFactory ?? throw new ArgumentNullException(nameof(playerStatsFactory));
+			_persistentProgressServiceProvider = persistentProgressService ??
+				throw new ArgumentNullException(nameof(persistentProgressService));
 
 #if YANDEX_CODE
 			_yandexSDKController = yandexSDKController ?? throw new ArgumentNullException(nameof(yandexSDKController));
@@ -69,6 +79,8 @@ namespace Sources.Application
 #if YANDEX_CODE
 			_yandexSDKController.SetStatusInitialized();
 #endif
+
+			_playerStatsFactory.CreatePlayerStats(_persistentProgressServiceProvider);
 
 			_pathConfigProvider.Register(_resourcePathConfigServiceFactory.Create());
 			_gameStateChangerProvider.Register(_gameStateChangerFactory.Create());

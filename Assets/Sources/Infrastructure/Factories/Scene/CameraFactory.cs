@@ -1,6 +1,7 @@
 using System;
 using Cinemachine;
 using Sources.Infrastructure.Factories.Player;
+using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.ServicesInterfaces;

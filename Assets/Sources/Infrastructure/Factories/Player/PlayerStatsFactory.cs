@@ -1,24 +1,44 @@
+using System;
 using System.Collections.Generic;
 using Sources.Domain;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
+using Sources.InfrastructureInterfaces.Providers;
 using Sources.Services;
 using Sources.Services.PlayerServices;
+using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Upgrade;
 using VContainer;
 
-namespace Sources.Infrastructure.Factories
+namespace Sources.Infrastructure.Factories.Player
 {
 	public class PlayerStatsFactory
 	{
 		private readonly IProgressUpgradeFactory _shopFactory;
+		private readonly IPersistentProgressServiceProvider _persistentProgressService;
+		private readonly IPlayerStatsServiceProvider _playerStatsServiceProvider;
 		private PlayerStatsService _playerStatsService;
 
-		[Inject]
-		public PlayerStatsFactory(IProgressUpgradeFactory progressUpgradeFactory) =>
-			_shopFactory = progressUpgradeFactory;
+		private IGameProgressProvider GameProgressPlayerProgress =>
+			_persistentProgressService.Implementation.GameProgress;
 
-		public PlayerStatsService CreatePlayerStats(IPersistentProgressService persistentProgressService)
+		[Inject]
+		public PlayerStatsFactory(
+			IProgressUpgradeFactory progressUpgradeFactory,
+			IPersistentProgressServiceProvider persistentProgressService,
+			IPlayerStatsServiceProvider playerStatsServiceProvider
+		)
+		{
+			_shopFactory = progressUpgradeFactory ?? throw new ArgumentNullException(nameof(progressUpgradeFactory));
+			_persistentProgressService = persistentProgressService ??
+				throw new ArgumentNullException(nameof(persistentProgressService));
+			_playerStatsServiceProvider = playerStatsServiceProvider ??
+				throw new ArgumentNullException(nameof(playerStatsServiceProvider));
+		}
+
+		public PlayerStatsService CreatePlayerStats(
+			IPersistentProgressServiceProvider persistentProgressService
+		)
 		{
 			if (_playerStatsService != null)
 				return _playerStatsService;
@@ -27,7 +47,7 @@ namespace Sources.Infrastructure.Factories
 
 			Dictionary<string, int[]> stats = CreateStatsDictionary(items);
 
-			List<IUpgradeProgressData> progress = persistentProgressService.GameProgress.PlayerProgress.GetAll();
+			List<IUpgradeProgressData> progress = GameProgressPlayerProgress.PlayerProgress.GetAll();
 
 			string[] statNames = new string[progress.Count];
 			IPlayerStatChangeable[] playerStats = new IPlayerStatChangeable[progress.Count];
@@ -37,6 +57,7 @@ namespace Sources.Infrastructure.Factories
 
 			_playerStatsService = new PlayerStatsService(statNames, playerStats, progress, converter);
 
+			_playerStatsServiceProvider.Register<IPlayerStatsService>(_playerStatsService);
 			return _playerStatsService;
 		}
 

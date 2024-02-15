@@ -22,12 +22,14 @@ using Sources.Infrastructure.Shop;
 using Sources.Infrastructure.StateMachine.GameStates;
 using Sources.InfrastructureInterfaces.Common.Factories;
 using Sources.InfrastructureInterfaces.Factory;
+using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
 using Sources.Services;
 using Sources.Services.DomainServices;
 using Sources.Services.Localization;
+using Sources.Services.PlayerServices;
 using Sources.Services.Providers;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
@@ -54,6 +56,19 @@ namespace Sources.Application.Bootstrapp
 		{
 			_builder.RegisterEntryPoint<GameBuilder>();
 
+#region BaseServices
+
+			_builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
+			_builder.Register<IShopProgressFacade, ShopProgressFacade>(Lifetime.Singleton);
+			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
+			_builder.Register<ITranslatorService, PhraseTranslatorService>(Lifetime.Singleton);
+
+			RegisterLoadingCurtain();
+
+#endregion
+
+#region States
+
 #region ConstantNames
 
 			_builder.Register<ProgressConstantNames>(Lifetime.Singleton);
@@ -62,19 +77,23 @@ namespace Sources.Application.Bootstrapp
 
 #region Providers
 
-		
-			
 			_builder.Register<SandCarContainerViewProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<GameStateChangerProvider>(Lifetime.Singleton).AsImplementedInterfaces();
+			_builder.Register<FillMeshShaderControllerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+			_builder.Register<PlayerStatsServiceProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+			_builder.Register<SandParticleSystemProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<GameplayInterfaceProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<GameplayInterfacePresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			
+			_builder.Register<PlayerProgressSetterFacadeProvider>(Lifetime.Singleton).AsImplementedInterfaces()
+				.AsSelf();
+			_builder.Register<GameplayInterfacePresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces()
+				.AsSelf();
+			_builder.Register<PersistentProgressServiceProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<UpgradeWindowPresenterProvider>(Lifetime.Singleton);
-			_builder.Register<IPlayerProgressProvider, PlayerProgressSetter>(Lifetime.Singleton);
-			_builder.Register<ShaderViewControllerProvider>(Lifetime.Singleton);
-			_builder.Register<IShopProgressProvider, ShopProgressProvider>(Lifetime.Singleton);
+			_builder.Register<ICoroutineRunnerProvider, CoroutineRunnerProvider>(Lifetime.Singleton).AsSelf();
 			_builder.Register<ResourcesProgressPresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces()
 				.AsSelf();
+
+			_builder.Register<DissolveShaderViewControllerProvider>(Lifetime.Singleton);
 			_builder.Register<ResourcePathConfigProvider>(Lifetime.Singleton);
 
 #endregion
@@ -100,36 +119,18 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<GameStateChangerFactory>(Lifetime.Scoped).AsImplementedInterfaces();
 			_builder.Register<ProgressFactory>(Lifetime.Scoped);
 			_builder.Register<PlayerStatsFactory>(Lifetime.Scoped);
+			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Singleton);
 
 			_builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Singleton);
 			_builder.Register<IAssetFactory, AssetFactory>(Lifetime.Singleton);
 
 			_builder.Register<ResourcesProgressPresenterFactory>(Lifetime.Singleton);
-			_builder.Register<ICoroutineRunnerProvider, CoroutineRunnerProvider>(Lifetime.Singleton).AsSelf();
 
 #endregion
-
-#region BaseServices
-
-			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Singleton);
-			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
-			_builder.Register<ITranslatorService, PhraseTranslatorService>(Lifetime.Singleton);
-
-			RegisterLoadingCurtain();
-
-#region States
 
 			_builder.Register<MenuState>(Lifetime.Singleton);
 			_builder.Register<BuildSceneState>(Lifetime.Singleton).AsImplementedInterfaces();
 			_builder.Register<GameLoopState>(Lifetime.Singleton);
-
-#endregion
-
-#region StateMachine
-
-#endregion
-
-			_builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
 
 #endregion
 
@@ -149,34 +150,11 @@ namespace Sources.Application.Bootstrapp
 
 			CreateResourceService();
 
-#region Progress
-
-			_builder.Register<PersistentProgressService>(
-					container =>
-					{
-						PersistentProgressService persistentProgressService = new PersistentProgressService();
-						InitialProgressFactory initialProgressFactory = container.Resolve<InitialProgressFactory>();
-						persistentProgressService.Set(initialProgressFactory.Create());
-
-						return persistentProgressService;
-					},
-					Lifetime.Singleton
-				)
-				.AsImplementedInterfaces();
-
-#endregion
-
 			CreateSceneLoadServices();
 
 #endregion
 
 #region InitializeProgressServices
-
-			_builder.Register(
-				container => container.Resolve<PlayerStatsFactory>()
-					.CreatePlayerStats(container.Resolve<IPersistentProgressService>()),
-				Lifetime.Singleton
-			).AsImplementedInterfaces().AsSelf();
 
 			_builder.Register<ILevelConfigGetter, LevelConfigGetter>(Lifetime.Singleton);
 
@@ -187,9 +165,7 @@ namespace Sources.Application.Bootstrapp
 
 			_builder.Register<IRegisterWindowLoader, RegisterWindowLoader>(Lifetime.Singleton);
 
-			_builder.RegisterEntryPointExceptionHandler(
-				exception => Debug.LogError(exception.Message)
-			);
+			_builder.RegisterEntryPointExceptionHandler(exception => Debug.LogError(exception.Message));
 		}
 
 		private void RegisterAdvertisement()
@@ -232,8 +208,7 @@ namespace Sources.Application.Bootstrapp
 			);
 		}
 
-		private void RegisterLoadingCurtain()
-		{
+		private void RegisterLoadingCurtain() =>
 			_builder.Register(
 				container =>
 				{
@@ -243,7 +218,6 @@ namespace Sources.Application.Bootstrapp
 				},
 				Lifetime.Singleton
 			).AsImplementedInterfaces().AsSelf();
-		}
 
 		private void CreateSceneLoadServices()
 		{

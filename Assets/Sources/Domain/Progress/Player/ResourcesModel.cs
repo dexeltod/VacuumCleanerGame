@@ -13,7 +13,7 @@ namespace Sources.Domain.Progress.Player
 
 		[SerializeField] private IntResource _softCurrency;
 		[SerializeField] private IntResource _hardCurrency;
-		
+
 		[SerializeField] private IntResource _cashScore;
 		[SerializeField] private IntResource _globalScore;
 

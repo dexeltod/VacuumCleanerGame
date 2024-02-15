@@ -20,11 +20,13 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly UpgradeWindowPresenterProvider _upgradeWindowPresenterProvider;
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
 		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
-		private readonly ShaderViewControllerProvider _shaderViewControllerProvider;
+		private readonly DissolveShaderViewControllerProvider _dissolveShaderViewControllerProvider;
 		private readonly LoadingCurtain _loadingCurtain;
 
 		private IGameplayInterfaceView GameplayInterface => _gameplayInterfaceProvider.Implementation;
-		private ShaderViewController ShaderViewController => _shaderViewControllerProvider.Implementation;
+
+		private IDissolveShaderViewController DissolveShaderViewController =>
+			_dissolveShaderViewControllerProvider.Implementation;
 
 		private IResourcesProgressPresenter ResourcesProgressPresenter =>
 			_resourcesProgressPresenterProvider.Implementation;
@@ -37,7 +39,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			UpgradeWindowPresenterProvider upgradeWindowPresenterProvider,
 			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
 			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
-			ShaderViewControllerProvider shaderViewControllerProvider
+			DissolveShaderViewControllerProvider dissolveShaderViewControllerProvider
 		)
 		{
 			_gameplayInterfaceProvider = gameplayInterfaceProvider ??
@@ -51,8 +53,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
 			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ??
 				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
-			_shaderViewControllerProvider = shaderViewControllerProvider ??
-				throw new ArgumentNullException(nameof(shaderViewControllerProvider));
+			_dissolveShaderViewControllerProvider = dissolveShaderViewControllerProvider ??
+				throw new ArgumentNullException(nameof(dissolveShaderViewControllerProvider));
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
@@ -71,7 +73,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			ResourcesProgressPresenter.Enable();
 			_loadingCurtain.HideSlowly();
 
-			ShaderViewController.StartDissolving();
+			DissolveShaderViewController.StartDissolving();
 		}
 
 		public void Exit()

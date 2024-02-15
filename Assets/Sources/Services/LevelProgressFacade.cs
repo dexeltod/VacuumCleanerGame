@@ -1,5 +1,6 @@
 using System;
 using Sources.DomainInterfaces;
+using Sources.InfrastructureInterfaces.Providers;
 using Sources.ServicesInterfaces;
 using Sources.Utils.ConstantNames;
 using VContainer;
@@ -18,7 +19,7 @@ namespace Sources.Services
 
 		[Inject]
 		public LevelProgressFacade(
-			IPersistentProgressService progressService,
+			IPersistentProgressServiceProvider progressService,
 			ProgressConstantNames progressConstantNames
 		)
 		{
@@ -26,7 +27,7 @@ namespace Sources.Services
 			_progressConstantNames
 				= progressConstantNames ?? throw new ArgumentNullException(nameof(progressConstantNames));
 
-			_progressService = progressService.GameProgress.LevelProgress;
+			_progressService = progressService.Implementation.GameProgress.LevelProgress;
 			CurrentLevelNumber = _progressService.GetByName(CurrentLevel).Value;
 		}
 

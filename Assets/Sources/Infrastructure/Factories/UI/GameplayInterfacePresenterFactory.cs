@@ -25,7 +25,7 @@ namespace Sources.Infrastructure.Factories.UI
 
 		private readonly IAssetFactory _assetFactory;
 		private readonly IResourcesProgressPresenterProvider _resourceProgressPresenterProvider;
-		private readonly IPersistentProgressService _gameProgress;
+		private readonly IPersistentProgressServiceProvider _gameProgress;
 		private readonly ITranslatorService _translatorService;
 		private readonly ILevelChangerService _levelChangerService;
 		private readonly GameplayInterfaceProvider _gameplayInterfaceProvider;
@@ -33,12 +33,11 @@ namespace Sources.Infrastructure.Factories.UI
 
 		private readonly string _uiResourcesUI = ResourcesAssetPath.Scene.UIResources.UI;
 
-
 		[Inject]
 		public GameplayInterfacePresenterFactory(
 			IAssetFactory assetFactory,
 			IResourcesProgressPresenterProvider resourceProgressProgressPresenterProvider,
-			IPersistentProgressService persistentProgressService,
+			IPersistentProgressServiceProvider persistentProgressService,
 			ITranslatorService translatorService,
 			ILevelChangerService levelChangerService,
 			GameplayInterfaceProvider gameplayInterfaceProvider,
@@ -101,9 +100,7 @@ namespace Sources.Infrastructure.Factories.UI
 		}
 
 		private IResourcesModel GetModel() =>
-			_gameProgress
-				.GameProgress
-				.ResourcesModel;
+			_gameProgress.Implementation.GameProgress.ResourcesModel;
 
 		private GameplayInterfaceView Load() =>
 			_assetFactory

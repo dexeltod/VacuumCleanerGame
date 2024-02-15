@@ -3,6 +3,7 @@ using Sources.ApplicationServicesInterfaces;
 using Sources.Controllers;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.InfrastructureInterfaces.Providers;
 using Sources.Services.DomainServices;
 using Unity.Services.Core;
 using VContainer;
@@ -11,12 +12,12 @@ namespace Sources.Infrastructure.Factories
 {
 	public class SaveLoaderFactory
 	{
-		private readonly IPersistentProgressService _progressService;
+		private readonly IPersistentProgressServiceProvider _progressService;
 		private readonly ICloudSave _cloudSave;
 
 		[Inject]
 		public SaveLoaderFactory(
-			IPersistentProgressService progressService,
+			IPersistentProgressServiceProvider progressService,
 			ICloudSave cloudSave
 		)
 		{

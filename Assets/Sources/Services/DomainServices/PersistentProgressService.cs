@@ -8,7 +8,7 @@ namespace Sources.Services.DomainServices
 		private IGameProgressProvider _gameProgress;
 		public IGameProgressProvider GameProgress => _gameProgress;
 
-		public void Set(IGameProgressProvider gameProgress) =>
+		public PersistentProgressService(IGameProgressProvider gameProgress) =>
 			_gameProgress = gameProgress ?? throw new ArgumentNullException(nameof(gameProgress));
 	}
 }

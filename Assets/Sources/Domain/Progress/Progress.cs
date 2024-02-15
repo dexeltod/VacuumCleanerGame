@@ -19,6 +19,7 @@ namespace Sources.Domain.Progress
 		{
 			if (maxUpgradePointsCount < 0) throw new ArgumentOutOfRangeException(nameof(maxUpgradePointsCount));
 			_progressData = progress ?? throw new ArgumentNullException(nameof(progress));
+			
 			_maxUpgradePointsCount = maxUpgradePointsCount;
 			_progressNames = new List<string>();
 

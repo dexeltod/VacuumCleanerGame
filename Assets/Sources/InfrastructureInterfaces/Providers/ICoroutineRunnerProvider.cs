@@ -1,7 +1,10 @@
 using Sources.InfrastructureInterfaces.Common.Providers;
-using Sources.UseCases.Scene;
+using Sources.Utils;
 
-public interface ICoroutineRunnerProvider : IProvider<ICoroutineRunner>
+namespace Sources.InfrastructureInterfaces.Providers
 {
+	public interface ICoroutineRunnerProvider : IProvider<ICoroutineRunner>
+	{
 		
+	}
 }

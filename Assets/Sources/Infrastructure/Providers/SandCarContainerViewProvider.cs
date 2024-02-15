@@ -2,7 +2,7 @@ using Sources.Infrastructure.Common.Provider;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
 
-namespace Sources.Application.Bootstrapp
+namespace Sources.Infrastructure.Providers
 {
 	public class SandCarContainerViewProvider  : Provider<ISandContainerView>, ISandContainerViewProvider{ }
 }

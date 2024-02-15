@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using Sources.Controllers;
 using Sources.DomainInterfaces;
+using Sources.Infrastructure.DataViewModel;
 using Sources.Infrastructure.Factories.UpgradeShop;
+using Sources.InfrastructureInterfaces.Providers;
 using Sources.Presentation.UI.Shop;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
+using Sources.ServicesInterfaces.DTO;
 using Sources.ServicesInterfaces.Upgrade;
 using Sources.Utils.Configs.Scripts;
 using UnityEngine;
@@ -16,24 +19,33 @@ namespace Sources.Infrastructure.Factories
 {
 	public class ShopElementFactory
 	{
-		private readonly IPersistentProgressService _persistentProgressService;
+		private readonly IPersistentProgressServiceProvider _persistentProgressService;
 		private readonly IAssetFactory _assetFactory;
 		private readonly ITranslatorService _translatorService;
+		private readonly IPlayerProgressSetterFacadeProvider _playerProgressSetterFacadeProvider;
 
 		private string UIResourcesShopItems => ResourcesAssetPath.Scene.UIResources.ShopItems;
-		private IGameProgress ShopProgress => _persistentProgressService.GameProgress.ShopProgress;
+		private IGameProgress ShopProgress => _persistentProgressService.Implementation.GameProgress.ShopProgress;
+
+		private IPlayerProgressSetterFacade PlayerProgressSetterFacade =>
+			_playerProgressSetterFacadeProvider.Implementation;
 
 		[Inject]
 		public ShopElementFactory(
-			IPersistentProgressService persistentProgressService,
+			IPersistentProgressServiceProvider persistentProgressService,
 			IAssetFactory assetFactory,
-			ITranslatorService translatorService
+			ITranslatorService translatorService,
+			IPlayerProgressSetterFacadeProvider playerProgressSetterFacadeProvider
 		)
 		{
+			_playerProgressSetterFacadeProvider = playerProgressSetterFacadeProvider ??
+				throw new ArgumentNullException(nameof(playerProgressSetterFacadeProvider));
 			_persistentProgressService = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
+			_playerProgressSetterFacadeProvider = playerProgressSetterFacadeProvider ??
+				throw new ArgumentNullException(nameof(playerProgressSetterFacadeProvider));
 		}
 
 		public List<UpgradeElementPrefabView> Instantiate(Transform transform)
@@ -83,12 +95,12 @@ namespace Sources.Infrastructure.Factories
 			int itemIndex
 		)
 		{
-			var presenter = new UpgradeElementPresenter();
-
 			UpgradeElementPrefabView button = Object.Instantiate(
 				items.ReadOnlyItems[itemIndex].PrefabView,
 				transform.transform
 			);
+
+			var presenter = new UpgradeElementPresenter(PlayerProgressSetterFacade, button);
 
 			var title = Localize(items.Items[itemIndex].Title);
 			var description = Localize(items.Items[itemIndex].Description);

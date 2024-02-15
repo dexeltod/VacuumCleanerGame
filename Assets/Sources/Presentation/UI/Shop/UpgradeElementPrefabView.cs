@@ -74,8 +74,9 @@ namespace Sources.Presentation.UI.Shop
 		public void Dispose() =>
 			_itemChangeable.PriceChanged -= OnPriceChanged;
 
-		public void AddProgressPointColor(int count)
+		public void AddProgressPointColor(int count = 1)
 		{
+			if (count <= 0) throw new ArgumentOutOfRangeException(nameof(count));
 			if (_boughtPoints + count > _maxPoints)
 				return;
 

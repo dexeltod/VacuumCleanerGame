@@ -3,20 +3,18 @@ using System.IO;
 using Cysharp.Threading.Tasks;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.InfrastructureInterfaces.Providers;
 using Sources.Services.DomainServices.DTO;
 
 namespace Sources.Services.DomainServices
 {
 	[Serializable] public class ProgressSaveLoadDataService : IProgressSaveLoadDataService
 	{
-	
-
 		private readonly ISaveLoader _saveLoader;
-		private readonly IPersistentProgressServiceConstructable _progressService;
+		private readonly IPersistentProgressServiceProvider _progressServiceProvider;
 
 		private readonly BinaryDataSaveLoader _binaryDataSaveLoader;
 		private readonly JsonDataSaveLoader _jsonDataLoader;
-		private readonly IPersistentProgressService _persistentProgress;
 
 		private IGameProgressProvider _gameProgress;
 
@@ -24,17 +22,15 @@ namespace Sources.Services.DomainServices
 
 		public event Func<IGameProgressProvider> ProgressCleared;
 
+		private IPersistentProgressService PersistentProgressService => _progressServiceProvider.Implementation;
+
 		public ProgressSaveLoadDataService(
 			ISaveLoader saveLoader,
-			IPersistentProgressServiceConstructable progressService,
-			IPersistentProgressService persistentProgressService
+			IPersistentProgressServiceProvider progressService
 		)
 		{
 			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
-			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
-			_persistentProgress = persistentProgressService ??
-				throw new ArgumentNullException(nameof(persistentProgressService));
-
+			_progressServiceProvider = progressService ?? throw new ArgumentNullException(nameof(progressService));
 			_jsonDataLoader = new JsonDataSaveLoader();
 		}
 
@@ -48,16 +44,16 @@ namespace Sources.Services.DomainServices
 
 		public async UniTask SaveToCloud(Action succeededCallback = null)
 		{
-			await Save(_persistentProgress.GameProgress);
+			await Save(PersistentProgressService.GameProgress);
 			succeededCallback?.Invoke();
 		}
 
 		public async UniTask ClearSaves()
 		{
-			IGameProgressProvider clearSave = ProgressCleared.Invoke();
-			_progressService.Set(clearSave);
+			IGameProgressProvider clearedSave = ProgressCleared!.Invoke();
+			_progressServiceProvider.Register<IPersistentProgressService>(new PersistentProgressService(clearedSave));
 
-			await Save(clearSave);
+			await Save(clearedSave);
 		}
 
 		public async UniTask<IGameProgressProvider> LoadFromCloud()

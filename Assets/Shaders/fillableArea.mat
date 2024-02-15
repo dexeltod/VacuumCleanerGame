@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: fillableArea
-  m_Shader: {fileID: -6465566751694194690, guid: a91505d307a68944ab32621ab9288156, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: dd5dda65a62590f45b132d8890f3376f, type: 3}
   m_ValidKeywords:
   - _BUILTIN_ALPHATEST_ON
   - _BUILTIN_AlphaClip
@@ -89,36 +89,40 @@ Material:
     - _AmbientOcclusion: 1
     - _BUILTIN_AlphaClip: 1
     - _BUILTIN_Blend: 1
-    - _BUILTIN_CullMode: 1
+    - _BUILTIN_CullMode: 0
     - _BUILTIN_DstBlend: 0
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
     - _BUILTIN_SrcBlend: 1
     - _BUILTIN_Surface: 0
-    - _BUILTIN_ZTest: 8
+    - _BUILTIN_ZTest: 2
     - _BUILTIN_ZWrite: 1
     - _BUILTIN_ZWriteControl: 0
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _FillAmount: 1.1
+    - _FillAmount: 1
     - _Float: -0.65
+    - _FrenselPower: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Metallic: 0
+    - _Metallic: 0.09
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Smoothness: 0.75
+    - _Smoothness: -0.22
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
+    - _WobbleX: 0
+    - _WobbleZ: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 2.9579568, g: 0.3488156, b: 0.3488156, a: 1}
+    - _Color: {r: 1.2242906, g: 0.65305865, b: 0.25987303, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SurfaceColor: {r: 0.44705883, g: 0.16078432, b: 0.10980392, a: 1}
+    - _FresnerColor: {r: 0.9056604, g: 0.41024637, b: 0.32039872, a: 0}
+    - _SurfaceColor: {r: 1.3333863, g: 0.63253134, b: 0.15723893, a: 1}
   m_BuildTextureStacks: []
