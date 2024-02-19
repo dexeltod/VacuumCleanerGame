@@ -15,7 +15,7 @@ namespace Sources.Domain.Progress
 
 		public int MaxUpgradePointCount => _maxUpgradePointsCount;
 
-		protected Progress(List<ProgressUpgradeData> progress, int maxUpgradePointsCount = 0)
+		protected Progress(List<ProgressUpgradeData> progress, int maxUpgradePointsCount)
 		{
 			if (maxUpgradePointsCount < 0) throw new ArgumentOutOfRangeException(nameof(maxUpgradePointsCount));
 			_progressData = progress ?? throw new ArgumentNullException(nameof(progress));

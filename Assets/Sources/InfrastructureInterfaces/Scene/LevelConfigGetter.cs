@@ -3,7 +3,7 @@ using Sources.Utils.Configs.Scripts;
 
 namespace Sources.InfrastructureInterfaces.Scene
 {
-	public class LevelConfigGetter : ILevelConfigGetter
+	public sealed class LevelConfigGetter : ILevelConfigGetter
 	{
 		private readonly LevelsConfig _levelConfigs;
 

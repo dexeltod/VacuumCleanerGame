@@ -1,13 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
 using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.InfrastructureInterfaces.Providers;
-using Unity.Services.CloudSave;
 using UnityEngine;
 
 namespace Sources.Services.DomainServices
@@ -16,33 +12,29 @@ namespace Sources.Services.DomainServices
 	{
 		private const string GameProgressKey = "GameProgress";
 
-		private readonly IPersistentProgressServiceProvider _progressService;
 		private readonly IUnityServicesController _unityServicesController;
 		private readonly ICloudSave _unityCloudSaveLoader;
 		private IUnityServicesController _controller;
 
 		public UnitySaveLoader(
-			IPersistentProgressServiceProvider progressService,
 			IUnityServicesController unityServicesController,
 			ICloudSave unityCloudSaveLoader
 		)
 		{
-			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
 			_unityServicesController = unityServicesController ??
 				throw new ArgumentNullException(nameof(unityServicesController));
 			_unityCloudSaveLoader
 				= unityCloudSaveLoader ?? throw new ArgumentNullException(nameof(unityCloudSaveLoader));
 		}
 
-		public async UniTask Save(IGameProgressProvider @object, Action succeededCallback)
+		public async UniTask Save(IGlobalProgress @object, Action succeededCallback)
 		{
-			GameProgressProvider provider = _progressService.Implementation.GameProgress as GameProgressProvider;
-			string json = JsonUtility.ToJson(provider);
+			string json = JsonUtility.ToJson(@object);
 
 			await _unityCloudSaveLoader.Save(json);
 		}
 
-		public async UniTask<IGameProgressProvider> Load(Action callback)
+		public async UniTask<IGlobalProgress> Load(Action callback)
 		{
 			var json = await _unityCloudSaveLoader.Load();
 			callback.Invoke();
@@ -52,17 +44,11 @@ namespace Sources.Services.DomainServices
 		public async UniTask Initialize() =>
 			await _unityServicesController.InitializeUnityServices();
 
-		public async UniTask ClearSaves(IGameProgressProvider gameProgressProvider, Action succeededCallback)
-		{
-			await CloudSaveService.Instance.Data.ForceDeleteAsync(GameProgressKey);
-			succeededCallback.Invoke();
-		}
-
-		private IGameProgressProvider DeserializeJson(string jsonSave)
+		private IGlobalProgress DeserializeJson(string jsonSave)
 		{
 			try
 			{
-				GameProgressProvider provider = JsonUtility.FromJson<GameProgressProvider>(jsonSave);
+				GlobalProgress provider = JsonUtility.FromJson<GlobalProgress>(jsonSave);
 
 				return provider;
 			}

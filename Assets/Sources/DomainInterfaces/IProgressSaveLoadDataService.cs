@@ -8,10 +8,9 @@ namespace Sources.DomainInterfaces
 		void SaveToJson(string fileName, object data);
 		string LoadFromJson(string fileName);
 		T LoadFromJson<T>(string fileName);
-		event Func<IGameProgressProvider> ProgressCleared;
-		UniTask SaveToCloud(IGameProgressProvider provider, Action succeededCallback = null);
+		UniTask SaveToCloud(IGlobalProgress progress, Action succeededCallback = null);
 		UniTask SaveToCloud(Action succeededCallback = null);
-		UniTask<IGameProgressProvider> LoadFromCloud();
+		UniTask<IGlobalProgress> LoadFromCloud();
 		UniTask ClearSaves();
 	}
 }

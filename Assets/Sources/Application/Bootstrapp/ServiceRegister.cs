@@ -8,7 +8,6 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure;
-using Sources.Infrastructure.DataViewModel;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Domain;
 using Sources.Infrastructure.Factories.LeaderBoard;
@@ -29,11 +28,9 @@ using Sources.PresentationInterfaces;
 using Sources.Services;
 using Sources.Services.DomainServices;
 using Sources.Services.Localization;
-using Sources.Services.PlayerServices;
 using Sources.Services.Providers;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
-using Sources.ServicesInterfaces.DTO;
 using Sources.Utils;
 using Sources.Utils.ConstantNames;
 using UnityEngine;
@@ -62,12 +59,12 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<IShopProgressFacade, ShopProgressFacade>(Lifetime.Singleton);
 			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
 			_builder.Register<ITranslatorService, PhraseTranslatorService>(Lifetime.Singleton);
-
+			
+			_builder.Register<ProgressCleaner>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+			
 			RegisterLoadingCurtain();
 
 #endregion
-
-#region States
 
 #region ConstantNames
 
@@ -82,6 +79,9 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<FillMeshShaderControllerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<PlayerStatsServiceProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<SandParticleSystemProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+
+			_builder.Register<GameMenuPresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+			_builder.Register<SaveLoaderProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<GameplayInterfaceProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<PlayerProgressSetterFacadeProvider>(Lifetime.Singleton).AsImplementedInterfaces()
 				.AsSelf();
@@ -108,16 +108,15 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<ShopElementFactory>(Lifetime.Scoped);
 
 			_builder.Register<SaveLoaderFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
+			_builder.Register<InitialProgressFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
 			_builder.Register<CoroutineRunnerFactory>(Lifetime.Scoped);
-			_builder.Register<Coroutine>(Lifetime.Scoped);
 			_builder.Register<LoadingCurtainFactory>(Lifetime.Scoped);
-			_builder.Register<InitialProgressFactory>(Lifetime.Scoped);
 			_builder.Register<GameplayInterfacePresenterFactory>(Lifetime.Scoped);
 			_builder.Register<GameStatesRepositoryFactory>(Lifetime.Scoped);
 			_builder.Register<GameStateContainerFactory>(Lifetime.Scoped);
 			_builder.Register<IProgressUpgradeFactory, ProgressUpgradeFactory>(Lifetime.Scoped);
 			_builder.Register<GameStateChangerFactory>(Lifetime.Scoped).AsImplementedInterfaces();
-			_builder.Register<ProgressFactory>(Lifetime.Scoped);
+			_builder.Register<ProgressFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
 			_builder.Register<PlayerStatsFactory>(Lifetime.Scoped);
 			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Singleton);
 
@@ -128,8 +127,10 @@ namespace Sources.Application.Bootstrapp
 
 #endregion
 
-			_builder.Register<MenuState>(Lifetime.Singleton);
-			_builder.Register<BuildSceneState>(Lifetime.Singleton).AsImplementedInterfaces();
+#region States
+
+			_builder.Register<MenuState>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+			_builder.Register<BuildSceneState>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<GameLoopState>(Lifetime.Singleton);
 
 #endregion
@@ -146,10 +147,17 @@ namespace Sources.Application.Bootstrapp
 
 			RegisterCloudSavers();
 
+			_builder.Register(
+				container =>
+				{
+					SaveLoaderFactory saveLoaderFactory = container.Resolve<SaveLoaderFactory>();
+					return saveLoaderFactory.GetSaveLoader();
+				},
+				Lifetime.Singleton
+			).AsImplementedInterfaces().AsSelf();
+
 			RegisterSaveLoader();
-
 			CreateResourceService();
-
 			CreateSceneLoadServices();
 
 #endregion
@@ -177,17 +185,7 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<IAdvertisement, EditorAdvertisement>(Lifetime.Singleton);
 		}
 
-		private void RegisterSaveLoader()
-		{
-			_builder.Register(
-				container =>
-				{
-					SaveLoaderFactory saveLoaderFactory = container.Resolve<SaveLoaderFactory>();
-					return saveLoaderFactory.GetSaveLoader();
-				},
-				Lifetime.Singleton
-			).AsImplementedInterfaces().AsSelf();
-		}
+		private void RegisterSaveLoader() { }
 
 		private void RegisterCloudSavers()
 		{

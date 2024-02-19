@@ -12,10 +12,10 @@ namespace Sources.Services
 		private const int OnePoint = 1;
 
 		private readonly ProgressConstantNames _progressConstantNames;
-		private readonly IGameProgress _progressService;
+		private readonly ILevelProgress _progressService;
 
-		public int CurrentLevelNumber { get; private set; }
-		private string CurrentLevel => _progressConstantNames.CurrentLevel;
+		public int CurrentLevelNumber => _progressService.CurrentLevel;
+		private string CurrentLevel => ProgressConstantNames.CurrentLevel;
 
 		[Inject]
 		public LevelProgressFacade(
@@ -27,18 +27,17 @@ namespace Sources.Services
 			_progressConstantNames
 				= progressConstantNames ?? throw new ArgumentNullException(nameof(progressConstantNames));
 
-			_progressService = progressService.Implementation.GameProgress.LevelProgress;
-			CurrentLevelNumber = _progressService.GetByName(CurrentLevel).Value;
+			_progressService = progressService.Implementation.GlobalProgress.LevelProgress;
 		}
 
 		public void SetNextLevel()
 		{
-			IUpgradeProgressData progressData = _progressService.GetByName(CurrentLevel);
-
-			int newLevel = progressData.Value + OnePoint;
-			CurrentLevelNumber = newLevel;
-
-			_progressService.SetProgress(CurrentLevel, newLevel);
+			// IUpgradeProgressData progressData = _progressService.GetByName(CurrentLevel);
+			//
+			// int newLevel = progressData.Value + OnePoint;
+			// CurrentLevelNumber = newLevel;
+			//
+			// _progressService.SetProgress(CurrentLevel, newLevel);
 		}
 	}
 }

@@ -1,6 +1,5 @@
 using System;
 using Sources.ApplicationServicesInterfaces;
-using Sources.Controllers.MainMenu;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.Presentation.Common;
@@ -9,14 +8,12 @@ using Sources.ServicesInterfaces;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using VContainer;
 
 namespace Sources.Presentation.UI
 {
-	public class MainMenuBehaviour : PresentableView<MainMenuPresenter>, IMainMenuView, IDisposable
+	public class MainMenuBehaviour : PresentableView<IMainMenuPresenter>, IMainMenuView, IDisposable
 	{
-		[SerializeField] private GameObject _settingsMenu;
-		[SerializeField] private GameObject _mainMenu;
-
 		[SerializeField] private Button _playButton;
 		[SerializeField] private Button _deleteSavesButton;
 		[SerializeField] private Button _addScoreButton;
@@ -33,7 +30,7 @@ namespace Sources.Presentation.UI
 		public event Action PlayButtonPressed;
 		public event Action DeleteSavesButtonPressed;
 
-	
+		[Inject]
 		private void Construct(
 			ILevelProgressFacade levelProgressFacade,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
@@ -47,9 +44,6 @@ namespace Sources.Presentation.UI
 				throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
 		}
-
-		public void Construct(IMainMenuPresenter presenter) =>
-			throw new NotImplementedException();
 
 		private void OnEnable()
 		{
@@ -73,13 +67,13 @@ namespace Sources.Presentation.UI
 		}
 
 		private void OnPlay() =>
-			PlayButtonPressed.Invoke();
+			PlayButtonPressed!.Invoke();
 
 		private async void OnAddLeader() =>
 			await _leaderBoardService.AddScore(200);
 
 		private void OnDeleteSaves() =>
-			DeleteSavesButtonPressed.Invoke();
+			DeleteSavesButtonPressed!.Invoke();
 
 		private void OnExit() =>
 			UnityEngine.Application.Quit();

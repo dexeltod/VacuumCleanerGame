@@ -1,6 +1,5 @@
 using System;
 using Sources.ServicesInterfaces;
-using Sources.UseCases.Scene;
 using Sources.Utils;
 using Sources.Utils.Configs.Scripts;
 using VContainer;
@@ -11,11 +10,11 @@ namespace Sources.Infrastructure.Factories
 	{
 		private readonly IAssetFactory _assetFactory;
 
-		private string CoroutineRunnerPath => ResourcesAssetPath.GameObjects.CoroutineRunner;
-
 		[Inject]
 		public CoroutineRunnerFactory(IAssetFactory assetFactory) =>
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+
+		private string CoroutineRunnerPath => ResourcesAssetPath.GameObjects.CoroutineRunner;
 
 		public ICoroutineRunner Create() =>
 			_assetFactory.InstantiateAndGetComponent<CoroutineRunner.CoroutineRunner>(CoroutineRunnerPath);

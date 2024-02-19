@@ -3,7 +3,7 @@ namespace Sources.ServicesInterfaces.Upgrade
 	public interface IUpgradeItemData
 	{
 		int Price { get; }
-		int PointLevel { get; }
+		int BoughtPointsCount { get; }
 
 		void SetUpgradeLevel(int level);
 		string IdName { get; }

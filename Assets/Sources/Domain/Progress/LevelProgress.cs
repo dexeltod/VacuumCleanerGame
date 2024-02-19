@@ -1,13 +1,19 @@
 using System;
-using System.Collections.Generic;
+using Sources.DomainInterfaces;
+using UnityEngine;
 
 namespace Sources.Domain.Progress
 {
-	[Serializable] public class LevelProgress : Progress
+	[Serializable] public class LevelProgress : ILevelProgress
 	{
-		private readonly List<ProgressUpgradeData> _upgradeProgressData;
+		[SerializeField] private int _currentLevel;
 
-		public LevelProgress(List<ProgressUpgradeData> progress) : base(progress) =>
-			_upgradeProgressData = progress;
+		public int CurrentLevel => _currentLevel;
+
+		public LevelProgress(int firstLevel) =>
+			_currentLevel = firstLevel;
+
+		public void AddLevel(int level) =>
+			_currentLevel += level;
 	}
 }

@@ -8,7 +8,7 @@ namespace Sources.PresentationInterfaces
 {
 	public interface IGameplayInterfaceView : IPresentableView<IGameplayInterfacePresenter>
 	{
-		public GameObject GameObject { get; }
+		public GameObject InterfaceGameObject { get; }
 		public Canvas Canvas { get; }
 		public Joystick Joystick { get; }
 		ITmpPhrases Phrases { get; }
@@ -19,7 +19,8 @@ namespace Sources.PresentationInterfaces
 			int maxCashScore,
 			int maxGlobalScore,
 			int moneyCount,
-			bool isActiveOnStart
+			bool isActiveOnStart,
+			IGameMenuPresenter gameMenuPresenter
 		);
 
 		void SetActiveGoToNextLevelButton(bool isActive);

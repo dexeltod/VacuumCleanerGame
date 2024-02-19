@@ -1,7 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 
-namespace Sources.ServicesInterfaces.DTO
+namespace Sources.ServicesInterfaces
 {
 	public interface IShopProgressFacade 
 	{

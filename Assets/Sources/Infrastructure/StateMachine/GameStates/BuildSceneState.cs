@@ -4,6 +4,7 @@ using Sources.Controllers.Mesh;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories;
+using Sources.Infrastructure.Factories.Player;
 using Sources.Infrastructure.Factories.Presenters;
 using Sources.Infrastructure.Factories.Scene;
 using Sources.Infrastructure.Factories.UI;
@@ -18,6 +19,7 @@ using Sources.PresentationInterfaces.Player;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs.Scripts;
 using UnityEngine;
+using VContainer;
 
 namespace Sources.Infrastructure.StateMachine.GameStates
 {
@@ -48,6 +50,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly FillMeshShaderControllerProvider _fillMeshShaderControllerProvider;
 		private readonly ISandParticleSystemProvider _sandParticleSystemProvider;
 		private readonly IPlayerStatsServiceProvider _playerStatsServiceProvider;
+		private readonly PlayerStatsFactory _playerStatsFactory;
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly ILevelProgressFacade _levelProgressFacade;
 
@@ -62,6 +65,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 #endregion
 
+		[Inject]
 		public BuildSceneState(
 
 #region Params
@@ -89,7 +93,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			DissolveShaderViewControllerProvider dissolveShaderViewControllerProvider,
 			FillMeshShaderControllerProvider fillMeshShaderControllerProvider,
 			ISandParticleSystemProvider sandParticleSystemProvider,
-			IPlayerStatsServiceProvider playerStatsServiceProvider
+			IPlayerStatsServiceProvider playerStatsServiceProvider,
+			PlayerStatsFactory playerStatsFactory
 
 #endregion
 
@@ -136,7 +141,9 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				throw new ArgumentNullException(nameof(fillMeshShaderControllerProvider));
 			_sandParticleSystemProvider = sandParticleSystemProvider ??
 				throw new ArgumentNullException(nameof(sandParticleSystemProvider));
-			_playerStatsServiceProvider = playerStatsServiceProvider ?? throw new ArgumentNullException(nameof(playerStatsServiceProvider));
+			_playerStatsServiceProvider = playerStatsServiceProvider ??
+				throw new ArgumentNullException(nameof(playerStatsServiceProvider));
+			_playerStatsFactory = playerStatsFactory ?? throw new ArgumentNullException(nameof(playerStatsFactory));
 
 #endregion
 		}
@@ -151,6 +158,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 		private void Build()
 		{
+			
+			
 			_assetFactory.Instantiate(SellTrigger);
 			_coroutineRunnerProvider.Register(_coroutineRunnerFactory.Create());
 
@@ -208,8 +217,6 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			).Create();
 
 			_upgradeWindowPresenterProvider.Register(presenter);
-
-			UpgradeWindowPresenter.Enable();
 		}
 
 		public void Exit() { }

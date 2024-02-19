@@ -1,11 +1,8 @@
 using System;
 using Cysharp.Threading.Tasks;
-using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
-using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.ServicesInterfaces;
-using Sources.ServicesInterfaces.DTO;
 using VContainer;
 
 namespace Sources.Infrastructure.Shop
@@ -16,7 +13,7 @@ namespace Sources.Infrastructure.Shop
 		private readonly IPersistentProgressServiceProvider _progressService;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadService;
 
-		private IGameProgress ShopProgress => _progressService.Implementation.GameProgress.ShopProgress;
+		private IGameProgress ShopProgress => _progressService.Implementation.GlobalProgress.ShopProgress;
 
 		[Inject]
 		public ShopProgressFacade(

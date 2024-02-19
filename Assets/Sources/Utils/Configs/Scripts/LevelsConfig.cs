@@ -8,10 +8,7 @@ namespace Sources.Utils.Configs.Scripts
 	{
 		[SerializeField] private List<LevelConfig> _levels;
 
-		public LevelConfig Get(int level)
-		{
-			int levelIndex = level - 1;
-			return _levels[levelIndex];
-		}
+		public LevelConfig Get(int level) =>
+			_levels[level - 1];
 	}
 }

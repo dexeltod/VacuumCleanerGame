@@ -1,0 +1,33 @@
+using System;
+using Sources.Domain.Progress.Player;
+using Sources.DomainInterfaces;
+using UnityEngine;
+
+namespace Sources.Domain.Progress
+{
+	[Serializable] public class GlobalProgress : IGlobalProgress
+	{
+		[SerializeField] private ResourcesModel _resources;
+		[SerializeField] private PlayerProgress _playerProgress;
+		[SerializeField] private UpgradeProgressModel _upgradeProgressModel;
+		[SerializeField] private LevelProgress _levelProgress;
+
+		public IGameProgress ShopProgress => _upgradeProgressModel;
+		public ILevelProgress LevelProgress => _levelProgress;
+		public IGameProgress PlayerProgress => _playerProgress;
+		public IResourcesModel ResourcesModel => _resources;
+
+		public GlobalProgress(
+			ResourcesModel resourcesModel,
+			PlayerProgress playerProgress,
+			UpgradeProgressModel upgradeProgressModel,
+			LevelProgress levelProgress
+		)
+		{
+			_resources = resourcesModel;
+			_playerProgress = playerProgress;
+			_upgradeProgressModel = upgradeProgressModel;
+			_levelProgress = levelProgress;
+		}
+	}
+}

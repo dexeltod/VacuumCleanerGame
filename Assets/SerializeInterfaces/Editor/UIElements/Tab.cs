@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor.UIElements;
-using UnityEngine.UIElements;
+﻿using UnityEngine.UIElements;
 
 namespace AYellowpaper.Editor
 {

@@ -1,0 +1,45 @@
+using System;
+using Sources.ControllersInterfaces;
+using Sources.Presentation.Common;
+using Sources.PresentationInterfaces;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Sources.Presentation
+{
+	public class GameMenuView : PresentableView<IGameMenuPresenter>, IGameMenuView
+	{
+		[SerializeField] private Button _openMenuButton;
+		[SerializeField] private Button _closeMenuButton;
+		[SerializeField] private Button _goToMainMenuButton;
+
+		[SerializeField] private GameObject _menuWindow;
+
+		public Button OpenMenuButton => _openMenuButton;
+
+		public override void Enable()
+		{
+			base.Enable();
+			_openMenuButton.onClick.AddListener(() => OnSetActiveMenuWindow(true));
+			_closeMenuButton.onClick.AddListener(() => OnSetActiveMenuWindow(false));
+			_goToMainMenuButton.onClick.AddListener(OnGoToMainMenu);
+		}
+
+		public override void Disable()
+		{
+			base.Disable();
+			_goToMainMenuButton.onClick.RemoveListener(OnGoToMainMenu);
+			_openMenuButton.onClick.RemoveListener(() => OnSetActiveMenuWindow(true));
+			_closeMenuButton.onClick.RemoveListener(() => OnSetActiveMenuWindow(false));
+		}
+
+		private void OnGoToMainMenu() =>
+			Presenter.GoToMainMenu();
+
+		private void OnSetActiveMenuWindow(bool isActive)
+		{
+			_openMenuButton.gameObject.SetActive(!isActive);
+			_menuWindow.gameObject.SetActive(isActive);
+		}
+	}
+}

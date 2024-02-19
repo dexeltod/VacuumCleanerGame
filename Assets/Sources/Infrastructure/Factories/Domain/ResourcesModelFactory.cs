@@ -40,7 +40,7 @@ namespace Sources.Infrastructure.Factories.Domain
 				globalScore,
 				StartScoreCount,
 				StartCurrencyCount,
-				StartCurrencyCount
+				StartScoreCount
 			);
 
 		private Resource<int> GetResource(ResourceType type) =>

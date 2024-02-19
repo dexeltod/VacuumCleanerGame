@@ -9,6 +9,12 @@ namespace Sources.Domain.Progress
 		[SerializeField] private int _value;
 		[SerializeField] private string _name;
 
+		public ProgressUpgradeData(string name, int pointCount)
+		{
+			_name = name;
+			_value = pointCount;
+		}
+
 		public string Name => _name;
 
 		public int Value
@@ -22,12 +28,6 @@ namespace Sources.Domain.Progress
 
 				_value = value;
 			}
-		}
-
-		public ProgressUpgradeData(string name, int pointCount)
-		{
-			_name = name;
-			_value = pointCount;
 		}
 	}
 }

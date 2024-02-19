@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using AYellowpaper;
-using System.Collections.Generic;
 using System;
 
 namespace AYellowpaper.Editor

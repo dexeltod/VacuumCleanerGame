@@ -38,6 +38,23 @@
           "Text": "Ayarlar"
         }
       ]
+    },  
+    {
+      "Name": "MainMenu",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Главное меню"
+        },
+        {
+          "Language": "English",
+          "Text": "Main menu"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Ana menü"
+        }
+      ]
     },
     {
       "Name": "SoundVolumeSetting",

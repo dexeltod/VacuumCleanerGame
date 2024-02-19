@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using Sources.ControllersInterfaces;
-using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.GameObject;
 using Sources.InfrastructureInterfaces.Providers;
-using Sources.UseCases.Scene;
 using Sources.Utils;
 using UnityEngine;
 using VContainer;
@@ -21,7 +19,7 @@ namespace Sources.Services.Triggers
 		private IResourcesProgressPresenter ResourceProgress => _progressPresenterProvider.Implementation;
 
 		private int CurrentScore =>
-			_persistentProgressService.Implementation.GameProgress.ResourcesModel.CurrentCashScore;
+			_persistentProgressService.Implementation.GlobalProgress.ResourcesModel.CurrentCashScore;
 
 		[Inject]
 		private void Construct(

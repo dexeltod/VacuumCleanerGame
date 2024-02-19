@@ -1,5 +1,4 @@
 using System;
-using Sources.ApplicationServicesInterfaces;
 using Sources.ApplicationServicesInterfaces.Authorization;
 using UnityEngine;
 using UnityEngine.UI;

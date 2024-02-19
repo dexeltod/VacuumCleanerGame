@@ -19,7 +19,7 @@ namespace Sources.Infrastructure.ScriptableObjects.Shop
 
 		public string Description => _description;
 		public int MaxPointLevel => MaxPoint;
-		public int PointLevel => _pointIndex;
+		public int BoughtPointsCount => _pointIndex;
 
 		public int Price
 		{

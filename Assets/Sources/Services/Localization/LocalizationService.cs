@@ -3,7 +3,6 @@ using System.Linq;
 using Lean.Localization;
 using Sources.Services.Localization.Serializable;
 using Sources.ServicesInterfaces;
-using Sources.Utils.Configs;
 using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 

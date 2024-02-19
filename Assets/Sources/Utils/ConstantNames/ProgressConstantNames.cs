@@ -1,7 +1,7 @@
 namespace Sources.Utils.ConstantNames
 {
-	public class ProgressConstantNames
+	public sealed class ProgressConstantNames
 	{
-		public readonly string CurrentLevel = "CurrentLevel";
+		public const string CurrentLevel = "CurrentLevel";
 	}
 }

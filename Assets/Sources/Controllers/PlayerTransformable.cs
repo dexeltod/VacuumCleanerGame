@@ -1,7 +1,6 @@
 using Joystick_Pack.Scripts.Base;
 using Sources.Controllers.Common;
 using Sources.DomainInterfaces;
-using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using UnityEngine;
@@ -27,7 +26,7 @@ namespace Sources.Controllers
 			IPlayerStatsService stats
 		) : base(transform)
 		{
-			_speedStat = stats.GetPlayerStat(SpeedName);
+			_speedStat = stats.Get(SpeedName);
 			_speedStat.ValueChanged += OnPlayerStatChanged;
 
 			_speed = _speedStat.Value;

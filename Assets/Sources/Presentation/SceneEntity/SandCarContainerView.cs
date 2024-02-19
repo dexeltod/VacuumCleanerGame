@@ -1,7 +1,6 @@
 using System;
 using Sources.PresentationInterfaces;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 
 namespace Sources.Presentation.SceneEntity
 {

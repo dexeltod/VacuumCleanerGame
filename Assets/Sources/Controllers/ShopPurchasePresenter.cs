@@ -1,13 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cysharp.Threading.Tasks;
-using Sources.Controllers.Common;
-using Sources.ControllersInterfaces;
-using Sources.PresentationInterfaces;
-using Sources.ServicesInterfaces.DTO;
-using Sources.ServicesInterfaces.Upgrade;
-
 namespace Sources.Controllers
 {
 	// public sealed class ShopPurchasePresenter : Presenter, IShopPurchasePresenter
@@ -54,7 +44,7 @@ namespace Sources.Controllers
 	// 	}
 	// 	public void ChangeColor(string idName)
 	// 	{
-	// 		IColorChangeable color = _upgradeElements
+	// 		IUpgradeElementChangeable color = _upgradeElements
 	// 			.FirstOrDefault(element => element.IdName == idName);
 	//
 	// 		color?.AddProgressPointColor(Point);

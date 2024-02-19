@@ -10,8 +10,7 @@ using UnityEngine.UI;
 
 namespace Sources.Presentation.UI.Shop
 {
-	public class UpgradeElementPrefabView : PresentableView<IUpgradeElementPresenter>,
-		IDisposable, IUpgradeElementPrefabView
+	public class UpgradeElementPrefabView : PresentableView<IUpgradeElementPresenter>, IUpgradeElementPrefabView
 	{
 		private const int StartIndex = 0;
 
@@ -32,51 +31,42 @@ namespace Sources.Presentation.UI.Shop
 
 		private readonly List<Image> _pointsColors = new();
 
-		private IUpgradeItemData _itemData;
-
 		private int _boughtPoints;
 		private bool _isInit;
-		private IItemChangeable _itemChangeable;
-		private string _idName;
-
-		public string IdName => _itemData.IdName;
 
 		public void Construct(
 			IUpgradeElementPresenter presenter,
 			IItemChangeable itemChangeable,
-			IUpgradeItemData itemData,
-			IUpgradeItemPrefab viewInfo,
+			Sprite icon,
+			int boughtPointsCount,
+			int price,
 			string title,
-			string description,
-			string idName
+			string description
 		)
 		{
 			if (_isInit)
 				throw new InvalidOperationException($"{name} view is already constructed");
 
 			base.Construct(presenter);
-			_idName = idName;
-			_boughtPoints = itemData.PointLevel;
-			_itemData = itemData;
-			_itemChangeable = itemChangeable;
+
+			_boughtPoints = boughtPointsCount;
 
 			_title.SetText(title);
-			_price.SetText(itemData.Price.ToString());
+			_price.SetText(price.ToString());
 			_description.SetText(description);
 
-			_icon.sprite = viewInfo.Icon;
+			_icon.sprite = icon;
 
 			InstantiatePoints();
 
 			_isInit = true;
 		}
 
-		public void Dispose() =>
-			_itemChangeable.PriceChanged -= OnPriceChanged;
-
 		public void AddProgressPointColor(int count = 1)
 		{
-			if (count <= 0) throw new ArgumentOutOfRangeException(nameof(count));
+			if (count <= 0)
+				throw new ArgumentOutOfRangeException(nameof(count));
+			
 			if (_boughtPoints + count > _maxPoints)
 				return;
 
@@ -89,28 +79,23 @@ namespace Sources.Presentation.UI.Shop
 				_pointsColors[i].color = _notBoughtPointColor;
 		}
 
+		public void SetPriceText(int price) =>
+			_price.SetText(price.ToString());
+
 		private void OnEnable()
 		{
 			Presenter.Enable();
 			_buttonBuy.onClick.AddListener(OnBuyButtonPressed);
-			_itemChangeable.PriceChanged += OnPriceChanged;
 		}
 
 		private void OnDisable()
 		{
 			Presenter.Disable();
 			_buttonBuy.onClick.RemoveListener(OnBuyButtonPressed);
-			_itemChangeable.PriceChanged -= OnPriceChanged;
 		}
 
-		private void OnDestroy() =>
-			_itemChangeable.PriceChanged -= OnPriceChanged;
-
 		private void OnBuyButtonPressed() =>
-			Presenter.Upgrade(_idName);
-
-		private void OnPriceChanged(int value) =>
-			_price.SetText(value.ToString());
+			Presenter.Upgrade();
 
 		private void InstantiatePoints()
 		{

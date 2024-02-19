@@ -12,8 +12,7 @@ using UnityEngine.UI;
 namespace Sources.Presentation.UI
 {
 	[RequireComponent(typeof(Canvas))]
-	//potato realisation ╕_╡
-	public class GameplayInterfaceView : PresentableView<IGameplayInterfacePresenter>, IDisposable,
+	public class GameplayInterfaceView : PresentableView<IGameplayInterfacePresenter>,
 		IGameplayInterfaceView
 
 	{
@@ -42,12 +41,15 @@ namespace Sources.Presentation.UI
 		private int _maxGlobalScore;
 
 		private bool _isInitialized;
+		private IGameMenuPresenter _gameMenuPresenter;
 
 		public ITmpPhrases Phrases => _phrases;
 
 		public Joystick Joystick => _joystick;
+
 		public Canvas Canvas => _canvas;
-		public GameObject GameObject { get; private set; }
+
+		public GameObject InterfaceGameObject { get; private set; }
 
 		public void Construct(
 			IGameplayInterfacePresenter gameplayInterfacePresenter,
@@ -55,7 +57,8 @@ namespace Sources.Presentation.UI
 			int maxCashScore,
 			int maxGlobalScore,
 			int moneyCount,
-			bool isActiveOnStart
+			bool isActiveOnStart,
+			IGameMenuPresenter gameMenuPresenter
 		)
 		{
 			if (gameplayInterfacePresenter == null) throw new ArgumentNullException(nameof(gameplayInterfacePresenter));
@@ -75,7 +78,7 @@ namespace Sources.Presentation.UI
 
 			_moneyText.SetText($"{moneyCount}");
 
-			Subscribe();
+			_gameMenuPresenter = gameMenuPresenter ?? throw new ArgumentNullException(nameof(gameMenuPresenter));
 
 			_maxCashScore = maxCashScore;
 			SetCashScoreText(startCashScore);
@@ -83,14 +86,18 @@ namespace Sources.Presentation.UI
 
 			SetMaxGlobalScore(maxGlobalScore);
 
-			GameObject = gameObject;
+			InterfaceGameObject = gameObject;
 
 			_isInitialized = true;
 		}
 
-		public void Dispose() =>
-			Unsubscribe();
+		public override void Enable() =>
+			Subscribe();
 
+		public override void Disable() =>
+			Unsubscribe();
+	
+		
 		private void OnDestroy() =>
 			Unsubscribe();
 

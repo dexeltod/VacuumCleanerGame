@@ -19,7 +19,7 @@ namespace Sources.Infrastructure.Factories
 		{
 			var gameStatesRepository = new GameStateMachineRepository();
 
-			gameStatesRepository.Set(_resolver.Resolve<MenuState>());
+			gameStatesRepository.Set(_resolver.Resolve<IMenuState>());
 			gameStatesRepository.Set(_resolver.Resolve<IBuildSceneState>());
 			gameStatesRepository.Set(_resolver.Resolve<GameLoopState>());
 

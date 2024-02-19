@@ -5,14 +5,14 @@ namespace Sources.Domain
 {
 	public class PlayerStat : IPlayerStatChangeable
 	{
-		public string Name  { get; }
-		public int    Value { get; private set; }
+		public string Name { get; private set; }
+		public int Value { get; private set; }
 
 		public event Action ValueChanged;
 
 		public PlayerStat(string name, int value)
 		{
-			Name  = name;
+			Name = name;
 			Value = value;
 		}
 

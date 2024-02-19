@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Sources.InfrastructureInterfaces.Common.Providers;
-using UnityEngine;
 
 namespace Sources.Infrastructure.Common.Provider
 {

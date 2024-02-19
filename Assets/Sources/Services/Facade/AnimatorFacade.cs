@@ -6,6 +6,7 @@ namespace Sources.Services.Facade
 	public class AnimatorFacade : MonoBehaviour
 	{
 		private Animator _animator;
+		
 		private Coroutine _currentAnimationRoutine;
 		private int _currentAnimationHash;
 

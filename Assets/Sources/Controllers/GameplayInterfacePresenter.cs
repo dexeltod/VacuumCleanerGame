@@ -22,5 +22,11 @@ namespace Sources.Controllers
 
 		public void GoToNextLevel() =>
 			_levelChangerService.GoNextLevelWithReward();
+
+		public override void Enable() =>
+			_gameplayInterfaceView.Enable();
+
+		public override void Disable() =>
+			_gameplayInterfaceView.Disable();
 	}
 }

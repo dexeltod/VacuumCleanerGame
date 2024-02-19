@@ -4,10 +4,10 @@ namespace Sources.Presentation.UI
 {
 	public abstract class View : MonoBehaviour
 	{
-		public void Enable() =>
+		public virtual void Enable() =>
 			gameObject.SetActive(true);
 
-		public void Disable() =>
+		public virtual void Disable() =>
 			gameObject.SetActive(false);
 	}
 }

@@ -1,14 +1,11 @@
 using System.Collections.Generic;
 using Sources.Application.MainMenu;
 using Sources.Infrastructure.UI;
-using Sources.InfrastructureInterfaces;
-using Sources.InfrastructureInterfaces.Scene;
 using Sources.Services;
 using Sources.ServicesInterfaces;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UIElements;
-using VContainer;
 using VContainer.Unity;
 
 namespace Sources.Application

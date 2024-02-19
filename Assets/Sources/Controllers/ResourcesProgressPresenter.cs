@@ -7,7 +7,6 @@ using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
 using Sources.PresentationInterfaces.Player;
 using Sources.Services;
-using Sources.ServicesInterfaces;
 using Sources.Utils;
 using UnityEngine;
 
@@ -25,7 +24,6 @@ namespace Sources.Controllers
 		private readonly SandParticlePlayerSystem _sandParticleParticlePlayerSystem;
 
 		private int _increasedDelta;
-		private int _globalScore;
 		private int _lastCashScore;
 
 		public IResourceReadOnly<int> SoftCurrency => _resourcesData.SoftCurrency;
@@ -94,7 +92,6 @@ namespace Sources.Controllers
 		public void ClearScores()
 		{
 			_resourcesData.ClearScores();
-			OnGlobalScoreChanged();
 			SetView();
 		}
 
@@ -104,22 +101,18 @@ namespace Sources.Controllers
 		public bool TryAddSand(int newScore)
 		{
 			if (newScore <= 0) throw new ArgumentOutOfRangeException(nameof(newScore));
+
 			if (CurrentScore > _resourcesData.MaxCashScore)
 				return false;
 
 			int score = Mathf.Clamp(newScore, 0, _resourcesData.MaxCashScore);
+			
 			_lastCashScore = _resourcesData.CurrentCashScore;
 
-			_resourcesData.AddCashScore(score);
+			_resourcesData.AddScore(score);
 
 			PlayParticleSystem();
 			SetView();
-
-			if (_globalScore != _resourcesData.GlobalSandCount)
-			{
-				_globalScore = _resourcesData.GlobalSandCount;
-				OnGlobalScoreChanged();
-			}
 
 			OnHalfScoreReached();
 
@@ -131,9 +124,6 @@ namespace Sources.Controllers
 			if (_lastCashScore < _resourcesData.CurrentCashScore)
 				_sandParticleParticlePlayerSystem.Play();
 		}
-
-		private void OnGlobalScoreChanged() =>
-			GameplayInterface.SetGlobalScore(_globalScore);
 
 		private void OnHalfScoreReached()
 		{
@@ -161,9 +151,9 @@ namespace Sources.Controllers
 			SetView();
 		}
 
-		//When the user will be watching video
 		public void AddMoney(int count)
 		{
+			//When the user will be watching video
 			_resourcesData.AddMoney(count);
 			SetMoneyTextView();
 		}
@@ -173,6 +163,7 @@ namespace Sources.Controllers
 
 		private void SetView()
 		{
+			GameplayInterface.SetGlobalScore(_resourcesData.GlobalScoreCount);
 			GameplayInterface.SetCashScore(_resourcesData.CurrentCashScore);
 			FillMeshShaderController.FillArea(CurrentScore, 0, _resourcesData.MaxCashScore);
 		}

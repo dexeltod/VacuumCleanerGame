@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Sources.Domain;
 using Sources.DomainInterfaces;
+using Sources.Infrastructure.Common.Factory;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.Services;
@@ -12,15 +13,13 @@ using VContainer;
 
 namespace Sources.Infrastructure.Factories.Player
 {
-	public class PlayerStatsFactory
+	public class PlayerStatsFactory : Factory<IPlayerStatsService>
 	{
 		private readonly IProgressUpgradeFactory _shopFactory;
 		private readonly IPersistentProgressServiceProvider _persistentProgressService;
 		private readonly IPlayerStatsServiceProvider _playerStatsServiceProvider;
-		private PlayerStatsService _playerStatsService;
 
-		private IGameProgressProvider GameProgressPlayerProgress =>
-			_persistentProgressService.Implementation.GameProgress;
+		private PlayerStatsService _playerStatsService;
 
 		[Inject]
 		public PlayerStatsFactory(
@@ -36,24 +35,28 @@ namespace Sources.Infrastructure.Factories.Player
 				throw new ArgumentNullException(nameof(playerStatsServiceProvider));
 		}
 
-		public PlayerStatsService CreatePlayerStats(
-			IPersistentProgressServiceProvider persistentProgressService
-		)
+		private IGameProgress ShopProgress => _persistentProgressService.Implementation.GlobalProgress.ShopProgress;
+
+		private IGlobalProgress GlobalProgressPlayerProgress =>
+			_persistentProgressService.Implementation.GlobalProgress;
+
+		public override IPlayerStatsService Create()
 		{
 			if (_playerStatsService != null)
 				return _playerStatsService;
+
+			List<IUpgradeProgressData> progress = ShopProgress.GetAll();
+			int progressCount = progress.Count;
+
+			string[] statNames = new string[progressCount];
+			IPlayerStatChangeable[] playerStats = new IPlayerStatChangeable[progressCount];
 
 			IUpgradeItemData[] items = _shopFactory.LoadItems();
 
 			Dictionary<string, int[]> stats = CreateStatsDictionary(items);
 
-			List<IUpgradeProgressData> progress = GameProgressPlayerProgress.PlayerProgress.GetAll();
-
-			string[] statNames = new string[progress.Count];
-			IPlayerStatChangeable[] playerStats = new IPlayerStatChangeable[progress.Count];
-
 			ShopPointsToStatsConverter converter = new ShopPointsToStatsConverter(stats);
-			InitArrays(progress, statNames, playerStats, converter);
+			FillArrays(progress, statNames, playerStats, converter);
 
 			_playerStatsService = new PlayerStatsService(statNames, playerStats, progress, converter);
 
@@ -72,7 +75,7 @@ namespace Sources.Infrastructure.Factories.Player
 			return stats;
 		}
 
-		private void InitArrays(
+		private void FillArrays(
 			List<IUpgradeProgressData> progress,
 			string[] statNames,
 			IPlayerStatChangeable[] playerStats,

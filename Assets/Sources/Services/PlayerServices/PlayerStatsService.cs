@@ -6,7 +6,7 @@ using Sources.ServicesInterfaces;
 
 namespace Sources.Services.PlayerServices
 {
-	public class PlayerStatsService : IPlayerStatsService
+	public sealed class PlayerStatsService : IPlayerStatsService
 	{
 		private readonly ShopPointsToStatsConverter _converter;
 
@@ -16,18 +16,18 @@ namespace Sources.Services.PlayerServices
 
 		public PlayerStatsService(
 			string[] statNames,
-			IPlayerStatChangeable[] playerPlayerStats,
+			IPlayerStatChangeable[] playerStats,
 			List<IUpgradeProgressData> progress,
 			ShopPointsToStatsConverter statsConverter
 		)
 		{
 			_statNames = statNames ?? throw new ArgumentNullException(nameof(statNames));
-			_playerStats = playerPlayerStats ?? throw new ArgumentNullException(nameof(playerPlayerStats));
+			_playerStats = playerStats ?? throw new ArgumentNullException(nameof(playerStats));
 			_progress = progress ?? throw new ArgumentNullException(nameof(progress));
 			_converter = statsConverter ?? throw new ArgumentNullException(nameof(statsConverter));
 		}
 
-		public IPlayerStat GetPlayerStat(string progressName)
+		public IPlayerStat Get(string progressName)
 		{
 			if (_statNames.Contains(progressName) == false)
 				throw new InvalidOperationException("The progress name " + progressName + "not exists");
@@ -44,8 +44,8 @@ namespace Sources.Services.PlayerServices
 		{
 			if (_statNames.Contains(progressName) == false)
 				throw new InvalidOperationException("The progress name " + progressName + "not exists");
-
-			if (value < 0) throw new ArgumentOutOfRangeException(nameof(value));
+			if (value < 0)
+				throw new ArgumentOutOfRangeException(nameof(value));
 
 			IUpgradeProgressData progress = _progress.FirstOrDefault(elem => elem.Name == progressName);
 			IPlayerStatChangeable stat = _playerStats.FirstOrDefault(elem => elem.Name == progressName);

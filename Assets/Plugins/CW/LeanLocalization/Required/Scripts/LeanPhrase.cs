@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Lean.Common;
 
 namespace Lean.Localization
 {

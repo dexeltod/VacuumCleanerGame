@@ -7,6 +7,6 @@ namespace Sources.ApplicationServicesInterfaces
 	{
 		UniTask Save(string json);
 		UniTask<string> Load();
-		UniTask DeleteSaves(IGameProgressProvider gameProgressProvider);
+		UniTask DeleteSaves(IGlobalProgress globalProgress);
 	}
 }

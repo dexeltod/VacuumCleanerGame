@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Sources.Controllers;
 using Sources.ControllersInterfaces;
-using Sources.DomainInterfaces;
-using Sources.Infrastructure.Factories.Presenters;
 using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
@@ -11,8 +8,6 @@ using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
-using Sources.ServicesInterfaces.DTO;
-using Sources.ServicesInterfaces.Upgrade;
 using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 using VContainer;
@@ -74,9 +69,6 @@ namespace Sources.Infrastructure.Factories.UI
 		private IResourcesProgressPresenter ResourcesProgressPresenter =>
 			_resourceProgressPresenterProvider.Implementation;
 
-		private void Localize() =>
-			_upgradeWindow.Phrases = _translatorService.Localize(_upgradeWindow.Phrases);
-
 		public IUpgradeWindow Create()
 		{
 			_upgradeWindow = _assetFactory.InstantiateAndGetComponent<UpgradeWindow>(UIResourcesUpgradeWindow);
@@ -95,5 +87,8 @@ namespace Sources.Infrastructure.Factories.UI
 
 			return _upgradeWindow;
 		}
+
+		private void Localize() =>
+			_upgradeWindow.Phrases = _translatorService.Localize(_upgradeWindow.Phrases);
 	}
 }

@@ -57,17 +57,18 @@ namespace Sources.Domain.Progress.Player
 			private set => _cashScore.Set(value);
 		}
 
-		public int GlobalSandCount
+		public int GlobalScoreCount
 		{
 			get => _globalScore.Count;
 			private set => _globalScore.Set(value);
 		}
 
-		public void AddCashScore(int newValue)
+		public void AddScore(int newValue)
 		{
 			if (newValue <= 0) throw new ArgumentOutOfRangeException(nameof(newValue));
+			
 			CurrentCashScore += newValue;
-			GlobalSandCount += newValue;
+			GlobalScoreCount += newValue;
 
 			_cashScore.Set(CurrentCashScore);
 		}

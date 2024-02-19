@@ -1,7 +1,7 @@
 namespace Sources.PresentationInterfaces
 {
-	public interface IUpgradeElementPrefabView : IColorChangeable
+	public interface IUpgradeElementPrefabView : IUpgradeElementChangeable
 	{
-		string IdName { get; }
+		
 	}
 }

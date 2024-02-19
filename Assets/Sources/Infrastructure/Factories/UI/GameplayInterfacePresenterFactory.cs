@@ -8,7 +8,6 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Common.Factory.Decorators;
 using Sources.Infrastructure.Providers;
-using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.Presentation.UI;
 using Sources.PresentationInterfaces;
@@ -19,19 +18,26 @@ using VContainer;
 
 namespace Sources.Infrastructure.Factories.UI
 {
-	public class GameplayInterfacePresenterFactory : PresenterFactory<GameplayInterfacePresenter>
+	public class GameplayInterfacePresenterFactory : PresenterFactory<IGameplayInterfacePresenter>
 	{
 		private const bool IsActiveOnStart = true;
 
 		private readonly IAssetFactory _assetFactory;
-		private readonly IResourcesProgressPresenterProvider _resourceProgressPresenterProvider;
 		private readonly IPersistentProgressServiceProvider _gameProgress;
 		private readonly ITranslatorService _translatorService;
 		private readonly ILevelChangerService _levelChangerService;
 		private readonly GameplayInterfaceProvider _gameplayInterfaceProvider;
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
+		private readonly IGameMenuPresenterProvider _gameMenuPresenterProvider;
+		private readonly IGameStateChangerProvider _gameStateChanger;
 
 		private readonly string _uiResourcesUI = ResourcesAssetPath.Scene.UIResources.UI;
+
+		private IGameplayInterfacePresenter GameplayInterfacePresenter =>
+			_gameplayInterfacePresenterProvider.Implementation;
+
+		private IResourcesModel GlobalProgressResourcesModel =>
+			_gameProgress.Implementation.GlobalProgress.ResourcesModel;
 
 		[Inject]
 		public GameplayInterfacePresenterFactory(
@@ -41,13 +47,12 @@ namespace Sources.Infrastructure.Factories.UI
 			ITranslatorService translatorService,
 			ILevelChangerService levelChangerService,
 			GameplayInterfaceProvider gameplayInterfaceProvider,
-			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider
+			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
+			IGameMenuPresenterProvider gameMenuPresenterProvider,
+			IGameStateChangerProvider gameStateChanger
 		)
 		{
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
-
-			_resourceProgressPresenterProvider = resourceProgressProgressPresenterProvider ??
-				throw new ArgumentNullException(nameof(resourceProgressProgressPresenterProvider));
 
 			_gameProgress = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
@@ -57,35 +62,47 @@ namespace Sources.Infrastructure.Factories.UI
 				throw new ArgumentNullException(nameof(gameplayInterfaceProvider));
 			_gameplayInterfacePresenterProvider = gameplayInterfacePresenterProvider ??
 				throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
+			_gameMenuPresenterProvider = gameMenuPresenterProvider ??
+				throw new ArgumentNullException(nameof(gameMenuPresenterProvider));
+			_gameStateChanger = gameStateChanger ?? throw new ArgumentNullException(nameof(gameStateChanger));
 		}
 
-		public override GameplayInterfacePresenter Create()
+		public override IGameplayInterfacePresenter Create()
 		{
 			GameplayInterfaceView gameplayInterfaceView = Load();
 			_gameplayInterfaceProvider.Register<IGameplayInterfaceView>(gameplayInterfaceView);
 
-			_gameplayInterfacePresenterProvider.Register<IGameplayInterfacePresenter>(
-				new GameplayInterfacePresenter(_levelChangerService, gameplayInterfaceView)
+			GameplayInterfacePresenter presenter = new GameplayInterfacePresenter(
+				_levelChangerService,
+				_gameplayInterfaceProvider.Implementation
 			);
 
-			IResourcesModel model = GetModel();
+			_gameplayInterfacePresenterProvider.Register<IGameplayInterfacePresenter>(presenter);
 
 			ConstructView(
-				model,
-				new GameplayInterfacePresenter(_levelChangerService, gameplayInterfaceView),
+				GlobalProgressResourcesModel,
+				GameplayInterfacePresenter,
 				gameplayInterfaceView
 			);
 
-			return new GameplayInterfacePresenter(_levelChangerService, gameplayInterfaceView);
+			return GameplayInterfacePresenter;
 		}
 
 		private void ConstructView(
 			IResourcesModel model,
-			GameplayInterfacePresenter gameplayInterfacePresenter,
+			IGameplayInterfacePresenter gameplayInterfacePresenter,
 			GameplayInterfaceView gameplayInterfaceView
 		)
 		{
 			if (model == null) throw new ArgumentNullException(nameof(model));
+
+			var gameMenuView = gameplayInterfaceView.GetComponent<IGameMenuView>();
+
+			_gameMenuPresenterProvider.Register<IGameMenuPresenter>(
+				new GameMenuPresenter(gameMenuView, _gameStateChanger.Implementation)
+			);
+
+			gameMenuView.Construct(_gameMenuPresenterProvider.Implementation);
 
 			gameplayInterfaceView.Construct(
 				gameplayInterfacePresenter,
@@ -93,14 +110,12 @@ namespace Sources.Infrastructure.Factories.UI
 				model.MaxCashScore,
 				model.MaxGlobalScore,
 				model.SoftCurrency.Count,
-				IsActiveOnStart
+				IsActiveOnStart,
+				_gameMenuPresenterProvider.Implementation
 			);
 
 			gameplayInterfaceView.Phrases.Phrases = _translatorService.Localize(gameplayInterfaceView.Phrases.Phrases);
 		}
-
-		private IResourcesModel GetModel() =>
-			_gameProgress.Implementation.GameProgress.ResourcesModel;
 
 		private GameplayInterfaceView Load() =>
 			_assetFactory

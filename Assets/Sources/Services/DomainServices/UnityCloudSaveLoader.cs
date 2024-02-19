@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
-using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Unity.Services.CloudSave;
-using UnityEngine;
 
 namespace Sources.Services.DomainServices
 {
@@ -51,7 +49,7 @@ namespace Sources.Services.DomainServices
 			}
 		}
 
-		public async UniTask DeleteSaves(IGameProgressProvider gameProgressProvider)
+		public async UniTask DeleteSaves(IGlobalProgress globalProgress)
 		{
 			
 		}

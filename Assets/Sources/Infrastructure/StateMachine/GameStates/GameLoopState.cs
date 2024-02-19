@@ -1,14 +1,11 @@
 using System;
-using Sources.Controllers;
 using Sources.ControllersInterfaces;
 using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.States.StateMachineInterfaces;
-using Sources.Presentation.Player;
 using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
-using Sources.Utils.ConstantNames;
 using VContainer;
 
 namespace Sources.Infrastructure.StateMachine.GameStates
@@ -21,6 +18,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
 		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 		private readonly DissolveShaderViewControllerProvider _dissolveShaderViewControllerProvider;
+		
+		private readonly IGameMenuPresenterProvider _gameMenuPresenterProvider;
 		private readonly LoadingCurtain _loadingCurtain;
 
 		private IGameplayInterfaceView GameplayInterface => _gameplayInterfaceProvider.Implementation;
@@ -39,7 +38,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			UpgradeWindowPresenterProvider upgradeWindowPresenterProvider,
 			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
 			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
-			DissolveShaderViewControllerProvider dissolveShaderViewControllerProvider
+			DissolveShaderViewControllerProvider dissolveShaderViewControllerProvider,
+			IGameMenuPresenterProvider gameMenuPresenterProvider
 		)
 		{
 			_gameplayInterfaceProvider = gameplayInterfaceProvider ??
@@ -55,35 +55,38 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
 			_dissolveShaderViewControllerProvider = dissolveShaderViewControllerProvider ??
 				throw new ArgumentNullException(nameof(dissolveShaderViewControllerProvider));
+			_gameMenuPresenterProvider = gameMenuPresenterProvider ??
+				throw new ArgumentNullException(nameof(gameMenuPresenterProvider));
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
 		public void Enter()
 		{
+			
 			_localizationService.UpdateTranslations();
 
 			if (GameplayInterface == null)
 				throw new NullReferenceException("GameplayInterface");
 
-			GameplayInterface.GameObject.SetActive(true);
+			GameplayInterface.InterfaceGameObject.SetActive(true);
 
 			_upgradeWindowPresenterProvider.Implementation.Enable();
 			_gameplayInterfacePresenterProvider.Implementation.Enable();
 			_resourcesProgressPresenterProvider.Implementation.Enable();
-			ResourcesProgressPresenter.Enable();
-			_loadingCurtain.HideSlowly();
+			_gameMenuPresenterProvider.Implementation.Enable();
 
+			_loadingCurtain.HideSlowly();
 			DissolveShaderViewController.StartDissolving();
 		}
 
 		public void Exit()
 		{
-			GameplayInterface?.GameObject.SetActive(false);
+			GameplayInterface?.InterfaceGameObject.SetActive(false);
 
 			_upgradeWindowPresenterProvider.Implementation.Disable();
 			_gameplayInterfacePresenterProvider.Implementation.Disable();
 			_resourcesProgressPresenterProvider.Implementation.Disable();
-			ResourcesProgressPresenter.Disable();
+			_gameMenuPresenterProvider.Implementation.Disable();
 			_loadingCurtain.Show();
 		}
 	}

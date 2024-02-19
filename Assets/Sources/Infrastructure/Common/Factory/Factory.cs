@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Sources.InfrastructureInterfaces.Common.Factories;
 
 namespace Sources.Infrastructure.Common.Factory

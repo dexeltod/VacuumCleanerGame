@@ -11,11 +11,11 @@ namespace Sources.DomainInterfaces
 
 		int MaxCashScore { get; }
 		int CurrentCashScore { get; }
-		int GlobalSandCount { get; }
+		int GlobalScoreCount { get; }
 		int PercentOfScore { get; }
 		int MaxGlobalScore { get; }
 
-		void AddCashScore(int newValue);
+		void AddScore(int newValue);
 		void DecreaseCashScore(int newValue);
 		void AddMoney(int newValue);
 		void DecreaseMoney(int newValue);

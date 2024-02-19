@@ -18,7 +18,7 @@ namespace Sources.Infrastructure.Factories
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IPersistentProgressService _persistentProgressService;
 		private readonly IUpgradeWindowPresenter _upgradeWindowPresenter;
-		private IResourcesModel GameProgressResourcesModel => _persistentProgressService.GameProgress.ResourcesModel;
+		private IResourcesModel GameProgressResourcesModel => _persistentProgressService.GlobalProgress.ResourcesModel;
 
 		private string GameObjectsUpgradeTrigger => ResourcesAssetPath.GameObjects.UpgradeTrigger;
 

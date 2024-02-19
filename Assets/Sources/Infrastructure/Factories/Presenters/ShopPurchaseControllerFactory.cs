@@ -1,15 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Sources.Controllers;
-using Sources.ControllersInterfaces;
-using Sources.Infrastructure.Common.Factory.Decorators;
-using Sources.InfrastructureInterfaces.Providers;
-using Sources.Presentation.UI.Shop;
-using Sources.PresentationInterfaces;
-using Sources.ServicesInterfaces;
-using Sources.ServicesInterfaces.DTO;
-using Sources.Utils.Configs.Scripts;
-
 namespace Sources.Infrastructure.Factories.Presenters
 {
 	// public class ShopPurchaseControllerFactory : PresenterFactory<ShopPurchasePresenter>

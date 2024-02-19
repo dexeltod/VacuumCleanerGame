@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Sources.UseCases.Scene;
 using Sources.Utils;
 using UnityEngine;
 

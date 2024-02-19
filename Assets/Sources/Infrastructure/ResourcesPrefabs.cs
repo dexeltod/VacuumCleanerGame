@@ -1,9 +1,4 @@
 using System;
-using Cinemachine;
-using Lean.Localization;
-using Sources.Infrastructure.Factories.CoroutineRunner;
-using Sources.Presentation.SceneEntity;
-using Sources.Services.Triggers;
 using UnityEngine;
 
 namespace Sources.Infrastructure

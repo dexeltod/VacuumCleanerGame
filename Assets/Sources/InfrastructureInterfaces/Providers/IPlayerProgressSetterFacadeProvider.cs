@@ -1,7 +1,7 @@
 using Sources.InfrastructureInterfaces.Common.Providers;
-using Sources.ServicesInterfaces.DTO;
+using Sources.ServicesInterfaces;
 
 namespace Sources.InfrastructureInterfaces.Providers
 {
-	public interface IPlayerProgressSetterFacadeProvider: IProvider<IPlayerProgressSetterFacade> { }
+	public interface IPlayerProgressSetterFacadeProvider: IProvider<IProgressSetterFacade> { }
 }

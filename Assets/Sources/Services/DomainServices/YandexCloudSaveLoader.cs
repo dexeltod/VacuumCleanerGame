@@ -1,10 +1,7 @@
-using System;
 using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
-using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
-using Sources.DomainInterfaces.DomainServicesInterfaces;
 using UnityEngine;
 
 namespace Sources.Services.DomainServices
@@ -45,7 +42,7 @@ namespace Sources.Services.DomainServices
 			return json;
 		}
 
-		public async UniTask DeleteSaves(IGameProgressProvider gameProgressProvider)
+		public async UniTask DeleteSaves(IGlobalProgress globalProgress)
 		{
 			bool isCallbackReceived = false;
 			PlayerAccount.SetCloudSaveData("{}", () => isCallbackReceived = true);

@@ -1,13 +1,8 @@
 using System;
 using Sources.Controllers;
-using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
-using Sources.Infrastructure.Common.Factory;
 using Sources.Infrastructure.Common.Factory.Decorators;
-using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Providers;
-using Sources.Presentation.UI;
-using Sources.PresentationInterfaces;
 using VContainer;
 
 namespace Sources.Infrastructure.Factories.Presenters
@@ -20,7 +15,7 @@ namespace Sources.Infrastructure.Factories.Presenters
 		private readonly ISandParticleSystemProvider _sandParticleSystemProvider;
 		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
 
-		private IResourcesModel Resources => _persistentProgressService.Implementation.GameProgress.ResourcesModel;
+		private IResourcesModel Resources => _persistentProgressService.Implementation.GlobalProgress.ResourcesModel;
 
 		[Inject]
 		public ResourcesProgressPresenterFactory(

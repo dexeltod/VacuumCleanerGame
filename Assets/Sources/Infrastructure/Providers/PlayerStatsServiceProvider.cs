@@ -4,5 +4,5 @@ using Sources.ServicesInterfaces;
 
 namespace Sources.Infrastructure.Providers
 {
-	public class PlayerStatsServiceProvider : Provider<IPlayerStatsService>, IPlayerStatsServiceProvider { }
+	public sealed class PlayerStatsServiceProvider : Provider<IPlayerStatsService>, IPlayerStatsServiceProvider { }
 }

@@ -5,7 +5,7 @@ using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.LeaderBoard;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Services;
-using Sources.InfrastructureInterfaces.States.StateMachineInterfaces;
+using Sources.InfrastructureInterfaces.States;
 using Sources.Presentation.SceneEntity;
 using Sources.Presentation.UI;
 using Sources.Services.Localization;
@@ -16,7 +16,7 @@ using VContainer;
 
 namespace Sources.Infrastructure.StateMachine.GameStates
 {
-	public sealed class MenuState : IGameState
+	public sealed class MenuState : IMenuState
 	{
 		private readonly ISceneLoader _sceneLoader;
 		private readonly LoadingCurtain _loadingCurtain;
@@ -31,8 +31,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly IGameStateChangerProvider _gameStateChangerProvider;
 
 		private MainMenuPresenter _mainMenuPresenter;
-		private IGameStateChangerProvider _gameStateMachineProvider;
-		private IGameStateChanger GameStateMachine => _gameStateMachineProvider.Implementation;
+
+		private IGameStateChanger GameStateMachine => _gameStateChangerProvider.Implementation;
 
 		[Inject]
 		public MenuState(
@@ -67,7 +67,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			_sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 
-			_gameStateMachineProvider = gameStateChangerProvider ?? throw new ArgumentNullException(nameof(gameStateChangerProvider));
+			_gameStateChangerProvider = gameStateChangerProvider ??
+				throw new ArgumentNullException(nameof(gameStateChangerProvider));
 		}
 
 		public async void Enter()

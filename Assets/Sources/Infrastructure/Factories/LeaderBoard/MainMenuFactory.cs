@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
-using Sources.Presentation;
 using Sources.Presentation.UI;
 using Sources.Presentation.UI.MainMenu.LeaderBoard;
 using Sources.Services.Localization;
