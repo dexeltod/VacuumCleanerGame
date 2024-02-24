@@ -15,7 +15,7 @@ namespace Sources.DomainInterfaces
 		int PercentOfScore { get; }
 		int MaxGlobalScore { get; }
 
-		void AddScore(int newValue);
+		void AddScore(int newScore);
 		void DecreaseCashScore(int newValue);
 		void AddMoney(int newValue);
 		void DecreaseMoney(int newValue);

@@ -22,10 +22,7 @@ namespace Sources.Domain
 				throw new InvalidCastException("Value must be positive");
 
 			Value = value;
-			ValueChanged.Invoke();
-
-			if (ValueChanged == null)
-				throw new NullReferenceException($"{ValueChanged} does not have a subscribers");
+			ValueChanged?.Invoke();
 		}
 	}
 }

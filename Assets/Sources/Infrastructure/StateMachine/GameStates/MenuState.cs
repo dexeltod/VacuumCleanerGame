@@ -3,6 +3,7 @@ using Sources.ApplicationServicesInterfaces;
 using Sources.Controllers.MainMenu;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.LeaderBoard;
+using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.InfrastructureInterfaces.States;
@@ -26,6 +27,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly ILeaderBoardService _leaderBoardService;
 		private readonly IRegisterWindowLoader _registerWindowLoader;
 		private readonly IAdvertisement _advertisement;
+		private readonly IAdvertisementHandlerProvider _advertisementHandler;
 		private readonly ITranslatorService _translatorService;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IGameStateChangerProvider _gameStateChangerProvider;
@@ -44,6 +46,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			ILeaderBoardService leaderBoardService,
 			IRegisterWindowLoader registerWindowLoader,
 			IAdvertisement advertisement,
+			IAdvertisementHandlerProvider advertisementHandler,
 			ITranslatorService translatorService,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			IGameStateChangerProvider gameStateChangerProvider
@@ -56,6 +59,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				= registerWindowLoader ?? throw new ArgumentNullException(nameof(registerWindowLoader));
 
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
+			_advertisementHandler = advertisementHandler ?? throw new ArgumentNullException(nameof(advertisementHandler));
 
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 

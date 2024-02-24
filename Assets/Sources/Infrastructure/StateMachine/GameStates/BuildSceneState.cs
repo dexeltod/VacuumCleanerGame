@@ -17,6 +17,7 @@ using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
 using Sources.PresentationInterfaces.Player;
 using Sources.ServicesInterfaces;
+using Sources.ServicesInterfaces.Advertisement;
 using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 using VContainer;
@@ -46,11 +47,13 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
 		private readonly ISceneLoader _sceneLoader;
 		private readonly SandCarContainerViewProvider _sandCarContainerViewProvider;
-		private readonly DissolveShaderViewControllerProvider _dissolveDissolveShaderViewControllerProvider;
+		private readonly DissolveShaderViewControllerProvider _dissolveShaderViewControllerProvider;
 		private readonly FillMeshShaderControllerProvider _fillMeshShaderControllerProvider;
 		private readonly ISandParticleSystemProvider _sandParticleSystemProvider;
 		private readonly IPlayerStatsServiceProvider _playerStatsServiceProvider;
 		private readonly PlayerStatsFactory _playerStatsFactory;
+		private readonly GameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
+		private readonly IAdvertisement _advertisement;
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly ILevelProgressFacade _levelProgressFacade;
 
@@ -94,7 +97,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			FillMeshShaderControllerProvider fillMeshShaderControllerProvider,
 			ISandParticleSystemProvider sandParticleSystemProvider,
 			IPlayerStatsServiceProvider playerStatsServiceProvider,
-			PlayerStatsFactory playerStatsFactory
+			PlayerStatsFactory playerStatsFactory,
+			GameplayInterfacePresenterProvider gameplayInterfacePresenterProvider
 
 #endregion
 
@@ -135,7 +139,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			_sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
 			_sandCarContainerViewProvider = sandCarContainerViewProvider ??
 				throw new ArgumentNullException(nameof(sandCarContainerViewProvider));
-			_dissolveDissolveShaderViewControllerProvider = dissolveShaderViewControllerProvider ??
+			_dissolveShaderViewControllerProvider = dissolveShaderViewControllerProvider ??
 				throw new ArgumentNullException(nameof(dissolveShaderViewControllerProvider));
 			_fillMeshShaderControllerProvider = fillMeshShaderControllerProvider ??
 				throw new ArgumentNullException(nameof(fillMeshShaderControllerProvider));
@@ -144,7 +148,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			_playerStatsServiceProvider = playerStatsServiceProvider ??
 				throw new ArgumentNullException(nameof(playerStatsServiceProvider));
 			_playerStatsFactory = playerStatsFactory ?? throw new ArgumentNullException(nameof(playerStatsFactory));
-
+			_gameplayInterfacePresenterProvider = gameplayInterfacePresenterProvider ??
+				throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
 #endregion
 		}
 
@@ -173,7 +178,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			);
 
 			CreateSandInCar(playerGameObject);
-			
+
 			ResourcesProgressPresenter resourcesProgressPresenter = _resourcesProgressPresenterFactory.Create();
 			_resourcesProgressPresenterProvider.Register<IResourcesProgressPresenter>(resourcesProgressPresenter);
 
@@ -208,7 +213,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 			shaderView.Construct(shaderViewController);
 
-			_dissolveDissolveShaderViewControllerProvider.Register<IDissolveShaderViewController>(shaderViewController);
+			_dissolveShaderViewControllerProvider.Register<IDissolveShaderViewController>(shaderViewController);
 		}
 
 		private void RegisterUpgradeWindowPresenterProvider()
@@ -217,7 +222,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				_upgradeWindowViewFactory,
 				_assetFactory,
 				_progressSaveLoadDataService,
-				_persistentProgress.Implementation
+				_persistentProgress.Implementation,
+				_gameplayInterfacePresenterProvider.Implementation
 			).Create();
 
 			_upgradeWindowPresenterProvider.Register(presenter);

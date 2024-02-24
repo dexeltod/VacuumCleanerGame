@@ -3,5 +3,5 @@ using Sources.Infrastructure.Common.Provider;
 
 namespace Sources.Infrastructure.Providers
 {
-	public class UpgradeWindowPresenterProvider : Provider<IUpgradeWindowPresenter> { }
+	public class UpgradeWindowPresenterProvider : Provider<IUpgradeWindowPresenter>, IUpgradeWindowPresenterProvider { }
 }

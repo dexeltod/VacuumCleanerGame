@@ -31,8 +31,12 @@ namespace Sources.Infrastructure.DataViewModel
 
 		private IGameProgress PlayerProgress =>
 			_persistentProgressServiceProvider.Implementation.GlobalProgress.PlayerProgress;
+
 		private IGameProgress ShopProgress =>
 			_persistentProgressServiceProvider.Implementation.GlobalProgress.ShopProgress;
+
+		private IResourcesModel ResourcesModel =>
+			_persistentProgressServiceProvider.Implementation.GlobalProgress.ResourcesModel;
 
 		private IPlayerStatsService PlayerStatsService => _playerStatsProvider.Implementation;
 
@@ -48,10 +52,12 @@ namespace Sources.Infrastructure.DataViewModel
 				return false;
 
 			PlayerStatsService.Set(upgradeProgress.Name, newProgressValue);
-			
+
 			PlayerProgress.SetProgress(progressName, newProgressValue);
 			ShopProgress.SetProgress(progressName, newProgressValue);
-
+			
+			ResourcesModel.DecreaseMoney(itemData.Price);
+			
 			itemData.SetUpgradeLevel(upgradeProgress.Value);
 
 			_progressSaveLoadDataService.SaveToCloud();

@@ -10,6 +10,7 @@ using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.InfrastructureInterfaces.States;
+using Sources.ServicesInterfaces.Advertisement;
 using VContainer;
 using VContainer.Unity;
 
@@ -26,6 +27,8 @@ namespace Sources.Application
 		private readonly PlayerStatsFactory _playerStatsFactory;
 		private readonly ISaveLoaderProvider _saveLoaderProvider;
 		private readonly SaveLoaderFactory _saveLoaderFactory;
+		private readonly AdvertisementHandlerProvider _advertisementHandlerProvider;
+		private readonly IAdvertisement _advertisement;
 		private readonly IYandexSDKController _yandexSDKController;
 
 		[Inject]
@@ -40,7 +43,9 @@ namespace Sources.Application
 			IPlayerStatsServiceProvider playerStatsServiceProvider,
 			IPersistentProgressServiceProvider persistentProgressService,
 			ISaveLoaderProvider saveLoaderProvider,
-			SaveLoaderFactory saveLoaderFactory
+			SaveLoaderFactory saveLoaderFactory,
+			AdvertisementHandlerProvider advertisementHandlerProvider,
+			IAdvertisement advertisement
 
 #if YANDEX_CODE
 			, IYandexSDKController yandexSDKController
@@ -59,6 +64,9 @@ namespace Sources.Application
 			_playerStatsFactory = playerStatsFactory ?? throw new ArgumentNullException(nameof(playerStatsFactory));
 			_saveLoaderProvider = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
 			_saveLoaderFactory = saveLoaderFactory ?? throw new ArgumentNullException(nameof(saveLoaderFactory));
+			_advertisementHandlerProvider = advertisementHandlerProvider ??
+				throw new ArgumentNullException(nameof(advertisementHandlerProvider));
+			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 
 #if YANDEX_CODE
 			_yandexSDKController = yandexSDKController ?? throw new ArgumentNullException(nameof(yandexSDKController));
@@ -67,14 +75,6 @@ namespace Sources.Application
 
 		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Implementation;
 
-		private async UniTask Initialize()
-		{
-			_saveLoaderProvider.Register<ISaveLoader>(_saveLoaderFactory.GetSaveLoader());
-
-			await _saveLoader.Initialize();
-			await _progressFactory.Initialize();
-		}
-
 		public async UniTask StartAsync(CancellationToken cancellation)
 		{
 			await Initialize();
@@ -82,12 +82,21 @@ namespace Sources.Application
 			_yandexSDKController.SetStatusInitialized();
 #endif
 
+			GameStateChanger.Enter<IMenuState>();
+		}
+
+		private async UniTask Initialize()
+		{
+			_saveLoaderProvider.Register<ISaveLoader>(_saveLoaderFactory.GetSaveLoader());
+
+			await _saveLoader.Initialize();
+			await _progressFactory.Initialize();
+
+			_advertisementHandlerProvider.Register(new AdvertisementHandler(_advertisement));
 			_pathConfigProvider.Register(_resourcePathConfigServiceFactory.Create());
 			_gameStateChangerProvider.Register(_gameStateChangerFactory.Create());
 
 			_playerStatsFactory.Create();
-
-			GameStateChanger.Enter<IMenuState>();
 		}
 	}
 }

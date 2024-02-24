@@ -8,11 +8,13 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Common.Factory.Decorators;
 using Sources.Infrastructure.Providers;
+using Sources.Infrastructure.Services.Decorators;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.Presentation.UI;
 using Sources.PresentationInterfaces;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
+using Sources.ServicesInterfaces.Advertisement;
 using Sources.Utils.Configs.Scripts;
 using VContainer;
 
@@ -32,6 +34,7 @@ namespace Sources.Infrastructure.Factories.UI
 		private readonly IGameStateChangerProvider _gameStateChanger;
 
 		private readonly string _uiResourcesUI = ResourcesAssetPath.Scene.UIResources.UI;
+		private readonly SpeedDecorator _speedDecorator;
 
 		private IGameplayInterfacePresenter GameplayInterfacePresenter =>
 			_gameplayInterfacePresenterProvider.Implementation;
@@ -49,7 +52,10 @@ namespace Sources.Infrastructure.Factories.UI
 			GameplayInterfaceProvider gameplayInterfaceProvider,
 			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
 			IGameMenuPresenterProvider gameMenuPresenterProvider,
-			IGameStateChangerProvider gameStateChanger
+			IGameStateChangerProvider gameStateChanger,
+			IPlayerStatsServiceProvider playerStatsServiceProvider,
+			ICoroutineRunnerProvider coroutineRunnerProvider,
+			IAdvertisement advertisement
 		)
 		{
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
@@ -65,6 +71,16 @@ namespace Sources.Infrastructure.Factories.UI
 			_gameMenuPresenterProvider = gameMenuPresenterProvider ??
 				throw new ArgumentNullException(nameof(gameMenuPresenterProvider));
 			_gameStateChanger = gameStateChanger ?? throw new ArgumentNullException(nameof(gameStateChanger));
+
+			IPlayerStatsServiceProvider statsServiceProvider = playerStatsServiceProvider ??
+				throw new ArgumentNullException(nameof(playerStatsServiceProvider));
+
+			IPlayerStatChangeable playerStatChangeable
+				= statsServiceProvider.Implementation.Get(PlayerStatNames.Speed) as IPlayerStatChangeable;
+
+			if (coroutineRunnerProvider == null) throw new ArgumentNullException(nameof(coroutineRunnerProvider));
+			if (advertisement == null) throw new ArgumentNullException(nameof(advertisement));
+			_speedDecorator = new SpeedDecorator(playerStatChangeable, coroutineRunnerProvider, advertisement);
 		}
 
 		public override IGameplayInterfacePresenter Create()
@@ -74,7 +90,8 @@ namespace Sources.Infrastructure.Factories.UI
 
 			GameplayInterfacePresenter presenter = new GameplayInterfacePresenter(
 				_levelChangerService,
-				_gameplayInterfaceProvider.Implementation
+				_gameplayInterfaceProvider.Implementation,
+				_speedDecorator
 			);
 
 			_gameplayInterfacePresenterProvider.Register<IGameplayInterfacePresenter>(presenter);

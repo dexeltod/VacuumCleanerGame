@@ -35,7 +35,14 @@ namespace Sources.Presentation.UI.Shop
 			if (money < 0) throw new ArgumentOutOfRangeException(nameof(money));
 
 			_money.SetText(money.ToString());
+
 			base.Construct(presenter);
+		}
+
+		public void SetMoney(int money)
+		{
+			if (money < 0) throw new ArgumentOutOfRangeException(nameof(money));
+			_money.SetText(money.ToString());
 		}
 
 		public void OnEnable() =>
@@ -46,9 +53,6 @@ namespace Sources.Presentation.UI.Shop
 
 		public void SetActiveYesNoButtons(bool isActive) =>
 			_yesNoButtons.gameObject.SetActive(isActive);
-
-		private void OnEnableJoystick() =>
-			Disable();
 
 		private void Awake() =>
 			enabled = false;

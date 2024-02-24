@@ -10,15 +10,15 @@ namespace Sources.Controllers
 	public class PlayerTransformable : Transformable, IUpdatable
 	{
 		private const float MaxTransformHeight = 2f;
-		private const string SpeedName = "Speed";
 
 		public readonly float VacuumDistance;
 
-		private float _speed;
 		private readonly Joystick _joystick;
 		private readonly IPlayerStat _speedStat;
 
 		private Vector3 _offset;
+
+		private float Speed => _speedStat.Value;
 
 		public PlayerTransformable(
 			Transform transform,
@@ -26,16 +26,9 @@ namespace Sources.Controllers
 			IPlayerStatsService stats
 		) : base(transform)
 		{
-			_speedStat = stats.Get(SpeedName);
-			_speedStat.ValueChanged += OnPlayerStatChanged;
+			_speedStat = stats.Get(PlayerStatNames.Speed);
 
-			_speed = _speedStat.Value;
 			_joystick = joystick;
-		}
-
-		private void OnPlayerStatChanged()
-		{
-			_speed = _speedStat.Value;
 		}
 
 		public void Update(float deltaTime) =>
@@ -44,7 +37,7 @@ namespace Sources.Controllers
 		private void Move(float deltaTime)
 		{
 			Vector3 joystickDirection = new Vector3(_joystick.Direction.x, 0, _joystick.Direction.y);
-			Vector3 direction = joystickDirection * (_speed * deltaTime);
+			Vector3 direction = joystickDirection * (Speed * deltaTime);
 
 			_offset = Transform.position + direction;
 

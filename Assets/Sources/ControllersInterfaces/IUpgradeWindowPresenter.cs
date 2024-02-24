@@ -2,5 +2,8 @@ using Sources.ControllersInterfaces.Common;
 
 namespace Sources.ControllersInterfaces
 {
-	public interface IUpgradeWindowPresenter : IPresenter { }
+	public interface IUpgradeWindowPresenter : IPresenter
+	{
+		void SetMoney(int money);
+	}
 }

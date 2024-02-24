@@ -5,9 +5,11 @@ using UnityEngine;
 
 namespace Sources.Application.UnityApplicationServices
 {
-	public class EditorAdvertisement : IAdvertisement
+	public sealed class EditorAdvertisement : IAdvertisement
 	{
-		public UniTask ShowAd(Action onOpenCallback, Action onRewardsCallback, Action onCloseCallback)
+		public event Action Opened;
+
+		public UniTask ShowAd(Action onRewardsCallback, Action onCloseCallback)
 		{
 			Debug.Log("ShowAd");
 			

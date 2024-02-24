@@ -27,6 +27,7 @@ namespace Sources.Presentation.UI
 		[SerializeField] private TextMeshProUGUI _moneyText;
 
 		[SerializeField] private Button _goToNextLevelButton;
+		[SerializeField] private Button _increaseSpeedButton;
 
 		[SerializeField] private Image _scoreFillBar;
 		[SerializeField] private Joystick _joystick;
@@ -88,7 +89,6 @@ namespace Sources.Presentation.UI
 
 			SetGlobalScore(globalScore);
 			SetCashScore(cashScore);
-
 			SetMaxGlobalScore(maxGlobalScore);
 
 			InterfaceGameObject = gameObject;
@@ -121,7 +121,7 @@ namespace Sources.Presentation.UI
 			if (newScore < 0) throw new ArgumentOutOfRangeException(nameof(newScore));
 			_globalScore = newScore;
 
-			_globalScoreImage.fillAmount = NormalizeValue(
+			_globalScoreImage.fillAmount = Normalizer.Normalize(
 				MaxNormalizeThreshold,
 				_globalScore,
 				_maxGlobalScore
@@ -154,21 +154,10 @@ namespace Sources.Presentation.UI
 		{
 			_cashScore = newScore;
 
-			float value = NormalizeValue(
-				MaxNormalizeThreshold,
-				_cashScore,
-				_maxCashScore
-			);
+			float value = Normalizer.Normalize(MaxNormalizeThreshold, _cashScore, _maxCashScore);
 
 			_scoreFillBar.fillAmount = value;
 		}
-
-		private float NormalizeValue(
-			float topValue,
-			float newScore,
-			float currentMaxScore
-		) =>
-			topValue / currentMaxScore * newScore;
 
 		private void SetCashScoreText(int newScore) =>
 			_scoreCash.SetText($"{newScore}/{_maxCashScore}");
@@ -176,10 +165,21 @@ namespace Sources.Presentation.UI
 		private void OnGoToNextLevelButtonClicked() =>
 			Presenter.GoToNextLevel();
 
-		private void Subscribe() =>
-			_goToNextLevelButton.onClick.AddListener(OnGoToNextLevelButtonClicked);
+		private void OnIncreaseSpeedButtonClicked()
+		{
+			Presenter.IncreaseSpeed();
+		}
 
-		private void Unsubscribe() =>
+		private void Subscribe()
+		{
+			_goToNextLevelButton.onClick.AddListener(OnGoToNextLevelButtonClicked);
+			_increaseSpeedButton.onClick.AddListener(OnIncreaseSpeedButtonClicked);
+		}
+
+		private void Unsubscribe()
+		{
 			_goToNextLevelButton.onClick.RemoveListener(OnGoToNextLevelButtonClicked);
+			_increaseSpeedButton.onClick.RemoveListener(OnIncreaseSpeedButtonClicked);
+		}
 	}
 }

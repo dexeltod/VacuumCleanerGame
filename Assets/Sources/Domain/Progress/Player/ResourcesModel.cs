@@ -20,6 +20,8 @@ namespace Sources.Domain.Progress.Player
 		[SerializeField] private int _maxCashScoreModifier;
 		[SerializeField] private int _maxGlobalScoreModifier;
 
+		private const int MultiplyFactor = 200;
+
 		public ResourcesModel(
 			Resource<int> softCurrency,
 			Resource<int> hardCurrency,
@@ -63,12 +65,15 @@ namespace Sources.Domain.Progress.Player
 			private set => _globalScore.Set(value);
 		}
 
-		public void AddScore(int newValue)
+		public void AddScore(int newScore)
 		{
-			if (newValue <= 0) throw new ArgumentOutOfRangeException(nameof(newValue));
-			
-			CurrentCashScore += newValue;
-			CurrentGlobalScore += newValue;
+#if UNITY_EDITOR
+			newScore *= MultiplyFactor;
+#endif
+			if (newScore <= 0) throw new ArgumentOutOfRangeException(nameof(newScore));
+
+			CurrentCashScore += newScore;
+			CurrentGlobalScore += newScore;
 
 			_cashScore.Set(CurrentCashScore);
 		}

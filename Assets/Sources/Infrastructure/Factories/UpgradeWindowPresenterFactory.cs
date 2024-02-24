@@ -17,16 +17,15 @@ namespace Sources.Infrastructure.Factories
 		private readonly IAssetFactory _assetFactory;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IPersistentProgressService _persistentProgressService;
+		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenter;
 		private readonly IUpgradeWindowPresenter _upgradeWindowPresenter;
-		private IResourcesModel GameProgressResourcesModel => _persistentProgressService.GlobalProgress.ResourcesModel;
-
-		private string GameObjectsUpgradeTrigger => ResourcesAssetPath.GameObjects.UpgradeTrigger;
 
 		public UpgradeWindowPresenterFactory(
 			IUpgradeWindowViewFactory upgradeWindowViewFactory,
 			IAssetFactory assetFactory,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
-			IPersistentProgressService persistentProgressService
+			IPersistentProgressService persistentProgressService,
+			IGameplayInterfacePresenter gameplayInterfacePresenter
 		)
 		{
 			_upgradeWindowViewFactory
@@ -36,7 +35,15 @@ namespace Sources.Infrastructure.Factories
 				throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 			_persistentProgressService = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
+			_gameplayInterfacePresenter = gameplayInterfacePresenter ??
+				throw new ArgumentNullException(nameof(gameplayInterfacePresenter));
 		}
+
+		private IResourcesModel GameProgressResourcesModel => _persistentProgressService.GlobalProgress.ResourcesModel;
+
+		private int SoftCurrencyCount => GameProgressResourcesModel.SoftCurrency.Count;
+
+		private string GameObjectsUpgradeTrigger => ResourcesAssetPath.GameObjects.UpgradeTrigger;
 
 		public override UpgradeWindowPresenter Create()
 		{
@@ -49,10 +56,11 @@ namespace Sources.Infrastructure.Factories
 			UpgradeWindowPresenter presenter = new(
 				upgradeTrigger,
 				upgradeWindow,
-				_progressSaveLoadDataService
+				_progressSaveLoadDataService,
+				_gameplayInterfacePresenter
 			);
 
-			upgradeWindow.Construct(presenter, GameProgressResourcesModel.CurrentCashScore);
+			upgradeWindow.Construct(presenter, SoftCurrencyCount);
 
 			return presenter;
 		}

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Sources.Controllers;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.UpgradeShop;
+using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.Presentation.UI.Shop;
 using Sources.Services.Localization;
@@ -22,17 +23,24 @@ namespace Sources.Infrastructure.Factories
 		private readonly IAssetFactory _assetFactory;
 		private readonly ITranslatorService _translatorService;
 		private readonly IPlayerProgressSetterFacadeProvider _playerProgressSetterFacadeProvider;
+		private readonly UpgradeWindowPresenterProvider _upgradeWindowPresenterProvider;
+		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 
 		[Inject]
 		public ShopElementFactory(
 			IPersistentProgressServiceProvider persistentProgressService,
 			IAssetFactory assetFactory,
 			ITranslatorService translatorService,
-			IPlayerProgressSetterFacadeProvider playerProgressSetterFacadeProvider
+			IPlayerProgressSetterFacadeProvider playerProgressSetterFacadeProvider,
+			UpgradeWindowPresenterProvider upgradeWindowPresenterProvider,
+			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider
 		)
 		{
 			_playerProgressSetterFacadeProvider = playerProgressSetterFacadeProvider ??
 				throw new ArgumentNullException(nameof(playerProgressSetterFacadeProvider));
+			_upgradeWindowPresenterProvider = upgradeWindowPresenterProvider ??
+				throw new ArgumentNullException(nameof(upgradeWindowPresenterProvider));
+			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ?? throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
 			_persistentProgressServiceProvider = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
@@ -75,7 +83,10 @@ namespace Sources.Infrastructure.Factories
 					ProgressSetterFacade,
 					button,
 					items.Items[i],
-					_persistentProgressServiceProvider
+					_persistentProgressServiceProvider,
+					_upgradeWindowPresenterProvider,
+					_resourcesProgressPresenterProvider
+					
 				);
 
 				var title = Localize(items.Items[i].Title);

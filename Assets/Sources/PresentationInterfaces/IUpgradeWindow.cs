@@ -12,5 +12,6 @@ namespace Sources.PresentationInterfaces
 		List<string> Phrases { get; set; }
 
 		void Construct(IUpgradeWindowPresenter presenter, int money);
+		void SetMoney(int money);
 	}
 }

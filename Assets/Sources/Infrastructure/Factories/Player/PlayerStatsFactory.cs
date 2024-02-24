@@ -42,8 +42,6 @@ namespace Sources.Infrastructure.Factories.Player
 
 		public override IPlayerStatsService Create()
 		{
-			if (_playerStatsService != null)
-				return _playerStatsService;
 
 			List<IUpgradeProgressData> progress = ShopProgress.GetAll();
 			int progressCount = progress.Count;

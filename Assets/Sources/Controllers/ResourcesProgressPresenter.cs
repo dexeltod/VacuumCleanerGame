@@ -14,6 +14,9 @@ namespace Sources.Controllers
 {
 	public class ResourcesProgressPresenter : Presenter, IResourcesProgressPresenter
 	{
+#if UNITY_EDITOR
+		const int MultiplyFactor = 1;
+#endif
 		private const float NormalizeThreshold = 1;
 		private const float MinThreshold = -1;
 
@@ -25,17 +28,6 @@ namespace Sources.Controllers
 
 		private int _increasedDelta;
 		private int _lastCashScore;
-
-		public IResourceReadOnly<int> SoftCurrency => _resourcesData.SoftCurrency;
-
-		private IGameplayInterfaceView GameplayInterface =>
-			_gameplayInterfaceView.GetContract<IGameplayInterfaceView>();
-
-		private IFillMeshShaderController FillMeshShaderController => _fillMeshShaderControllerProvider.Implementation;
-
-		private int CurrentScore => _resourcesData.CurrentCashScore;
-		private bool IsHalfScore => IsHalfScoreReached();
-		public bool IsMaxScoreReached => CheckMaxScore();
 
 		public ResourcesProgressPresenter(
 			IGameplayInterfaceProvider gameplayInterfaceView,
@@ -56,6 +48,19 @@ namespace Sources.Controllers
 			_sandParticleParticlePlayerSystem
 				= new SandParticlePlayerSystem(sandParticleSystem, coroutineRunner, PlayTime);
 		}
+
+		public IResourceReadOnly<int> SoftCurrency => _resourcesData.SoftCurrency;
+
+		private IGameplayInterfaceView GameplayInterface =>
+			_gameplayInterfaceView.GetContract<IGameplayInterfaceView>();
+
+		private IFillMeshShaderController FillMeshShaderController => _fillMeshShaderControllerProvider.Implementation;
+
+		private int CurrentScore => _resourcesData.CurrentCashScore;
+
+		private bool IsHalfGlobalScore => IsHalfScoreReached();
+
+		public bool IsMaxScoreReached => CheckMaxScore();
 
 		public override void Enable()
 		{
@@ -100,13 +105,14 @@ namespace Sources.Controllers
 
 		public bool TryAddSand(int newScore)
 		{
+
 			if (newScore <= 0) throw new ArgumentOutOfRangeException(nameof(newScore));
 
 			if (CurrentScore > _resourcesData.MaxCashScore)
 				return false;
 
 			int score = Mathf.Clamp(newScore, 0, _resourcesData.MaxCashScore);
-			
+
 			_lastCashScore = _resourcesData.CurrentCashScore;
 
 			_resourcesData.AddScore(score);
@@ -127,7 +133,7 @@ namespace Sources.Controllers
 
 		private void OnHalfScoreReached()
 		{
-			if (IsHalfScore == true)
+			if (IsHalfGlobalScore == true)
 				GameplayInterface.SetActiveGoToNextLevelButton(true);
 		}
 
@@ -172,7 +178,7 @@ namespace Sources.Controllers
 		{
 			int halfScore = _resourcesData.MaxGlobalScore / 2;
 
-			return _resourcesData.Score.Count >= halfScore;
+			return _resourcesData.GlobalScore.Count >= halfScore;
 		}
 	}
 }

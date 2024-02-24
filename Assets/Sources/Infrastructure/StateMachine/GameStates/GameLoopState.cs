@@ -18,8 +18,9 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
 		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 		private readonly DissolveShaderViewControllerProvider _dissolveShaderViewControllerProvider;
-		
+
 		private readonly IGameMenuPresenterProvider _gameMenuPresenterProvider;
+		private readonly AdvertisementHandlerProvider _advertisementHandlerProvider;
 		private readonly LoadingCurtain _loadingCurtain;
 
 		private IGameplayInterfaceView GameplayInterface => _gameplayInterfaceProvider.Implementation;
@@ -39,7 +40,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
 			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
 			DissolveShaderViewControllerProvider dissolveShaderViewControllerProvider,
-			IGameMenuPresenterProvider gameMenuPresenterProvider
+			IGameMenuPresenterProvider gameMenuPresenterProvider,
+			AdvertisementHandlerProvider advertisementHandlerProvider
 		)
 		{
 			_gameplayInterfaceProvider = gameplayInterfaceProvider ??
@@ -57,12 +59,13 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				throw new ArgumentNullException(nameof(dissolveShaderViewControllerProvider));
 			_gameMenuPresenterProvider = gameMenuPresenterProvider ??
 				throw new ArgumentNullException(nameof(gameMenuPresenterProvider));
+			_advertisementHandlerProvider = advertisementHandlerProvider ??
+				throw new ArgumentNullException(nameof(advertisementHandlerProvider));
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
 		public void Enter()
 		{
-			
 			_localizationService.UpdateTranslations();
 
 			if (GameplayInterface == null)
@@ -74,6 +77,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			_gameplayInterfacePresenterProvider.Implementation.Enable();
 			_resourcesProgressPresenterProvider.Implementation.Enable();
 			_gameMenuPresenterProvider.Implementation.Enable();
+			_advertisementHandlerProvider.Implementation.Enable();
 
 			_loadingCurtain.HideSlowly();
 			DissolveShaderViewController.StartDissolving();
@@ -88,6 +92,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			_resourcesProgressPresenterProvider.Implementation.Disable();
 			_gameMenuPresenterProvider.Implementation.Disable();
 			_loadingCurtain.Show();
+			_advertisementHandlerProvider.Implementation.Disable();
 		}
 	}
 }
