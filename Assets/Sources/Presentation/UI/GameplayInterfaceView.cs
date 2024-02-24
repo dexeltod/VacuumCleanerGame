@@ -27,6 +27,7 @@ namespace Sources.Presentation.UI
 		[SerializeField] private TextMeshProUGUI _moneyText;
 
 		[SerializeField] private Button _goToNextLevelButton;
+		[SerializeField] private Button _increaseSpeedButton;
 
 		[SerializeField] private Image _scoreFillBar;
 		[SerializeField] private Joystick _joystick;
@@ -176,10 +177,19 @@ namespace Sources.Presentation.UI
 		private void OnGoToNextLevelButtonClicked() =>
 			Presenter.GoToNextLevel();
 
-		private void Subscribe() =>
-			_goToNextLevelButton.onClick.AddListener(OnGoToNextLevelButtonClicked);
+		private void OnIncreaseSpeed() =>
+			Presenter.IncreaseSpeed();
 
-		private void Unsubscribe() =>
+		private void Subscribe()
+		{
+			_goToNextLevelButton.onClick.AddListener(OnGoToNextLevelButtonClicked);
+			_increaseSpeedButton.onClick.AddListener(OnIncreaseSpeed);
+		}
+
+		private void Unsubscribe()
+		{
 			_goToNextLevelButton.onClick.RemoveListener(OnGoToNextLevelButtonClicked);
+			_increaseSpeedButton.onClick.RemoveListener(OnIncreaseSpeed);
+		}
 	}
 }

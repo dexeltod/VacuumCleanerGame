@@ -8,16 +8,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e72b9b77-a85b-4195-b3c2-5f5bad8d4534" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Controllers/AdvertisementHandler.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Controllers/AdvertisementHandler.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/IAdvertisementHandler.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/IAdvertisementHandler.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/ISpeedDecorator.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/ISpeedDecorator.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Providers/AdvertisementHandlerProvider.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Providers/AdvertisementHandlerProvider.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Services/Decorators.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Services/Decorators/SpeedDecorator.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Services/Decorators/SpeedDecorator.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Providers/IAdvertisementHandlerProvider.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Providers/IAdvertisementHandlerProvider.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/GameBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/GameBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Controllers/ResourcesProgressPresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Controllers/ResourcesProgressPresenter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Domain/Progress/Player/ResourcesModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Domain/Progress/Player/ResourcesModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/DomainInterfaces/IResourcesModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/DomainInterfaces/IResourcesModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Game/Ui/GameplayInterface.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Game/Ui/GameplayInterface.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/Bootstrapp/ServiceRegister.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/Bootstrapp/ServiceRegister.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/UnityApplicationServices/EditorAdvertisement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/UnityApplicationServices/EditorAdvertisement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/Yandex/YandexAdvertisement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/Yandex/YandexAdvertisement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Controllers/GameplayInterfacePresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Controllers/GameplayInterfacePresenter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/IGameplayInterfacePresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/IGameplayInterfacePresenter.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UI/GameplayInterfacePresenterFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UI/GameplayInterfacePresenterFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/StateMachine/GameStates/BuildSceneState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/StateMachine/GameStates/BuildSceneState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/LevelChangerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/LevelChangerService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Services/ProgressCleaner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Services/ProgressCleaner.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Sources/Presentation/UI/GameplayInterfaceView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Presentation/UI/GameplayInterfaceView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/PresentationInterfaces/IGameplayInterfaceView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/PresentationInterfaces/IGameplayInterfaceView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Services/Facade/AnimatorFacade.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/Facade/AnimatorFacade.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/Advertisement/IAdvertisement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/Advertisement/IAdvertisement.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,11 +50,27 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/036e42927f1a4a6c818677238ed2040411a00/25/bf32d220/IScopedObjectResolver.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/036e42927f1a4a6c818677238ed2040411a00/82/8939e172/IObjectResolver.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/05b34b9bbbd44230847afcf6fbcfdbb91ca00/67/38ea7c1b/ICloudSaveDataClient.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5a41d6b7189842eca409fd0b1c3e3dcf17bf78/38/d63750b7/Progress`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bae255e3e08e46f7bc2fbd23dde96338158800/52/a5ca5b74/UnitySynchronizationContext.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bae255e3e08e46f7bc2fbd23dde96338158800/ac/9fa4179b/Coroutine.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bae255e3e08e46f7bc2fbd23dde96338158800/f7/045e3218/AsyncOperation.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d6232873609549b8a045fa15811a5bd346a800/35/074ab40c/YieldAwaitable.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d6232873609549b8a045fa15811a5bd346a800/69/4d8a3d03/Task.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d6232873609549b8a045fa15811a5bd346a800/cc/ffe5e809/AwaitTaskContinuation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ea01e77be99618395f448b16bd7cc2bd4248bd9e5d8474964b2d97f39c5d74/System.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/My Games/Terraria/tModLoader/ModSources/SVO/SVO.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Application/Bootstrapp/ServiceRegister.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Application/Bootstrapp/ServiceRegister.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Application/UnityApplicationServices/EditorAdvertisement.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Application/UnityApplicationServices/EditorAdvertisement.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Application/UnityApplicationServices/EditorAdvertisement.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Application/UnityApplicationServices/EditorAdvertisement.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Controllers/AdvertisementHandler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Controllers/AdvertisementHandler.cs.meta" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Controllers/IDissolveShaderViewController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/Controllers/MainMenu/MainMenuPresenter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/Domain/PlayerStat.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/Domain/Progress/ProgressUpgradeData.cs" root0="FORCE_HIGHLIGHTING" />
@@ -85,6 +116,9 @@
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.polybrush@1.1.4/Runtime/Scripts/MonoBehaviour/ZoomOverride.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.polybrush@1.1.4/Runtime/Scripts/MonoBehaviour/z_AdditionalVertexStreams.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.remote-config@3.2.2/Editor/UIComponents/SettingsTreeview.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.services.authentication@2.4.0/Runtime/AuthenticationServiceInternal.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.services.authentication@2.4.0/Runtime/Network/AuthenticationNetworkClient.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.services.authentication@2.4.0/Runtime/Network/NetworkHandler.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.services.core@1.8.1/Runtime/Core.Internal/Registry/DependencyTreeExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.services.core@1.8.1/Runtime/Core/Initialization/InitializationOptions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.services.core@1.8.1/Runtime/Core/Initialization/ServicesInitializationException.cs" root0="SKIP_HIGHLIGHTING" />
@@ -104,6 +138,7 @@
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/jp.hadashikick.vcontainer@af7bd4ecab/Runtime/Internal/ReflectionInjector.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/jp.hadashikick.vcontainer@af7bd4ecab/Runtime/Registration.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/jp.hadashikick.vcontainer@af7bd4ecab/Runtime/RegistrationBuilder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/jp.hadashikick.vcontainer@af7bd4ecab/Runtime/Registry.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/jp.hadashikick.vcontainer@af7bd4ecab/Runtime/Unity/ContainerBuilderUnityExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/jp.hadashikick.vcontainer@af7bd4ecab/Runtime/Unity/EntryPointDispatcher.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/jp.hadashikick.vcontainer@af7bd4ecab/Runtime/Unity/LifetimeScope.cs" root0="SKIP_HIGHLIGHTING" />
@@ -143,7 +178,7 @@
     "WebServerToolWindowFactoryState": "false",
     "XThreadsFramesViewSplitterKey": "0.26632652",
     "editorconfig.notification": "lf                   ",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "9d62aa9a",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -205,10 +240,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="23072">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="23072" />
+      <option name="pid" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -623,13 +658,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Sources/Presentation/UI/GameplayInterfaceView.cs</url>
-          <line>120</line>
+          <line>121</line>
           <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Presentation\UI\GameplayInterfaceView.cs" initialLine="120" containingFunctionPresentation="Method 'SetGlobalScore'">
             <startOffsets>
-              <option value="3219" />
+              <option value="3275" />
             </startOffsets>
             <endOffsets>
-              <option value="3336" />
+              <option value="3392" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="516" />

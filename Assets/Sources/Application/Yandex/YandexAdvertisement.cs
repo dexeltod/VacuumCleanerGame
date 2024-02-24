@@ -7,13 +7,15 @@ namespace Sources.Application
 {
 	public class YandexAdvertisement : IAdvertisement
 	{
-		public async UniTask ShowAd(Action onOpenCallback, Action onRewardsCallback, Action onCloseCallback)
+		public event Action Opened;
+
+		public async UniTask ShowAd( Action onRewardsCallback, Action onCloseCallback)
 		{
 			bool isClosed = false;
 			bool isRewarded = false;
 
 			VideoAd.Show(
-				() => onOpenCallback?.Invoke(),
+				() => Opened!.Invoke(),
 				() => isClosed = true,
 				() => isRewarded = true
 			);

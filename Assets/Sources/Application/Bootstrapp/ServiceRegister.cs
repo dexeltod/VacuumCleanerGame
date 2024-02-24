@@ -59,9 +59,9 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<IShopProgressFacade, ShopProgressFacade>(Lifetime.Singleton);
 			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
 			_builder.Register<ITranslatorService, PhraseTranslatorService>(Lifetime.Singleton);
-			
+
 			_builder.Register<ProgressCleaner>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			
+
 			RegisterLoadingCurtain();
 
 #endregion
@@ -79,6 +79,7 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<FillMeshShaderControllerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<PlayerStatsServiceProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<SandParticleSystemProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+			_builder.Register<AdvertisementHandlerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
 			_builder.Register<GameMenuPresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<SaveLoaderProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();

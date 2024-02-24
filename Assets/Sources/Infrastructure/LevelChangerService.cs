@@ -46,13 +46,7 @@ namespace Sources.Infrastructure
 		}
 
 		public void GoNextLevelWithReward() =>
-			_rewardService.ShowAd(OnAdShowed, OnRewarded, OnProcessEnded);
-
-		private void OnAdShowed()
-		{
-			AudioListener.volume = 0;
-			Time.timeScale = 0;
-		}
+			_rewardService.ShowAd(OnRewarded);
 
 		private void OnProcessEnded()
 		{
