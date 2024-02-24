@@ -107,6 +107,7 @@ namespace Sources.Infrastructure.Factories.UI
 			gameplayInterfaceView.Construct(
 				gameplayInterfacePresenter,
 				model.CurrentCashScore,
+				model.CurrentGlobalScore,
 				model.MaxCashScore,
 				model.MaxGlobalScore,
 				model.SoftCurrency.Count,

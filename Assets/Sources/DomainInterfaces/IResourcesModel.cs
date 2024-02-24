@@ -11,7 +11,7 @@ namespace Sources.DomainInterfaces
 
 		int MaxCashScore { get; }
 		int CurrentCashScore { get; }
-		int GlobalScoreCount { get; }
+		int CurrentGlobalScore { get; }
 		int PercentOfScore { get; }
 		int MaxGlobalScore { get; }
 

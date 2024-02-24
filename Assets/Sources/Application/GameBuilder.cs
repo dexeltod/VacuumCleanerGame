@@ -24,7 +24,6 @@ namespace Sources.Application
 		private readonly ResourcePathConfigServiceFactory _resourcePathConfigServiceFactory;
 		private readonly ResourcePathConfigProvider _pathConfigProvider;
 		private readonly PlayerStatsFactory _playerStatsFactory;
-		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
 		private readonly ISaveLoaderProvider _saveLoaderProvider;
 		private readonly SaveLoaderFactory _saveLoaderFactory;
 		private readonly IYandexSDKController _yandexSDKController;
@@ -58,8 +57,6 @@ namespace Sources.Application
 				throw new ArgumentNullException(nameof(resourcePathConfigServiceFactory));
 			_pathConfigProvider = pathConfigProvider ?? throw new ArgumentNullException(nameof(pathConfigProvider));
 			_playerStatsFactory = playerStatsFactory ?? throw new ArgumentNullException(nameof(playerStatsFactory));
-			_persistentProgressServiceProvider = persistentProgressService ??
-				throw new ArgumentNullException(nameof(persistentProgressService));
 			_saveLoaderProvider = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
 			_saveLoaderFactory = saveLoaderFactory ?? throw new ArgumentNullException(nameof(saveLoaderFactory));
 
@@ -87,6 +84,8 @@ namespace Sources.Application
 
 			_pathConfigProvider.Register(_resourcePathConfigServiceFactory.Create());
 			_gameStateChangerProvider.Register(_gameStateChangerFactory.Create());
+
+			_playerStatsFactory.Create();
 
 			GameStateChanger.Enter<IMenuState>();
 		}

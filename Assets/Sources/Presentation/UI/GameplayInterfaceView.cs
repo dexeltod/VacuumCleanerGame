@@ -16,7 +16,7 @@ namespace Sources.Presentation.UI
 		IGameplayInterfaceView
 
 	{
-		private const float MaxNormilizeThreshold = 1f;
+		private const float MaxNormalizeThreshold = 1f;
 
 		[FormerlySerializedAs("_phrasesTranslator")] [SerializeField]
 		private TmpPhrases _phrases;
@@ -53,7 +53,8 @@ namespace Sources.Presentation.UI
 
 		public void Construct(
 			IGameplayInterfacePresenter gameplayInterfacePresenter,
-			int startCashScore,
+			int cashScore,
+			int globalScore,
 			int maxCashScore,
 			int maxGlobalScore,
 			int moneyCount,
@@ -63,7 +64,7 @@ namespace Sources.Presentation.UI
 		{
 			if (gameplayInterfacePresenter == null) throw new ArgumentNullException(nameof(gameplayInterfacePresenter));
 
-			if (startCashScore < 0) throw new ArgumentOutOfRangeException(nameof(startCashScore));
+			if (cashScore < 0) throw new ArgumentOutOfRangeException(nameof(cashScore));
 			if (maxCashScore < 0) throw new ArgumentOutOfRangeException(nameof(maxCashScore));
 			if (maxGlobalScore < 0) throw new ArgumentOutOfRangeException(nameof(maxGlobalScore));
 
@@ -80,13 +81,19 @@ namespace Sources.Presentation.UI
 
 			_gameMenuPresenter = gameMenuPresenter ?? throw new ArgumentNullException(nameof(gameMenuPresenter));
 
+			_globalScore = globalScore;
+			_cashScore = cashScore;
 			_maxCashScore = maxCashScore;
-			SetCashScoreText(startCashScore);
-			enabled = isActiveOnStart;
+			_maxGlobalScore = maxGlobalScore;
+
+			SetGlobalScore(globalScore);
+			SetCashScore(cashScore);
 
 			SetMaxGlobalScore(maxGlobalScore);
 
 			InterfaceGameObject = gameObject;
+
+			enabled = isActiveOnStart;
 
 			_isInitialized = true;
 		}
@@ -96,8 +103,7 @@ namespace Sources.Presentation.UI
 
 		public override void Disable() =>
 			Unsubscribe();
-	
-		
+
 		private void OnDestroy() =>
 			Unsubscribe();
 
@@ -106,7 +112,7 @@ namespace Sources.Presentation.UI
 
 		public void SetCashScore(int newScore)
 		{
-			NormalizeScoreValue(newScore);
+			SetScoreBarValue(newScore);
 			SetCashScoreText(newScore);
 		}
 
@@ -116,7 +122,7 @@ namespace Sources.Presentation.UI
 			_globalScore = newScore;
 
 			_globalScoreImage.fillAmount = NormalizeValue(
-				MaxNormilizeThreshold,
+				MaxNormalizeThreshold,
 				_globalScore,
 				_maxGlobalScore
 			);
@@ -144,12 +150,12 @@ namespace Sources.Presentation.UI
 			_moneyText.SetText(newMoney.ToString());
 		}
 
-		private void NormalizeScoreValue(int newScore)
+		private void SetScoreBarValue(int newScore)
 		{
 			_cashScore = newScore;
 
 			float value = NormalizeValue(
-				MaxNormilizeThreshold,
+				MaxNormalizeThreshold,
 				_cashScore,
 				_maxCashScore
 			);
@@ -159,8 +165,8 @@ namespace Sources.Presentation.UI
 
 		private float NormalizeValue(
 			float topValue,
-			int newScore,
-			int currentMaxScore
+			float newScore,
+			float currentMaxScore
 		) =>
 			topValue / currentMaxScore * newScore;
 

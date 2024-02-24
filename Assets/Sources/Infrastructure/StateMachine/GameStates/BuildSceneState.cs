@@ -158,8 +158,6 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 		private void Build()
 		{
-			
-			
 			_assetFactory.Instantiate(SellTrigger);
 			_coroutineRunnerProvider.Register(_coroutineRunnerFactory.Create());
 
@@ -170,15 +168,12 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				GameplayInterface.Joystick
 			);
 
-			_sandParticleSystemProvider.Register<ISandParticleSystem>(
-				playerGameObject.GetComponentInChildren<ISandParticleSystem>()
-			);
-
 			_fillMeshShaderControllerProvider.Register<IFillMeshShaderController>(
 				new FillAreaShaderControllerFactory(playerGameObject).Create()
 			);
 
-			RegisterShaderViewPresenterProvider(playerGameObject);
+			CreateSandInCar(playerGameObject);
+			
 			ResourcesProgressPresenter resourcesProgressPresenter = _resourcesProgressPresenterFactory.Create();
 			_resourcesProgressPresenterProvider.Register<IResourcesProgressPresenter>(resourcesProgressPresenter);
 
@@ -195,6 +190,15 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			);
 
 			_cameraFactory.CreateVirtualCamera();
+		}
+
+		private void CreateSandInCar(GameObject playerGameObject)
+		{
+			_sandParticleSystemProvider.Register<ISandParticleSystem>(
+				playerGameObject.GetComponentInChildren<ISandParticleSystem>()
+			);
+
+			RegisterShaderViewPresenterProvider(playerGameObject);
 		}
 
 		private void RegisterShaderViewPresenterProvider(GameObject player)

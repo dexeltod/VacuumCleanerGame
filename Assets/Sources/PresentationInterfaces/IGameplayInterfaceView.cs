@@ -15,7 +15,8 @@ namespace Sources.PresentationInterfaces
 
 		void Construct(
 			IGameplayInterfacePresenter gameplayInterfacePresenter,
-			int startCashScore,
+			int cashScore,
+			int globalScore,
 			int maxCashScore,
 			int maxGlobalScore,
 			int moneyCount,

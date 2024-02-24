@@ -163,7 +163,7 @@ namespace Sources.Controllers
 
 		private void SetView()
 		{
-			GameplayInterface.SetGlobalScore(_resourcesData.GlobalScoreCount);
+			GameplayInterface.SetGlobalScore(_resourcesData.CurrentGlobalScore);
 			GameplayInterface.SetCashScore(_resourcesData.CurrentCashScore);
 			FillMeshShaderController.FillArea(CurrentScore, 0, _resourcesData.MaxCashScore);
 		}

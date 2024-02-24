@@ -3,46 +3,45 @@ using UnityEngine;
 
 namespace Sources.Services.Facade
 {
-	public class AnimatorFacade : MonoBehaviour
-	{
-		private Animator _animator;
-		
-		private Coroutine _currentAnimationRoutine;
-		private int _currentAnimationHash;
+    public class AnimatorFacade : MonoBehaviour
+    {
+        private Animator _animator;
 
-		private void Start() =>
-			_animator = GetComponent<Animator>();
+        private Coroutine _currentAnimationRoutine;
 
-		public void Play(int hash)
-		{
-			StopAnimationRoutine();
-			_currentAnimationRoutine = StartCoroutine(StartAnimationRoutine(hash));
-		}
+        private int _currentAnimationHash;
+            
+        private void Start() => _animator = GetComponent<Animator>();
 
-		private void StopAnimationRoutine()
-		{
-			if (_currentAnimationRoutine != null)
-				StopCoroutine(_currentAnimationRoutine);
-		}
+        public void Play(int hash)
+        {
+            StopAnimationRoutine();
+            _currentAnimationRoutine = StartCoroutine(StartAnimationRoutine(hash));
+        }
 
-		private IEnumerator StartAnimationRoutine(int hash)
-		{
-			float timeOut = 1f;
+        private void StopAnimationRoutine()
+        {
+            if (_currentAnimationRoutine != null)
+                StopCoroutine(_currentAnimationRoutine);
+        }
 
-			while (GetAnimatorInfo().shortNameHash != hash)
-			{
-				_animator.Play(hash);
-				_animator.Update(Time.deltaTime);
-				timeOut -= Time.deltaTime;
+        private IEnumerator StartAnimationRoutine(int hash)
+        {
+            float timeOut = 1f;
 
-				if (timeOut <= 0)
-					yield break;
+            while (GetAnimatorInfo().shortNameHash != hash)
+            {
+                _animator.Play(hash);
+                _animator.Update(Time.deltaTime);
+                timeOut -= Time.deltaTime;
 
-				yield return 0;
-			}
-		}
+                if (timeOut <= 0)
+                    yield break;
 
-		private AnimatorStateInfo GetAnimatorInfo() =>
-			_animator.GetCurrentAnimatorStateInfo(0);
-	}
+                yield return 0;
+            }
+        }
+
+        private AnimatorStateInfo GetAnimatorInfo() => _animator.GetCurrentAnimatorStateInfo(0);
+    }
 }
