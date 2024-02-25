@@ -15,6 +15,7 @@ namespace Sources.Services.DomainServices
 		private readonly ISaveLoaderProvider _saveLoader;
 		private readonly IPersistentProgressServiceProvider _progressServiceProvider;
 		private readonly PlayerStatsFactory _playerStatsFactory;
+		private readonly IProgressCleaner _progressCleaner;
 
 		[Inject]
 		public ProgressCleaner(

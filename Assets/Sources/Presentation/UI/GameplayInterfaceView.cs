@@ -89,6 +89,7 @@ namespace Sources.Presentation.UI
 
 			SetGlobalScore(globalScore);
 			SetCashScore(cashScore);
+
 			SetMaxGlobalScore(maxGlobalScore);
 
 			InterfaceGameObject = gameObject;
@@ -121,7 +122,7 @@ namespace Sources.Presentation.UI
 			if (newScore < 0) throw new ArgumentOutOfRangeException(nameof(newScore));
 			_globalScore = newScore;
 
-			_globalScoreImage.fillAmount = Normalizer.Normalize(
+			_globalScoreImage.fillAmount = NormalizeValue(
 				MaxNormalizeThreshold,
 				_globalScore,
 				_maxGlobalScore
@@ -154,10 +155,21 @@ namespace Sources.Presentation.UI
 		{
 			_cashScore = newScore;
 
-			float value = Normalizer.Normalize(MaxNormalizeThreshold, _cashScore, _maxCashScore);
+			float value = NormalizeValue(
+				MaxNormalizeThreshold,
+				_cashScore,
+				_maxCashScore
+			);
 
 			_scoreFillBar.fillAmount = value;
 		}
+
+		private float NormalizeValue(
+			float topValue,
+			float newScore,
+			float currentMaxScore
+		) =>
+			topValue / currentMaxScore * newScore;
 
 		private void SetCashScoreText(int newScore) =>
 			_scoreCash.SetText($"{newScore}/{_maxCashScore}");
@@ -165,21 +177,19 @@ namespace Sources.Presentation.UI
 		private void OnGoToNextLevelButtonClicked() =>
 			Presenter.GoToNextLevel();
 
-		private void OnIncreaseSpeedButtonClicked()
-		{
+		private void OnIncreaseSpeed() =>
 			Presenter.IncreaseSpeed();
-		}
 
 		private void Subscribe()
 		{
 			_goToNextLevelButton.onClick.AddListener(OnGoToNextLevelButtonClicked);
-			_increaseSpeedButton.onClick.AddListener(OnIncreaseSpeedButtonClicked);
+			_increaseSpeedButton.onClick.AddListener(OnIncreaseSpeed);
 		}
 
 		private void Unsubscribe()
 		{
 			_goToNextLevelButton.onClick.RemoveListener(OnGoToNextLevelButtonClicked);
-			_increaseSpeedButton.onClick.RemoveListener(OnIncreaseSpeedButtonClicked);
+			_increaseSpeedButton.onClick.RemoveListener(OnIncreaseSpeed);
 		}
 	}
 }

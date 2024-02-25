@@ -19,7 +19,7 @@ namespace Sources.Infrastructure
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly IResourcesProgressPresenterProvider _progressPresenter;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
-		private readonly IAdvertisement _advertisementService;
+		private readonly IAdvertisement _rewardService;
 
 		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Implementation;
 
@@ -42,11 +42,11 @@ namespace Sources.Infrastructure
 			_progressSaveLoadDataService = progressSaveLoadDataService ??
 				throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 
-			_advertisementService = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
+			_rewardService = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 		}
 
 		public void GoNextLevelWithReward() =>
-			_advertisementService.ShowAd(OnRewarded, OnProcessEnded);
+			_rewardService.ShowAd(OnRewarded);
 
 		private void OnProcessEnded()
 		{

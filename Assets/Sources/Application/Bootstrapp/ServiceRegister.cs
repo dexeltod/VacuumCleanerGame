@@ -59,9 +59,9 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<IShopProgressFacade, ShopProgressFacade>(Lifetime.Singleton);
 			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
 			_builder.Register<ITranslatorService, PhraseTranslatorService>(Lifetime.Singleton);
-			
+
 			_builder.Register<ProgressCleaner>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			
+
 			RegisterLoadingCurtain();
 
 #endregion

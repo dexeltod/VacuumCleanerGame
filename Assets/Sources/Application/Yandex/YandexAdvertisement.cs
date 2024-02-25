@@ -9,7 +9,7 @@ namespace Sources.Application
 	{
 		public event Action Opened;
 
-		public async UniTask ShowAd(Action onRewardsCallback, Action onCloseCallback)
+		public async UniTask ShowAd( Action onRewardsCallback, Action onCloseCallback)
 		{
 			bool isClosed = false;
 			bool isRewarded = false;

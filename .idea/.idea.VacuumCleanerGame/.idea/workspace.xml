@@ -7,7 +7,33 @@
     <option name="askBeforeDeletingLists" value="false" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e72b9b77-a85b-4195-b3c2-5f5bad8d4534" name="Changes" comment="" />
+    <list default="true" id="e72b9b77-a85b-4195-b3c2-5f5bad8d4534" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Controllers/AdvertisementHandler.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Controllers/AdvertisementHandler.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/IAdvertisementHandler.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/IAdvertisementHandler.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/ISpeedDecorator.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/ISpeedDecorator.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Providers/AdvertisementHandlerProvider.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Providers/AdvertisementHandlerProvider.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Services/Decorators.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Services/Decorators/SpeedDecorator.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Services/Decorators/SpeedDecorator.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Providers/IAdvertisementHandlerProvider.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Sources/InfrastructureInterfaces/Providers/IAdvertisementHandlerProvider.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Game/Ui/GameplayInterface.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Game/Ui/GameplayInterface.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/Bootstrapp/ServiceRegister.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/Bootstrapp/ServiceRegister.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/UnityApplicationServices/EditorAdvertisement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/UnityApplicationServices/EditorAdvertisement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/Yandex/YandexAdvertisement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/Yandex/YandexAdvertisement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Controllers/GameplayInterfacePresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Controllers/GameplayInterfacePresenter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/IGameplayInterfacePresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/ControllersInterfaces/IGameplayInterfacePresenter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UI/GameplayInterfacePresenterFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/UI/GameplayInterfacePresenterFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/LevelChangerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/LevelChangerService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Services/ProgressCleaner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Services/ProgressCleaner.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Presentation/UI/GameplayInterfaceView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Presentation/UI/GameplayInterfaceView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/Advertisement/IAdvertisement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/ServicesInterfaces/Advertisement/IAdvertisement.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,6 +62,15 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d6232873609549b8a045fa15811a5bd346a800/cc/ffe5e809/AwaitTaskContinuation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ea01e77be99618395f448b16bd7cc2bd4248bd9e5d8474964b2d97f39c5d74/System.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Documents/My Games/Terraria/tModLoader/ModSources/SVO/SVO.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Application/Bootstrapp/ServiceRegister.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Application/Bootstrapp/ServiceRegister.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Application/UnityApplicationServices/EditorAdvertisement.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Application/UnityApplicationServices/EditorAdvertisement.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Application/UnityApplicationServices/EditorAdvertisement.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Application/UnityApplicationServices/EditorAdvertisement.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Controllers/AdvertisementHandler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Controllers/AdvertisementHandler.cs.meta" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://F:/_projects/Unity/VacuumCleanerGame/Assets/Sources/Controllers/IDissolveShaderViewController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/Controllers/MainMenu/MainMenuPresenter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/Domain/PlayerStat.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Sources/Domain/Progress/ProgressUpgradeData.cs" root0="FORCE_HIGHLIGHTING" />
@@ -116,7 +151,7 @@
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="Toolset" />
+    <option name="selectedTabId" value="SWEA" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -141,9 +176,9 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.2659409&quot;,
+    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.26632652&quot;,
     &quot;editorconfig.notification&quot;: &quot;lf                   &quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;9d62aa9a&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -536,8 +571,7 @@
       <workItem from="1708259725752" duration="3977000" />
       <workItem from="1708281525436" duration="22702000" />
       <workItem from="1708710541448" duration="1607000" />
-      <workItem from="1708787152842" duration="20248000" />
-      <workItem from="1708814425025" duration="698000" />
+      <workItem from="1708787152842" duration="3091000" />
     </task>
     <servers />
   </component>
@@ -547,6 +581,17 @@
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="EditMode" />
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
+      </list>
+    </option>
+  </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
@@ -571,199 +616,69 @@
           <option name="timeStamp" value="131" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Controllers/UpgradeElementPresenter.cs</url>
-          <line>61</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Controllers\UpgradeElementPresenter.cs" initialLine="54" containingFunctionPresentation="Method 'Upgrade'">
+          <url>file://$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/Player/PlayerStatsFactory.cs</url>
+          <line>60</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Infrastructure\Factories\Player\PlayerStatsFactory.cs" initialLine="57" containingFunctionPresentation="Method 'CreatePlayerStats'">
             <startOffsets>
-              <option value="2618" />
+              <option value="2255" />
             </startOffsets>
             <endOffsets>
-              <option value="2657" />
+              <option value="2345" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="519" />
+          <option name="timeStamp" value="510" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Controllers/ResourcesProgressPresenter.cs</url>
-          <line>136</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Controllers\ResourcesProgressPresenter.cs" initialLine="136" containingFunctionPresentation="Method 'OnHalfScoreReached'">
+          <url>file://$PROJECT_DIR$/Assets/Sources/Controllers/PlayerTransformable.cs</url>
+          <line>28</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Controllers\PlayerTransformable.cs" initialLine="28" containingFunctionPresentation="Constructor 'PlayerTransformable'">
             <startOffsets>
-              <option value="3971" />
+              <option value="691" />
             </startOffsets>
             <endOffsets>
-              <option value="4024" />
+              <option value="725" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="530" />
+          <option name="timeStamp" value="511" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Presentation/UI/GameplayInterfaceView.cs</url>
-          <line>110</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Presentation\UI\GameplayInterfaceView.cs" initialLine="109" containingFunctionPresentation="Method 'SetActiveGoToNextLevelButton'">
+          <url>file://$PROJECT_DIR$/Assets/Sources/Services/PlayerServices/PlayerStatsService.cs</url>
+          <line>23</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Services\PlayerServices\PlayerStatsService.cs" initialLine="23" containingFunctionPresentation="Constructor 'PlayerStatsService'">
             <startOffsets>
-              <option value="3026" />
+              <option value="645" />
             </startOffsets>
             <endOffsets>
-              <option value="3077" />
+              <option value="722" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="531" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Controllers/ResourcesProgressPresenter.cs</url>
-          <line>135</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Controllers\ResourcesProgressPresenter.cs" initialLine="135" containingFunctionPresentation="Method 'OnHalfScoreReached'">
-            <startOffsets>
-              <option value="3936" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3966" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="532" />
+          <option name="timeStamp" value="513" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Sources/Infrastructure/StateMachine/GameStates/BuildSceneState.cs</url>
-          <line>108</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Infrastructure\StateMachine\GameStates\BuildSceneState.cs" initialLine="109" containingFunctionPresentation="Constructor 'BuildSceneState'">
+          <line>165</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Infrastructure\StateMachine\GameStates\BuildSceneState.cs" initialLine="166" containingFunctionPresentation="Method 'Build'">
             <startOffsets>
-              <option value="5044" />
+              <option value="8272" />
             </startOffsets>
             <endOffsets>
-              <option value="5142" />
+              <option value="8377" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="550" />
+          <option name="timeStamp" value="515" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/GameStatesRepositoryFactory.cs</url>
-          <line>22</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Infrastructure\Factories\GameStatesRepositoryFactory.cs" initialLine="22" containingFunctionPresentation="Method 'Create'">
+          <url>file://$PROJECT_DIR$/Assets/Sources/Presentation/UI/GameplayInterfaceView.cs</url>
+          <line>121</line>
+          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Presentation\UI\GameplayInterfaceView.cs" initialLine="120" containingFunctionPresentation="Method 'SetGlobalScore'">
             <startOffsets>
-              <option value="739" />
+              <option value="3275" />
             </startOffsets>
             <endOffsets>
-              <option value="803" />
+              <option value="3392" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="557" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Library/PackageCache/com.unity.services.authentication@2.4.0/Runtime/Network/NetworkHandler.cs</url>
-          <line>58</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Library\PackageCache\com.unity.services.authentication@2.4.0\Runtime\Network\NetworkHandler.cs" initialLine="58" containingFunctionPresentation="Method 'PostAsync'">
-            <startOffsets>
-              <option value="1645" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1675" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="573" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Controllers/UnityServicesController.cs</url>
-          <line>23</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Controllers\UnityServicesController.cs" initialLine="23" containingFunctionPresentation="Method 'InitializeUnityServices'">
-            <startOffsets>
-              <option value="704" />
-            </startOffsets>
-            <endOffsets>
-              <option value="766" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="575" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Application/GameBuilder.cs</url>
-          <line>99</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Application\GameBuilder.cs" initialLine="83" containingFunctionPresentation="Method 'Initialize'">
-            <startOffsets>
-              <option value="4340" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4341" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="579" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Controllers/UnityServicesController.cs</url>
-          <line>24</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Controllers\UnityServicesController.cs" initialLine="24" containingFunctionPresentation="Method 'InitializeUnityServices'">
-            <startOffsets>
-              <option value="769" />
-            </startOffsets>
-            <endOffsets>
-              <option value="770" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="583" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/ProgressFactory.cs</url>
-          <line>68</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Infrastructure\Factories\ProgressFactory.cs" initialLine="68" containingFunctionPresentation="Method 'Initialize'">
-            <startOffsets>
-              <option value="2952" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2998" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="584" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/ProgressFactory.cs</url>
-          <line>66</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Infrastructure\Factories\ProgressFactory.cs" initialLine="66" containingFunctionPresentation="Method 'Initialize'">
-            <startOffsets>
-              <option value="2879" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2947" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="585" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/ProgressFactory.cs</url>
-          <line>98</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Infrastructure\Factories\ProgressFactory.cs" initialLine="98" containingFunctionPresentation="Method 'RegisterServices'">
-            <startOffsets>
-              <option value="3737" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3738" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="586" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Library/PackageCache/com.cysharp.unitask@73d86259ce/Runtime/CompilerServices/StateMachineRunner.cs</url>
-          <line>188</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Library\PackageCache\com.cysharp.unitask@73d86259ce\Runtime\CompilerServices\StateMachineRunner.cs" initialLine="188" containingFunctionPresentation="Method 'Run'">
-            <startOffsets>
-              <option value="5621" />
-            </startOffsets>
-            <endOffsets>
-              <option value="5645" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="587" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Sources/Infrastructure/Services/Decorators/SpeedDecorator.cs</url>
-          <line>47</line>
-          <properties documentPath="F:\_projects\Unity\VacuumCleanerGame\Assets\Sources\Infrastructure\Services\Decorators\SpeedDecorator.cs" initialLine="46" containingFunctionPresentation="Method 'StartSpeedRoutine'">
-            <startOffsets>
-              <option value="1511" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1555" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="588" />
+          <option name="timeStamp" value="516" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
