@@ -22,7 +22,6 @@ namespace Sources.Infrastructure.Factories.UI
 		private readonly IShopProgressFacade _shopProgressFacade;
 		private readonly IPlayerProgressSetterFacadeProvider _playerProgressSetterFacade;
 		private readonly ITranslatorService _translatorService;
-		private readonly GameplayInterfaceProvider _gameplayInterfaceView;
 		private readonly IPersistentProgressServiceProvider _persistentProgressService;
 		private readonly ShopElementFactory _shopElementFactory;
 
@@ -40,7 +39,6 @@ namespace Sources.Infrastructure.Factories.UI
 			IShopProgressFacade shopProgressFacade,
 			IPlayerProgressSetterFacadeProvider playerProgressSetterFacade,
 			ITranslatorService translatorService,
-			GameplayInterfaceProvider gameplayInterfaceView,
 			ShopElementFactory shopElementFactory
 		)
 		{
@@ -54,8 +52,6 @@ namespace Sources.Infrastructure.Factories.UI
 			_playerProgressSetterFacade = playerProgressSetterFacade ??
 				throw new ArgumentNullException(nameof(playerProgressSetterFacade));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
-			_gameplayInterfaceView
-				= gameplayInterfaceView ?? throw new ArgumentNullException(nameof(gameplayInterfaceView));
 			_shopElementFactory = shopElementFactory ?? throw new ArgumentNullException(nameof(shopElementFactory));
 
 			_persistentProgressService = persistentProgressService ??
@@ -64,7 +60,6 @@ namespace Sources.Infrastructure.Factories.UI
 
 		private string UIResourcesUpgradeWindow => ResourcesAssetPath.Scene.UIResources.UpgradeWindow;
 		private Transform UpgradeWindowContainerTransform => _upgradeWindow.ContainerTransform;
-		private IGameplayInterfaceView GameplayInterface => _gameplayInterfaceView.Implementation;
 
 		private IResourcesProgressPresenter ResourcesProgressPresenter =>
 			_resourceProgressPresenterProvider.Implementation;

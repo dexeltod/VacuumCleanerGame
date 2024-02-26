@@ -25,6 +25,7 @@ namespace Sources.Infrastructure.Factories
 		private readonly IPlayerProgressSetterFacadeProvider _playerProgressSetterFacadeProvider;
 		private readonly UpgradeWindowPresenterProvider _upgradeWindowPresenterProvider;
 		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
+		private readonly IGameplayInterfacePresenterProvider _gameplayInterfaceProvider;
 
 		[Inject]
 		public ShopElementFactory(
@@ -33,14 +34,18 @@ namespace Sources.Infrastructure.Factories
 			ITranslatorService translatorService,
 			IPlayerProgressSetterFacadeProvider playerProgressSetterFacadeProvider,
 			UpgradeWindowPresenterProvider upgradeWindowPresenterProvider,
-			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider
+			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
+			IGameplayInterfacePresenterProvider gameplayInterfaceProvider
 		)
 		{
 			_playerProgressSetterFacadeProvider = playerProgressSetterFacadeProvider ??
 				throw new ArgumentNullException(nameof(playerProgressSetterFacadeProvider));
 			_upgradeWindowPresenterProvider = upgradeWindowPresenterProvider ??
 				throw new ArgumentNullException(nameof(upgradeWindowPresenterProvider));
-			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ?? throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
+			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ??
+				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
+			_gameplayInterfaceProvider = gameplayInterfaceProvider ??
+				throw new ArgumentNullException(nameof(gameplayInterfaceProvider));
 			_persistentProgressServiceProvider = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
@@ -85,8 +90,8 @@ namespace Sources.Infrastructure.Factories
 					items.Items[i],
 					_persistentProgressServiceProvider,
 					_upgradeWindowPresenterProvider,
-					_resourcesProgressPresenterProvider
-					
+					_resourcesProgressPresenterProvider,
+					_gameplayInterfaceProvider
 				);
 
 				var title = Localize(items.Items[i].Title);

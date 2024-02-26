@@ -39,7 +39,7 @@ namespace Sources.Infrastructure.Shop
 			if (newProgressPoint > ShopProgress.MaxUpgradePointCount)
 				return;
 
-			ShopProgress.SetProgress(progressName, newProgressPoint);
+			ShopProgress.Set(progressName, newProgressPoint);
 
 			await _progressSaveLoadService.SaveToCloud();
 			succeededCallback!.Invoke();

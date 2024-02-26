@@ -9,10 +9,10 @@ namespace Sources.Infrastructure.Factories.Domain
 {
 	public class ResourcesModelFactory : Factory<ResourcesModel>
 	{
-		private readonly IResourceService _resourceService;
-		private const int StartCurrencyCount = 99999;
-
+		private const int StartCurrencyCount = 0;
 		private const int StartScoreCount = 0;
+
+		private readonly IResourceService _resourceService;
 
 		public ResourcesModelFactory(IResourceService resourceService) =>
 			_resourceService = resourceService ?? throw new ArgumentNullException(nameof(resourceService));

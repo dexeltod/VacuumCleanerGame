@@ -1,6 +1,6 @@
 using System;
 using Joystick_Pack.Scripts.Base;
-using Sources.ControllersInterfaces;
+using Sources.Controllers;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
@@ -34,22 +34,16 @@ namespace Sources.Presentation.UI
 
 		[SerializeField] private Image _globalScoreImage;
 
-		private Canvas _canvas;
-
 		private int _cashScore;
 		private int _maxCashScore;
 		private int _globalScore;
 		private int _maxGlobalScore;
 
 		private bool _isInitialized;
-		private IGameMenuPresenter _gameMenuPresenter;
 
 		public ITmpPhrases Phrases => _phrases;
 
 		public Joystick Joystick => _joystick;
-
-		public Canvas Canvas => _canvas;
-
 		public GameObject InterfaceGameObject { get; private set; }
 
 		public void Construct(
@@ -59,8 +53,7 @@ namespace Sources.Presentation.UI
 			int maxCashScore,
 			int maxGlobalScore,
 			int moneyCount,
-			bool isActiveOnStart,
-			IGameMenuPresenter gameMenuPresenter
+			bool isHalfScoreReached
 		)
 		{
 			if (gameplayInterfacePresenter == null) throw new ArgumentNullException(nameof(gameplayInterfacePresenter));
@@ -69,18 +62,11 @@ namespace Sources.Presentation.UI
 			if (maxCashScore < 0) throw new ArgumentOutOfRangeException(nameof(maxCashScore));
 			if (maxGlobalScore < 0) throw new ArgumentOutOfRangeException(nameof(maxGlobalScore));
 
-			if (_isInitialized == true)
-				return;
-
 			base.Construct(gameplayInterfacePresenter);
 
-			_goToNextLevelButton.gameObject.SetActive(false);
-
-			_canvas ??= GetComponent<Canvas>();
+			_goToNextLevelButton.gameObject.SetActive(isHalfScoreReached);
 
 			_moneyText.SetText($"{moneyCount}");
-
-			_gameMenuPresenter = gameMenuPresenter ?? throw new ArgumentNullException(nameof(gameMenuPresenter));
 
 			_globalScore = globalScore;
 			_cashScore = cashScore;
@@ -93,17 +79,19 @@ namespace Sources.Presentation.UI
 			SetMaxGlobalScore(maxGlobalScore);
 
 			InterfaceGameObject = gameObject;
-
-			enabled = isActiveOnStart;
-
-			_isInitialized = true;
 		}
 
-		public override void Enable() =>
+		public override void Enable()
+		{
+			base.Enable();
 			Subscribe();
+		}
 
-		public override void Disable() =>
+		public override void Disable()
+		{
+			base.Disable();
 			Unsubscribe();
+		}
 
 		private void OnDestroy() =>
 			Unsubscribe();
@@ -145,7 +133,7 @@ namespace Sources.Presentation.UI
 			_maxGlobalScoreText.SetText($"{_maxGlobalScore}");
 		}
 
-		public void SetSoftCurrency(int newMoney)
+		public void SetSoftCurrencyText(int newMoney)
 		{
 			if (newMoney < 0) throw new ArgumentOutOfRangeException(nameof(newMoney));
 			_moneyText.SetText(newMoney.ToString());

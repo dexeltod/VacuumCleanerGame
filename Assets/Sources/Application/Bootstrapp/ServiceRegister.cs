@@ -75,7 +75,7 @@ namespace Sources.Application.Bootstrapp
 #region Providers
 
 			_builder.Register<SandCarContainerViewProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<GameStateChangerProvider>(Lifetime.Singleton).AsImplementedInterfaces();
+			_builder.Register<GameStateChangerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<FillMeshShaderControllerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<PlayerStatsServiceProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<SandParticleSystemProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
@@ -83,7 +83,6 @@ namespace Sources.Application.Bootstrapp
 
 			_builder.Register<GameMenuPresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<SaveLoaderProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<GameplayInterfaceProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<PlayerProgressSetterFacadeProvider>(Lifetime.Singleton).AsImplementedInterfaces()
 				.AsSelf();
 			_builder.Register<GameplayInterfacePresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces()
@@ -95,7 +94,7 @@ namespace Sources.Application.Bootstrapp
 				.AsSelf();
 
 			_builder.Register<DissolveShaderViewControllerProvider>(Lifetime.Singleton);
-			_builder.Register<ResourcePathConfigProvider>(Lifetime.Singleton);
+			_builder.Register<ResourcePathNameConfigProvider>(Lifetime.Singleton);
 
 #endregion
 
@@ -105,7 +104,6 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<IPresentableFactory<IUpgradeWindow, IUpgradeWindowPresenter>, UpgradeWindowViewFactory>(
 				Lifetime.Scoped
 			).AsImplementedInterfaces();
-			_builder.Register<ICameraFactory, CameraFactory>(Lifetime.Scoped);
 			_builder.Register<ShopElementFactory>(Lifetime.Scoped);
 
 			_builder.Register<SaveLoaderFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();

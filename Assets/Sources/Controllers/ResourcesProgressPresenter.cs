@@ -4,57 +4,42 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
-using Sources.PresentationInterfaces;
-using Sources.PresentationInterfaces.Player;
 using Sources.Services;
-using Sources.Utils;
 using UnityEngine;
 
 namespace Sources.Controllers
 {
 	public class ResourcesProgressPresenter : Presenter, IResourcesProgressPresenter
 	{
-#if UNITY_EDITOR
-		const int MultiplyFactor = 1;
-#endif
-		private const float NormalizeThreshold = 1;
-		private const float MinThreshold = -1;
-
 		private readonly IResourcesModel _resourcesData;
 		private readonly ISandContainerViewProvider _sandContainerViewProvider;
 		private readonly IFillMeshShaderControllerProvider _fillMeshShaderControllerProvider;
-		private readonly IGameplayInterfaceProvider _gameplayInterfaceView;
-		private readonly SandParticlePlayerSystem _sandParticleParticlePlayerSystem;
+		private readonly SandParticlePlayerSystem _sandParticlePlayerSystem;
+		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenter;
 
 		private int _increasedDelta;
 		private int _lastCashScore;
 
 		public ResourcesProgressPresenter(
-			IGameplayInterfaceProvider gameplayInterfaceView,
+			IGameplayInterfacePresenterProvider gameplayInterfaceView,
 			IResourcesModel persistentProgressService,
 			IFillMeshShaderControllerProvider fillMeshShaderControllerProvider,
-			ISandParticleSystem sandParticleSystem,
-			ICoroutineRunner coroutineRunner
+			SandParticlePlayerSystem sandParticlePlayerSystem
 		)
 		{
-			_gameplayInterfaceView
+			_gameplayInterfacePresenter
 				= gameplayInterfaceView ?? throw new ArgumentNullException(nameof(gameplayInterfaceView));
 			_resourcesData = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
 			_fillMeshShaderControllerProvider = fillMeshShaderControllerProvider ??
 				throw new ArgumentNullException(nameof(fillMeshShaderControllerProvider));
-
-			const int PlayTime = 1;
-			_sandParticleParticlePlayerSystem
-				= new SandParticlePlayerSystem(sandParticleSystem, coroutineRunner, PlayTime);
+			_sandParticlePlayerSystem = sandParticlePlayerSystem ??
+				throw new ArgumentNullException(nameof(sandParticlePlayerSystem));
 		}
 
 		public IResourceReadOnly<int> SoftCurrency => _resourcesData.SoftCurrency;
-
-		private IGameplayInterfaceView GameplayInterface =>
-			_gameplayInterfaceView.GetContract<IGameplayInterfaceView>();
-
 		private IFillMeshShaderController FillMeshShaderController => _fillMeshShaderControllerProvider.Implementation;
+		private IGameplayInterfacePresenter GameplayInterfacePresenter => _gameplayInterfacePresenter.Implementation;
 
 		private int CurrentScore => _resourcesData.CurrentCashScore;
 
@@ -65,6 +50,12 @@ namespace Sources.Controllers
 		public override void Enable()
 		{
 			base.Enable();
+			SetEnableSand();
+		}
+
+		public override void Disable()
+		{
+			base.Disable();
 			SetEnableSand();
 		}
 
@@ -85,12 +76,6 @@ namespace Sources.Controllers
 			SetMoneyTextView();
 		}
 
-		public override void Disable()
-		{
-			base.Disable();
-			SetEnableSand();
-		}
-
 		private void SetEnableSand() =>
 			_fillMeshShaderControllerProvider.Implementation.FillArea(CurrentScore, 0, _resourcesData.MaxCashScore);
 
@@ -105,7 +90,6 @@ namespace Sources.Controllers
 
 		public bool TryAddSand(int newScore)
 		{
-
 			if (newScore <= 0) throw new ArgumentOutOfRangeException(nameof(newScore));
 
 			if (CurrentScore > _resourcesData.MaxCashScore)
@@ -128,13 +112,13 @@ namespace Sources.Controllers
 		private void PlayParticleSystem()
 		{
 			if (_lastCashScore < _resourcesData.CurrentCashScore)
-				_sandParticleParticlePlayerSystem.Play();
+				_sandParticlePlayerSystem.Play();
 		}
 
 		private void OnHalfScoreReached()
 		{
 			if (IsHalfGlobalScore == true)
-				GameplayInterface.SetActiveGoToNextLevelButton(true);
+				GameplayInterfacePresenter.SetActiveGoToNextLevelButton(true);
 		}
 
 		public void SellSand()
@@ -164,13 +148,15 @@ namespace Sources.Controllers
 			SetMoneyTextView();
 		}
 
-		private void SetMoneyTextView() =>
-			GameplayInterface.SetSoftCurrency(SoftCurrency.Count);
+		private void SetMoneyTextView()
+		{
+			GameplayInterfacePresenter.SetSoftCurrency(_resourcesData.SoftCurrency.Count);
+		}
 
 		private void SetView()
 		{
-			GameplayInterface.SetGlobalScore(_resourcesData.CurrentGlobalScore);
-			GameplayInterface.SetCashScore(_resourcesData.CurrentCashScore);
+			GameplayInterfacePresenter.SetGlobalScore(_resourcesData.CurrentGlobalScore);
+			GameplayInterfacePresenter.SetCashScore(_resourcesData.CurrentCashScore);
 			FillMeshShaderController.FillArea(CurrentScore, 0, _resourcesData.MaxCashScore);
 		}
 

@@ -19,6 +19,7 @@ namespace Sources.Controllers
 		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
 		private readonly IUpgradeWindowPresenterProvider _upgradeWindowPresenter;
 		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenter;
+		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
 		private readonly ISaveLoader _saveLoader;
 
 		public UpgradeElementPresenter(
@@ -27,7 +28,8 @@ namespace Sources.Controllers
 			IUpgradeItemData upgradeItemData,
 			IPersistentProgressServiceProvider persistentProgressServiceProvider,
 			IUpgradeWindowPresenterProvider upgradeWindowPresenter,
-			IResourcesProgressPresenterProvider resourcesProgressPresenter
+			IResourcesProgressPresenterProvider resourcesProgressPresenter,
+			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider
 		)
 		{
 			_progressSetterFacade = progressSetterFacade ??
@@ -40,6 +42,8 @@ namespace Sources.Controllers
 				throw new ArgumentNullException(nameof(upgradeWindowPresenter));
 			_resourcesProgressPresenter = resourcesProgressPresenter ??
 				throw new ArgumentNullException(nameof(resourcesProgressPresenter));
+			_gameplayInterfacePresenterProvider = gameplayInterfacePresenterProvider ??
+				throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
 		}
 
 		private IUpgradeWindowPresenter UpgradeWindowPresenter => _upgradeWindowPresenter.Implementation;
@@ -50,16 +54,14 @@ namespace Sources.Controllers
 
 		public void Upgrade()
 		{
-			if (_progressSetterFacade.TryAddOneProgressPoint(_upgradeItemData.IdName, _upgradeItemData) ==
-				false)
+			if (_progressSetterFacade.TryAddOneProgressPoint(_upgradeItemData.IdName, _upgradeItemData) == false)
 				throw new InvalidOperationException();
 
 			_button.AddProgressPointColor();
 			_button.SetPriceText(_upgradeItemData.Price);
 
-			_resourcesProgressPresenter.Implementation.DecreaseMoney(_upgradeItemData.Price);
-
 			UpgradeWindowPresenter.SetMoney(Money);
+			_gameplayInterfacePresenterProvider.Implementation.SetSoftCurrency(Money);
 		}
 	}
 }

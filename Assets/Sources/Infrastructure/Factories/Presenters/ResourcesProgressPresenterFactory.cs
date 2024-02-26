@@ -3,13 +3,14 @@ using Sources.Controllers;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Common.Factory.Decorators;
 using Sources.InfrastructureInterfaces.Providers;
+using Sources.Services;
 using VContainer;
 
 namespace Sources.Infrastructure.Factories.Presenters
 {
 	public class ResourcesProgressPresenterFactory : PresenterFactory<ResourcesProgressPresenter>
 	{
-		private readonly IGameplayInterfaceProvider _gameplayInterfaceProvider;
+		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
 		private readonly IPersistentProgressServiceProvider _persistentProgressService;
 		private readonly IFillMeshShaderControllerProvider _fillMeshShaderControllerProvider;
 		private readonly ISandParticleSystemProvider _sandParticleSystemProvider;
@@ -19,15 +20,15 @@ namespace Sources.Infrastructure.Factories.Presenters
 
 		[Inject]
 		public ResourcesProgressPresenterFactory(
-			IGameplayInterfaceProvider gameplayInterfaceProvider,
+			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
 			IPersistentProgressServiceProvider persistentProgressService,
 			IFillMeshShaderControllerProvider fillMeshShaderControllerProvider,
 			ISandParticleSystemProvider sandParticleSystemProvider,
 			ICoroutineRunnerProvider coroutineRunnerProvider
 		)
 		{
-			_gameplayInterfaceProvider = gameplayInterfaceProvider ??
-				throw new ArgumentNullException(nameof(gameplayInterfaceProvider));
+			_gameplayInterfacePresenterProvider = gameplayInterfacePresenterProvider ??
+				throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
 			_persistentProgressService = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
 			_fillMeshShaderControllerProvider = fillMeshShaderControllerProvider ??
@@ -38,13 +39,21 @@ namespace Sources.Infrastructure.Factories.Presenters
 				throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 		}
 
-		public override ResourcesProgressPresenter Create() =>
-			new ResourcesProgressPresenter(
-				_gameplayInterfaceProvider,
+		public override ResourcesProgressPresenter Create()
+		{
+			var sandParticlePlayerSystem
+				= new SandParticlePlayerSystem(
+					_sandParticleSystemProvider,
+					_coroutineRunnerProvider,
+					1
+				);
+			
+			return new ResourcesProgressPresenter(
+				_gameplayInterfacePresenterProvider,
 				Resources,
 				_fillMeshShaderControllerProvider,
-				_sandParticleSystemProvider.Implementation,
-				_coroutineRunnerProvider.Implementation
+				sandParticlePlayerSystem
 			);
+		}
 	}
 }

@@ -2,8 +2,8 @@ using Cinemachine;
 
 namespace Sources.InfrastructureInterfaces.Scene
 {
-	public interface ICameraFactory : ICamera
+	public interface ICameraFactory
 	{
-		CinemachineVirtualCamera CreateVirtualCamera();
+		CinemachineVirtualCamera Create();
 	}
 }

@@ -16,6 +16,8 @@ using Sources.InfrastructureInterfaces.States;
 using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
 using Sources.PresentationInterfaces.Player;
+using Sources.Services;
+using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
 using Sources.Utils.Configs.Scripts;
@@ -31,40 +33,29 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly IGameStateChangerProvider _gameStateMachine;
 
 		private readonly GameplayInterfacePresenterFactory _gameplayInterfacePresenterFactory;
-		private readonly ICameraFactory _cameraFactory;
 		private readonly IPlayerFactory _playerFactory;
 		private readonly IUpgradeWindowViewFactory _upgradeWindowViewFactory;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
-		private readonly IResourcesProgressPresenterProvider _resourcesProgress;
 		private readonly IPersistentProgressServiceProvider _persistentProgress;
 		private readonly IAssetFactory _assetFactory;
 		private readonly CoroutineRunnerFactory _coroutineRunnerFactory;
-		private readonly GameplayInterfaceProvider _gameplayInterfaceProvider;
 		private readonly UpgradeWindowPresenterProvider _upgradeWindowPresenterProvider;
 		private readonly ResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 		private readonly ResourcesProgressPresenterFactory _resourcesProgressPresenterFactory;
-		private readonly ResourcePathConfigProvider _resourcePathConfigProvider;
+		private readonly ResourcePathNameConfigProvider _resourcePathNameConfigProvider;
 		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
 		private readonly ISceneLoader _sceneLoader;
 		private readonly SandCarContainerViewProvider _sandCarContainerViewProvider;
 		private readonly DissolveShaderViewControllerProvider _dissolveShaderViewControllerProvider;
 		private readonly FillMeshShaderControllerProvider _fillMeshShaderControllerProvider;
 		private readonly ISandParticleSystemProvider _sandParticleSystemProvider;
-		private readonly IPlayerStatsServiceProvider _playerStatsServiceProvider;
-		private readonly PlayerStatsFactory _playerStatsFactory;
 		private readonly GameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
+		private readonly GameMenuPresenterProvider _gameMenuPresenterProvider;
+		private readonly GameStateChangerProvider _gameStateChangerProvider;
+		private readonly ITranslatorService _translatorService;
 		private readonly IAdvertisement _advertisement;
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly ILevelProgressFacade _levelProgressFacade;
-
-		private IUpgradeWindowPresenter UpgradeWindowPresenter => _upgradeWindowPresenterProvider.Implementation;
-
-		private GameObject SpawnPoint => _resourcePathConfigProvider.Implementation.SceneGameObjects.SpawnPoint;
-
-		private IGameplayInterfaceView GameplayInterface => _gameplayInterfaceProvider.Implementation;
-		private ResourcesPrefabs ResourcesPrefabs => _resourcePathConfigProvider.Implementation;
-		private IPlayerStatsService PlayerStatsService => _playerStatsServiceProvider.Implementation;
-		private GameObject SellTrigger => ResourcesPrefabs.Triggers.SellTrigger;
 
 #endregion
 
@@ -75,7 +66,6 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 			IGameStateChangerProvider gameStateMachine,
 			GameplayInterfacePresenterFactory uiFactory,
-			ICameraFactory cameraFactory,
 			IPlayerFactory playerFactory,
 			IUpgradeWindowViewFactory upgradeWindowViewFactory,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
@@ -85,11 +75,10 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			IPersistentProgressServiceProvider persistentProgress,
 			IAssetFactory assetFactory,
 			CoroutineRunnerFactory coroutineRunnerFactory,
-			GameplayInterfaceProvider gameplayInterfaceProvider,
 			UpgradeWindowPresenterProvider upgradeWindowPresenterProvider,
 			ResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
 			ResourcesProgressPresenterFactory resourcesProgressPresenterFactory,
-			ResourcePathConfigProvider resourcePathConfigProvider,
+			ResourcePathNameConfigProvider resourcePathNameConfigProvider,
 			ICoroutineRunnerProvider coroutineRunnerProvider,
 			ISceneLoader sceneLoader,
 			SandCarContainerViewProvider sandCarContainerViewProvider,
@@ -98,7 +87,10 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			ISandParticleSystemProvider sandParticleSystemProvider,
 			IPlayerStatsServiceProvider playerStatsServiceProvider,
 			PlayerStatsFactory playerStatsFactory,
-			GameplayInterfacePresenterProvider gameplayInterfacePresenterProvider
+			GameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
+			GameMenuPresenterProvider gameMenuPresenterProvider,
+			GameStateChangerProvider gameStateChangerProvider,
+			ITranslatorService translatorService
 
 #endregion
 
@@ -106,37 +98,38 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		{
 #region Construction
 
-			_gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
-
-			_gameplayInterfacePresenterFactory = uiFactory ?? throw new ArgumentNullException(nameof(uiFactory));
-			_cameraFactory = cameraFactory ?? throw new ArgumentNullException(nameof(cameraFactory));
-			_playerFactory = playerFactory ?? throw new ArgumentNullException(nameof(playerFactory));
-			_upgradeWindowViewFactory
-				= upgradeWindowViewFactory ?? throw new ArgumentNullException(nameof(upgradeWindowViewFactory));
+			_gameStateMachine = gameStateMachine ??
+				throw new ArgumentNullException(nameof(gameStateMachine));
+			_gameplayInterfacePresenterFactory = uiFactory ??
+				throw new ArgumentNullException(nameof(uiFactory));
+			_playerFactory = playerFactory ??
+				throw new ArgumentNullException(nameof(playerFactory));
+			_upgradeWindowViewFactory = upgradeWindowViewFactory ??
+				throw new ArgumentNullException(nameof(upgradeWindowViewFactory));
 			_progressSaveLoadDataService = progressSaveLoadDataService ??
 				throw new ArgumentNullException(nameof(progressSaveLoadDataService));
-			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
-			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
-			_resourcesProgress = resourcesProgress ?? throw new ArgumentNullException(nameof(resourcesProgress));
-			_persistentProgress = persistentProgress ?? throw new ArgumentNullException(nameof(persistentProgress));
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_levelConfigGetter = levelConfigGetter ??
+				throw new ArgumentNullException(nameof(levelConfigGetter));
+			_levelProgressFacade = levelProgressFacade ??
+				throw new ArgumentNullException(nameof(levelProgressFacade));
+			_persistentProgress = persistentProgress ??
+				throw new ArgumentNullException(nameof(persistentProgress));
+			_assetFactory = assetFactory ??
+				throw new ArgumentNullException(nameof(assetFactory));
 			_coroutineRunnerFactory = coroutineRunnerFactory ??
 				throw new ArgumentNullException(nameof(coroutineRunnerFactory));
-			_gameplayInterfaceProvider = gameplayInterfaceProvider ??
-				throw new ArgumentNullException(nameof(gameplayInterfaceProvider));
-			_upgradeWindowPresenterProvider
-				= upgradeWindowPresenterProvider ??
+			_sceneLoader = sceneLoader ??
+				throw new ArgumentNullException(nameof(sceneLoader));
+			_upgradeWindowPresenterProvider = upgradeWindowPresenterProvider ??
 				throw new ArgumentNullException(nameof(upgradeWindowPresenterProvider));
 			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ??
 				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
 			_resourcesProgressPresenterFactory = resourcesProgressPresenterFactory ??
 				throw new ArgumentNullException(nameof(resourcesProgressPresenterFactory));
-
-			_resourcePathConfigProvider = resourcePathConfigProvider ??
-				throw new ArgumentNullException(nameof(resourcePathConfigProvider));
+			_resourcePathNameConfigProvider = resourcePathNameConfigProvider ??
+				throw new ArgumentNullException(nameof(resourcePathNameConfigProvider));
 			_coroutineRunnerProvider = coroutineRunnerProvider ??
 				throw new ArgumentNullException(nameof(coroutineRunnerProvider));
-			_sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
 			_sandCarContainerViewProvider = sandCarContainerViewProvider ??
 				throw new ArgumentNullException(nameof(sandCarContainerViewProvider));
 			_dissolveShaderViewControllerProvider = dissolveShaderViewControllerProvider ??
@@ -145,13 +138,21 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				throw new ArgumentNullException(nameof(fillMeshShaderControllerProvider));
 			_sandParticleSystemProvider = sandParticleSystemProvider ??
 				throw new ArgumentNullException(nameof(sandParticleSystemProvider));
-			_playerStatsServiceProvider = playerStatsServiceProvider ??
-				throw new ArgumentNullException(nameof(playerStatsServiceProvider));
-			_playerStatsFactory = playerStatsFactory ?? throw new ArgumentNullException(nameof(playerStatsFactory));
 			_gameplayInterfacePresenterProvider = gameplayInterfacePresenterProvider ??
 				throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
+			_gameMenuPresenterProvider = gameMenuPresenterProvider ??
+				throw new ArgumentNullException(nameof(gameMenuPresenterProvider));
+			_gameStateChangerProvider = gameStateChangerProvider ??
+				throw new ArgumentNullException(nameof(gameStateChangerProvider));
+			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
+
 #endregion
 		}
+
+		private GameObject SpawnPoint => _resourcePathNameConfigProvider.Implementation.SceneGameObjects.SpawnPoint;
+		private ResourcesPrefabs ResourcesPrefabs => _resourcePathNameConfigProvider.Implementation;
+		private GameObject SellTrigger => ResourcesPrefabs.Triggers.SellTrigger;
+		private IResourcesModel ResourcesModel => _persistentProgress.Implementation.GlobalProgress.ResourcesModel;
 
 		public async void Enter(LevelConfig payload)
 		{
@@ -166,12 +167,19 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			_assetFactory.Instantiate(SellTrigger);
 			_coroutineRunnerProvider.Register(_coroutineRunnerFactory.Create());
 
+			// ему нужен ресурс
 			_gameplayInterfacePresenterFactory.Create();
 
-			GameObject playerGameObject = _playerFactory.Create(
-				SpawnPoint,
-				GameplayInterface.Joystick
-			);
+			// ему нужен IGameplayInterfacePresenterProvider
+			GameObject playerGameObject = _playerFactory.Create(SpawnPoint);
+
+			// ему нужен плеер game object
+			SandCarContainerView sandContainerView = playerGameObject.GetComponent<SandCarContainerView>();
+			_sandCarContainerViewProvider.Register<ISandContainerView>(sandContainerView);
+
+			// ему нужен сэнд ^
+			ResourcesProgressPresenter resourcesProgressPresenter = _resourcesProgressPresenterFactory.Create();
+			_resourcesProgressPresenterProvider.Register<IResourcesProgressPresenter>(resourcesProgressPresenter);
 
 			_fillMeshShaderControllerProvider.Register<IFillMeshShaderController>(
 				new FillAreaShaderControllerFactory(playerGameObject).Create()
@@ -179,22 +187,12 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 			CreateSandInCar(playerGameObject);
 
-			ResourcesProgressPresenter resourcesProgressPresenter = _resourcesProgressPresenterFactory.Create();
-			_resourcesProgressPresenterProvider.Register<IResourcesProgressPresenter>(resourcesProgressPresenter);
-
-			SandCarContainerView sandContainerView = playerGameObject.GetComponent<SandCarContainerView>();
-			_sandCarContainerViewProvider.Register<ISandContainerView>(sandContainerView);
-
 			RegisterUpgradeWindowPresenterProvider();
 
 			IMeshModifiable meshModifiable = new SandFactory(_assetFactory).Create();
 
-			new MeshDeformationController(
-				meshModifiable,
-				resourcesProgressPresenter
-			);
-
-			_cameraFactory.CreateVirtualCamera();
+			new MeshDeformationController(meshModifiable, resourcesProgressPresenter);
+			new CameraFactory(_assetFactory, _playerFactory.Player, _resourcePathNameConfigProvider).Create();
 		}
 
 		private void CreateSandInCar(GameObject playerGameObject)
@@ -223,7 +221,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				_assetFactory,
 				_progressSaveLoadDataService,
 				_persistentProgress.Implementation,
-				_gameplayInterfacePresenterProvider.Implementation
+				_gameplayInterfacePresenterProvider.Implementation,
+				_resourcesProgressPresenterProvider
 			).Create();
 
 			_upgradeWindowPresenterProvider.Register(presenter);

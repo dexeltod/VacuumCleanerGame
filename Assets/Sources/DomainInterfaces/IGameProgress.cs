@@ -7,6 +7,6 @@ namespace Sources.DomainInterfaces
 		int MaxUpgradePointCount { get; }
 		List<IUpgradeProgressData> GetAll();
 		IUpgradeProgressData GetByName(string name);
-		void SetProgress(string progressName, int progressValue);
+		void Set(string progressName, int progressValue);
 	}
 }

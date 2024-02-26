@@ -18,42 +18,39 @@ namespace Sources.Infrastructure.Factories.Player
 		private readonly IAssetFactory _assetFactory;
 		private readonly IObjectResolver _objectResolver;
 		private readonly IPlayerStatsServiceProvider _playerStatsServiceProvider;
-
-		private Joystick _joystick;
-		private Animator _animator;
-		private AnimationHasher _animationHasher;
-		private AnimatorFacade _animatorFacade;
-
-		private IPlayerStatsService PlayerStatsService => _playerStatsServiceProvider.Implementation;
-
-		public GameObject Player { get; private set; }
+		private readonly IGameplayInterfacePresenterProvider _gameplayInterfaceProvider;
 
 		[Inject]
 		public PlayerFactory(
 			IAssetFactory assetFactory,
 			IObjectResolver objectResolver,
-			IPlayerStatsServiceProvider playerStatsServiceProvider
+			IPlayerStatsServiceProvider playerStatsServiceProvider,
+			IGameplayInterfacePresenterProvider gameplayInterfaceProvider
 		)
 		{
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_objectResolver = objectResolver ?? throw new ArgumentNullException(nameof(objectResolver));
 			_playerStatsServiceProvider = playerStatsServiceProvider ??
 				throw new ArgumentNullException(nameof(playerStatsServiceProvider));
+			_gameplayInterfaceProvider = gameplayInterfaceProvider ??
+				throw new ArgumentNullException(nameof(gameplayInterfaceProvider));
 		}
 
-		public GameObject Create(
-			GameObject spawnPoint,
-			Joystick joystick
-		)
+		private Joystick ImplementationJoystick => _gameplayInterfaceProvider.Implementation.Joystick;
+
+		private IPlayerStatsService PlayerStatsService => _playerStatsServiceProvider.Implementation;
+
+		public GameObject Player { get; private set; }
+
+		public GameObject Create(GameObject spawnPoint)
 		{
 			if (spawnPoint == null) throw new ArgumentNullException(nameof(spawnPoint));
-			_joystick = joystick ? joystick : throw new ArgumentNullException(nameof(joystick));
 
-			return Create(spawnPoint);
-		}
+			var joystick =
+				ImplementationJoystick
+					? ImplementationJoystick
+					: throw new ArgumentNullException(nameof(ImplementationJoystick));
 
-		private GameObject Create(GameObject spawnPoint)
-		{
 			AnimationHasher animationHasher = new AnimationHasher();
 
 			PlayerBody playerBodyComponent = GetPlayerBodyComponent(spawnPoint);
@@ -63,11 +60,12 @@ namespace Sources.Infrastructure.Factories.Player
 			GameObject character = playerBodyComponent.gameObject;
 			Player = character;
 			Rigidbody body = Player.GetComponent<Rigidbody>();
+			
 			Animator animator = Player.GetComponentInChildren<Animator>();
 
 			PlayerTransformable playerTransformable = new(
 				Player.transform,
-				_joystick,
+				joystick,
 				PlayerStatsService
 			);
 

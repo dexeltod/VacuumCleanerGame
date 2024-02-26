@@ -4,6 +4,7 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Common.Factory.Decorators;
 using Sources.InfrastructureInterfaces.Factory;
+using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
 using Sources.Services.Triggers;
 using Sources.ServicesInterfaces;
@@ -18,6 +19,7 @@ namespace Sources.Infrastructure.Factories
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IPersistentProgressService _persistentProgressService;
 		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenter;
+		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 		private readonly IUpgradeWindowPresenter _upgradeWindowPresenter;
 
 		public UpgradeWindowPresenterFactory(
@@ -25,7 +27,8 @@ namespace Sources.Infrastructure.Factories
 			IAssetFactory assetFactory,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			IPersistentProgressService persistentProgressService,
-			IGameplayInterfacePresenter gameplayInterfacePresenter
+			IGameplayInterfacePresenter gameplayInterfacePresenter,
+			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider
 		)
 		{
 			_upgradeWindowViewFactory
@@ -37,6 +40,8 @@ namespace Sources.Infrastructure.Factories
 				throw new ArgumentNullException(nameof(persistentProgressService));
 			_gameplayInterfacePresenter = gameplayInterfacePresenter ??
 				throw new ArgumentNullException(nameof(gameplayInterfacePresenter));
+			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ??
+				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
 		}
 
 		private IResourcesModel GameProgressResourcesModel => _persistentProgressService.GlobalProgress.ResourcesModel;
@@ -57,7 +62,8 @@ namespace Sources.Infrastructure.Factories
 				upgradeTrigger,
 				upgradeWindow,
 				_progressSaveLoadDataService,
-				_gameplayInterfacePresenter
+				_gameplayInterfacePresenter,
+				_resourcesProgressPresenterProvider
 			);
 
 			upgradeWindow.Construct(presenter, SoftCurrencyCount);

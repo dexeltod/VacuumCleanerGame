@@ -5,48 +5,40 @@ using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.ServicesInterfaces;
 using UnityEngine;
+using VContainer;
 
 namespace Sources.Infrastructure.Factories.Scene
 {
-	public class CameraConfinerFactory
-	{
-		private readonly IAssetFactory _assetFactory;
-	}
-
 	public class CameraFactory : ICameraFactory
 	{
-		private const string MainCameraPath = "MainCamera";
-		private const string VirtualCameraPath = "VirtualCamera";
-
 		private readonly IAssetFactory _assetFactory;
-		private readonly IPlayerFactory _playerFactory;
-		private readonly ResourcePathConfigProvider _assetPathConfigProvider;
+		private readonly GameObject _player;
+		private readonly ResourcePathNameConfigProvider _assetPathNameConfigProvider;
 
 		private GameObject _characterObject;
-		public Camera Camera { get; private set; }
-
-		private GameObject CustomCameraConfiner =>
-			_assetPathConfigProvider.Implementation.SceneGameObjects.CameraConfiner;
-
-		private GameObject MainCamera => _assetPathConfigProvider.Implementation.SceneGameObjects.MainCamera;
-		private GameObject VirtualCamera => _assetPathConfigProvider.Implementation.SceneGameObjects.VirtualCamera;
-
 		public CameraFactory(
 			IAssetFactory assetFactory,
-			IPlayerFactory playerFactory,
-			ResourcePathConfigProvider assetPathConfigProvider
+			GameObject playerFactory,
+			ResourcePathNameConfigProvider assetPathNameConfigProvider
 		)
 		{
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
-			_playerFactory = playerFactory ?? throw new ArgumentNullException(nameof(playerFactory));
-			_assetPathConfigProvider = assetPathConfigProvider ??
-				throw new ArgumentNullException(nameof(assetPathConfigProvider));
+			_player = playerFactory ? playerFactory : throw new ArgumentNullException(nameof(playerFactory));
+			_assetPathNameConfigProvider = assetPathNameConfigProvider ??
+				throw new ArgumentNullException(nameof(assetPathNameConfigProvider));
 		}
 
-		public CinemachineVirtualCamera CreateVirtualCamera()
+		private GameObject CustomCameraConfiner =>
+			_assetPathNameConfigProvider.Implementation.SceneGameObjects.CameraConfiner;
+
+		private GameObject MainCamera => _assetPathNameConfigProvider.Implementation.SceneGameObjects.MainCamera;
+
+		private GameObject VirtualCamera => _assetPathNameConfigProvider.Implementation.SceneGameObjects.VirtualCamera;
+
+		public CinemachineVirtualCamera Create()
 		{
-			_characterObject = _playerFactory.Player;
-			Camera = _assetFactory.InstantiateAndGetComponent<Camera>(MainCamera);
+			_characterObject = _player;
+			_assetFactory.InstantiateAndGetComponent<Camera>(MainCamera);
 
 			return GetVirtualCamera();
 		}

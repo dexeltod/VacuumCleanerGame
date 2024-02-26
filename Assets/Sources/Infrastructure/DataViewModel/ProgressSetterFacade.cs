@@ -1,4 +1,5 @@
 using System;
+using Sources.ControllersInterfaces;
 using Sources.Domain.Progress.Player;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
@@ -14,12 +15,14 @@ namespace Sources.Infrastructure.DataViewModel
 		private readonly IPlayerStatsServiceProvider _playerStatsProvider;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
+		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 		private readonly IPersistentProgressService _persistentProgressService;
 
 		public ProgressSetterFacade(
 			IPlayerStatsServiceProvider playerStats,
 			IProgressSaveLoadDataService persistentProgressService,
-			IPersistentProgressServiceProvider persistentProgressServiceProvider
+			IPersistentProgressServiceProvider persistentProgressServiceProvider,
+			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider
 		)
 		{
 			_playerStatsProvider = playerStats ?? throw new ArgumentNullException(nameof(playerStats));
@@ -27,16 +30,18 @@ namespace Sources.Infrastructure.DataViewModel
 				throw new ArgumentNullException(nameof(persistentProgressService));
 			_persistentProgressServiceProvider = persistentProgressServiceProvider ??
 				throw new ArgumentNullException(nameof(persistentProgressServiceProvider));
+			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ??
+				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
 		}
+
+		private IResourcesProgressPresenter ResourcesProgressPresenter =>
+			_resourcesProgressPresenterProvider.Implementation;
 
 		private IGameProgress PlayerProgress =>
 			_persistentProgressServiceProvider.Implementation.GlobalProgress.PlayerProgress;
 
 		private IGameProgress ShopProgress =>
 			_persistentProgressServiceProvider.Implementation.GlobalProgress.ShopProgress;
-
-		private IResourcesModel ResourcesModel =>
-			_persistentProgressServiceProvider.Implementation.GlobalProgress.ResourcesModel;
 
 		private IPlayerStatsService PlayerStatsService => _playerStatsProvider.Implementation;
 
@@ -52,12 +57,11 @@ namespace Sources.Infrastructure.DataViewModel
 				return false;
 
 			PlayerStatsService.Set(upgradeProgress.Name, newProgressValue);
+			PlayerProgress.Set(progressName, newProgressValue);
+			ShopProgress.Set(progressName, newProgressValue);
 
-			PlayerProgress.SetProgress(progressName, newProgressValue);
-			ShopProgress.SetProgress(progressName, newProgressValue);
-			
-			ResourcesModel.DecreaseMoney(itemData.Price);
-			
+			ResourcesProgressPresenter.DecreaseMoney(itemData.Price);
+
 			itemData.SetUpgradeLevel(upgradeProgress.Value);
 
 			_progressSaveLoadDataService.SaveToCloud();

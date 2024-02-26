@@ -12,7 +12,6 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 {
 	public sealed class GameLoopState : IGameState
 	{
-		private readonly GameplayInterfaceProvider _gameplayInterfaceProvider;
 		private readonly ILocalizationService _localizationService;
 		private readonly UpgradeWindowPresenterProvider _upgradeWindowPresenterProvider;
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
@@ -23,18 +22,9 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly AdvertisementHandlerProvider _advertisementHandlerProvider;
 		private readonly LoadingCurtain _loadingCurtain;
 
-		private IGameplayInterfaceView GameplayInterface => _gameplayInterfaceProvider.Implementation;
-
-		private IDissolveShaderViewController DissolveShaderViewController =>
-			_dissolveShaderViewControllerProvider.Implementation;
-
-		private IResourcesProgressPresenter ResourcesProgressPresenter =>
-			_resourcesProgressPresenterProvider.Implementation;
-
 		[Inject]
 		public GameLoopState(
 			LoadingCurtain loadingCurtain,
-			GameplayInterfaceProvider gameplayInterfaceProvider,
 			ILocalizationService localizationService,
 			UpgradeWindowPresenterProvider upgradeWindowPresenterProvider,
 			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
@@ -44,8 +34,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			AdvertisementHandlerProvider advertisementHandlerProvider
 		)
 		{
-			_gameplayInterfaceProvider = gameplayInterfaceProvider ??
-				throw new ArgumentNullException(nameof(gameplayInterfaceProvider));
+			
 			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 			_upgradeWindowPresenterProvider
 				= upgradeWindowPresenterProvider ??
@@ -64,14 +53,15 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
+		private IDissolveShaderViewController DissolveShaderViewController =>
+			_dissolveShaderViewControllerProvider.Implementation;
+
+		private IResourcesProgressPresenter ResourcesProgressPresenter =>
+			_resourcesProgressPresenterProvider.Implementation;
+
 		public void Enter()
 		{
 			_localizationService.UpdateTranslations();
-
-			if (GameplayInterface == null)
-				throw new NullReferenceException("GameplayInterface");
-
-			GameplayInterface.InterfaceGameObject.SetActive(true);
 
 			_upgradeWindowPresenterProvider.Implementation.Enable();
 			_gameplayInterfacePresenterProvider.Implementation.Enable();
@@ -85,8 +75,6 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 		public void Exit()
 		{
-			GameplayInterface?.InterfaceGameObject.SetActive(false);
-
 			_upgradeWindowPresenterProvider.Implementation.Disable();
 			_gameplayInterfacePresenterProvider.Implementation.Disable();
 			_resourcesProgressPresenterProvider.Implementation.Disable();

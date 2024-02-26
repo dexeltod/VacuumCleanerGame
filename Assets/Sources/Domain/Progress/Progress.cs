@@ -47,7 +47,7 @@ namespace Sources.Domain.Progress
 			return foundedProgress;
 		}
 
-		public void SetProgress(string progressName, int progressValue)
+		public void Set(string progressName, int progressValue)
 		{
 			if (_progressNames.Contains(progressName) == false)
 				return;

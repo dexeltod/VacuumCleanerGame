@@ -2,6 +2,7 @@ using System;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
+using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 
@@ -12,6 +13,7 @@ namespace Sources.Controllers
 		private readonly IUpgradeWindow _upgradeWindow;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadService;
 		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenter;
+		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 		private readonly IUpgradeTriggerObserver _observer;
 
 		private bool _isCanSave;
@@ -20,7 +22,8 @@ namespace Sources.Controllers
 			IUpgradeTriggerObserver observer,
 			IUpgradeWindow upgradeWindow,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
-			IGameplayInterfacePresenter gameplayInterfacePresenter
+			IGameplayInterfacePresenter gameplayInterfacePresenter,
+			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider
 		)
 		{
 			_observer = observer ?? throw new ArgumentNullException(nameof(observer));
@@ -29,13 +32,24 @@ namespace Sources.Controllers
 				throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 			_gameplayInterfacePresenter = gameplayInterfacePresenter ??
 				throw new ArgumentNullException(nameof(gameplayInterfacePresenter));
+			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ??
+				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
 		}
 
-		public override void Enable() =>
-			_observer.TriggerEntered += OnTriggerEnter;
+		private int SoftCurrencyCount => _resourcesProgressPresenterProvider.Implementation.SoftCurrency.Count;
 
-		public override void Disable() =>
+		public override void Enable()
+		{
+			_gameplayInterfacePresenter.Disable();
+			_upgradeWindow.SetMoney(SoftCurrencyCount);
+			_observer.TriggerEntered += OnTriggerEnter;
+		}
+
+		public override void Disable()
+		{
+			_gameplayInterfacePresenter.Enable();
 			_observer.TriggerEntered -= OnTriggerEnter;
+		}
 
 		public void SetMoney(int money) =>
 			_upgradeWindow.SetMoney(money);
@@ -43,11 +57,6 @@ namespace Sources.Controllers
 		private async void OnTriggerEnter(bool isEntered)
 		{
 			_upgradeWindow.SetActiveYesNoButtons(isEntered);
-
-			if (isEntered)
-				_gameplayInterfacePresenter.Disable();
-			else
-				_gameplayInterfacePresenter.Enable();
 
 			if (isEntered != false || _isCanSave == false)
 				return;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces.Player;
 using Sources.Utils;
 using UnityEngine;
@@ -8,13 +9,14 @@ namespace Sources.Services
 {
 	public class SandParticlePlayerSystem
 	{
-		private readonly ISandParticleSystem _sandParticleSystem;
-		private readonly ICoroutineRunner _coroutineRunner;
+		private readonly ISandParticleSystemProvider _sandParticleSystem;
+		private readonly ICoroutineRunnerProvider _coroutineRunner;
 		private readonly WaitForSeconds _waitForSeconds;
+		private ISandParticleSystem ParticleSystem;
 
 		public SandParticlePlayerSystem(
-			ISandParticleSystem sandParticleSystem,
-			ICoroutineRunner coroutineRunner,
+			ISandParticleSystemProvider sandParticleSystem,
+			ICoroutineRunnerProvider coroutineRunner,
 			int playTime
 		)
 		{
@@ -26,15 +28,16 @@ namespace Sources.Services
 		}
 
 		public void Play() =>
-			_coroutineRunner.Run(PlayParticleSystem());
+			_coroutineRunner.Implementation.Run(PlayParticleSystem());
 
 		private IEnumerator PlayParticleSystem()
 		{
-			_sandParticleSystem.Play();
-			
+			ParticleSystem = _sandParticleSystem.Implementation;
+			ParticleSystem.Play();
+
 			yield return _waitForSeconds;
 
-			_sandParticleSystem.Stop();
+			ParticleSystem.Stop();
 		}
 	}
 }

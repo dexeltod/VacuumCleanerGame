@@ -20,6 +20,7 @@ namespace Sources.Infrastructure.Factories.Player
 		private readonly InitialProgressFactory _initialProgressFactory;
 		private readonly ProgressConstantNames _progressConstantNames;
 		private readonly IProgressCleaner _progressCleaner;
+		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 
 		private IPlayerProgressSetterFacadeProvider _playerProgressSetterFacadeProvider;
 
@@ -31,7 +32,8 @@ namespace Sources.Infrastructure.Factories.Player
 			IPlayerStatsServiceProvider playerStatsService,
 			IPlayerProgressSetterFacadeProvider playerProgressSetterFacadeProvider,
 			ISaveLoaderProvider saveLoaderProvider,
-			IProgressCleaner progressCleaner
+			IProgressCleaner progressCleaner,
+			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider
 		)
 		{
 			_progressSaveLoadDataService = progressSaveLoadDataService ??
@@ -48,6 +50,8 @@ namespace Sources.Infrastructure.Factories.Player
 				throw new ArgumentNullException(nameof(playerProgressSetterFacadeProvider));
 
 			_progressCleaner = progressCleaner ?? throw new ArgumentNullException(nameof(progressCleaner));
+			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ??
+				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
 		}
 
 		private IPersistentProgressService PersistentProgressService =>
@@ -93,7 +97,8 @@ namespace Sources.Infrastructure.Factories.Player
 				new ProgressSetterFacade(
 					_playerStatsServiceProvider,
 					_progressSaveLoadDataService,
-					_persistentProgressServiceProvider
+					_persistentProgressServiceProvider,
+					_resourcesProgressPresenterProvider
 				)
 			);
 		}

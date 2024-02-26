@@ -26,9 +26,6 @@ namespace Sources.Presentation.SceneEntity
 				SetSand(_sandValueSliderTest);
 		}
 
-		public void SetEnableSand(bool isEnabled) =>
-			_sand.gameObject.SetActive(isEnabled);
-
 		public void SetSand(float normalizedCount)
 		{
 			_sand.gameObject.SetActive(_normalizedCount > 0);

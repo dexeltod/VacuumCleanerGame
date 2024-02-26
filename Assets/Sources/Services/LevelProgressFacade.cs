@@ -37,7 +37,7 @@ namespace Sources.Services
 			// int newLevel = progressData.Value + OnePoint;
 			// CurrentLevelNumber = newLevel;
 			//
-			// _progressService.SetProgress(CurrentLevel, newLevel);
+			// _progressService.Set(CurrentLevel, newLevel);
 		}
 	}
 }

@@ -10,10 +10,10 @@ namespace Sources.Controllers.Mesh
 		private readonly IMeshModifiable _meshModifiable;
 		private readonly IResourcesProgressPresenter _resourceMaxScore;
 
-		public MeshDeformationController(IMeshModifiable meshModifiable, IResourcesProgressPresenter resourceMaxScore)
+		public MeshDeformationController(IMeshModifiable meshModifiable, IResourcesProgressPresenter resourcePresenter)
 		{
 			_meshModifiable = meshModifiable ?? throw new ArgumentNullException(nameof(meshModifiable));
-			_resourceMaxScore = resourceMaxScore ?? throw new ArgumentNullException(nameof(resourceMaxScore));
+			_resourceMaxScore = resourcePresenter ?? throw new ArgumentNullException(nameof(resourcePresenter));
 			_meshModifiable.CollisionHappen += OnCollisionHappen;
 		}
 

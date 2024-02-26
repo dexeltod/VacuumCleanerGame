@@ -23,7 +23,7 @@ namespace Sources.Application
 		private readonly ISaveLoader _saveLoader;
 		private readonly IGameStateChangerFactory _gameStateChangerFactory;
 		private readonly ResourcePathConfigServiceFactory _resourcePathConfigServiceFactory;
-		private readonly ResourcePathConfigProvider _pathConfigProvider;
+		private readonly ResourcePathNameConfigProvider _pathNameConfigProvider;
 		private readonly PlayerStatsFactory _playerStatsFactory;
 		private readonly ISaveLoaderProvider _saveLoaderProvider;
 		private readonly SaveLoaderFactory _saveLoaderFactory;
@@ -38,7 +38,7 @@ namespace Sources.Application
 			IGameStateChangerProvider gameStateChangerProvider,
 			IGameStateChangerFactory gameStateChangerFactory,
 			ResourcePathConfigServiceFactory resourcePathConfigServiceFactory,
-			ResourcePathConfigProvider pathConfigProvider,
+			ResourcePathNameConfigProvider pathNameConfigProvider,
 			PlayerStatsFactory playerStatsFactory,
 			IPlayerStatsServiceProvider playerStatsServiceProvider,
 			IPersistentProgressServiceProvider persistentProgressService,
@@ -60,7 +60,7 @@ namespace Sources.Application
 				throw new ArgumentNullException(nameof(gameStateChangerFactory));
 			_resourcePathConfigServiceFactory = resourcePathConfigServiceFactory ??
 				throw new ArgumentNullException(nameof(resourcePathConfigServiceFactory));
-			_pathConfigProvider = pathConfigProvider ?? throw new ArgumentNullException(nameof(pathConfigProvider));
+			_pathNameConfigProvider = pathNameConfigProvider ?? throw new ArgumentNullException(nameof(pathNameConfigProvider));
 			_playerStatsFactory = playerStatsFactory ?? throw new ArgumentNullException(nameof(playerStatsFactory));
 			_saveLoaderProvider = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
 			_saveLoaderFactory = saveLoaderFactory ?? throw new ArgumentNullException(nameof(saveLoaderFactory));
@@ -93,7 +93,7 @@ namespace Sources.Application
 			await _progressFactory.Initialize();
 
 			_advertisementHandlerProvider.Register(new AdvertisementHandler(_advertisement));
-			_pathConfigProvider.Register(_resourcePathConfigServiceFactory.Create());
+			_pathNameConfigProvider.Register(_resourcePathConfigServiceFactory.Create());
 			_gameStateChangerProvider.Register(_gameStateChangerFactory.Create());
 
 			_playerStatsFactory.Create();
