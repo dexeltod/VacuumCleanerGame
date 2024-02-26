@@ -19,12 +19,6 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 		private readonly ILeaderBoardService _leaderBoardService;
 		private readonly ITranslatorService _translatorService;
 
-		private LeaderBoardBehaviour _leaderBoardBehaviour;
-
-		public MainMenuBehaviour MainMenuBehaviour { get; private set; }
-		private List<string> Phrases => MainMenuBehaviour.Translator.Phrases;
-		private string MainMenuCanvas => ResourcesAssetPath.Scene.UIResources.MainMenuCanvas;
-
 		public MainMenuFactory(
 			IAssetFactory assetFactory,
 			ILeaderBoardService leaderBoardService,
@@ -36,29 +30,22 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 		}
 
+		public MainMenuBehaviour MainMenuBehaviour { get; private set; }
+		private List<string> Phrases => MainMenuBehaviour.Translator.Phrases;
+		private string MainMenuCanvas => ResourcesAssetPath.Scene.UIResources.MainMenuCanvas;
+
 		public async UniTask Create()
 		{
 			GameObject gameObject = _assetFactory.Instantiate(MainMenuCanvas);
 
-			_leaderBoardBehaviour = gameObject.GetComponent<LeaderBoardBehaviour>();
+			var leaderBoardBehaviour = gameObject.GetComponent<LeaderBoardBehaviour>();
+			var leaderBoardFactory = new LeaderBoardFactory(_assetFactory, leaderBoardBehaviour);
+
 			MainMenuBehaviour = gameObject.GetComponent<MainMenuBehaviour>();
 
 			MainMenuBehaviour.Translator.Phrases = _translatorService.Localize(MainMenuBehaviour.Translator.Phrases);
-			InstantiateAndLeaders(await _leaderBoardService.GetLeaders(LeaderBoardPlayersCount));
-		}
 
-		private void InstantiateAndLeaders(Dictionary<string, int> leaders)
-		{
-			foreach (KeyValuePair<string, int> player in leaders)
-			{
-				Vector3 containerPosition = _leaderBoardBehaviour.Container.position;
-				GameObject playerPanelGameObject = _leaderBoardBehaviour.PlayerPanel.gameObject;
-
-				var panel = _assetFactory
-					.Instantiate(playerPanelGameObject, containerPosition)
-					.GetComponent<LeaderBoardPlayerPanelBehaviour>();
-				panel.Construct(player.Key, player.Value);
-			}
+			leaderBoardFactory.Create(await _leaderBoardService.GetLeaders(LeaderBoardPlayersCount));
 		}
 	}
 }

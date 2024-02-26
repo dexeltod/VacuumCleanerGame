@@ -59,7 +59,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				= registerWindowLoader ?? throw new ArgumentNullException(nameof(registerWindowLoader));
 
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
-			_advertisementHandler = advertisementHandler ?? throw new ArgumentNullException(nameof(advertisementHandler));
+			_advertisementHandler
+				= advertisementHandler ?? throw new ArgumentNullException(nameof(advertisementHandler));
 
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 

@@ -21,6 +21,7 @@ namespace Sources.Controllers
 			int cashScore
 		)
 		{
+			if (cashScore < 0) throw new ArgumentOutOfRangeException(nameof(cashScore));
 			_levelChangerService = levelChangerService ?? throw new ArgumentNullException(nameof(levelChangerService));
 			_gameplayInterfaceView
 				= gameplayInterfaceView ?? throw new ArgumentNullException(nameof(gameplayInterfaceView));
