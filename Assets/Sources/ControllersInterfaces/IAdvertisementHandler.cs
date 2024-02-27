@@ -1,6 +1,6 @@
 using Sources.ControllersInterfaces.Common;
 
-namespace Sources.Infrastructure.Providers
+namespace Sources.ControllersInterfaces
 {
 	public interface IAdvertisementHandler : IPresenter { }
 }

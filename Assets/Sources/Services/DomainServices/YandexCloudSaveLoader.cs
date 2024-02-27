@@ -1,7 +1,9 @@
+using System;
 using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
 using Sources.DomainInterfaces;
+using Sources.DomainInterfaces.DomainServicesInterfaces;
 using UnityEngine;
 
 namespace Sources.Services.DomainServices
@@ -61,17 +63,14 @@ namespace Sources.Services.DomainServices
 		public YandexSaveLoader(ICloudSave yandexCloudSave) =>
 			_yandexController = yandexCloudSave ?? throw new ArgumentNullException(nameof(yandexCloudSave));
 
-		public async UniTask Save(IGameProgressModel @object, Action succeededCallback)
+		public async UniTask Save(IGlobalProgress @object, Action succeededCallback = null)
 		{
-			await _yandexController.Save
-			(
-				JsonUtility.ToJson((GameProgressModel)@object)
-			);
+			await _yandexController.Save(JsonUtility.ToJson(@object));
 
-			succeededCallback.Invoke();
+			succeededCallback?.Invoke();
 		}
 
-		public async UniTask<IGameProgressModel> Load(Action succeededCallback)
+		public async UniTask<IGlobalProgress> Load(Action succeededCallback)
 		{
 			string json = await _yandexController.Load();
 
@@ -86,7 +85,7 @@ namespace Sources.Services.DomainServices
 			try
 			{
 				Debug.Log("" + json);
-				GameProgressModel convertedJson = JsonUtility.FromJson<GameProgressModel>(json);
+				IGlobalProgress convertedJson = JsonUtility.FromJson<IGlobalProgress>(json);
 				succeededCallback.Invoke();
 				return convertedJson;
 			}
@@ -97,7 +96,7 @@ namespace Sources.Services.DomainServices
 			}
 		}
 
-		public async UniTask ClearSaves(IGameProgressModel gameProgressModel, Action succeededCallback)
+		public async UniTask ClearSaves(IGlobalProgress gameProgressModel, Action succeededCallback)
 		{
 			await _yandexController.DeleteSaves(gameProgressModel);
 			succeededCallback.Invoke();

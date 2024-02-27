@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Sources.DomainInterfaces;
 
-namespace Sources.Infrastructure.Factories.Player
+namespace Sources.InfrastructureInterfaces.Factory
 {
 	public interface IProgressFactory
 	{

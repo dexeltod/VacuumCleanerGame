@@ -30,22 +30,24 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 		}
 
-		public MainMenuBehaviour MainMenuBehaviour { get; private set; }
-		private List<string> Phrases => MainMenuBehaviour.Translator.Phrases;
+		private MainMenuBehaviour _mainMenuBehaviour;
+		private List<string> Phrases => _mainMenuBehaviour.Translator.Phrases;
 		private string MainMenuCanvas => ResourcesAssetPath.Scene.UIResources.MainMenuCanvas;
 
-		public async UniTask Create()
+		public async UniTask<MainMenuBehaviour> Create()
 		{
 			GameObject gameObject = _assetFactory.Instantiate(MainMenuCanvas);
 
 			var leaderBoardBehaviour = gameObject.GetComponent<LeaderBoardBehaviour>();
 			var leaderBoardFactory = new LeaderBoardFactory(_assetFactory, leaderBoardBehaviour);
 
-			MainMenuBehaviour = gameObject.GetComponent<MainMenuBehaviour>();
+			_mainMenuBehaviour = gameObject.GetComponent<MainMenuBehaviour>();
 
-			MainMenuBehaviour.Translator.Phrases = _translatorService.Localize(MainMenuBehaviour.Translator.Phrases);
+			_mainMenuBehaviour.Translator.Phrases = _translatorService.Localize(_mainMenuBehaviour.Translator.Phrases);
 
 			leaderBoardFactory.Create(await _leaderBoardService.GetLeaders(LeaderBoardPlayersCount));
+
+			return _mainMenuBehaviour;
 		}
 	}
 }

@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Sources.DomainInterfaces;
 
-namespace Sources.Services.DomainServices
+namespace Sources.InfrastructureInterfaces.Services
 {
 	public interface IProgressCleaner
 	{

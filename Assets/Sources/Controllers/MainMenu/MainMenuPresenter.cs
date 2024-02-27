@@ -4,6 +4,7 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.InfrastructureInterfaces.States;
+using Sources.Presentation;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs.Scripts;
@@ -17,6 +18,7 @@ namespace Sources.Controllers.MainMenu
 		private readonly IGameStateChanger _stateMachine;
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
+		private readonly IAuthorizationPresenter _authorizationPresenter;
 
 		private int CurrentNumber => _levelProgress.CurrentLevelNumber;
 
@@ -25,7 +27,8 @@ namespace Sources.Controllers.MainMenu
 			ILevelProgressFacade levelProgress,
 			IGameStateChanger stateMachine,
 			ILevelConfigGetter levelConfigGetter,
-			IProgressSaveLoadDataService progressSaveLoadDataService
+			IProgressSaveLoadDataService progressSaveLoadDataService,
+			IAuthorizationPresenter authorizationPresenter
 		)
 		{
 			_mainMenu = mainMenu ?? throw new ArgumentNullException(nameof(mainMenu));
@@ -34,6 +37,7 @@ namespace Sources.Controllers.MainMenu
 			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
 			_progressSaveLoadDataService = progressSaveLoadDataService ??
 				throw new ArgumentNullException(nameof(progressSaveLoadDataService));
+			_authorizationPresenter = authorizationPresenter ?? throw new ArgumentNullException(nameof(authorizationPresenter));
 		}
 
 		public override void Enable()
@@ -48,6 +52,11 @@ namespace Sources.Controllers.MainMenu
 			_mainMenu.DeleteSavesButtonPressed -= OnDeleteSaves;
 		}
 
+		public void Authorize()
+		{
+			_authorizationPresenter.Authorize();
+		}
+		
 		private async void OnDeleteSaves() =>
 			await _progressSaveLoadDataService.ClearSaves();
 

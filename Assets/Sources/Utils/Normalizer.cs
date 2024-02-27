@@ -1,4 +1,4 @@
-namespace Sources.Presentation.UI
+namespace Sources.Utils
 {
 	public static class Normalizer
 	{

@@ -167,17 +167,15 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			_assetFactory.Instantiate(SellTrigger);
 			_coroutineRunnerProvider.Register(_coroutineRunnerFactory.Create());
 
-			// ему нужен ресурс
 			_gameplayInterfacePresenterFactory.Create();
 
-			// ему нужен IGameplayInterfacePresenterProvider
+			
 			GameObject playerGameObject = _playerFactory.Create(SpawnPoint);
 
-			// ему нужен плеер game object
+			
 			SandCarContainerView sandContainerView = playerGameObject.GetComponent<SandCarContainerView>();
 			_sandCarContainerViewProvider.Register<ISandContainerView>(sandContainerView);
 
-			// ему нужен сэнд ^
 			ResourcesProgressPresenter resourcesProgressPresenter = _resourcesProgressPresenterFactory.Create();
 			_resourcesProgressPresenterProvider.Register<IResourcesProgressPresenter>(resourcesProgressPresenter);
 

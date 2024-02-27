@@ -1,13 +1,15 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Sources.DomainInterfaces;
-using Sources.Infrastructure.Factories.Domain;
 using Sources.Infrastructure.Factories.Player;
 using Sources.Infrastructure.Providers;
+using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
+using Sources.InfrastructureInterfaces.Services;
+using Sources.Services.DomainServices;
 using VContainer;
 
-namespace Sources.Services.DomainServices
+namespace Sources.Infrastructure.Services
 {
 	public class ProgressCleaner : IProgressCleaner
 	{

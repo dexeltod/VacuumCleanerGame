@@ -6,7 +6,7 @@ using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 
-namespace Sources.Services.DomainServices.DTO
+namespace Sources.Services.DomainServices
 {
 	public class BinaryDataSaveLoader : IBinaryDataSaveLoader
 	{

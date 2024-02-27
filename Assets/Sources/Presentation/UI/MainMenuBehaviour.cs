@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using Sources.ApplicationServicesInterfaces;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
@@ -8,15 +9,16 @@ using Sources.ServicesInterfaces;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-using VContainer;
 
 namespace Sources.Presentation.UI
 {
-	public class MainMenuBehaviour : PresentableView<IMainMenuPresenter>, IMainMenuView, IDisposable
+	public class MainMenuBehaviour : PresentableView<IMainMenuPresenter>, IMainMenuView
 	{
 		[SerializeField] private Button _playButton;
 		[SerializeField] private Button _deleteSavesButton;
 		[SerializeField] private Button _addScoreButton;
+		[SerializeField] private Button _leaderboardButton;
+		[SerializeField] private GameObject _test;
 
 		[FormerlySerializedAs("_translatorBehaviour")] [SerializeField]
 		private TmpPhrases _translator;
@@ -30,27 +32,20 @@ namespace Sources.Presentation.UI
 		public event Action PlayButtonPressed;
 		public event Action DeleteSavesButtonPressed;
 
-		[Inject]
-		private void Construct(
-			ILevelProgressFacade levelProgressFacade,
-			IProgressSaveLoadDataService progressSaveLoadDataService,
-			ILeaderBoardService leaderBoardService,
-			ILevelConfigGetter levelConfigGetter
-		)
-		{
-			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
-			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
-			_progressSaveLoadDataService = progressSaveLoadDataService ??
-				throw new ArgumentNullException(nameof(progressSaveLoadDataService));
-			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
-		}
+		private void Construct(IMainMenuPresenter mainMenuPresenter) =>
+			base.Construct(mainMenuPresenter);
 
 		private void OnEnable()
 		{
+			_leaderboardButton.onClick.AddListener(OnShowLeaderboard);
 			_addScoreButton.onClick.AddListener(OnAddLeader);
 			_playButton.onClick.AddListener(OnPlay);
 			_deleteSavesButton.onClick.AddListener(OnDeleteSaves);
+
+			_test.transform.DOScale(_test.transform.localScale * 1.3f, 1f).SetLoops(-1, LoopType.Yoyo);
 		}
+
+		private void OnShowLeaderboard() { }
 
 		private void OnDisable()
 		{
@@ -58,13 +53,7 @@ namespace Sources.Presentation.UI
 			_addScoreButton.onClick.RemoveListener(OnAddLeader);
 			_deleteSavesButton.onClick.RemoveListener(OnDeleteSaves);
 		}
-
-		public void Dispose()
-		{
-			_playButton.onClick.RemoveListener(OnPlay);
-			_addScoreButton.onClick.RemoveListener(OnAddLeader);
-			_deleteSavesButton.onClick.RemoveListener(OnDeleteSaves);
-		}
+	
 
 		private void OnPlay() =>
 			PlayButtonPressed!.Invoke();

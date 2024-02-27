@@ -1,7 +1,7 @@
 using System.IO;
 using UnityEngine;
 
-namespace Sources.Services.DomainServices.DTO
+namespace Sources.Services.DomainServices
 {
 	public class JsonDataSaveLoader
 	{

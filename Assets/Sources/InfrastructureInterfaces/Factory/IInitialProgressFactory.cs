@@ -1,6 +1,6 @@
 using Sources.DomainInterfaces;
 
-namespace Sources.Infrastructure.Factories.Domain
+namespace Sources.InfrastructureInterfaces.Factory
 {
 	public interface IInitialProgressFactory
 	{

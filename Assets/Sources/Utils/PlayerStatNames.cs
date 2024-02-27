@@ -1,4 +1,4 @@
-namespace Sources.Controllers
+namespace Sources.Utils
 {
 	public static class PlayerStatNames
 	{

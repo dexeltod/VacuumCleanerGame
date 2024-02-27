@@ -4,13 +4,15 @@ using Sources.DomainInterfaces;
 using Sources.Infrastructure.DataViewModel;
 using Sources.Infrastructure.Factories.Domain;
 using Sources.Infrastructure.Providers;
+using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
+using Sources.InfrastructureInterfaces.Services;
 using Sources.Services.DomainServices;
 using Sources.ServicesInterfaces;
 using Sources.Utils.ConstantNames;
 using UnityEngine;
 
-namespace Sources.Infrastructure.Factories.Player
+namespace Sources.Infrastructure.Factories
 {
 	[Serializable] public class ProgressFactory : IProgressFactory
 	{
@@ -66,7 +68,7 @@ namespace Sources.Infrastructure.Factories.Player
 			await _progressSaveLoadDataService.SaveToCloud();
 		}
 
-		public async UniTask Initialize()
+		public async UniTask Create()
 		{
 			var cloudSaves = await _progressSaveLoadDataService.LoadFromCloud();
 

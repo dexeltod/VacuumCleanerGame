@@ -1,9 +1,10 @@
 using System;
 using Sources.Controllers.Common;
+using Sources.ControllersInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
 using UnityEngine;
 
-namespace Sources.Infrastructure.Providers
+namespace Sources.Controllers
 {
 	public sealed class AdvertisementHandler : Presenter, IAdvertisementHandler
 	{

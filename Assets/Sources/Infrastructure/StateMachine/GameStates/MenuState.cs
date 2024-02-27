@@ -1,12 +1,14 @@
 using System;
+using Cysharp.Threading.Tasks;
+using Sources.Application.Bootstrapp;
 using Sources.ApplicationServicesInterfaces;
 using Sources.Controllers.MainMenu;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.LeaderBoard;
-using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.InfrastructureInterfaces.States;
+using Sources.Presentation;
 using Sources.Presentation.SceneEntity;
 using Sources.Presentation.UI;
 using Sources.Services.Localization;
@@ -21,18 +23,18 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 	{
 		private readonly ISceneLoader _sceneLoader;
 		private readonly LoadingCurtain _loadingCurtain;
-		private readonly IAssetFactory _assetFactory;
 		private readonly ILevelProgressFacade _levelProgressFacade;
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly ILeaderBoardService _leaderBoardService;
-		private readonly IRegisterWindowLoader _registerWindowLoader;
-		private readonly IAdvertisement _advertisement;
-		private readonly IAdvertisementHandlerProvider _advertisementHandler;
 		private readonly ITranslatorService _translatorService;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IGameStateChangerProvider _gameStateChangerProvider;
+		private readonly CloudServiceSdkFacadeProvider _cloudServiceSdkFacadeProvider;
+		private readonly IAuthorizationView _authorizationView;
+		private readonly IAssetFactory _assetFactory;
 
 		private MainMenuPresenter _mainMenuPresenter;
+		private IAuthorizationPresenter _authorizationPresenter;
 
 		private IGameStateChanger GameStateMachine => _gameStateChangerProvider.Implementation;
 
@@ -44,23 +46,16 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			ILevelProgressFacade levelProgressFacade,
 			ILevelConfigGetter levelConfigGetter,
 			ILeaderBoardService leaderBoardService,
-			IRegisterWindowLoader registerWindowLoader,
 			IAdvertisement advertisement,
 			IAdvertisementHandlerProvider advertisementHandler,
 			ITranslatorService translatorService,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
-			IGameStateChangerProvider gameStateChangerProvider
+			IGameStateChangerProvider gameStateChangerProvider,
+			CloudServiceSdkFacadeProvider cloudServiceSdkFacadeProvider
 		)
 		{
 			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
-
-			_registerWindowLoader
-				= registerWindowLoader ?? throw new ArgumentNullException(nameof(registerWindowLoader));
-
-			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
-			_advertisementHandler
-				= advertisementHandler ?? throw new ArgumentNullException(nameof(advertisementHandler));
 
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 
@@ -74,32 +69,19 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 			_gameStateChangerProvider = gameStateChangerProvider ??
 				throw new ArgumentNullException(nameof(gameStateChangerProvider));
+			_cloudServiceSdkFacadeProvider = cloudServiceSdkFacadeProvider ?? throw new ArgumentNullException(nameof(cloudServiceSdkFacadeProvider));
 		}
 
 		public async void Enter()
 		{
-#if YANDEX_CODE
-			YandexGamesSdkFacade yandexGamesSdkFacade = new YandexGamesSdkFacade(_registerWindowLoader.Load());
-#endif
-
-			MainMenuFactory mainMenuFactory = new MainMenuFactory(
-				_assetFactory,
-				_leaderBoardService,
-				_translatorService
-			);
-
 			await _sceneLoader.Load(ConstantNames.MenuScene);
-			await mainMenuFactory.Create();
 
-			MainMenuBehaviour mainMenuBehaviour = mainMenuFactory.MainMenuBehaviour;
+			var authorizationFactory = new AuthorizationFactory(_assetFactory);
+			
+			_authorizationPresenter = authorizationFactory.Create();
+			_authorizationPresenter.Enable();
 
-			_mainMenuPresenter = new MainMenuPresenter(
-				mainMenuBehaviour,
-				_levelProgressFacade,
-				GameStateMachine,
-				_levelConfigGetter,
-				_progressSaveLoadDataService
-			);
+			await CreateMainMenuPresenter();
 
 			_mainMenuPresenter.Enable();
 			_loadingCurtain.HideSlowly();
@@ -107,9 +89,34 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 		public void Exit()
 		{
+			_authorizationPresenter.Disable();
+			_mainMenuPresenter.Disable();
 			_loadingCurtain.Show();
 			_loadingCurtain.gameObject.SetActive(true);
-			_mainMenuPresenter.Disable();
+		}
+
+		private async UniTask<MainMenuPresenter> CreateMainMenuPresenter()
+		{
+			MainMenuFactory mainMenuFactory = new MainMenuFactory(
+				_assetFactory,
+				_leaderBoardService,
+				_translatorService
+			);
+
+			MainMenuBehaviour mainMenuView = await mainMenuFactory.Create();
+            
+			_mainMenuPresenter = new MainMenuPresenter(
+				mainMenuView,
+				_levelProgressFacade,
+				GameStateMachine,
+				_levelConfigGetter,
+				_progressSaveLoadDataService,
+				_authorizationPresenter
+			);
+			
+			mainMenuView.Construct(_mainMenuPresenter);
+			
+			return _mainMenuPresenter;
 		}
 	}
 }

@@ -1,7 +1,7 @@
 using Joystick_Pack.Scripts.Base;
 using Sources.ControllersInterfaces.Common;
 
-namespace Sources.Controllers
+namespace Sources.ControllersInterfaces
 {
 	public interface IGameplayInterfacePresenter : IPresenter
 	{

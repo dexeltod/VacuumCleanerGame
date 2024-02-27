@@ -1,4 +1,4 @@
-namespace Sources.Controllers
+namespace Sources.ControllersInterfaces
 {
 	public interface ISpeedDecorator
 	{

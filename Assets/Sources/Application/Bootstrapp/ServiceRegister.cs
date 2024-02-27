@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Sources.Application.Services.Leaderboard;
 using Sources.Application.UnityApplicationServices;
 using Sources.ApplicationServicesInterfaces;
-using Sources.ApplicationServicesInterfaces.Authorization;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
@@ -17,12 +16,15 @@ using Sources.Infrastructure.Factories.Scene;
 using Sources.Infrastructure.Factories.UI;
 using Sources.Infrastructure.Factories.UpgradeShop;
 using Sources.Infrastructure.Providers;
+using Sources.Infrastructure.Services;
 using Sources.Infrastructure.Shop;
 using Sources.Infrastructure.StateMachine.GameStates;
+using Sources.Infrastructure.Yandex;
 using Sources.InfrastructureInterfaces.Common.Factories;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Scene;
+using Sources.Presentation;
 using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
 using Sources.Services;
@@ -79,6 +81,7 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<FillMeshShaderControllerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<PlayerStatsServiceProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<SandParticleSystemProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+			_builder.Register<CloudServiceSdkFacadeProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<AdvertisementHandlerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
 			_builder.Register<GameMenuPresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
@@ -135,8 +138,6 @@ namespace Sources.Application.Bootstrapp
 
 #region InitializeServicesAndProgress
 
-			RegisterAuthorization();
-
 			InitializeLeaderBoardService(_builder);
 
 			_builder.Register<ILevelChangerService, LevelChangerService>(Lifetime.Singleton);
@@ -169,8 +170,6 @@ namespace Sources.Application.Bootstrapp
 
 #endregion
 
-			_builder.Register<IRegisterWindowLoader, RegisterWindowLoader>(Lifetime.Singleton);
-
 			_builder.RegisterEntryPointExceptionHandler(exception => Debug.LogError(exception.Message));
 		}
 
@@ -193,15 +192,6 @@ namespace Sources.Application.Bootstrapp
 #if !YANDEX_CODE
 			_builder.Register<ICloudSave, UnityCloudSaveLoader>(Lifetime.Singleton);
 #endif
-		}
-
-		private void RegisterAuthorization()
-		{
-			_builder.Register<AuthorizationFactory>(Lifetime.Scoped);
-			_builder.Register<IAuthorization>(
-				container => container.Resolve<AuthorizationFactory>().Create(),
-				Lifetime.Singleton
-			);
 		}
 
 		private void RegisterLoadingCurtain() =>

@@ -2,6 +2,6 @@ namespace Sources.Utils.Configs.Scripts
 {
 	public class EditorUi
 	{
-		public readonly string AuthHandler = "Game/Ui/EditorUi/AuthHandler";
+		public readonly string AuthorizationView = "Game/Ui/EditorUi/YandexAuthorizationView";
 	}
 }

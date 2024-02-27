@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
@@ -13,8 +14,6 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 
 		public async UniTask<Dictionary<string, int>> GetPlayers(int playersCount)
 		{
-			Dictionary<string, int> playersLeaders = new Dictionary<string, int>();
-
 			bool isResponseReceived = false;
 			LeaderboardGetEntriesResponse leaderboardResponse = null;
 
@@ -37,10 +36,10 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 
 			LeaderboardEntryResponse[] entries = leaderboardResponse.entries;
 
-			foreach (LeaderboardEntryResponse response in entries)
-				playersLeaders.Add(response.player.scopePermissions.public_name, response.score);
-
-			return playersLeaders;
+			return entries.ToDictionary(
+				response => response.player.scopePermissions.public_name,
+				response => response.score
+			);
 		}
 
 		public async UniTask AddScore(int newScore)
@@ -68,13 +67,6 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 			bool isResponseReceived = false;
 			LeaderboardEntryResponse leaderboardResponse = null;
 
-			async void ErrorCallback(string errorResponse)
-			{
-				Leaderboard.SetScore(BoardName, 0, () => isResponseReceived = true);
-
-				await UniTask.WaitWhile(() => isResponseReceived == false);
-			}
-
 			Leaderboard.GetPlayerEntry(
 				BoardName,
 				response =>
@@ -88,6 +80,13 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 			await UniTask.WaitWhile(() => isResponseReceived == false);
 
 			return new Tuple<string, int>(leaderboardResponse.player.publicName, leaderboardResponse.score);
+
+			async void ErrorCallback(string errorResponse)
+			{
+				Leaderboard.SetScore(BoardName, 0, () => isResponseReceived = true);
+
+				await UniTask.WaitWhile(() => isResponseReceived == false);
+			}
 		}
 
 		private async UniTask<LeaderboardEntryResponse> GetPlayerEntry()
@@ -102,7 +101,7 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 					leaderboardResponse = response;
 					isResponseReceived = true;
 				},
-				async errorResponse =>
+				onErrorCallback: async errorResponse =>
 				{
 					Debug.LogError("ERROR IN GETTING PLAYER" + errorResponse);
 					Leaderboard.SetScore(BoardName, 0, () => isResponseReceived = true);

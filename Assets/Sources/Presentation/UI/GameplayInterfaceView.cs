@@ -1,6 +1,8 @@
 using System;
+using DG.Tweening;
 using Joystick_Pack.Scripts.Base;
 using Sources.Controllers;
+using Sources.ControllersInterfaces;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
@@ -84,6 +86,7 @@ namespace Sources.Presentation.UI
 		public override void Enable()
 		{
 			base.Enable();
+			
 			Subscribe();
 		}
 

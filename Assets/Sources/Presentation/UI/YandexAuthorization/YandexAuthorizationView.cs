@@ -1,43 +1,44 @@
 using System;
-using Sources.ApplicationServicesInterfaces.Authorization;
+using Sources.ApplicationServicesInterfaces;
+using Sources.Controllers;
+using Sources.Presentation.Common;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Sources.Presentation.UI.YandexAuthorization
 {
-	public class YandexAuthorizationView : MonoBehaviour, IAuthorization
+	public class YandexAuthorizationView : PresentableView<IAuthorizationPresenter>, IAuthorizationView
 	{
 		[SerializeField] private GameObject _yesNoButtons;
 		[SerializeField] private Button _yesButton;
 		[SerializeField] private Button _noButton;
 
-		public event Action<bool> AuthorizeCallback;
+		private ICloudPlayerDataService _cloudPlayerDataService;
+		private AuthorizationPresenter _authorizationPresenter;
 
-		public void EnableAuthorizeWindow() =>
-			_yesNoButtons.SetActive(true);
-
-		public void DisableAuthorizeWindow() =>
-			_yesNoButtons.SetActive(false);
-
-		private void OnEnable()
+		public void Construct(AuthorizationPresenter authorizationPresenter)
 		{
+			base.Construct(authorizationPresenter);
+		}
+
+		public override void Enable()
+		{
+			_yesNoButtons.SetActive(true);
 			_yesButton.onClick.AddListener(OnYesButtonClicked);
 			_noButton.onClick.AddListener(OnNoButtonClicked);
 		}
 
-		private void OnDisable()
+		public override void Disable()
 		{
+			_yesNoButtons.SetActive(false);
 			_yesButton.onClick.RemoveListener(OnYesButtonClicked);
 			_noButton.onClick.RemoveListener(OnNoButtonClicked);
 		}
 
-		private void DisableWindow() =>
-			_yesNoButtons.gameObject.SetActive(false);
-
 		private void OnNoButtonClicked() =>
-			AuthorizeCallback.Invoke(false);
+			Presenter.SetChoice(false);
 
 		private void OnYesButtonClicked() =>
-			AuthorizeCallback.Invoke(true);
+			Presenter.SetChoice(true);
 	}
 }

@@ -21,9 +21,6 @@ namespace Sources.Infrastructure
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IAdvertisement _rewardService;
 
-		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Implementation;
-
-		private int LevelNumber => _levelProgressFacade.CurrentLevelNumber;
 
 		[Inject]
 		public LevelChangerService(
@@ -44,15 +41,11 @@ namespace Sources.Infrastructure
 
 			_rewardService = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 		}
+		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Implementation;
+		private int LevelNumber => _levelProgressFacade.CurrentLevelNumber;
 
 		public void GoNextLevelWithReward() =>
 			_rewardService.ShowAd(OnRewarded);
-
-		private void OnProcessEnded()
-		{
-			AudioListener.volume = 1;
-			Time.timeScale = 1;
-		}
 
 		private async void OnRewarded()
 		{
@@ -66,6 +59,12 @@ namespace Sources.Infrastructure
 			OnProcessEnded();
 
 			GameStateChanger.Enter<IBuildSceneState, LevelConfig>(levelConfig);
+		}
+
+		private void OnProcessEnded()
+		{
+			AudioListener.volume = 1;
+			Time.timeScale = 1;
 		}
 	}
 }
