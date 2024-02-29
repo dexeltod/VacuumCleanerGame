@@ -1,4 +1,5 @@
 using Sources.ControllersInterfaces.Common;
+using UnityEngine;
 
 namespace Sources.PresentationInterfaces.Common
 {
@@ -7,5 +8,6 @@ namespace Sources.PresentationInterfaces.Common
 		void Construct(T presenter);
 		void Enable();
 		void Disable();
+		void SetParent(Transform parent);
 	}
 }

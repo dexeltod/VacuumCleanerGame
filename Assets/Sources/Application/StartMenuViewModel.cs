@@ -10,6 +10,7 @@ using VContainer.Unity;
 
 namespace Sources.Application
 {
+
 	[RequireComponent(typeof(UIElementGetterFacade))]
 	public class StartMenuViewModel : MonoBehaviour, IPostStartable
 	{

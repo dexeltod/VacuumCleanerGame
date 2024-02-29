@@ -1,5 +1,4 @@
 using Sources.ApplicationServicesInterfaces;
-using Sources.Infrastructure.Yandex;
 
 namespace Sources.Infrastructure.StateMachine.GameStates
 {
@@ -10,6 +9,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 #if YANDEX_CODE
 			return new YandexCloudPlayerDataAdapter(new YandexServiceSdkFacade());
 #endif
+			//TODO: add other platforms
+			return new UnityCloudPlayerDataService();
 		}
 	}
 }

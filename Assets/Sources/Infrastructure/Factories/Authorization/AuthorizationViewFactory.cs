@@ -1,17 +1,25 @@
 using System;
+using DG.Tweening;
 using Sources.Presentation;
+using Sources.Presentation.UI;
 using Sources.Presentation.UI.YandexAuthorization;
+using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs.Scripts;
+using UnityEngine;
 
 namespace Sources.Infrastructure.Factories.LeaderBoard
 {
 	public class AuthorizationViewFactory
 	{
 		private readonly IAssetFactory _assetFactory;
+		private readonly ITranslatorService _localizationService;
 
-		public AuthorizationViewFactory(IAssetFactory assetFactory) =>
+		public AuthorizationViewFactory(IAssetFactory assetFactory, ITranslatorService localizationService)
+		{
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
+		}
 
 		private string EditorAuthorizationView => ResourcesAssetPath.Scene.UIResources.Editor.AuthorizationView;
 		private string YandexAuthorizationView => ResourcesAssetPath.Scene.UIResources.Yandex.YandexAuthorizationView;
@@ -19,15 +27,29 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 		public IAuthorizationView Create()
 		{
 #if YANDEX_CODE
-			return GetYandexAuthorizationHandler();
+			return CreateYandexAuthorizationHandler();
 #endif
-			return GetEditorAuthorizationView();
+			return CreateEditorAuthorizationView();
 		}
 
-		private IAuthorizationView GetYandexAuthorizationHandler() =>
-			_assetFactory.InstantiateAndGetComponent<YandexAuthorizationView>(YandexAuthorizationView);
+		private IAuthorizationView CreateYandexAuthorizationHandler()
+		{
+			var view = _assetFactory.InstantiateAndGetComponent<YandexAuthorizationView>(YandexAuthorizationView);
+			
+			var phrases = view.GetComponent<TextPhrases>();
+			view.Construct(view.GetComponent<RectTransform>(), null, phrases);
+			view.TextPhrases.Phrases = _localizationService.Localize(phrases.Phrases);
 
-		private IAuthorizationView GetEditorAuthorizationView() =>
-			_assetFactory.InstantiateAndGetComponent<EditorAuthorizationView>(EditorAuthorizationView);
+			return view;
+		}
+
+		private IAuthorizationView CreateEditorAuthorizationView()
+		{
+			var view = _assetFactory.InstantiateAndGetComponent<EditorAuthorizationView>(EditorAuthorizationView);
+			var phrases = view.GetComponent<TextPhrases>();
+			view.Construct(view.GetComponent<RectTransform>(), null, phrases);
+			view.TextPhrases.Phrases = _localizationService.Localize(phrases.Phrases);
+			return view;
+		}
 	}
 }

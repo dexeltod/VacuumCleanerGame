@@ -10,17 +10,17 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 	public class LeaderBoardFactory
 	{
 		private readonly IAssetFactory _assetFactory;
-		private readonly LeaderBoardBehaviour _leaderBoardBehaviour;
+		private readonly LeaderBoardView _leaderBoardView;
 
 		public LeaderBoardFactory(
 			IAssetFactory assetFactory,
-			LeaderBoardBehaviour leaderBoardBehaviour
+			LeaderBoardView leaderBoardView
 		)
 		{
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
-			_leaderBoardBehaviour = leaderBoardBehaviour
-				? leaderBoardBehaviour
-				: throw new ArgumentNullException(nameof(leaderBoardBehaviour));
+			_leaderBoardView = leaderBoardView
+				? leaderBoardView
+				: throw new ArgumentNullException(nameof(leaderBoardView));
 		}
 
 		public void Create(Dictionary<string, int> leaders)
@@ -32,8 +32,8 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 
 			foreach (KeyValuePair<string, int> player in sortedLeaders)
 			{
-				Transform containerTransform = _leaderBoardBehaviour.Container;
-				GameObject playerPanelGameObject = _leaderBoardBehaviour.PlayerPanel.gameObject;
+				Transform containerTransform = _leaderBoardView.Container;
+				GameObject playerPanelGameObject = _leaderBoardView.PlayerPanel.gameObject;
 
 				var panel = _assetFactory
 					.Instantiate(playerPanelGameObject)

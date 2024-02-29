@@ -21,12 +21,14 @@ namespace Sources.Controllers
 				throw new ArgumentNullException(nameof(authorizationView));
 		}
 
+		public bool IsAuthorized => _cloudPlayerDataService.IsAuthorized;
+
 		public void Authorize() =>
 			_authorizationView.Enable();
 
 		public void SetChoice(bool isWants)
 		{
-			if (isWants)
+			if (isWants == true)
 				_cloudPlayerDataService.Authorize();
 
 			_authorizationView.Disable();

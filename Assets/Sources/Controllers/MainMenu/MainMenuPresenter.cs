@@ -5,9 +5,11 @@ using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.InfrastructureInterfaces.States;
 using Sources.Presentation;
+using Sources.Presentation.UI.MainMenu.LeaderBoard;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using Sources.Utils.Configs.Scripts;
+using UnityEngine;
 
 namespace Sources.Controllers.MainMenu
 {
@@ -19,6 +21,7 @@ namespace Sources.Controllers.MainMenu
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IAuthorizationPresenter _authorizationPresenter;
+		private readonly ILeaderBoardView _leaderBoardView;
 
 		private int CurrentNumber => _levelProgress.CurrentLevelNumber;
 
@@ -28,7 +31,8 @@ namespace Sources.Controllers.MainMenu
 			IGameStateChanger stateMachine,
 			ILevelConfigGetter levelConfigGetter,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
-			IAuthorizationPresenter authorizationPresenter
+			IAuthorizationPresenter authorizationPresenter,
+			ILeaderBoardView leaderBoardView
 		)
 		{
 			_mainMenu = mainMenu ?? throw new ArgumentNullException(nameof(mainMenu));
@@ -37,26 +41,38 @@ namespace Sources.Controllers.MainMenu
 			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
 			_progressSaveLoadDataService = progressSaveLoadDataService ??
 				throw new ArgumentNullException(nameof(progressSaveLoadDataService));
-			_authorizationPresenter = authorizationPresenter ?? throw new ArgumentNullException(nameof(authorizationPresenter));
+			_authorizationPresenter = authorizationPresenter ??
+				throw new ArgumentNullException(nameof(authorizationPresenter));
+			_leaderBoardView = leaderBoardView ?? throw new ArgumentNullException(nameof(leaderBoardView));
 		}
 
 		public override void Enable()
 		{
 			_mainMenu.PlayButtonPressed += OnPlay;
 			_mainMenu.DeleteSavesButtonPressed += OnDeleteSaves;
+			_mainMenu.Enable();
 		}
 
 		public override void Disable()
 		{
+			_mainMenu.Disable();
+
 			_mainMenu.PlayButtonPressed -= OnPlay;
 			_mainMenu.DeleteSavesButtonPressed -= OnDeleteSaves;
 		}
 
-		public void Authorize()
+		public void ShowLeaderBoard()
 		{
-			_authorizationPresenter.Authorize();
+			if (_authorizationPresenter.IsAuthorized == false)
+			{
+				_authorizationPresenter.Authorize();
+				return;
+			}
+
+			Debug.Log("ShowLeaderBoard");
+			_leaderBoardView.Enable();
 		}
-		
+
 		private async void OnDeleteSaves() =>
 			await _progressSaveLoadDataService.ClearSaves();
 

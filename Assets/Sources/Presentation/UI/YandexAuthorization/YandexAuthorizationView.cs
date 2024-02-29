@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Sources.Presentation.UI.YandexAuthorization
 {
-	public class YandexAuthorizationView : PresentableView<IAuthorizationPresenter>, IAuthorizationView
+	public class YandexAuthorizationView : PresentableCanvas<IAuthorizationPresenter>, IAuthorizationView
 	{
 		[SerializeField] private GameObject _yesNoButtons;
 		[SerializeField] private Button _yesButton;
@@ -15,11 +15,6 @@ namespace Sources.Presentation.UI.YandexAuthorization
 
 		private ICloudPlayerDataService _cloudPlayerDataService;
 		private AuthorizationPresenter _authorizationPresenter;
-
-		public void Construct(AuthorizationPresenter authorizationPresenter)
-		{
-			base.Construct(authorizationPresenter);
-		}
 
 		public override void Enable()
 		{

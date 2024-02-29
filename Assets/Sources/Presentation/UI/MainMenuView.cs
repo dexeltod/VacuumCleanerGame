@@ -1,65 +1,78 @@
 using System;
 using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using Sources.ApplicationServicesInterfaces;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
+using Sources.Utils.Tweeners;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Sources.Presentation.UI
 {
-	public class MainMenuBehaviour : PresentableView<IMainMenuPresenter>, IMainMenuView
+	public class MainMenuView : PresentableView<IMainMenuPresenter>, IMainMenuView
 	{
 		[SerializeField] private Button _playButton;
 		[SerializeField] private Button _deleteSavesButton;
 		[SerializeField] private Button _addScoreButton;
 		[SerializeField] private Button _leaderboardButton;
-		[SerializeField] private GameObject _test;
 
 		[FormerlySerializedAs("_translatorBehaviour")] [SerializeField]
-		private TmpPhrases _translator;
+		private TextPhrases _translator;
 
 		private ILevelConfigGetter _levelConfigGetter;
 		private ILeaderBoardService _leaderBoardService;
 		private IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private ILevelProgressFacade _levelProgressFacade;
 
-		public TmpPhrases Translator => _translator;
+		private TweenerCore<Vector3, Vector3, VectorOptions> _playButtonTween;
+
+		public TextPhrases Translator => _translator;
 		public event Action PlayButtonPressed;
 		public event Action DeleteSavesButtonPressed;
 
-		private void Construct(IMainMenuPresenter mainMenuPresenter) =>
-			base.Construct(mainMenuPresenter);
-
-		private void OnEnable()
+		public override void Enable()
 		{
 			_leaderboardButton.onClick.AddListener(OnShowLeaderboard);
 			_addScoreButton.onClick.AddListener(OnAddLeader);
 			_playButton.onClick.AddListener(OnPlay);
 			_deleteSavesButton.onClick.AddListener(OnDeleteSaves);
 
-			_test.transform.DOScale(_test.transform.localScale * 1.3f, 1f).SetLoops(-1, LoopType.Yoyo);
+			_playButtonTween ??= CustomTweeners.StartPulseLocal(_playButton.transform);
 		}
 
-		private void OnShowLeaderboard() { }
-
-		private void OnDisable()
+		public override void Disable()
 		{
+			_playButtonTween.Kill();
+
 			_playButton.onClick.RemoveListener(OnPlay);
 			_addScoreButton.onClick.RemoveListener(OnAddLeader);
 			_deleteSavesButton.onClick.RemoveListener(OnDeleteSaves);
+			_leaderboardButton.onClick.RemoveListener(OnShowLeaderboard);
 		}
-	
+
+		public void OnDestroy()
+		{
+			_playButtonTween.Kill();
+			_playButton.onClick.RemoveListener(OnPlay);
+			_addScoreButton.onClick.RemoveListener(OnAddLeader);
+			_deleteSavesButton.onClick.RemoveListener(OnDeleteSaves);
+			_leaderboardButton.onClick.RemoveListener(OnShowLeaderboard);
+		}
 
 		private void OnPlay() =>
 			PlayButtonPressed!.Invoke();
 
 		private async void OnAddLeader() =>
 			await _leaderBoardService.AddScore(200);
+
+		private void OnShowLeaderboard() =>
+			Presenter.ShowLeaderBoard();
 
 		private void OnDeleteSaves() =>
 			DeleteSavesButtonPressed!.Invoke();

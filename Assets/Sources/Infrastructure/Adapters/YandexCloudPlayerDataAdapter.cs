@@ -6,6 +6,7 @@ using Sources.Infrastructure.Yandex;
 
 namespace Sources.Infrastructure.StateMachine.GameStates
 {
+#if YANDEX_CODE
 	public class YandexCloudPlayerDataAdapter : ICloudPlayerDataService
 	{
 		private readonly YandexServiceSdkFacade _yandexServiceSdkFacade;
@@ -32,4 +33,5 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		public void Authorize() =>
 			_yandexServiceSdkFacade.Authorize();
 	}
+#endif
 }

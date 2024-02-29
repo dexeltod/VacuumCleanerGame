@@ -12,7 +12,7 @@ namespace Sources.Presentation.UI.Shop
 	[RequireComponent(typeof(UpgradeWindow))]
 	public class UpgradeWindow : PresentableView<IUpgradeWindowPresenter>, IUpgradeWindow
 	{
-		[SerializeField] private TmpPhrases _phrases;
+		[SerializeField] private TextPhrases _phrases;
 
 		[SerializeField] private GameObject _content;
 		[SerializeField] private TextMeshProUGUI _money;

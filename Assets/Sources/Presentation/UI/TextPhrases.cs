@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Sources.Presentation.UI
 {
-	public class TmpPhrases : MonoBehaviour, ITmpPhrases
+	public class TextPhrases : MonoBehaviour, ITextPhrases
 	{
 		[SerializeField] private TextMeshProUGUI[] _phrases;
 

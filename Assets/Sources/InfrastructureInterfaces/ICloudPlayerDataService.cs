@@ -8,5 +8,6 @@ namespace Sources.ApplicationServicesInterfaces
 		UniTask<IPlayerAccount> GetPlayerAccount();
 		void SetStatusInitialized();
 		void Authorize();
+		bool IsAuthorized { get;}
 	}
 }

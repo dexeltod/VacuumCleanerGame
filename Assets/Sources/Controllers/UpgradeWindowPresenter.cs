@@ -40,14 +40,14 @@ namespace Sources.Controllers
 
 		public override void Enable()
 		{
-			_gameplayInterfacePresenter.Disable();
+			_gameplayInterfacePresenter.Enable();
 			_upgradeWindow.SetMoney(SoftCurrencyCount);
 			_observer.TriggerEntered += OnTriggerEnter;
 		}
 
 		public override void Disable()
 		{
-			_gameplayInterfacePresenter.Enable();
+			_gameplayInterfacePresenter.Disable();
 			_observer.TriggerEntered -= OnTriggerEnter;
 		}
 

@@ -1,11 +1,14 @@
 using System;
 using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using Joystick_Pack.Scripts.Base;
 using Sources.Controllers;
 using Sources.ControllersInterfaces;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
+using Sources.Utils.Tweeners;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -21,7 +24,7 @@ namespace Sources.Presentation.UI
 		private const float MaxNormalizeThreshold = 1f;
 
 		[FormerlySerializedAs("_phrasesTranslator")] [SerializeField]
-		private TmpPhrases _phrases;
+		private TextPhrases _phrases;
 
 		[SerializeField] private TextMeshProUGUI _scoreCash;
 		[SerializeField] private TextMeshProUGUI _globalScoreText;
@@ -42,8 +45,10 @@ namespace Sources.Presentation.UI
 		private int _maxGlobalScore;
 
 		private bool _isInitialized;
+		private TweenerCore<Vector3, Vector3, VectorOptions> _goToNextLevelButtonTween;
+		private TweenerCore<Vector3, Vector3, VectorOptions> _increaseSpeedButtonTween;
 
-		public ITmpPhrases Phrases => _phrases;
+		public ITextPhrases Phrases => _phrases;
 
 		public Joystick Joystick => _joystick;
 		public GameObject InterfaceGameObject { get; private set; }
@@ -86,13 +91,18 @@ namespace Sources.Presentation.UI
 		public override void Enable()
 		{
 			base.Enable();
-			
+			_goToNextLevelButtonTween ??= CustomTweeners.StartPulseLocal(_goToNextLevelButton.transform, 1.15f);
+			_increaseSpeedButtonTween ??= CustomTweeners.StartPulseLocal(_increaseSpeedButton.transform);
+
 			Subscribe();
 		}
 
 		public override void Disable()
 		{
 			base.Disable();
+			_goToNextLevelButtonTween.Kill();
+			_increaseSpeedButtonTween.Kill();
+
 			Unsubscribe();
 		}
 

@@ -6,5 +6,6 @@ namespace Sources.Presentation
 	{
 		void SetChoice(bool isWants);
 		void Authorize();
+		bool IsAuthorized { get; }
 	}
 }

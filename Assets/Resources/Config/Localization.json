@@ -38,7 +38,7 @@
           "Text": "Ayarlar"
         }
       ]
-    },  
+    },
     {
       "Name": "MainMenu",
       "Translations": [
@@ -87,6 +87,23 @@
         {
           "Language": "Turkish",
           "Text": "Seviye"
+        }
+      ]
+    },
+    {
+      "Name": "PlayerNotAuthorizedInYandex",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Вы не авторизованы в Яндексе. Пожалуйста, авторизуйтесь."
+        },
+        {
+          "Language": "English",
+          "Text": "You are not authorized in Yandex. Please log in."
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Yandex'de yetkiniz yok. Lütfen giriş yapın."
         }
       ]
     },

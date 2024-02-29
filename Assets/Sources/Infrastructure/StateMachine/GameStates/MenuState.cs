@@ -11,6 +11,7 @@ using Sources.InfrastructureInterfaces.States;
 using Sources.Presentation;
 using Sources.Presentation.SceneEntity;
 using Sources.Presentation.UI;
+using Sources.Presentation.UI.MainMenu.LeaderBoard;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
@@ -30,11 +31,13 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IGameStateChangerProvider _gameStateChangerProvider;
 		private readonly CloudServiceSdkFacadeProvider _cloudServiceSdkFacadeProvider;
+		private readonly ITranslatorService _localizationService;
 		private readonly IAuthorizationView _authorizationView;
 		private readonly IAssetFactory _assetFactory;
 
 		private MainMenuPresenter _mainMenuPresenter;
 		private IAuthorizationPresenter _authorizationPresenter;
+		private MainMenuView _mainMenuView;
 
 		private IGameStateChanger GameStateMachine => _gameStateChangerProvider.Implementation;
 
@@ -51,7 +54,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			ITranslatorService translatorService,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			IGameStateChangerProvider gameStateChangerProvider,
-			CloudServiceSdkFacadeProvider cloudServiceSdkFacadeProvider
+			CloudServiceSdkFacadeProvider cloudServiceSdkFacadeProvider,
+			ITranslatorService localizationService
 		)
 		{
 			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
@@ -69,21 +73,19 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 			_gameStateChangerProvider = gameStateChangerProvider ??
 				throw new ArgumentNullException(nameof(gameStateChangerProvider));
-			_cloudServiceSdkFacadeProvider = cloudServiceSdkFacadeProvider ?? throw new ArgumentNullException(nameof(cloudServiceSdkFacadeProvider));
+			_cloudServiceSdkFacadeProvider = cloudServiceSdkFacadeProvider ??
+				throw new ArgumentNullException(nameof(cloudServiceSdkFacadeProvider));
+			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 		}
 
 		public async void Enter()
 		{
 			await _sceneLoader.Load(ConstantNames.MenuScene);
 
-			var authorizationFactory = new AuthorizationFactory(_assetFactory);
-			
-			_authorizationPresenter = authorizationFactory.Create();
-			_authorizationPresenter.Enable();
-
 			await CreateMainMenuPresenter();
 
 			_mainMenuPresenter.Enable();
+			_authorizationPresenter.Enable();
 			_loadingCurtain.HideSlowly();
 		}
 
@@ -103,19 +105,23 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				_translatorService
 			);
 
-			MainMenuBehaviour mainMenuView = await mainMenuFactory.Create();
-            
+			 _mainMenuView = await mainMenuFactory.Create();
+
+			_authorizationPresenter = new AuthorizationFactory(_assetFactory, _cloudServiceSdkFacadeProvider, 
+                _mainMenuView,_localizationService ).Create();
+
 			_mainMenuPresenter = new MainMenuPresenter(
-				mainMenuView,
+				_mainMenuView,
 				_levelProgressFacade,
 				GameStateMachine,
 				_levelConfigGetter,
 				_progressSaveLoadDataService,
-				_authorizationPresenter
+				_authorizationPresenter,
+				_mainMenuView.GetComponent<LeaderBoardView>()
 			);
-			
-			mainMenuView.Construct(_mainMenuPresenter);
-			
+
+			_mainMenuView.Construct(_mainMenuPresenter);
+
 			return _mainMenuPresenter;
 		}
 	}
