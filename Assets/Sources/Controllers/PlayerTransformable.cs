@@ -39,7 +39,7 @@ namespace Sources.Controllers
 		{
 			Vector3 joystickDirection = new Vector3(_joystick.Direction.x, 0, _joystick.Direction.y);
 			Vector3 direction = joystickDirection * (Speed * deltaTime);
-
+			Debug.Log(direction);
 			_offset = Transform.position + direction;
 
 			if (Transform.position.y > MaxTransformHeight)

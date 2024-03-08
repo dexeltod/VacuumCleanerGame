@@ -4,8 +4,8 @@ namespace Sources.ServicesInterfaces
 {
 	public interface ILevelProgressFacade 
 	{
-		int CurrentLevelNumber { get; }
-
+		int CurrentLevel { get; }
+		int MaxScoreCount { get; }
 		void SetNextLevel();
 	}
 }

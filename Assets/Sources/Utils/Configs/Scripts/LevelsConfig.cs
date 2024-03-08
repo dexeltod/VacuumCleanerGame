@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,12 @@ namespace Sources.Utils.Configs.Scripts
 	{
 		[SerializeField] private List<LevelConfig> _levels;
 
-		public LevelConfig Get(int level) =>
-			_levels[level - 1];
+		public LevelConfig Get(int level)
+		{
+			if (level - 1 < 0 || level - 1 >= _levels.Count)
+				throw new ArgumentOutOfRangeException($"Level {level} not found");
+
+			return _levels[level - 1];
+		}
 	}
 }

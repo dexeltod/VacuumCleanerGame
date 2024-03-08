@@ -45,10 +45,9 @@ namespace Sources.Infrastructure.Factories.Presenters
 				= new SandParticlePlayerSystem(
 					_sandParticleSystemProvider,
 					_coroutineRunnerProvider,
-					//TODO: need progression
-					1
+					playTime: 1
 				);
-			
+
 			return new ResourcesProgressPresenter(
 				_gameplayInterfacePresenterProvider,
 				Resources,

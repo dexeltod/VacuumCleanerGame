@@ -3542,7 +3542,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 12503
+  m_VersionIndex: 12506
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3624,7 +3624,6 @@ GameObject:
   - component: {fileID: 8360181722883721508}
   - component: {fileID: 831133131622003962}
   - component: {fileID: 1331111627075837805}
-  - component: {fileID: 8894198497593458279}
   - component: {fileID: 45328045165459800}
   - component: {fileID: 8849614304666864629}
   - component: {fileID: 1557974806461760579}
@@ -3717,25 +3716,6 @@ MonoBehaviour:
   _colliders:
   - {fileID: 5830537721695648863}
   - {fileID: 6372702435804402781}
---- !u!114 &8894198497593458279
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5656946216201666231}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51ba9627c2e7451a816c3404a084e6ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maxPosition: {x: 0, y: 1.685, z: -0.8245}
-  _minPosition: {x: 0, y: 0.753, z: -0.494}
-  _maxScale: {x: 0.9511998, y: 0.01, z: 2.5582404}
-  _minScale: {x: 0.8140143, y: 0.01, z: 1.6878427}
-  _sand: {fileID: 0}
-  _sandValueSliderTest: 0
-  _isDebug: 0
 --- !u!114 &45328045165459800
 MonoBehaviour:
   m_ObjectHideFlags: 0

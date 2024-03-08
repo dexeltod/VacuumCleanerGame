@@ -42,7 +42,7 @@ namespace Sources.Infrastructure
 			_rewardService = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 		}
 		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Implementation;
-		private int LevelNumber => _levelProgressFacade.CurrentLevelNumber;
+		private int LevelNumber => _levelProgressFacade.CurrentLevel;
 
 		public void GoNextLevelWithReward() =>
 			_rewardService.ShowAd(OnRewarded);

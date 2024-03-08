@@ -20,7 +20,7 @@ namespace Sources.Domain.Progress.Player
 		[SerializeField] private int _maxCashScoreModifier;
 		[SerializeField] private int _maxGlobalScoreModifier;
 
-		private const int MultiplyFactor = 200;
+		private const int MultiplyFactor = 1;
 
 		public ResourcesModel(
 			Resource<int> softCurrency,

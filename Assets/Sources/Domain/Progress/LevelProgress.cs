@@ -7,13 +7,23 @@ namespace Sources.Domain.Progress
 	[Serializable] public class LevelProgress : ILevelProgress
 	{
 		[SerializeField] private int _currentLevel;
+		[SerializeField] private int _maxScoreCount;
+
+		public LevelProgress(int firstLevel, int maxPoint)
+		{
+			_currentLevel = firstLevel;
+			_maxScoreCount = maxPoint;
+
+			Debug.Log(_maxScoreCount);
+		}
 
 		public int CurrentLevel => _currentLevel;
+		public int MaxScoreCount => _maxScoreCount;
 
-		public LevelProgress(int firstLevel) =>
-			_currentLevel = firstLevel;
-
-		public void AddLevel(int level) =>
+		public void AddLevel(int maxPointDelta, int level)
+		{
 			_currentLevel += level;
+			_maxScoreCount += maxPointDelta;
+		}
 	}
 }

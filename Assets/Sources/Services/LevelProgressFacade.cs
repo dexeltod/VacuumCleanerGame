@@ -2,6 +2,7 @@ using System;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.ServicesInterfaces;
+using Sources.Utils.Configs.Scripts;
 using Sources.Utils.ConstantNames;
 using VContainer;
 
@@ -10,34 +11,37 @@ namespace Sources.Services
 	public class LevelProgressFacade : ILevelProgressFacade
 	{
 		private const int OnePoint = 1;
+		private const int MaxScoreDelta = 100;
 
-		private readonly ProgressConstantNames _progressConstantNames;
 		private readonly ILevelProgress _progressService;
-
-		public int CurrentLevelNumber => _progressService.CurrentLevel;
-		private string CurrentLevel => ProgressConstantNames.CurrentLevel;
 
 		[Inject]
 		public LevelProgressFacade(
-			IPersistentProgressServiceProvider progressService,
-			ProgressConstantNames progressConstantNames
+			IPersistentProgressServiceProvider progressService
 		)
 		{
 			if (progressService == null) throw new ArgumentNullException(nameof(progressService));
-			_progressConstantNames
-				= progressConstantNames ?? throw new ArgumentNullException(nameof(progressConstantNames));
-
 			_progressService = progressService.Implementation.GlobalProgress.LevelProgress;
 		}
 
-		public void SetNextLevel()
-		{
-			// IUpgradeProgressData progressData = _progressService.GetByName(CurrentLevel);
-			//
-			// int newLevel = progressData.Value + OnePoint;
-			// CurrentLevelNumber = newLevel;
-			//
-			// _progressService.Set(CurrentLevel, newLevel);
-		}
+		public int CurrentLevel => _progressService.CurrentLevel;
+		public int MaxScoreCount => _progressService.MaxScoreCount;
+
+		public void SetNextLevel() =>
+			_progressService.AddLevel(OnePoint, MaxScoreDelta);
 	}
+
+	public class LevelDifficultyMagnifier : ILevelDifficultyMagnifier
+	{
+		private readonly ProgressionConfig _progressionConfig;
+
+		public LevelDifficultyMagnifier(ProgressionConfig progressionConfig)
+		{
+			_progressionConfig = progressionConfig ?? throw new ArgumentNullException(nameof(progressionConfig));
+		}
+
+		public void IncreaseMaxSand() { }
+	}
+
+	public interface ILevelDifficultyMagnifier { }
 }

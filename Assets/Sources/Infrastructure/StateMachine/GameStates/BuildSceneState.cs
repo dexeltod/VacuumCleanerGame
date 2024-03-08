@@ -53,6 +53,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly GameMenuPresenterProvider _gameMenuPresenterProvider;
 		private readonly GameStateChangerProvider _gameStateChangerProvider;
 		private readonly ITranslatorService _translatorService;
+		private readonly ProgressionConfig _progressionConfig;
 		private readonly IAdvertisement _advertisement;
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly ILevelProgressFacade _levelProgressFacade;
@@ -90,7 +91,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			GameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
 			GameMenuPresenterProvider gameMenuPresenterProvider,
 			GameStateChangerProvider gameStateChangerProvider,
-			ITranslatorService translatorService
+			ITranslatorService translatorService,
+			ProgressionConfig progressionConfig
 
 #endregion
 
@@ -145,6 +147,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			_gameStateChangerProvider = gameStateChangerProvider ??
 				throw new ArgumentNullException(nameof(gameStateChangerProvider));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
+			_progressionConfig = progressionConfig ?? throw new ArgumentNullException(nameof(progressionConfig));
 
 #endregion
 		}
@@ -169,12 +172,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 			_gameplayInterfacePresenterFactory.Create();
 
-			
 			GameObject playerGameObject = _playerFactory.Create(SpawnPoint);
-
-			
-			SandCarContainerView sandContainerView = playerGameObject.GetComponent<SandCarContainerView>();
-			_sandCarContainerViewProvider.Register<ISandContainerView>(sandContainerView);
 
 			ResourcesProgressPresenter resourcesProgressPresenter = _resourcesProgressPresenterFactory.Create();
 			_resourcesProgressPresenterProvider.Register<IResourcesProgressPresenter>(resourcesProgressPresenter);
@@ -187,9 +185,12 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 			RegisterUpgradeWindowPresenterProvider();
 
-			IMeshModifiable meshModifiable = new SandFactory(_assetFactory).Create();
+			IMeshModifiable meshModifiable = new SandFactory(
+				_assetFactory,
+				_levelProgressFacade,
+				_resourcesProgressPresenterProvider
+			).Create();
 
-			new MeshDeformationController(meshModifiable, resourcesProgressPresenter);
 			new CameraFactory(_assetFactory, _playerFactory.Player, _resourcePathNameConfigProvider).Create();
 		}
 

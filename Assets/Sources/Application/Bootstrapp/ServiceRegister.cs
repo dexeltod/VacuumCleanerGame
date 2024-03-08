@@ -34,10 +34,13 @@ using Sources.Services.Providers;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
 using Sources.Utils;
+using Sources.Utils.Configs.Scripts;
 using Sources.Utils.ConstantNames;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+
+
 #if YANDEX_CODE
 using Sources.Services.DomainServices.YandexLeaderboard;
 #endif
@@ -46,6 +49,7 @@ namespace Sources.Application.Bootstrapp
 {
 	public class ServiceRegister
 	{
+		
 		private readonly IContainerBuilder _builder;
 
 		public ServiceRegister(IContainerBuilder builder) =>
@@ -61,6 +65,8 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<IShopProgressFacade, ShopProgressFacade>(Lifetime.Singleton);
 			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
 			_builder.Register<ITranslatorService, PhraseTranslatorService>(Lifetime.Singleton);
+            
+			_builder.Register<ProgressionConfig>(Lifetime.Singleton);
 
 			_builder.Register<ProgressCleaner>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
@@ -113,6 +119,7 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<InitialProgressFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
 			_builder.Register<CoroutineRunnerFactory>(Lifetime.Scoped);
 			_builder.Register<LoadingCurtainFactory>(Lifetime.Scoped);
+			
 			_builder.Register<GameplayInterfacePresenterFactory>(Lifetime.Scoped);
 			_builder.Register<GameStatesRepositoryFactory>(Lifetime.Scoped);
 			_builder.Register<IProgressUpgradeFactory, ProgressUpgradeFactory>(Lifetime.Scoped);

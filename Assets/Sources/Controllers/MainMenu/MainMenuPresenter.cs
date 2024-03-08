@@ -23,7 +23,7 @@ namespace Sources.Controllers.MainMenu
 		private readonly IAuthorizationPresenter _authorizationPresenter;
 		private readonly ILeaderBoardView _leaderBoardView;
 
-		private int CurrentNumber => _levelProgress.CurrentLevelNumber;
+		private int CurrentNumber => _levelProgress.CurrentLevel;
 
 		public MainMenuPresenter(
 			IMainMenuView mainMenu,

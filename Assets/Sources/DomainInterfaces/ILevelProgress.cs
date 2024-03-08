@@ -3,6 +3,8 @@ namespace Sources.DomainInterfaces
 	public interface ILevelProgress
 	{
 		int CurrentLevel { get; }
-		void AddLevel(int level);
+		int MaxScoreCount { get; }
+
+		void AddLevel(int maxPointDelta, int level);
 	}
 }

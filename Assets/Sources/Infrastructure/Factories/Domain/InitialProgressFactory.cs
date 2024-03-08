@@ -5,6 +5,7 @@ using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
+using Sources.Utils.Configs.Scripts;
 using Sources.Utils.ConstantNames;
 using VContainer;
 
@@ -16,7 +17,6 @@ namespace Sources.Infrastructure.Factories.Domain
 
 		private readonly IProgressUpgradeFactory _progressUpgradeFactory;
 		private readonly IResourceService _resourceService;
-		private readonly ProgressConstantNames _progressConstantNames;
 		private readonly IPlayerStatsServiceProvider _playerStatsService;
 
 		[Inject]
@@ -31,8 +31,6 @@ namespace Sources.Infrastructure.Factories.Domain
 			_progressUpgradeFactory = progressUpgradeFactory ??
 				throw new ArgumentNullException(nameof(progressUpgradeFactory));
 			_resourceService = resourceService ?? throw new ArgumentNullException(nameof(resourceService));
-			_progressConstantNames
-				= progressConstantNames ?? throw new ArgumentNullException(nameof(progressConstantNames));
 		}
 
 		public IGlobalProgress Create()
@@ -53,7 +51,10 @@ namespace Sources.Infrastructure.Factories.Domain
 				MaxUpgradePointsCount
 			);
 
-			LevelProgress levelProgressModel = new LevelProgressFactory().Create();
+			LevelProgress levelProgressModel = new LevelProgressFactory(
+				firstLevel: 1,
+				GameConfig.DefaultMaxGlobalScore
+			).Create();
 
 			return new GlobalProgress(
 				resourcesModel,
