@@ -1,43 +1,47 @@
 using System;
+using System.Collections.Generic;
 using Sources.ControllersInterfaces;
+using Sources.InfrastructureInterfaces.Providers;
 using UnityEngine;
 
 namespace Sources.Controllers.Mesh
 {
 	public class MeshDeformationPresenter : IMeshDeformationController
 	{
-		private readonly UnityEngine.Mesh _meshModifiable;
-
 		private readonly float _meshModificatorRadiusDeformation;
+		private readonly Dictionary<int, MeshCollider> _meshes;
 
-		private readonly IResourcesProgressPresenter _resourceMaxScore;
-		private readonly MeshCollider _meshCollider;
+		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 
 		public MeshDeformationPresenter(
-			UnityEngine.Mesh meshModifiable,
-			IResourcesProgressPresenter resourcePresenter,
+			IResourcesProgressPresenterProvider resourcePresenter,
 			float meshModificatorRadiusDeformation,
-			MeshCollider meshCollider
+			Dictionary<int, MeshCollider> meshes
 		)
 		{
 			if (meshModificatorRadiusDeformation < 0)
 				throw new ArgumentOutOfRangeException(nameof(meshModificatorRadiusDeformation));
 
-			_meshModifiable = meshModifiable ? meshModifiable : throw new ArgumentNullException(nameof(meshModifiable));
-			_resourceMaxScore = resourcePresenter ?? throw new ArgumentNullException(nameof(resourcePresenter));
+			_resourcesProgressPresenterProvider
+				= resourcePresenter ?? throw new ArgumentNullException(nameof(resourcePresenter));
 			_meshModificatorRadiusDeformation = meshModificatorRadiusDeformation;
-			_meshCollider = meshCollider ? meshCollider : throw new ArgumentNullException(nameof(meshCollider));
+			_meshes = meshes ?? throw new ArgumentNullException(nameof(meshes));
 		}
 
-		public void OnCollisionHappen(int scoreCount, Transform transform, Collision collision)
+		private IResourcesProgressPresenter ResourcesProgressPresenter =>
+			_resourcesProgressPresenterProvider.Implementation;
+
+		public void OnCollisionHappen(int scoreCount, Transform transform, Collision collision, int id)
 		{
-			if (_resourceMaxScore.IsMaxScoreReached == false)
+			if (ResourcesProgressPresenter.IsMaxScoreReached == false)
 				return;
 
 			bool isDeforming = false;
-			Vector3[] vertices = _meshModifiable.vertices;
 
-			for (int i = 0; i < _meshModifiable.vertexCount; i++)
+			UnityEngine.Mesh mesh = _meshes[id].sharedMesh;
+			Vector3[] vertices = mesh.vertices;
+
+			for (int i = 0; i < mesh.vertexCount; i++)
 			{
 				foreach (ContactPoint contact in collision.contacts)
 				{
@@ -55,21 +59,21 @@ namespace Sources.Controllers.Mesh
 			if (!isDeforming)
 				return;
 
-			Recalculate(vertices);
+			Recalculate(vertices, mesh, id);
 
-			_resourceMaxScore.TryAddSand(scoreCount);
+			ResourcesProgressPresenter.TryAddSand(scoreCount);
 		}
 
 		private Vector3 Calculate(float distance) =>
 			(_meshModificatorRadiusDeformation - distance) * Vector3.down;
 
-		private void Recalculate(Vector3[] vertices)
+		private void Recalculate(Vector3[] vertices, UnityEngine.Mesh mesh, int id)
 		{
-			_meshModifiable.vertices = vertices;
-			_meshModifiable.RecalculateNormals();
-			_meshModifiable.RecalculateBounds();
+			mesh.vertices = vertices;
+			mesh.RecalculateNormals();
+			mesh.RecalculateBounds();
 
-			_meshCollider.sharedMesh = _meshModifiable;
+			_meshes[id].sharedMesh = mesh;
 		}
 	}
 }

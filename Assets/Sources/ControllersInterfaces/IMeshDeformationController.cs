@@ -4,6 +4,6 @@ namespace Sources.ControllersInterfaces
 {
 	public interface IMeshDeformationController
 	{
-		void OnCollisionHappen(int scoreCount, Transform transform, Collision collision);
+		void OnCollisionHappen(int scoreCount, Transform transform, Collision collision, int id);
 	}
 }

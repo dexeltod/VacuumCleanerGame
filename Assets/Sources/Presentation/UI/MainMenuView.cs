@@ -56,14 +56,14 @@ namespace Sources.Presentation.UI
 			_leaderboardButton.onClick.RemoveListener(OnShowLeaderboard);
 		}
 
-		public void OnDestroy()
-		{
-			_playButtonTween.Kill();
-			_playButton.onClick.RemoveListener(OnPlay);
-			_addScoreButton.onClick.RemoveListener(OnAddLeader);
-			_deleteSavesButton.onClick.RemoveListener(OnDeleteSaves);
-			_leaderboardButton.onClick.RemoveListener(OnShowLeaderboard);
-		}
+		// public void OnDestroy()
+		// {
+		// 	_playButtonTween.Kill();
+		// 	_playButton.onClick.RemoveListener(OnPlay);
+		// 	_addScoreButton.onClick.RemoveListener(OnAddLeader);
+		// 	_deleteSavesButton.onClick.RemoveListener(OnDeleteSaves);
+		// 	_leaderboardButton.onClick.RemoveListener(OnShowLeaderboard);
+		// }
 
 		private void OnPlay() =>
 			PlayButtonPressed!.Invoke();

@@ -14,7 +14,7 @@ namespace Sources.Infrastructure.Factories
 		public CoroutineRunnerFactory(IAssetFactory assetFactory) =>
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 
-		private string CoroutineRunnerPath => ResourcesAssetPath.GameObjects.CoroutineRunner;
+		private string CoroutineRunnerPath => GameObjects.CoroutineRunner;
 
 		public ICoroutineRunner Create() =>
 			_assetFactory.InstantiateAndGetComponent<CoroutineRunner.CoroutineRunner>(CoroutineRunnerPath);

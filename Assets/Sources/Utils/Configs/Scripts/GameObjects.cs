@@ -2,9 +2,10 @@ namespace Sources.Utils.Configs.Scripts
 {
 	public class GameObjects
 	{
-		public readonly string CoroutineRunner = "Game/Coroutine/CoroutineRunner";
-		public readonly string SandGround = "Game/Environment/Sand/SandGround";
-		public readonly string LeanLocalization = "Localization/LeanLocalization";
-		public readonly string UpgradeTrigger = "Game/Environment/UpgradeTrigger";
+		public const string SandMaterial = "Game/Environment/Sand/SandMaterial";
+		public const string CoroutineRunner = "Game/Coroutine/CoroutineRunner";
+		public const string SandGround = "Game/Environment/Sand/SandGround";
+		public const string LeanLocalization = "Localization/LeanLocalization";
+		public const string UpgradeTrigger = "Game/Environment/UpgradeTrigger";
 	}
 }

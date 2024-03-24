@@ -65,8 +65,7 @@ namespace Sources.Services.Localization
 			LeanLocalization leanLocalization =
 				assetFactory.InstantiateAndGetComponent<LeanLocalization>
 				(
-					ResourcesAssetPath.GameObjects
-						.LeanLocalization
+					GameObjects.LeanLocalization
 				);
 
 			string config = assetFactory.LoadFromResources<TextAsset>(ResourcesAssetPath.Configs.Localization).text;

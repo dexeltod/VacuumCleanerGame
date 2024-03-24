@@ -48,7 +48,7 @@ namespace Sources.Infrastructure.Factories
 
 		private int SoftCurrencyCount => GameProgressResourcesModel.SoftCurrency.Count;
 
-		private string GameObjectsUpgradeTrigger => ResourcesAssetPath.GameObjects.UpgradeTrigger;
+		private string GameObjectsUpgradeTrigger => GameObjects.UpgradeTrigger;
 
 		public override UpgradeWindowPresenter Create()
 		{
