@@ -160,9 +160,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _view: {fileID: 638679986767135467}
-  _score: 1
   _particle: {fileID: 6646351217378409088}
   _sound: {fileID: 2772784652904484918}
+  _minPitchRange: 0.6
+  _maxPitchRange: 0.8
+  _soundVolume: 0.6
 --- !u!1 &4601263017467182479
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,6 +304,7 @@ GameObject:
   - component: {fileID: 3529129637972319860}
   - component: {fileID: 6646351217378409088}
   - component: {fileID: 1995216590972781783}
+  - component: {fileID: 136016258748830016}
   m_Layer: 0
   m_Name: SandVacuumParticle
   m_TagString: Untagged
@@ -514,7 +517,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.8490566, g: 0.4723225, b: 0.13216448, a: 1}
+      maxColor: {r: 0.8490566, g: 0.16231509, b: 0.13216448, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5052,7 +5055,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: aa462666008c28940b2dce8ad6829b91, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5103,3 +5106,17 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &136016258748830016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8129320694745754435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7aa9684d8af06d44db56abfe0e4eb2f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentColor: {r: 0, g: 0, b: 0, a: 0}
+  newColor: {r: 0.4433962, g: 0.24832222, b: 0.1945087, a: 0}

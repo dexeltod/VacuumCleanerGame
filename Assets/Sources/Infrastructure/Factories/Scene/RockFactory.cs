@@ -7,6 +7,7 @@ using Sources.Infrastructure.Configs.Scripts.Level.LevelResouce;
 using Sources.Infrastructure.Providers;
 using Sources.Presentation.SceneEntity;
 using Sources.ServicesInterfaces;
+using TheDeveloper.ColorChanger;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -22,6 +23,7 @@ namespace Sources.Infrastructure.Factories.Scene
 		private readonly ILevelProgressFacade _levelProgressFacade;
 		private readonly ResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 		private readonly ILevelConfigGetter _levelConfigGetter;
+		private Material _sandMaterial;
 
 		public RockFactory(
 			IAssetFactory assetFactory,
@@ -42,6 +44,7 @@ namespace Sources.Infrastructure.Factories.Scene
 
 		public void Create()
 		{
+			_sandMaterial = _assetFactory.LoadFromResources<Material>(ResourcesAssetPath.Materials.Sand);
 			var levelConfig = _levelConfigGetter.GetOrDefault(_levelProgressFacade.CurrentLevel);
 
 			GameObject gameObject = new("Rocks");
@@ -78,6 +81,7 @@ namespace Sources.Infrastructure.Factories.Scene
 				for (int j = 0; j < rocksCount; j++)
 				{
 					int randomRockIndex = Random.Range(0, softResourcesVariantsCount);
+
 					var resourcePresentation = levelConfig.SoftMinedResource[randomRockIndex].Prefab
 						.GetComponent<ResourcePresentation>();
 
@@ -101,10 +105,30 @@ namespace Sources.Infrastructure.Factories.Scene
 					).GetComponent<ResourcePresentation>();
 
 					SetMaterial(resourceObject, config);
+					SetParticleColor(resourcePresentation, config);
 					resourceObject.Construct(_resourcesProgressPresenterProvider, config.Score);
 					resourceObject.transform.SetParent(resourceSpawnPosition.transform);
 				}
 			}
+		}
+
+		private void SetParticleColor(ResourcePresentation resourcePresentation, ISoftMinedResource config)
+		{
+			var a = resourcePresentation.Particle.GetComponent<PS_ColorChanger>();
+
+			var particleSystem = resourcePresentation.Particle.GetComponent<ParticleSystem>();
+			var renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+
+			renderer.material = new Material(_sandMaterial)
+			{
+				color = config.Color
+			};
+
+			// resourcePresentation.Particle.GetComponent<ParticleSystemRenderer>().material
+			// 	.color = config.Color;
+
+			a.newColor = config.Color;
+			a.ChangeColor();
 		}
 
 		private void SetMaterial(ResourcePresentation resourceObject, ISoftMinedResource config)
