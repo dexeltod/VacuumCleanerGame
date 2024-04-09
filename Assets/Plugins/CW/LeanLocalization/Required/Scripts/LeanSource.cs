@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
 	/// <summary>This is the base class used for all translation sources. When a translation source is built, it will populate the <b>LeanLocalization</b> class with its translation data.</summary>
 	public abstract class LeanSource : MonoBehaviour

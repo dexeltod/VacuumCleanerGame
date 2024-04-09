@@ -1,14 +1,15 @@
+using Plugins.CW.Shared.Common.Required.Scripts;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using CW.Common;
 
-namespace Lean.Common
+namespace Plugins.CW.LeanCommon.Extras.Scripts
 {
 	/// <summary>This component allows you to change the color of the Graphic (e.g. Image) attached to the current GameObject when selected.</summary>
 	[ExecuteInEditMode]
 	[RequireComponent(typeof(Graphic))]
-	[HelpURL(LeanCommon.HelpUrlPrefix + "LeanSelectableGraphicColor")]
-	[AddComponentMenu(LeanCommon.ComponentPathPrefix + "Selectable Graphic Color")]
+	[HelpURL(Required.Scripts.LeanCommon.HelpUrlPrefix + "LeanSelectableGraphicColor")]
+	[AddComponentMenu(Required.Scripts.LeanCommon.ComponentPathPrefix + "Selectable Graphic Color")]
 	public class LeanSelectableGraphicColor : LeanSelectableBehaviour
 	{
 		/// <summary>The default color given to the SpriteRenderer.</summary>
@@ -39,21 +40,15 @@ namespace Lean.Common
 			cachedGraphic.color = color;
 		}
 	}
-}
 
 #if UNITY_EDITOR
-namespace Lean.Common.Editor
-{
-	using UnityEditor;
-	using TARGET = LeanSelectableGraphicColor;
-
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
+	[CustomEditor(typeof(LeanSelectableGraphicColor))]
 	public class LeanSelectableGraphicColor_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
+			LeanSelectableGraphicColor tgt; LeanSelectableGraphicColor[] tgts; GetTargets(out tgt, out tgts);
 
 			var updateColor = false;
 
@@ -66,5 +61,6 @@ namespace Lean.Common.Editor
 			}
 		}
 	}
-}
+
 #endif
+}

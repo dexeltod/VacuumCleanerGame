@@ -1,6 +1,9 @@
-﻿using UnityEngine;
+﻿using Plugins.CW.Shared.Common.Extras.Scripts;
+using Plugins.CW.Shared.Common.Required.Scripts;
+using UnityEditor;
+using UnityEngine;
 
-namespace CW.Common
+namespace Plugins.CW.Shared.Common.Examples.Scripts
 {
 	/// <summary>This component allows you to freely move the current GameObject based on mouse/finger drags.</summary>
 	[HelpURL(CwShared.HelpUrlPrefix + "CwCameraMove")]
@@ -80,21 +83,15 @@ namespace CW.Common
 			remainingDelta = newDelta;
 		}
 	}
-}
 
 #if UNITY_EDITOR
-namespace CW.Common
-{
-	using UnityEditor;
-	using TARGET = CwCameraMove;
-
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
+	[CustomEditor(typeof(CwCameraMove))]
 	public class CwCameraMove_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
+			CwCameraMove tgt; CwCameraMove[] tgts; GetTargets(out tgt, out tgts);
 
 			Draw("listen", "Is this component currently listening for inputs?");
 			Draw("damping", "How quickly the rotation transitions from the current to the target value (-1 = instant).");
@@ -107,5 +104,6 @@ namespace CW.Common
 			Draw("verticalControls", "The keys/fingers required to move down/up.");
 		}
 	}
-}
+
 #endif
+}

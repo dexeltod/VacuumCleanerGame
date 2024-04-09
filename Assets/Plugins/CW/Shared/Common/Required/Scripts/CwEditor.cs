@@ -1,9 +1,9 @@
 #if UNITY_EDITOR
-using UnityEngine;
-using UnityEditor;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
 
-namespace CW.Common
+namespace Plugins.CW.Shared.Common.Required.Scripts
 {
 	/// <summary>This is the base class for all inspectors.</summary>
 	public abstract class CwEditor : UnityEditor.Editor

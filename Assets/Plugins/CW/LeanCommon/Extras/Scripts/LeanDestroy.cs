@@ -1,11 +1,12 @@
+using Plugins.CW.Shared.Common.Required.Scripts;
+using UnityEditor;
 using UnityEngine;
-using CW.Common;
 
-namespace Lean.Common
+namespace Plugins.CW.LeanCommon.Extras.Scripts
 {
 	/// <summary>This component allows you to destroy a GameObject.</summary>
-	[HelpURL(LeanCommon.HelpUrlPrefix + "LeanDestroy")]
-	[AddComponentMenu(LeanCommon.ComponentPathPrefix + "Destroy")]
+	[HelpURL(Required.Scripts.LeanCommon.HelpUrlPrefix + "LeanDestroy")]
+	[AddComponentMenu(Required.Scripts.LeanCommon.ComponentPathPrefix + "Destroy")]
 	public class LeanDestroy : MonoBehaviour
 	{
 		public enum ExecuteType
@@ -38,7 +39,7 @@ namespace Lean.Common
 				{
 					DestroyNow();
 				}
-				break;
+					break;
 
 				case ExecuteType.AfterDelay:
 				{
@@ -49,7 +50,7 @@ namespace Lean.Common
 						DestroyNow();
 					}
 				}
-				break;
+					break;
 
 				case ExecuteType.AfterDelayUnscaled:
 				{
@@ -60,7 +61,7 @@ namespace Lean.Common
 						DestroyNow();
 					}
 				}
-				break;
+					break;
 			}
 		}
 
@@ -72,31 +73,26 @@ namespace Lean.Common
 			Destroy(target != null ? target : gameObject);
 		}
 	}
-}
 
 #if UNITY_EDITOR
-namespace Lean.Common.Editor
-{
-	using UnityEditor;
-	using TARGET = LeanDestroy;
-
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
+	[CustomEditor(typeof(LeanDestroy))]
 	public class LeanDestroy_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
+			LeanDestroy tgt; LeanDestroy[] tgts; GetTargets(out tgt, out tgts);
 
 			Draw("target", "The GameObject that will be destroyed.\n\nNone/null = This GameObject.");
 			Draw("execute", "This allows you to control when the <b>Target</b> GameObject will be destroyed.\n\nOnFirstFrame = As soon as Update runs (this component must be enabled).\n\nAfterDelay = After the specified amount of <b>Seconds</b> has elapsed.\n\nAfterDelayUnscaled = The same as AfterDelay, but using unscaledDeltaTime.\n\nManually = You must manually call the <b>DestroyNow</b> method.");
 			if (Any(tgts, t => t.Execute == LeanDestroy.ExecuteType.AfterDelay || t.Execute == LeanDestroy.ExecuteType.AfterDelayUnscaled))
 			{
 				BeginIndent();
-					Draw("seconds", "The amount of seconds remaining until the GameObject is destroyed.");
+				Draw("seconds", "The amount of seconds remaining until the GameObject is destroyed.");
 				EndIndent();
 			}
 		}
 	}
-}
+
 #endif
+}

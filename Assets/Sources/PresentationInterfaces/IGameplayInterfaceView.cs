@@ -1,13 +1,17 @@
-using Joystick_Pack.Scripts.Base;
+using Graphic.Joystick_Pack.Scripts.Base;
 using Sources.ControllersInterfaces;
 using Sources.PresentationInterfaces.Common;
-using Sources.ServicesInterfaces;
-using UnityEngine;
+using UnityEngine.UI;
 
 namespace Sources.PresentationInterfaces
 {
 	public interface IGameplayInterfaceView : IPresentableView<IGameplayInterfacePresenter>
 	{
+		public Joystick Joystick { get; }
+		Image IncreaseSpeedButtonImage { get; }
+		Button GoToNextLevelButton { get; }
+		Button IncreaseSpeedButton { get; }
+
 		void Construct(
 			IGameplayInterfacePresenter gameplayInterfacePresenter,
 			int cashScore,
@@ -15,7 +19,8 @@ namespace Sources.PresentationInterfaces
 			int maxCashScore,
 			int maxGlobalScore,
 			int moneyCount,
-			bool isHalfScoreReached
+			bool isHalfScoreReached,
+			bool isScoresViewed
 		);
 
 		void SetActiveGoToNextLevelButton(bool isActive);
@@ -23,7 +28,6 @@ namespace Sources.PresentationInterfaces
 		void SetGlobalScore(int newScore);
 		void SetCashScore(int newScore);
 		void SetSoftCurrencyText(int newMoney);
-		
-		public Joystick Joystick { get; }
+		void FillSpeedButtonImage(float fillAmount);
 	}
 }

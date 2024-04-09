@@ -1,27 +1,27 @@
 using System;
+using Sources.ApplicationServicesInterfaces;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
+using Sources.Infrastructure.Configs.Scripts.Level;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.InfrastructureInterfaces.States;
-using Sources.Presentation;
-using Sources.Presentation.UI.MainMenu.LeaderBoard;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
-using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 
 namespace Sources.Controllers.MainMenu
 {
 	public class MainMenuPresenter : Presenter, IMainMenuPresenter
 	{
-		private readonly IMainMenuView _mainMenu;
+		private readonly IMainMenuView _mainMenuView;
 		private readonly ILevelProgressFacade _levelProgress;
 		private readonly IGameStateChanger _stateMachine;
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IAuthorizationPresenter _authorizationPresenter;
 		private readonly ILeaderBoardView _leaderBoardView;
+		private readonly ILeaderBoardService _leaderBoardService;
 
 		private int CurrentNumber => _levelProgress.CurrentLevel;
 
@@ -32,10 +32,11 @@ namespace Sources.Controllers.MainMenu
 			ILevelConfigGetter levelConfigGetter,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			IAuthorizationPresenter authorizationPresenter,
-			ILeaderBoardView leaderBoardView
+			ILeaderBoardView leaderBoardView,
+			ILeaderBoardService leaderBoardService
 		)
 		{
-			_mainMenu = mainMenu ?? throw new ArgumentNullException(nameof(mainMenu));
+			_mainMenuView = mainMenu ?? throw new ArgumentNullException(nameof(mainMenu));
 			_levelProgress = levelProgress ?? throw new ArgumentNullException(nameof(levelProgress));
 			_stateMachine = stateMachine ?? throw new ArgumentNullException(nameof(stateMachine));
 			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
@@ -44,24 +45,29 @@ namespace Sources.Controllers.MainMenu
 			_authorizationPresenter = authorizationPresenter ??
 				throw new ArgumentNullException(nameof(authorizationPresenter));
 			_leaderBoardView = leaderBoardView ?? throw new ArgumentNullException(nameof(leaderBoardView));
+			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
 		}
 
 		public override void Enable()
 		{
-			_mainMenu.PlayButtonPressed += OnPlay;
-			_mainMenu.DeleteSavesButtonPressed += OnDeleteSaves;
-			_mainMenu.Enable();
+			_mainMenuView.PlayButton.onClick.AddListener(OnPlay);
+			_mainMenuView.DeleteSavesButton.onClick.AddListener(OnDeleteSaves);
+			_mainMenuView.LeaderboardButton.onClick.AddListener(OnShowLeaderboard);
+			_mainMenuView.AddScoreButton.onClick.AddListener(OnAddLeader);
+			_mainMenuView.Enable();
 		}
 
 		public override void Disable()
 		{
-			_mainMenu.Disable();
+			_mainMenuView.PlayButton.onClick.RemoveListener(OnPlay);
+			_mainMenuView.DeleteSavesButton.onClick.RemoveListener(OnDeleteSaves);
+			_mainMenuView.LeaderboardButton.onClick.RemoveListener(OnShowLeaderboard);
+			_mainMenuView.AddScoreButton.onClick.RemoveListener(OnAddLeader);
 
-			_mainMenu.PlayButtonPressed -= OnPlay;
-			_mainMenu.DeleteSavesButtonPressed -= OnDeleteSaves;
+			_mainMenuView.Disable();
 		}
 
-		public void ShowLeaderBoard()
+		private void ShowLeaderBoard()
 		{
 			if (_authorizationPresenter.IsAuthorized == false)
 			{
@@ -77,6 +83,12 @@ namespace Sources.Controllers.MainMenu
 			await _progressSaveLoadDataService.ClearSaves();
 
 		private void OnPlay() =>
-			_stateMachine.Enter<IBuildSceneState, LevelConfig>(_levelConfigGetter.Get(CurrentNumber));
+			_stateMachine.Enter<IBuildSceneState, ILevelConfig>(_levelConfigGetter.GetOrDefault(CurrentNumber));
+
+		private async void OnAddLeader() =>
+			await _leaderBoardService.AddScore(200);
+
+		private void OnShowLeaderboard() =>
+			ShowLeaderBoard();
 	}
 }

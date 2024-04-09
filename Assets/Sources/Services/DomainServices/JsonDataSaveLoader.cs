@@ -6,7 +6,7 @@ namespace Sources.Services.DomainServices
 	public class JsonDataSaveLoader
 	{
 		private readonly string _fileFormat;
-		private string _directoryPath => UnityEngine.Application.persistentDataPath + "/Data/";
+		private string _directoryPath => Application.persistentDataPath + "/Data/";
 
 		public JsonDataSaveLoader()
 		{

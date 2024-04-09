@@ -1,18 +1,14 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
-namespace CW.Common
+namespace Plugins.CW.Shared.Common.Extras.Scripts
 {
 	/// <summary>This attribute can be added to any int field to make it a random seed value that can easily be randomized.</summary>
 	public class CwSeedAttribute : PropertyAttribute
 	{
 	}
-}
 
 #if UNITY_EDITOR
-namespace CW.Common
-{
-	using UnityEditor;
-
 	[CustomPropertyDrawer(typeof(CwSeedAttribute))]
 	public class CwSeedDrawer : PropertyDrawer
 	{
@@ -29,5 +25,6 @@ namespace CW.Common
 			}
 		}
 	}
-}
+
 #endif
+}

@@ -114,7 +114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cellSize: 0.25
   _slopeLength: 3
-  _middleHeight: 5
+  _middleHeight: 8
 --- !u!114 &60262621857532902
 MonoBehaviour:
   m_ObjectHideFlags: 0

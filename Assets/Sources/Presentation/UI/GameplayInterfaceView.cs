@@ -2,8 +2,7 @@ using System;
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
-using Joystick_Pack.Scripts.Base;
-using Sources.Controllers;
+using Graphic.Joystick_Pack.Scripts.Base;
 using Sources.ControllersInterfaces;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
@@ -19,39 +18,56 @@ namespace Sources.Presentation.UI
 	[RequireComponent(typeof(Canvas))]
 	public class GameplayInterfaceView : PresentableView<IGameplayInterfacePresenter>,
 		IGameplayInterfaceView
-
 	{
 		private const float MaxNormalizeThreshold = 1f;
 
 		[FormerlySerializedAs("_phrasesTranslator")] [SerializeField]
 		private TextPhrases _phrases;
 
-		[SerializeField] private TextMeshProUGUI _scoreCash;
+//=============================Text=========================================================
+		[Header("Text")] [SerializeField] private TextMeshProUGUI _scoreCash;
 		[SerializeField] private TextMeshProUGUI _globalScoreText;
 		[SerializeField] private TextMeshProUGUI _maxGlobalScoreText;
+
 		[SerializeField] private TextMeshProUGUI _moneyText;
 
-		[SerializeField] private Button _goToNextLevelButton;
+//=============================Buttons===========================================================
+		[Space] [Header("Buttons")] [SerializeField]
+		private Button _goToNextLevelButton;
+
 		[SerializeField] private Button _increaseSpeedButton;
 
-		[SerializeField] private Image _scoreFillBar;
-		[SerializeField] private Joystick _joystick;
+//===============================Images============================================================
+		[Space] [Header("Images")] [SerializeField]
+		private Image _scoreFillBar;
+
+		[SerializeField] private Image _increaseSpeedButtonImage;
 
 		[SerializeField] private Image _globalScoreImage;
 
-		private int _cashScore;
-		private int _maxCashScore;
-		private int _globalScore;
-		private int _maxGlobalScore;
+//=================================Other=======================================================
+		[Space] [Header("Other")] [SerializeField]
+		private Joystick _joystick;
 
-		private bool _isInitialized;
+		private int _cashScore;
+		private int _globalScore;
 		private TweenerCore<Vector3, Vector3, VectorOptions> _goToNextLevelButtonTween;
 		private TweenerCore<Vector3, Vector3, VectorOptions> _increaseSpeedButtonTween;
 
+		private bool _isInitialized;
+		private bool _isScoresViewed;
+		private int _maxCashScore;
+		private int _maxGlobalScore;
+
 		public ITextPhrases Phrases => _phrases;
+		public Button GoToNextLevelButton => _goToNextLevelButton;
+
+		public Button IncreaseSpeedButton => _increaseSpeedButton;
+		public GameObject InterfaceGameObject { get; private set; }
+
+		public Image IncreaseSpeedButtonImage => _increaseSpeedButtonImage;
 
 		public Joystick Joystick => _joystick;
-		public GameObject InterfaceGameObject { get; private set; }
 
 		public void Construct(
 			IGameplayInterfacePresenter gameplayInterfacePresenter,
@@ -60,9 +76,11 @@ namespace Sources.Presentation.UI
 			int maxCashScore,
 			int maxGlobalScore,
 			int moneyCount,
-			bool isHalfScoreReached
+			bool isHalfScoreReached,
+			bool isScoresViewed
 		)
 		{
+			_isScoresViewed = isScoresViewed;
 			if (gameplayInterfacePresenter == null) throw new ArgumentNullException(nameof(gameplayInterfacePresenter));
 
 			if (cashScore < 0) throw new ArgumentOutOfRangeException(nameof(cashScore));
@@ -90,24 +108,26 @@ namespace Sources.Presentation.UI
 
 		public override void Enable()
 		{
-			base.Enable();
+			gameObject.SetActive(true);
 			_goToNextLevelButtonTween ??= CustomTweeners.StartPulseLocal(_goToNextLevelButton.transform, 1.15f);
 			_increaseSpeedButtonTween ??= CustomTweeners.StartPulseLocal(_increaseSpeedButton.transform);
 
-			Subscribe();
+			SetActiveGlobalScores();
+		}
+
+		public override void DestroySelf()
+		{
+			_goToNextLevelButtonTween!.Kill(true);
+			_increaseSpeedButtonTween!.Kill(true);
+			base.DestroySelf();
 		}
 
 		public override void Disable()
 		{
-			base.Disable();
-			_goToNextLevelButtonTween.Kill();
-			_increaseSpeedButtonTween.Kill();
-
-			Unsubscribe();
+			_goToNextLevelButtonTween!.Kill(true);
+			_increaseSpeedButtonTween!.Kill(true);
+			gameObject.SetActive(false);
 		}
-
-		private void OnDestroy() =>
-			Unsubscribe();
 
 		public void SetActiveGoToNextLevelButton(bool isActive) =>
 			_goToNextLevelButton.gameObject.SetActive(isActive);
@@ -139,6 +159,15 @@ namespace Sources.Presentation.UI
 			_maxGlobalScoreText.SetText($"{_maxCashScore}");
 		}
 
+		public void SetSoftCurrencyText(int newMoney)
+		{
+			if (newMoney < 0) throw new ArgumentOutOfRangeException(nameof(newMoney));
+			_moneyText.SetText(newMoney.ToString());
+		}
+
+		public void FillSpeedButtonImage(float fillAmount) =>
+			_increaseSpeedButtonImage.fillAmount = fillAmount;
+
 		public void SetMaxGlobalScore(int newMaxScore)
 		{
 			if (newMaxScore < 0) throw new ArgumentOutOfRangeException(nameof(newMaxScore));
@@ -146,10 +175,10 @@ namespace Sources.Presentation.UI
 			_maxGlobalScoreText.SetText($"{_maxGlobalScore}");
 		}
 
-		public void SetSoftCurrencyText(int newMoney)
+		private void SetActiveGlobalScores()
 		{
-			if (newMoney < 0) throw new ArgumentOutOfRangeException(nameof(newMoney));
-			_moneyText.SetText(newMoney.ToString());
+			_globalScoreText.gameObject.SetActive(_isScoresViewed);
+			_maxGlobalScoreText.gameObject.SetActive(_isScoresViewed);
 		}
 
 		private void SetScoreBarValue(int newScore)
@@ -173,24 +202,6 @@ namespace Sources.Presentation.UI
 			topValue / currentMaxScore * newScore;
 
 		private void SetCashScoreText(int newScore) =>
-			_scoreCash.SetText($"{newScore}/{_maxCashScore}");
-
-		private void OnGoToNextLevelButtonClicked() =>
-			Presenter.GoToNextLevel();
-
-		private void OnIncreaseSpeed() =>
-			Presenter.IncreaseSpeed();
-
-		private void Subscribe()
-		{
-			_goToNextLevelButton.onClick.AddListener(OnGoToNextLevelButtonClicked);
-			_increaseSpeedButton.onClick.AddListener(OnIncreaseSpeed);
-		}
-
-		private void Unsubscribe()
-		{
-			_goToNextLevelButton.onClick.RemoveListener(OnGoToNextLevelButtonClicked);
-			_increaseSpeedButton.onClick.RemoveListener(OnIncreaseSpeed);
-		}
+			_scoreCash.SetText($"{newScore}");
 	}
 }

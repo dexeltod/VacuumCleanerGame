@@ -1,9 +1,9 @@
-﻿using Joystick_Pack.Scripts.Base;
-using Joystick_Pack.Scripts.Joysticks;
+﻿using Graphic.Joystick_Pack.Scripts.Base;
+using Graphic.Joystick_Pack.Scripts.Joysticks;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Joystick_Pack.Examples
+namespace Graphic.Joystick_Pack.Examples
 {
     public class JoystickSetterExample : MonoBehaviour
     {

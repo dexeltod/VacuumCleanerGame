@@ -30,7 +30,7 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 #endif
 
-namespace Tayx.Graphy.CustomizationScene
+namespace Graphy___Ultimate_Stats_Monitor.Scene___Customization.Color_Picker
 {
     public class G_CUIColorPicker : MonoBehaviour
     {

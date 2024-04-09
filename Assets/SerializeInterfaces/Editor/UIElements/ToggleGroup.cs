@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 
-namespace AYellowpaper.Editor
+namespace SerializeInterfaces.Editor.UIElements
 {
 	internal class ToggleGroup
 	{

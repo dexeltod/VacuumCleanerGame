@@ -1,4 +1,4 @@
-﻿namespace Lean.Localization
+﻿namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
 	/// <summary>This interface can be implemented by any component that needs to listen for localization changes.</summary>
 	public interface ILocalizationHandler

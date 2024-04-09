@@ -1,4 +1,4 @@
-﻿namespace AYellowpaper.Samples
+﻿namespace SerializeInterfaces.Samples.Scripts
 {
 	public interface IInteractable
 	{

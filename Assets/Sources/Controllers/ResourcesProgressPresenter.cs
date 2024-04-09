@@ -47,17 +47,11 @@ namespace Sources.Controllers
 
 		public bool IsMaxScoreReached => CheckMaxScore();
 
-		public override void Enable()
-		{
-			base.Enable();
+		public override void Enable() =>
 			SetEnableSand();
-		}
 
-		public override void Disable()
-		{
-			base.Disable();
+		public override void Disable() =>
 			SetEnableSand();
-		}
 
 		public int GetDecreasedMoney(int count)
 		{
@@ -143,7 +137,7 @@ namespace Sources.Controllers
 
 		public void AddMoney(int count)
 		{
-			//When the user will be watching video
+			//TODO: When the user will be watching video
 			_resourcesData.AddMoney(count);
 			SetMoneyTextView();
 		}
@@ -155,16 +149,16 @@ namespace Sources.Controllers
 
 		private void SetView()
 		{
-			GameplayInterfacePresenter.SetGlobalScore(_resourcesData.CurrentGlobalScore);
+			GameplayInterfacePresenter.SetGlobalScore(_resourcesData.CurrentTotalResources);
 			GameplayInterfacePresenter.SetCashScore(_resourcesData.CurrentCashScore);
 			FillMeshShaderController.FillArea(CurrentScore, 0, _resourcesData.MaxCashScore);
 		}
 
 		private bool IsHalfScoreReached()
 		{
-			int halfScore = _resourcesData.MaxGlobalScore / 2;
+			int halfScore = Mathf.CeilToInt(_resourcesData.MaxGlobalScore / 2f);
 
-			return _resourcesData.GlobalScore.Count >= halfScore;
+			return _resourcesData.CurrentTotalResources >= halfScore;
 		}
 	}
 }

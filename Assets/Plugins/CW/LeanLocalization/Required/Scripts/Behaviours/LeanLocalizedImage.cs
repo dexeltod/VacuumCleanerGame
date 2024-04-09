@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 {
 	/// <summary>This component will update an Image component with a localized sprite, or use a fallback if none is found</summary>
 	[ExecuteInEditMode]

@@ -1,10 +1,4 @@
-using System;
-using Agava.YandexGames;
-using Cysharp.Threading.Tasks;
-using Sources.ApplicationServicesInterfaces;
-using Sources.Infrastructure.Yandex;
-
-namespace Sources.Infrastructure.StateMachine.GameStates
+namespace Sources.Infrastructure.Adapters
 {
 #if YANDEX_CODE
 	public class YandexCloudPlayerDataAdapter : ICloudPlayerDataService

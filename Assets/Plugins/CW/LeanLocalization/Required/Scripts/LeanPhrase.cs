@@ -1,7 +1,7 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
 	/// <summary>This contains data about each phrase, which is then translated into different languages.</summary>
 	[ExecuteInEditMode]

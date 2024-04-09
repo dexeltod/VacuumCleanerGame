@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Sources.Controllers;
 using Sources.DomainInterfaces;
+using Sources.Infrastructure.Configs.Scripts;
 using Sources.Infrastructure.Factories.UpgradeShop;
 using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Providers;
@@ -10,7 +11,6 @@ using Sources.Presentation.UI.Shop;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Upgrade;
-using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 using VContainer;
 using Object = UnityEngine.Object;
@@ -126,6 +126,6 @@ namespace Sources.Infrastructure.Factories
 			);
 
 		private string Localize(string phrase) =>
-			_translatorService.Localize(phrase);
+			_translatorService.GetLocalize(phrase);
 	}
 }

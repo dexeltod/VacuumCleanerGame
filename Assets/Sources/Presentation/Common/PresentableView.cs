@@ -8,13 +8,26 @@ namespace Sources.Presentation.Common
 {
 	public abstract class PresentableView<T> : View, IPresentableView<T> where T : class, IPresenter
 	{
+		private bool _isEnabled;
 		protected T Presenter { get; set; }
 
-		private void OnEnable() =>
-			Presenter?.Enable();
+		private void OnEnable()
+		{
+			if (!_isEnabled)
+				Presenter?.Enable();
+		}
 
-		private void OnDisable() =>
-			Presenter?.Disable();
+		public virtual void DestroySelf() =>
+			Destroy(gameObject);
+
+		private void OnDestroy() =>
+			DestroySelf();
+
+		private void OnDisable()
+		{
+			if (_isEnabled)
+				Presenter?.Disable();
+		}
 
 		public virtual void Construct(T presenter)
 		{

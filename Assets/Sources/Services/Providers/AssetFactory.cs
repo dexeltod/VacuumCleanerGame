@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace Sources.Services.Providers
 {
-	public class AssetFactory : IAssetFactory
+	public sealed class AssetFactory : IAssetFactory
 	{
 		[Inject] private IObjectResolver _objectResolver;
 

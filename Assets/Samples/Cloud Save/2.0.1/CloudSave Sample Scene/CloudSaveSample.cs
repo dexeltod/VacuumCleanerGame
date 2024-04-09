@@ -6,7 +6,7 @@ using Unity.Services.CloudSave;
 using Unity.Services.Core;
 using UnityEngine;
 
-namespace CloudSaveSample
+namespace Samples.Cloud_Save._2._0._1.CloudSave_Sample_Scene
 {
     [Serializable]
     public class SampleObject

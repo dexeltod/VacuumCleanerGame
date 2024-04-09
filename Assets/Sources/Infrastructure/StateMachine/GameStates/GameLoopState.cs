@@ -4,7 +4,6 @@ using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.States.StateMachineInterfaces;
 using Sources.Presentation.SceneEntity;
-using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
 using VContainer;
 
@@ -34,7 +33,6 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			AdvertisementHandlerProvider advertisementHandlerProvider
 		)
 		{
-			
 			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 			_upgradeWindowPresenterProvider
 				= upgradeWindowPresenterProvider ??

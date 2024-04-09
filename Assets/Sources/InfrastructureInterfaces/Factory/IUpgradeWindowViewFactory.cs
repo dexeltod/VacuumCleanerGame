@@ -4,5 +4,6 @@ using Sources.PresentationInterfaces;
 
 namespace Sources.InfrastructureInterfaces.Factory
 {
-	public interface IUpgradeWindowViewFactory : IPresentableFactory<IUpgradeWindow, IUpgradeWindowPresenter> { }
+	public interface
+		IUpgradeWindowViewFactory : IPresentableFactory<IUpgradeWindowPresentation, IUpgradeWindowPresenter> { }
 }

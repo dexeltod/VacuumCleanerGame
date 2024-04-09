@@ -1,12 +1,11 @@
 using System;
-using Joystick_Pack.Scripts.Base;
+using Graphic.Joystick_Pack.Scripts.Base;
 using Sources.Controllers;
+using Sources.Infrastructure.Configs.Scripts;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
-using Sources.Services.Facade;
 using Sources.ServicesInterfaces;
 using Sources.Utils;
-using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 using VContainer;
 
@@ -60,7 +59,7 @@ namespace Sources.Infrastructure.Factories.Player
 			GameObject character = playerBodyComponent.gameObject;
 			Player = character;
 			Rigidbody body = Player.GetComponent<Rigidbody>();
-			
+
 			Animator animator = Player.GetComponentInChildren<Animator>();
 
 			PlayerTransformable playerTransformable = new(

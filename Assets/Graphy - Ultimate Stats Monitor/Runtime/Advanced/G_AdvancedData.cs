@@ -11,18 +11,16 @@
  * Attribution is not required, but it is always welcomed!
  * -------------------------------------*/
 
-using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Text;
-using Tayx.Graphy.UI;
-using Tayx.Graphy.Utils;
-using Tayx.Graphy.Utils.NumString;
-
+using Graphy___Ultimate_Stats_Monitor.Runtime.UI;
+using Graphy___Ultimate_Stats_Monitor.Runtime.Util;
+using UnityEngine;
+using UnityEngine.UI;
 #if UNITY_5_5_OR_NEWER
 #endif
 
-namespace Tayx.Graphy.Advanced
+namespace Graphy___Ultimate_Stats_Monitor.Runtime.Advanced
 {
     public class G_AdvancedData : MonoBehaviour, IMovable, IModifiableState
     {

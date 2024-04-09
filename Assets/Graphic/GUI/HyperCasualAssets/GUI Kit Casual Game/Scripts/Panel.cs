@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LayerLab
+namespace Graphic.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Scripts
 {
     public class Panel : MonoBehaviour
     {

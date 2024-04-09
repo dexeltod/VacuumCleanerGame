@@ -1,6 +1,9 @@
-﻿using UnityEngine;
+﻿using Plugins.CW.Shared.Common.Extras.Scripts;
+using Plugins.CW.Shared.Common.Required.Scripts;
+using UnityEditor;
+using UnityEngine;
 
-namespace CW.Common
+namespace Plugins.CW.Shared.Common.Examples.Scripts
 {
 	/// <summary>This component allows you to rotate the current GameObject using local Euler rotations, allowing you to create a typical FPS camera system, or orbital camera system.</summary>
 	[HelpURL(CwShared.HelpUrlPrefix + "CwCameraPivot")]
@@ -64,21 +67,15 @@ namespace CW.Common
 			remainingDelta = newDelta;
 		}
 	}
-}
 
 #if UNITY_EDITOR
-namespace CW.Common
-{
-	using UnityEditor;
-	using TARGET = CwCameraPivot;
-
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
+	[CustomEditor(typeof(CwCameraPivot))]
 	public class CwCameraPivot_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
+			CwCameraPivot tgt; CwCameraPivot[] tgts; GetTargets(out tgt, out tgts);
 
 			Draw("listen", "Is this component currently listening for inputs?");
 			Draw("damping", "How quickly the rotation transitions from the current to the target value (-1 = instant).");
@@ -89,5 +86,6 @@ namespace CW.Common
 			Draw("yawControls", "The keys/fingers required to yaw left/right.");
 		}
 	}
-}
+
 #endif
+}

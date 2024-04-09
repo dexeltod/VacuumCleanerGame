@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace AYellowpaper
+namespace SerializeInterfaces.Runtime
 {
 	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 	public class RequireInterfaceAttribute : PropertyAttribute

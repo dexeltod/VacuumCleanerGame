@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Sources.Domain;
+using Sources.Domain.Stats;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Common.Factory;
 using Sources.InfrastructureInterfaces.Factory;
@@ -42,7 +42,6 @@ namespace Sources.Infrastructure.Factories.Player
 
 		public override IPlayerStatsService Create()
 		{
-
 			List<IUpgradeProgressData> progress = ShopProgress.GetAll();
 			int progressCount = progress.Count;
 

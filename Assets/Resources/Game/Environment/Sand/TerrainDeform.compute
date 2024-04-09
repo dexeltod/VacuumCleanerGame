@@ -1,0 +1,21 @@
+// Kernel для деформации террейна
+#pragma kernel DeformTerrain
+
+Texture2D<float> Heightmap;
+
+RWTexture2D<float> ResultHeightmap;
+
+[numthreads(8, 8, 1)]
+void DeformTerrain (uint3 id : SV_DispatchThreadID)
+{
+    // Получаем размер текстуры высот
+    uint width = Heightmap.GetDimensions().x;
+    uint height = Heightmap.GetDimensions().y;
+
+    // Получаем центральный пиксель карты высот
+    float centralHeight = Heightmap[id.xy];
+
+    // Пример деформации: вычитаем из центрального пикселя значение
+    float deformAmount = 0.1f;
+    ResultHeightmap[id.xy] = centralHeight - deformAmount;
+}

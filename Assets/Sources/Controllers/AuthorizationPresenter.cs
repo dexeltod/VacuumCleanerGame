@@ -1,7 +1,8 @@
 using System;
-using Sources.ApplicationServicesInterfaces;
 using Sources.Controllers.Common;
-using Sources.Presentation;
+using Sources.ControllersInterfaces;
+using Sources.InfrastructureInterfaces;
+using Sources.PresentationInterfaces;
 
 namespace Sources.Controllers
 {

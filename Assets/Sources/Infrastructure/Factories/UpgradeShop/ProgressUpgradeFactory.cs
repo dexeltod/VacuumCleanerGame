@@ -1,9 +1,9 @@
 using System;
+using Sources.Infrastructure.Configs.Scripts;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.Presentation.SceneEntity;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Upgrade;
-using Sources.Utils.Configs.Scripts;
 using VContainer;
 
 namespace Sources.Infrastructure.Factories.UpgradeShop

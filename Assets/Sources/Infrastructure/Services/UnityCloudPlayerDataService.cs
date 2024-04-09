@@ -1,9 +1,8 @@
 using Cysharp.Threading.Tasks;
-using Sources.ApplicationServicesInterfaces;
-using UnityEngine;
-using Random = System.Random;
+using Sources.DomainInterfaces;
+using Sources.InfrastructureInterfaces;
 
-namespace Sources.Infrastructure.StateMachine.GameStates
+namespace Sources.Infrastructure.Services
 {
 	public class UnityCloudPlayerDataService : ICloudPlayerDataService
 	{

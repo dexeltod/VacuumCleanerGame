@@ -1,11 +1,9 @@
 using System;
 using Cinemachine;
 using Sources.Infrastructure.Providers;
-using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Scene;
 using Sources.ServicesInterfaces;
 using UnityEngine;
-using VContainer;
 
 namespace Sources.Infrastructure.Factories.Scene
 {
@@ -16,6 +14,7 @@ namespace Sources.Infrastructure.Factories.Scene
 		private readonly ResourcePathNameConfigProvider _assetPathNameConfigProvider;
 
 		private GameObject _characterObject;
+
 		public CameraFactory(
 			IAssetFactory assetFactory,
 			GameObject playerFactory,

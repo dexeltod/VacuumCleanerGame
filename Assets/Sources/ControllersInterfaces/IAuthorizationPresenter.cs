@@ -1,6 +1,6 @@
 using Sources.ControllersInterfaces.Common;
 
-namespace Sources.Presentation
+namespace Sources.ControllersInterfaces
 {
 	public interface IAuthorizationPresenter : IPresenter
 	{

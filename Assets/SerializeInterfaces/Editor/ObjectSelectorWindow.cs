@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SerializeInterfaces.Editor.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
-namespace AYellowpaper.Editor
+namespace SerializeInterfaces.Editor
 {
     internal class ObjectSelectorWindow : EditorWindow
     {

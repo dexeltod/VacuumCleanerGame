@@ -5,7 +5,7 @@ using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
-using Sources.Utils.Configs.Scripts;
+using Sources.Utils;
 using Sources.Utils.ConstantNames;
 using VContainer;
 
@@ -53,7 +53,7 @@ namespace Sources.Infrastructure.Factories.Domain
 
 			LevelProgress levelProgressModel = new LevelProgressFactory(
 				firstLevel: 1,
-				GameConfig.DefaultMaxGlobalScore
+				GameConfig.DefaultMaxTotalResource
 			).Create();
 
 			return new GlobalProgress(

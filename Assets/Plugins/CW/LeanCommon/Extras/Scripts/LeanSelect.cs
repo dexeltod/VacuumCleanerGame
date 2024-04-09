@@ -1,13 +1,14 @@
+using System.Collections.Generic;
+using Plugins.CW.Shared.Common.Required.Scripts;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
-using System.Collections.Generic;
-using CW.Common;
 
-namespace Lean.Common
+namespace Plugins.CW.LeanCommon.Extras.Scripts
 {
 	/// <summary>This is the base class for all object selectors.</summary>
-	[HelpURL(LeanCommon.HelpUrlPrefix + "LeanSelect")]
-	[AddComponentMenu(LeanCommon.ComponentPathPrefix + "Select")]
+	[HelpURL(Required.Scripts.LeanCommon.HelpUrlPrefix + "LeanSelect")]
+	[AddComponentMenu(Required.Scripts.LeanCommon.ComponentPathPrefix + "Select")]
 	public class LeanSelect : MonoBehaviour
 	{
 		[System.Serializable] public class LeanSelectableEvent : UnityEvent<LeanSelectable> {}
@@ -94,7 +95,7 @@ namespace Lean.Common
 							case LimitType.Unlimited:
 							{
 							}
-							break;
+								break;
 
 							case LimitType.StopAtMax:
 							{
@@ -103,7 +104,7 @@ namespace Lean.Common
 									return false;
 								}
 							}
-							break;
+								break;
 
 							case LimitType.DeselectFirst:
 							{
@@ -112,7 +113,7 @@ namespace Lean.Common
 									TryDeselect(selectables[0]);
 								}
 							}
-							break;
+								break;
 						}
 					}
 
@@ -152,7 +153,7 @@ namespace Lean.Common
 						return true;
 					}
 				}
-				break;
+					break;
 
 				case ReselectType.Deselect:
 				{
@@ -165,7 +166,7 @@ namespace Lean.Common
 						Deselect(selectable);
 					}
 				}
-				break;
+					break;
 
 				case ReselectType.DeselectAndSelect:
 				{
@@ -174,12 +175,12 @@ namespace Lean.Common
 						Deselect(selectable);
 					}
 				}
-				return true;
+					return true;
 
 				case ReselectType.SelectAgain:
 				{
 				}
-				return true;
+					return true;
 			}
 
 			return false;
@@ -286,19 +287,13 @@ namespace Lean.Common
 			DeselectAll();
 		}
 	}
-}
 
 #if UNITY_EDITOR
-namespace Lean.Common.Editor
-{
-	using UnityEditor;
-	using TARGET = LeanSelect;
-
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
+	[CustomEditor(typeof(LeanSelect))]
 	public class LeanSelect_Editor : CwEditor
 	{
-		[System.NonSerialized] TARGET tgt; [System.NonSerialized] TARGET[] tgts;
+		[System.NonSerialized] LeanSelect tgt; [System.NonSerialized] LeanSelect[] tgts;
 
 		protected override void OnInspector()
 		{
@@ -309,7 +304,7 @@ namespace Lean.Common.Editor
 			if (Any(tgts, t => t.Limit != LeanSelect.LimitType.Unlimited))
 			{
 				BeginIndent();
-					Draw("maxSelectables", "The maximum number of selectables that can be selected at the same time.\n\n0 = Unlimited.");
+				Draw("maxSelectables", "The maximum number of selectables that can be selected at the same time.\n\n0 = Unlimited.");
 				EndIndent();
 			}
 			Draw("reselect", "If you select an already selected selectable, what should happen?");
@@ -320,7 +315,7 @@ namespace Lean.Common.Editor
 			var deselect = (LeanSelectable)UnityEditor.EditorGUILayout.ObjectField(new GUIContent("Deselect", "Drop a selectable object here to deselect it."), null, typeof(LeanSelectable), true);
 
 			BeginDisabled();
-				Draw("selectables", "This stores all objects selected by this component.");
+			Draw("selectables", "This stores all objects selected by this component.");
 			EndDisabled();
 
 			Separator();
@@ -358,5 +353,6 @@ namespace Lean.Common.Editor
 			}
 		}
 	}
-}
+
 #endif
+}

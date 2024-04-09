@@ -5,7 +5,7 @@ using Sources.Infrastructure.StateMachine.GameStates;
 using Sources.InfrastructureInterfaces.States;
 using VContainer;
 
-namespace Sources.Infrastructure.Factories
+namespace Sources.Infrastructure.Factories.StateMachine
 {
 	public class GameStatesRepositoryFactory : Factory<GameStateMachineRepository>
 	{

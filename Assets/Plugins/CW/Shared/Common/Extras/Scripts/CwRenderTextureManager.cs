@@ -1,8 +1,10 @@
 ﻿//#define USE_CUSTOM_TEMPORARY
+
+using Plugins.CW.Shared.Common.Required.Scripts;
+using UnityEditor;
 using UnityEngine;
 
-namespace CW.Common
-{
+namespace Plugins.CW.Shared.Common.Extras.Scripts {
 	[ExecuteInEditMode]
 	[DefaultExecutionOrder(1000)]
 	[HelpURL(CwShared.HelpUrlPrefix + "CwRenderTextureManager")]
@@ -214,24 +216,19 @@ namespace CW.Common
 		}
 #endif
 	}
-}
 
 #if UNITY_EDITOR
-namespace CW.Common
-{
-	using UnityEditor;
-	using TARGET = CwRenderTextureManager;
-
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
+	[CustomEditor(typeof(CwRenderTextureManager))]
 	public class CwRenderTextureManager_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
+			CwRenderTextureManager tgt; CwRenderTextureManager[] tgts; GetTargets(out tgt, out tgts);
 
 			Draw("lifetime", "This allows you to set how many frames an unused RenderTexture will remaining in memory before it's released.");
 		}
 	}
-}
+
 #endif
+}

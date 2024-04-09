@@ -1,13 +1,14 @@
+using Plugins.CW.Shared.Common.Required.Scripts;
+using UnityEditor;
 using UnityEngine;
-using CW.Common;
 
-namespace Lean.Common
+namespace Plugins.CW.LeanCommon.Extras.Scripts
 {
 	/// <summary>This component rotates the current GameObject based on the current Angle value.
 	/// NOTE: This component overrides and takes over the rotation of this GameObject, so you can no longer externally influence it.</summary>
 	[ExecuteInEditMode]
-	[HelpURL(LeanCommon.HelpUrlPrefix + "LeanRoll")]
-	[AddComponentMenu(LeanCommon.ComponentPathPrefix + "Roll")]
+	[HelpURL(Required.Scripts.LeanCommon.HelpUrlPrefix + "LeanRoll")]
+	[AddComponentMenu(Required.Scripts.LeanCommon.ComponentPathPrefix + "Roll")]
 	public class LeanRoll : MonoBehaviour
 	{
 		/// <summary>The current angle in degrees.</summary>
@@ -81,21 +82,15 @@ namespace Lean.Common
 			transform.rotation = Quaternion.Euler(0.0f, 0.0f, -currentAngle);
 		}
 	}
-}
 
 #if UNITY_EDITOR
-namespace Lean.Common.Editor
-{
-	using UnityEditor;
-	using TARGET = LeanRoll;
-
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
+	[CustomEditor(typeof(LeanRoll))]
 	public class LeanRoll_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
+			LeanRoll tgt; LeanRoll[] tgts; GetTargets(out tgt, out tgts);
 
 			Draw("angle", "The current angle in degrees.");
 			Draw("clamp", "Should the Angle value be clamped?");
@@ -103,8 +98,8 @@ namespace Lean.Common.Editor
 			if (Any(tgts, t => t.Clamp == true))
 			{
 				BeginIndent();
-					Draw("clampMin", "The minimum Angle value.", "Min");
-					Draw("clampMax", "The maximum Angle value.", "Max");
+				Draw("clampMin", "The minimum Angle value.", "Min");
+				Draw("clampMax", "The maximum Angle value.", "Max");
 				EndIndent();
 
 				Separator();
@@ -113,5 +108,6 @@ namespace Lean.Common.Editor
 			Draw("damping", "If you want this component to change smoothly over time, then this allows you to control how quick the changes reach their target value.\n\n-1 = Instantly change.\n\n1 = Slowly change.\n\n10 = Quickly change.");
 		}
 	}
-}
+
 #endif
+}

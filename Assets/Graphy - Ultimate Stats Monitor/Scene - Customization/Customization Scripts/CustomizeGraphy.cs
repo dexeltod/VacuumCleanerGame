@@ -12,11 +12,13 @@
  * -------------------------------------*/
 
 using System;
+using System.Collections.Generic;
+using Graphy___Ultimate_Stats_Monitor.Runtime;
+using Graphy___Ultimate_Stats_Monitor.Scene___Customization.Color_Picker;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
-namespace Tayx.Graphy.CustomizationScene
+namespace Graphy___Ultimate_Stats_Monitor.Scene___Customization.Customization_Scripts
 {
     public class CustomizeGraphy : MonoBehaviour
     {

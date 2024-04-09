@@ -4,8 +4,8 @@ namespace Sources.Services.Localization
 {
 	public interface ITranslatorService
 	{
-		string Localize(string phrase);
-		void Localize(string[] phrases);
-		List<string> Localize(List<string> phrases);
+		string GetLocalize(string phrase);
+		void GetLocalize(string[] phrases);
+		List<string> GetLocalize(List<string> phrases);
 	}
 }

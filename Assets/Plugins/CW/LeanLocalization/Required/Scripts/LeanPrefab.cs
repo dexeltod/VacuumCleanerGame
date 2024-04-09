@@ -1,23 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Collections.Generic;
+using UnityEngine;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
 	/// <summary>This class stores a reference to an object (e.g. folder) in your project that contains LeanSource components so they can be registered.</summary>
-	[System.Serializable]
-	public class LeanPrefab
+	[System.Serializable] public class LeanPrefab
 	{
 		public Object Root;
 
-		[SerializeField]
-		private List<LeanSource> sources;
+		[SerializeField] private List<LeanSource> sources;
 
-		[System.NonSerialized]
-		private int buildingCount;
+		[System.NonSerialized] private int buildingCount;
 
-		[System.NonSerialized]
-		private bool buildingModified;
+		[System.NonSerialized] private bool buildingModified;
 
 		private static List<LeanSource> tempSources = new List<LeanSource>();
 
@@ -45,7 +41,7 @@ namespace Lean.Localization
 			{
 				if (Root is LeanSource)
 				{
-					buildingCount    = 0;
+					buildingCount = 0;
 					buildingModified = false;
 
 					AddSource((LeanSource)Root);
@@ -54,7 +50,7 @@ namespace Lean.Localization
 				}
 				else if (Root is GameObject)
 				{
-					buildingCount    = 0;
+					buildingCount = 0;
 					buildingModified = false;
 
 					FindFromGameObject(((GameObject)Root).transform);
@@ -68,7 +64,7 @@ namespace Lean.Localization
 
 					if (string.IsNullOrEmpty(rootPath) == false)
 					{
-						buildingCount    = 0;
+						buildingCount = 0;
 						buildingModified = false;
 
 						var basePath = Application.dataPath;
@@ -94,7 +90,8 @@ namespace Lean.Localization
 		{
 			for (var i = sources.Count - 1; i >= buildingCount; i--)
 			{
-				sources.RemoveAt(i); buildingModified = true;
+				sources.RemoveAt(i);
+				buildingModified = true;
 			}
 
 			return buildingModified;

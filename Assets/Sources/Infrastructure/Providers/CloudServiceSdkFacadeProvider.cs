@@ -1,7 +1,7 @@
-using Sources.ApplicationServicesInterfaces;
 using Sources.Infrastructure.Common.Provider;
+using Sources.InfrastructureInterfaces;
 
-namespace Sources.Application.Bootstrapp
+namespace Sources.Infrastructure.Providers
 {
 	public class CloudServiceSdkFacadeProvider : Provider<ICloudPlayerDataService> { }
 }

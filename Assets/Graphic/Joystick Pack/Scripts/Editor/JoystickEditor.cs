@@ -1,10 +1,10 @@
-﻿using Joystick_Pack.Scripts.Base;
+﻿using Graphic.Joystick_Pack.Scripts.Base;
 using UnityEditor;
 using UnityEngine;
 
 #if UNITY_EDITOR
 
-namespace Joystick_Pack.Scripts.Editor
+namespace Graphic.Joystick_Pack.Scripts.Editor
 {
     [CustomEditor(typeof(Joystick), true)]
     public class JoystickEditor : UnityEditor.Editor

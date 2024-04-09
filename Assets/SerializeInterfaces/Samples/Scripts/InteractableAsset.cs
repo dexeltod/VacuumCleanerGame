@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace AYellowpaper.Samples
+namespace SerializeInterfaces.Samples.Scripts
 {
 	public class InteractableAsset : ScriptableObject, IInteractable
 	{

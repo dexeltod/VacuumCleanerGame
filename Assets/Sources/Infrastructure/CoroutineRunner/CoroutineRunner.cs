@@ -3,7 +3,7 @@ using System.Collections;
 using Sources.Utils;
 using UnityEngine;
 
-namespace Sources.Infrastructure.Factories.CoroutineRunner
+namespace Sources.Infrastructure.CoroutineRunner
 {
 	public class CoroutineRunner : MonoBehaviour, ICoroutineRunner
 	{

@@ -1,6 +1,6 @@
 using UnityEngine.EventSystems;
 
-namespace Agava.YandexGames.Samples
+namespace Samples.Yandex_Games._16._0._0.Playtesting_Sample
 {
     /// <summary>
     /// Fixes unresponsive UI controls after alt-tabbing on mobile Google Chrome.

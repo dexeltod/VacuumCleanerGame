@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using SerializeInterfaces.Runtime;
 using UnityEngine;
 
-namespace AYellowpaper.Samples
+namespace SerializeInterfaces.Samples.Scripts
 {
 	public class InteractableTest : MonoBehaviour
 	{
@@ -23,9 +24,8 @@ namespace AYellowpaper.Samples
 
 		[RequireInterface(typeof(IInteractable))]
 		public ScriptableObject AttributeRestrictedToScriptableObject;
+
 		[RequireInterface(typeof(IInteractable))]
 		public MonoBehaviour AttributeRestrictedToMonoBehaviour;
 	}
 }
-
-

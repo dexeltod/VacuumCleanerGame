@@ -1,13 +1,14 @@
+using Plugins.CW.Shared.Common.Required.Scripts;
+using UnityEditor;
 using UnityEngine;
-using CW.Common;
 
-namespace Lean.Common
+namespace Plugins.CW.LeanCommon.Extras.Scripts
 {
 	/// <summary>This component allows you to change the color of the Renderer (e.g. MeshRenderer) attached to the current GameObject when selected.</summary>
 	[ExecuteInEditMode]
 	[RequireComponent(typeof(Renderer))]
-	[HelpURL(LeanCommon.HelpUrlPrefix + "LeanSelectableRendererColor")]
-	[AddComponentMenu(LeanCommon.ComponentPathPrefix + "Selectable Renderer Color")]
+	[HelpURL(Required.Scripts.LeanCommon.HelpUrlPrefix + "LeanSelectableRendererColor")]
+	[AddComponentMenu(Required.Scripts.LeanCommon.ComponentPathPrefix + "Selectable Renderer Color")]
 	public class LeanSelectableRendererColor : LeanSelectableBehaviour
 	{
 		/// <summary>The default color given to the SpriteRenderer.</summary>
@@ -57,21 +58,15 @@ namespace Lean.Common
 			cachedRenderer.SetPropertyBlock(properties);
 		}
 	}
-}
 
 #if UNITY_EDITOR
-namespace Lean.Common.Editor
-{
-	using UnityEditor;
-	using TARGET = LeanSelectableRendererColor;
-
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
+	[CustomEditor(typeof(LeanSelectableRendererColor))]
 	public class LeanSelectableRendererColor_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
+			LeanSelectableRendererColor tgt; LeanSelectableRendererColor[] tgts; GetTargets(out tgt, out tgts);
 
 			var updateColor = false;
 
@@ -84,5 +79,6 @@ namespace Lean.Common.Editor
 			}
 		}
 	}
-}
+
 #endif
+}

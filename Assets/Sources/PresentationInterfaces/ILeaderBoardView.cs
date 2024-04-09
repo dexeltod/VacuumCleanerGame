@@ -1,7 +1,7 @@
 using Sources.ControllersInterfaces;
 using Sources.PresentationInterfaces.Common;
 
-namespace Sources.Presentation.UI.MainMenu.LeaderBoard
+namespace Sources.PresentationInterfaces
 {
 	public interface ILeaderBoardView : IPresentableView<IMainMenuPresenter> { }
 }

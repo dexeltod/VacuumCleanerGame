@@ -1,18 +1,14 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
 	/// <summary>This attribute allows you to select a translation from all the localizations in the scene.</summary>
 	public class LeanTranslationNameAttribute : PropertyAttribute
 	{
 	}
-}
 
 #if UNITY_EDITOR
-namespace Lean.Localization
-{
-	using UnityEditor;
-
 	[CustomPropertyDrawer(typeof(LeanTranslationNameAttribute))]
 	public class LeanTranslationNameDrawer : PropertyDrawer
 	{
@@ -74,5 +70,6 @@ namespace Lean.Localization
 			}
 		}
 	}
-}
+
 #endif
+}

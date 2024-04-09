@@ -1,7 +1,7 @@
 using System;
 using Sources.DomainInterfaces;
 
-namespace Sources.Domain
+namespace Sources.Domain.Stats
 {
 	public class PlayerStat : IPlayerStatChangeable
 	{

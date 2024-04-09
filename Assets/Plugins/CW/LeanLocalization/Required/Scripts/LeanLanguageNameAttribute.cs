@@ -1,18 +1,14 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
 	/// <summary>This attribute allows you to modify a normal string field into one that has a dropdown list that allows you to pick a language.</summary>
 	public class LeanLanguageNameAttribute : PropertyAttribute
 	{
 	}
-}
 
 #if UNITY_EDITOR
-namespace Lean.Localization
-{
-	using UnityEditor;
-
 	[CustomPropertyDrawer(typeof(LeanLanguageNameAttribute))]
 	public class LeanLanguageNameDrawer : PropertyDrawer
 	{
@@ -41,5 +37,6 @@ namespace Lean.Localization
 			}
 		}
 	}
-}
+
 #endif
+}

@@ -1,6 +1,7 @@
-using Sources.ApplicationServicesInterfaces;
+using Sources.Infrastructure.Services;
+using Sources.InfrastructureInterfaces;
 
-namespace Sources.Infrastructure.StateMachine.GameStates
+namespace Sources.Infrastructure.Factories.Domain
 {
 	public class CloudPlayerDataServiceFactory
 	{

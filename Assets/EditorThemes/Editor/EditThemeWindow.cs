@@ -1,11 +1,11 @@
-using UnityEngine;
-using UnityEditor;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
 
 //to do TextColor
 //EditorStyles.label.normal.textColor 
 
-namespace ThemesPlugin 
+namespace EditorThemes.Editor 
 { 
 
 public class EditThemeWindow : EditorWindow

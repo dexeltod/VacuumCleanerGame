@@ -4,6 +4,6 @@ namespace Sources.ControllersInterfaces
 {
 	public interface IMainMenuPresenter : IPresenter
 	{
-		void ShowLeaderBoard();
+	
 	}
 }

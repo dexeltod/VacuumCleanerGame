@@ -1,4 +1,4 @@
-﻿namespace CW.Common
+﻿namespace Plugins.CW.Shared.Common.Required.Scripts
 {
 	/// <summary>This class contains some useful methods used by this asset.</summary>
 	internal static class CwShared

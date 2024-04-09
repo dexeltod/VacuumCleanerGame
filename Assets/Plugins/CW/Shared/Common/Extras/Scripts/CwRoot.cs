@@ -1,7 +1,9 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Plugins.CW.Shared.Common.Required.Scripts;
+using UnityEditor;
+using UnityEngine;
 
-namespace CW.Common
+namespace Plugins.CW.Shared.Common.Extras.Scripts
 {
 	/// <summary>If this component is added to your scene, then any GmaeObjects that get spawned at runtime from CW code will be placed as children of this, rather than being placed in the scene root.</summary>
 	[ExecuteInEditMode]
@@ -58,24 +60,19 @@ namespace CW.Common
 			instances.Remove(this);
 		}
 	}
-}
 
 #if UNITY_EDITOR
-namespace CW.Common
-{
-	using UnityEditor;
-	using TARGET = CwRoot;
-
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
+	[CustomEditor(typeof(CwRoot))]
 	public class CwRoot_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
+			CwRoot tgt; CwRoot[] tgts; GetTargets(out tgt, out tgts);
 
 			Info("If this component is added to your scene, then any GmaeObjects that get spawned at runtime from CW code will be placed as children of this, rather than being placed in the scene root.");
 		}
 	}
-}
+
 #endif
+}

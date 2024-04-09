@@ -14,7 +14,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Tayx.Graphy.CustomizationScene
+namespace Graphy___Ultimate_Stats_Monitor.Scene___Customization.Customization_Scripts
 {
     [RequireComponent(typeof(Text))]
 	public class UpdateTextWithSliderValue : MonoBehaviour

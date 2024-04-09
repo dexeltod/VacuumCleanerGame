@@ -1,12 +1,3 @@
-using System;
-using Agava.YandexGames;
-using Cysharp.Threading.Tasks;
-using Sources.ApplicationServicesInterfaces;
-using Sources.DomainInterfaces;
-using Sources.Presentation;
-using UnityEngine;
-using VContainer;
-
 namespace Sources.Infrastructure.Yandex
 {
 #if YANDEX_CODE

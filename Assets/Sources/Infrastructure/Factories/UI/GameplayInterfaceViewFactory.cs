@@ -11,12 +11,14 @@ namespace Sources.Infrastructure.Factories.UI
 {
 	public class GameplayInterfaceViewFactory
 	{
-		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
+		private const bool IsGlobalScoreViewed = false;
+
 		private readonly IGameMenuPresenterProvider _gameMenuPresenterProvider;
+		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
+		private readonly GameplayInterfaceView _gameplayInterfaceView;
+		private readonly IResourcesModel _resourcesModel;
 		private readonly IGameStateChangerProvider _stateChangerProvider;
 		private readonly ITranslatorService _translatorService;
-		private readonly IResourcesModel _resourcesModel;
-		private readonly GameplayInterfaceView _gameplayInterfaceView;
 
 		public GameplayInterfaceViewFactory(
 			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
@@ -35,7 +37,9 @@ namespace Sources.Infrastructure.Factories.UI
 				= stateChangerProvider ?? throw new ArgumentNullException(nameof(stateChangerProvider));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 			_resourcesModel = resourcesModel ?? throw new ArgumentNullException(nameof(resourcesModel));
-			_gameplayInterfaceView = gameplayInterfaceView ? gameplayInterfaceView : throw new ArgumentNullException(nameof(gameplayInterfaceView));
+			_gameplayInterfaceView = gameplayInterfaceView
+				? gameplayInterfaceView
+				: throw new ArgumentNullException(nameof(gameplayInterfaceView));
 		}
 
 		public void Create()
@@ -50,22 +54,22 @@ namespace Sources.Infrastructure.Factories.UI
 				)
 			);
 
-
 			bool isHalfScoreReached
-				= _resourcesModel.GlobalScore.Count > _resourcesModel.GlobalScore.Count / 2;
+				= _resourcesModel.CurrentTotalResources > _resourcesModel.CurrentTotalResources / 2;
 
 			_gameplayInterfaceView.Construct(
 				_gameplayInterfacePresenterProvider.Implementation,
 				_resourcesModel.CurrentCashScore,
-				_resourcesModel.CurrentGlobalScore,
+				_resourcesModel.CurrentTotalResources,
 				_resourcesModel.MaxCashScore,
 				_resourcesModel.MaxGlobalScore,
 				_resourcesModel.SoftCurrency.Count,
-				isHalfScoreReached
+				isHalfScoreReached,
+				IsGlobalScoreViewed
 			);
 
 			_gameplayInterfaceView.Phrases.Phrases
-				= _translatorService.Localize(_gameplayInterfaceView.Phrases.Phrases);
+				= _translatorService.GetLocalize(_gameplayInterfaceView.Phrases.Phrases);
 		}
 	}
 }

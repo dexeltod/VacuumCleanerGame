@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Sources.Domain
+namespace Sources.Domain.Stats
 {
 	[Serializable] public class Stats
 	{

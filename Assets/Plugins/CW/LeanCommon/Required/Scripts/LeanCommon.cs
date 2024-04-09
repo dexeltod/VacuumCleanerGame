@@ -1,7 +1,8 @@
 ﻿using System.Collections;
+using UnityEditor;
 using UnityEngine;
 
-namespace Lean.Common
+namespace Plugins.CW.LeanCommon.Required.Scripts
 {
 	/// <summary>This class contains some useful methods used by this asset.</summary>
 	public static partial class LeanCommon
@@ -34,13 +35,8 @@ namespace Lean.Common
 			return a0 * y1 + a1 * m0 + a2 * m1 + a3 * y2;
 		}
 	}
-}
 
 #if UNITY_EDITOR
-namespace Lean.Common
-{
-	using UnityEditor;
-
 	public static partial class LeanCommon
 	{
 		/// <summary>This method gives you the actual object behind a SerializedProperty given to you by a property drawer.</summary>
@@ -81,5 +77,6 @@ namespace Lean.Common
 			return (T)target;
 		}
 	}
-}
+
 #endif
+}

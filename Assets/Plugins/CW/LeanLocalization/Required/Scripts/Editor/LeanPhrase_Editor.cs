@@ -1,15 +1,14 @@
-using UnityEngine;
 using System.Collections.Generic;
-using CW.Common;
+using Plugins.CW.Shared.Common.Required.Scripts;
+using UnityEditor;
+using UnityEngine;
 
 #if UNITY_EDITOR
-namespace Lean.Localization.Editor
+namespace Plugins.CW.LeanLocalization.Required.Scripts.Editor
 {
-	using UnityEditor;
 	using TARGET = LeanPhrase;
 
-	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
+	[CanEditMultipleObjects] [CustomEditor(typeof(TARGET))]
 	public class LeanPhrase_Editor : CwEditor
 	{
 		private static List<string> languageNames = new List<string>();
@@ -18,7 +17,9 @@ namespace Lean.Localization.Editor
 
 		protected override void OnInspector()
 		{
-			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
+			TARGET tgt;
+			TARGET[] tgts;
+			GetTargets(out tgt, out tgts);
 
 			entries.Clear();
 			entries.AddRange(tgt.Entries);
@@ -26,7 +27,10 @@ namespace Lean.Localization.Editor
 			languageNames.Clear();
 			languageNames.AddRange(LeanLocalization.CurrentLanguages.Keys);
 
-			tgt.Data = (LeanPhrase.DataType)GUILayout.Toolbar((int)tgt.Data, new string[] { "Text", "Object", "Sprite" });
+			tgt.Data = (LeanPhrase.DataType)GUILayout.Toolbar(
+				(int)tgt.Data,
+				new string[] { "Text", "Object", "Sprite" }
+			);
 
 			Separator();
 
@@ -43,15 +47,16 @@ namespace Lean.Localization.Editor
 				else
 				{
 					EditorGUILayout.BeginHorizontal();
-						EditorGUILayout.LabelField(languageName, EditorStyles.boldLabel);
-						if (GUILayout.Button("Add", EditorStyles.miniButton, GUILayout.Width(45.0f)) == true)
-						{
-							Undo.RecordObject(tgt, "Add Translation");
+					EditorGUILayout.LabelField(languageName, EditorStyles.boldLabel);
+					if (GUILayout.Button("Add", EditorStyles.miniButton, GUILayout.Width(45.0f)) == true)
+					{
+						Undo.RecordObject(tgt, "Add Translation");
 
-							tgt.AddEntry(languageName);
+						tgt.AddEntry(languageName);
 
-							DirtyAndUpdate();
-						}
+						DirtyAndUpdate();
+					}
+
 					EditorGUILayout.EndHorizontal();
 				}
 
@@ -70,95 +75,115 @@ namespace Lean.Localization.Editor
 		private void DrawEntry(TARGET tgt, LeanPhrase.Entry entry, bool unexpected)
 		{
 			EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.LabelField(entry.Language, EditorStyles.boldLabel);
-				if (GUILayout.Button("Modify", EditorStyles.miniButton, GUILayout.Width(65.0f)) == true)
+			EditorGUILayout.LabelField(entry.Language, EditorStyles.boldLabel);
+			if (GUILayout.Button("Modify", EditorStyles.miniButton, GUILayout.Width(65.0f)) == true)
+			{
+				var menu = new GenericMenu();
+
+				foreach (var otherEntry in tgt.Entries)
 				{
-					var menu = new GenericMenu();
+					var title = new GUIContent("Auto Translate/From " + otherEntry.Language);
 
-					foreach (var otherEntry in tgt.Entries)
+					if (entry != otherEntry && string.IsNullOrEmpty(otherEntry.Text) == false)
 					{
-						var title = new GUIContent("Auto Translate/From " + otherEntry.Language);
+						var textInput = otherEntry.Text;
+						var languageInput = default(LeanLanguage);
+						var languageOutput = default(LeanLanguage);
 
-						if (entry != otherEntry && string.IsNullOrEmpty(otherEntry.Text) == false)
+						if (LeanLocalization.CurrentLanguages.TryGetValue(otherEntry.Language, out languageInput) ==
+							true && LeanLocalization.CurrentLanguages.TryGetValue(entry.Language, out languageOutput) ==
+							true)
 						{
-							var textInput      = otherEntry.Text;
-							var languageInput  = default(LeanLanguage);
-							var languageOutput = default(LeanLanguage);
+							var languageCodeInput = languageInput.TranslationCode;
+							var languageCodeOutput = languageOutput.TranslationCode;
 
-							if (LeanLocalization.CurrentLanguages.TryGetValue(otherEntry.Language, out languageInput) == true && LeanLocalization.CurrentLanguages.TryGetValue(entry.Language, out languageOutput) == true)
-							{
-								var languageCodeInput  = languageInput.TranslationCode;
-								var languageCodeOutput = languageOutput.TranslationCode;
+							menu.AddItem(
+								title,
+								false,
+								() =>
+								{
+									var textOutput = default(string);
 
-								menu.AddItem(title, false, () =>
+									if (TryAutoTranslate(
+											languageCodeInput,
+											languageCodeOutput,
+											textInput,
+											ref textOutput
+										) == true)
 									{
-										var textOutput = default(string);
+										Undo.RecordObject(tgt, "Auto Translate");
 
-										if (TryAutoTranslate(languageCodeInput, languageCodeOutput, textInput, ref textOutput) == true)
-										{
-											Undo.RecordObject(tgt, "Auto Translate");
+										entry.Text = textOutput;
 
-											entry.Text = textOutput;
-
-											EditorUtility.SetDirty(tgt);
-										}
-										else
-										{
-											Debug.LogError("Failed to auto translate text for some reason.");
-										}
-									});
-							}
-							else
-							{
-								menu.AddDisabledItem(title, false);
-							}
+										EditorUtility.SetDirty(tgt);
+									}
+									else
+									{
+										Debug.LogError("Failed to auto translate text for some reason.");
+									}
+								}
+							);
 						}
 						else
 						{
 							menu.AddDisabledItem(title, false);
 						}
 					}
-
-					menu.AddSeparator("");
-
-					menu.AddItem(new GUIContent("Remove"), false, () =>
-						{
-							Undo.RecordObject(tgt, "Remove Translation");
-
-							tgt.RemoveTranslation(entry.Language);
-
-							DirtyAndUpdate();
-						});
-
-					menu.ShowAsContext();
+					else
+					{
+						menu.AddDisabledItem(title, false);
+					}
 				}
+
+				menu.AddSeparator("");
+
+				menu.AddItem(
+					new GUIContent("Remove"),
+					false,
+					() =>
+					{
+						Undo.RecordObject(tgt, "Remove Translation");
+
+						tgt.RemoveTranslation(entry.Language);
+
+						DirtyAndUpdate();
+					}
+				);
+
+				menu.ShowAsContext();
+			}
+
 			EditorGUILayout.EndHorizontal();
 
 			if (unexpected == true)
 			{
-				EditorGUILayout.HelpBox("Your LeanLocalization component doesn't define the " + entry.Language + " language.", MessageType.Warning);
+				EditorGUILayout.HelpBox(
+					"Your LeanLocalization component doesn't define the " + entry.Language + " language.",
+					MessageType.Warning
+				);
 			}
 
 			Undo.RecordObject(tgt, "Modified Translation");
 
 			EditorGUI.BeginChangeCheck();
-			
+
 			switch (tgt.Data)
 			{
 				case LeanPhrase.DataType.Text:
 					entry.Text = EditorGUILayout.TextArea(entry.Text ?? "", GUILayout.MinHeight(40.0f));
-				break;
+					break;
 				case LeanPhrase.DataType.Object:
 					entry.Object = EditorGUILayout.ObjectField(entry.Object, typeof(Object), true);
-				break;
+					break;
 				case LeanPhrase.DataType.Sprite:
 					entry.Object = EditorGUILayout.ObjectField(entry.Object, typeof(Sprite), true);
-				break;
+					break;
 			}
 
 			if (EditorGUI.EndChangeCheck() == true)
 			{
-				DirtyAndUpdate(); LeanLocalization.UpdateTranslations();
+				DirtyAndUpdate();
+				LeanLocalization.UpdateTranslations();
 			}
 
 			Separator();
@@ -170,13 +195,26 @@ namespace Lean.Localization.Editor
 			CwHelper.CreatePrefabAsset("New Phrase").AddComponent<LeanPhrase>();
 		}
 
-		private static bool TryAutoTranslate(string languageCodeInput, string languageCodeOutput, string wordInput, ref string wordOutput)
+		private static bool TryAutoTranslate(
+			string languageCodeInput,
+			string languageCodeOutput,
+			string wordInput,
+			ref string wordOutput
+		)
 		{
 			try
 			{
-				var url       = string.Format("https://translate.googleapis.com/translate_a/single?client=gtx&sl={0}&tl={1}&dt=t&q={2}", languageCodeInput, languageCodeOutput, System.Web.HttpUtility.UrlEncode(wordInput));
-				var webClient = new System.Net.WebClient { Encoding = System.Text.Encoding.UTF8 };
-				var result    = webClient.DownloadString(url);
+				var url = string.Format(
+					"https://translate.googleapis.com/translate_a/single?client=gtx&sl={0}&tl={1}&dt=t&q={2}",
+					languageCodeInput,
+					languageCodeOutput,
+					System.Web.HttpUtility.UrlEncode(wordInput)
+				);
+				var webClient = new System.Net.WebClient
+				{
+					Encoding = System.Text.Encoding.UTF8
+				};
+				var result = webClient.DownloadString(url);
 
 				wordOutput = result.Substring(4, result.IndexOf("\",\"", 4, System.StringComparison.Ordinal) - 4);
 

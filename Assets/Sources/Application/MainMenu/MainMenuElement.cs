@@ -93,7 +93,7 @@ namespace Sources.Application.MainMenu
 		private void OnPlay()
 		{
 			_visualElementSwitcher.Disable(ThisElement);
-			// LevelConfig levelConfig = _levelConfigGetter.Get(_)
+			// LevelConfig levelConfig = _levelConfigGetter.GetOrDefault(_)
 
 			// _gameStateMachine.Enter<BuildSceneState, LevelConfig>(levelConfig);
 

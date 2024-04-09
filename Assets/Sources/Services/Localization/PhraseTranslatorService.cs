@@ -12,7 +12,7 @@ namespace Sources.Services.Localization
 		public PhraseTranslatorService(ILocalizationService localizationService) =>
 			_localizationService = localizationService;
 
-		public string Localize(string phrase)
+		public string GetLocalize(string phrase)
 		{
 			if (string.IsNullOrWhiteSpace(phrase))
 				throw new ArgumentException("Value cannot be null or whitespace.", nameof(phrase));
@@ -20,10 +20,10 @@ namespace Sources.Services.Localization
 			return _localizationService.GetTranslationText(phrase);
 		}
 
-		public void Localize(string[] phrases)
+		public void GetLocalize(string[] phrases)
 		{
 			string[] result = new string[phrases.Length];
-			
+
 			for (int i = 0; i < phrases.Length; i++)
 			{
 				if (string.IsNullOrWhiteSpace(phrases[i]))
@@ -33,7 +33,7 @@ namespace Sources.Services.Localization
 			}
 		}
 
-		public List<string> Localize(List<string> phrases)
+		public List<string> GetLocalize(List<string> phrases)
 		{
 			for (int i = 0; i < phrases.Count; i++)
 			{

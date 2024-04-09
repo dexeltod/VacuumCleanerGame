@@ -1,11 +1,9 @@
 #define AUTO_SWITCH_SHADERS_TO_CURRENT_PIPELINE
 using System.Collections.Generic;
-using UnityEngine;
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
+using UnityEngine;
 
-namespace CW.Common
+namespace Plugins.CW.Shared.Common.Required.Scripts
 {
 	/// <summary>This asset stores multiple variants of a shader for different rendering pipelines, and allows you to switch between them in the editor.</summary>
 	//[CreateAssetMenu(fileName = "NewShaderBundle", menuName = "MakeShaderBundle", order = 1)]

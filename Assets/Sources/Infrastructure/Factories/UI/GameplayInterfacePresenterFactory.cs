@@ -5,27 +5,25 @@ using Agava.YandexGames;
 using System;
 using Sources.Controllers;
 using Sources.ControllersInterfaces;
-using Sources.Domain.Progress.ResourcesData;
 using Sources.DomainInterfaces;
-using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Common.Factory.Decorators;
-using Sources.Infrastructure.Providers;
+using Sources.Infrastructure.Configs.Scripts;
 using Sources.Infrastructure.Services.Decorators;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.Presentation;
 using Sources.Presentation.UI;
-using Sources.PresentationInterfaces;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
-using Sources.Utils.Configs.Scripts;
 using VContainer;
 
 namespace Sources.Infrastructure.Factories.UI
 {
 	public class GameplayInterfacePresenterFactory : PresenterFactory<GameplayInterfacePresenter>
 	{
+		private const float Time = 10f;
+
 		private readonly string _uiResourcesUI = ResourcesAssetPath.Scene.UIResources.UI;
 		private readonly IAssetFactory _assetFactory;
 		private readonly GameplayInterfaceViewFactory _gameplayInterfaceViewFactory;
@@ -94,9 +92,12 @@ namespace Sources.Infrastructure.Factories.UI
 				new SpeedDecorator(
 					_playerStatsServiceProvider.Implementation.Get("Speed") as IPlayerStatChangeable,
 					_coroutineRunnerProvider,
-					_advertisement
+					_advertisement,
+					Time
 				),
-				CashScore
+				CashScore,
+				_coroutineRunnerProvider,
+				Time
 			);
 
 			var gameMenuView = gameplayInterfaceView.GetComponent<GameMenuView>();

@@ -4,7 +4,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace AYellowpaper.Editor
+namespace SerializeInterfaces.Editor
 {
     internal static class InterfaceReferenceUtility
     {

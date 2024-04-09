@@ -3,6 +3,12 @@ using VContainer.Unity;
 
 namespace Sources.Application.Bootstrapp
 {
+	//██████╗░░█████╗░░█████╗░████████╗
+	//██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝
+	//██████╦╝██║░░██║██║░░██║░░░██║░░░
+	//██╔══██╗██║░░██║██║░░██║░░░██║░░░
+	//██████╦╝╚█████╔╝╚█████╔╝░░░██║░░░
+	//╚═════╝░░╚════╝░░╚════╝░░░░╚═╝░░░
 	public class Boot : LifetimeScope
 	{
 		protected override void Configure(IContainerBuilder builder)

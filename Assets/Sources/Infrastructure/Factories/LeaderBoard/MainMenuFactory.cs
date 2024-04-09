@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
+using Sources.Infrastructure.Configs.Scripts;
 using Sources.Presentation.UI;
 using Sources.Presentation.UI.MainMenu.LeaderBoard;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
-using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Factories.LeaderBoard
@@ -43,7 +43,7 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 
 			_mainMenuView = gameObject.GetComponent<MainMenuView>();
 
-			_mainMenuView.Translator.Phrases = _translatorService.Localize(_mainMenuView.Translator.Phrases);
+			_mainMenuView.Translator.Phrases = _translatorService.GetLocalize(_mainMenuView.Translator.Phrases);
 
 			leaderBoardFactory.Create(await _leaderBoardService.GetLeaders(LeaderBoardPlayersCount));
 

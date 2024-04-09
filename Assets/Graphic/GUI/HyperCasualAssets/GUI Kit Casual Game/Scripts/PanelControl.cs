@@ -3,8 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-namespace LayerLab
+namespace Graphic.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Scripts
 {
     public class PanelControl : MonoBehaviour
     {

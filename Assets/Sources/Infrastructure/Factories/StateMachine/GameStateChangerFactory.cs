@@ -3,11 +3,10 @@ using Sources.Infrastructure.Common.Factory;
 using Sources.Infrastructure.Services;
 using Sources.Infrastructure.StateMachine.Common;
 using Sources.InfrastructureInterfaces.Factory;
-using Sources.InfrastructureInterfaces.Repository;
 using Sources.InfrastructureInterfaces.Services;
 using VContainer;
 
-namespace Sources.Infrastructure.Factories
+namespace Sources.Infrastructure.Factories.StateMachine
 {
 	public class GameStateChangerFactory : Factory<IGameStateChanger>, IGameStateChangerFactory
 	{

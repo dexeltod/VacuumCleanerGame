@@ -1,13 +1,14 @@
+using System.Collections.Generic;
+using Plugins.CW.Shared.Common.Required.Scripts;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
-using System.Collections.Generic;
-using CW.Common;
 
-namespace Lean.Common
+namespace Plugins.CW.LeanCommon.Extras.Scripts
 {
 	/// <summary>This component allows you make the current GameObject selectable.</summary>
-	[HelpURL(LeanCommon.HelpUrlPrefix + "LeanSelectable")]
-	[AddComponentMenu(LeanCommon.ComponentPathPrefix + "Selectable")]
+	[HelpURL(Required.Scripts.LeanCommon.HelpUrlPrefix + "LeanSelectable")]
+	[AddComponentMenu(Required.Scripts.LeanCommon.ComponentPathPrefix + "Selectable")]
 	public class LeanSelectable : MonoBehaviour
 	{
 		[System.Serializable] public class LeanSelectEvent : UnityEvent<LeanSelect> {}
@@ -176,19 +177,13 @@ namespace Lean.Common
 			Deselect();
 		}
 	}
-}
 
 #if UNITY_EDITOR
-namespace Lean.Common.Editor
-{
-	using UnityEditor;
-	using TARGET = LeanSelectable;
-
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
+	[CustomEditor(typeof(LeanSelectable))]
 	public class LeanSelectable_Editor : CwEditor
 	{
-		[System.NonSerialized] TARGET tgt; [System.NonSerialized] TARGET[] tgts;
+		[System.NonSerialized] LeanSelectable tgt; [System.NonSerialized] LeanSelectable[] tgts;
 
 		protected override void OnInspector()
 		{
@@ -206,22 +201,22 @@ namespace Lean.Common.Editor
 		private void DrawSelected()
 		{
 			BeginDisabled();
-				EditorGUILayout.Toggle(new GUIContent("Is Selected", "This will tell you if this object is self selected, or selected by any LeanSelect components in the scene."), tgt.IsSelected);
+			EditorGUILayout.Toggle(new GUIContent("Is Selected", "This will tell you if this object is self selected, or selected by any LeanSelect components in the scene."), tgt.IsSelected);
 			EndDisabled();
 			BeginIndent();
-				if (Draw("selfSelected") == true)
+			if (Draw("selfSelected") == true)
+			{
+				Each(tgts, t => t.SelfSelected = serializedObject.FindProperty("selfSelected").boolValue, true);
+			}
+			BeginDisabled();
+			foreach (var select in LeanSelect.Instances)
+			{
+				if (IsSelectedByAnyTgt(select) == true)
 				{
-					Each(tgts, t => t.SelfSelected = serializedObject.FindProperty("selfSelected").boolValue, true);
+					EditorGUILayout.ObjectField(new GUIContent("selectedBy"), select, typeof(LeanSelect), true);
 				}
-				BeginDisabled();
-					foreach (var select in LeanSelect.Instances)
-					{
-						if (IsSelectedByAnyTgt(select) == true)
-						{
-							EditorGUILayout.ObjectField(new GUIContent("selectedBy"), select, typeof(LeanSelect), true);
-						}
-					}
-				EndDisabled();
+			}
+			EndDisabled();
 			EndIndent();
 		}
 
@@ -251,5 +246,6 @@ namespace Lean.Common.Editor
 			}
 		}
 	}
-}
+
 #endif
+}

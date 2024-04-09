@@ -6,7 +6,7 @@ using Sources.Services.DomainServices;
 using Unity.Services.Core;
 using VContainer;
 
-namespace Sources.Infrastructure.Factories
+namespace Sources.Infrastructure.Factories.Domain
 {
 	public class SaveLoaderFactory
 	{

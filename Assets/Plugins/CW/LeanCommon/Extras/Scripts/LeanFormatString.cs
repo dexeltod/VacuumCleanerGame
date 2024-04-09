@@ -1,22 +1,38 @@
+using Plugins.CW.Shared.Common.Required.Scripts;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
-using CW.Common;
 
-namespace Lean.Common
+namespace Plugins.CW.LeanCommon.Extras.Scripts
 {
 	/// <summary>This component allows you to convert values like ints and floats into formatted text that can be shown in the UI. To use this component, simply call one of the <b>SetString</b> methods, and it will output the formatted string to the <b>OnString</b> event, which can be connected to UI text, etc.</b></summary>
-	[HelpURL(LeanCommon.HelpUrlPrefix + "LeanFormatString")]
-	[AddComponentMenu(LeanCommon.ComponentPathPrefix + "Format String")]
+	[HelpURL(Required.Scripts.LeanCommon.HelpUrlPrefix + "LeanFormatString")]
+	[AddComponentMenu(Required.Scripts.LeanCommon.ComponentPathPrefix + "Format String")]
 	public class LeanFormatString : MonoBehaviour
 	{
-		[System.Serializable] public class StringEvent : UnityEvent<string> {}
+		[System.Serializable] public class StringEvent : UnityEvent<string> { }
 
 		/// <summary>The final text will use this string formatting, where {0} is the first value, {1} is the second, etc. Formatting uses standard <b>string.Format</b> style.</summary>
-		public string Format { set { format = value; } get { return format; } } [SerializeField] [Multiline] private string format = "Current Value = {0}";
+		public string Format
+		{
+			set { format = value; }
+			get { return format; }
+		}
+
+		[SerializeField] [Multiline] private string format = "Current Value = {0}";
 
 		/// <summary>Based on the <b>Send</b> setting, this event will be invoked.
 		/// String = The .</summary>
-		public StringEvent OnString { get { if (onString == null) onString = new StringEvent(); return onString;  } } [SerializeField] private StringEvent onString;
+		public StringEvent OnString
+		{
+			get
+			{
+				if (onString == null) onString = new StringEvent();
+				return onString;
+			}
+		}
+
+		[SerializeField] private StringEvent onString;
 
 		/// <summary>This method will convert the input arguments into a formatted string, and output it to the <b>OnString</b> event.</summary>
 		public void SetString(string a)
@@ -118,24 +134,22 @@ namespace Lean.Common
 			}
 		}
 	}
-}
 
 #if UNITY_EDITOR
-namespace Lean.Common.Editor
-{
-	using UnityEditor;
-	using TARGET = LeanFormatString;
-
-	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
+	[CanEditMultipleObjects] [CustomEditor(typeof(LeanFormatString))]
 	public class LeanFormatString_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
+			LeanFormatString tgt;
+			LeanFormatString[] tgts;
+			GetTargets(out tgt, out tgts);
 
 			BeginError(Any(tgts, t => string.IsNullOrEmpty(t.Format)));
-				Draw("format", "The final text will use this string formatting, where {0} is the first value, {1} is the second, etc. Formatting uses standard <b>string.Format</b> style.");
+			Draw(
+				"format",
+				"The final text will use this string formatting, where {0} is the first value, {1} is the second, etc. Formatting uses standard <b>string.Format</b> style."
+			);
 			EndError();
 
 			Separator();
@@ -143,5 +157,6 @@ namespace Lean.Common.Editor
 			Draw("onString");
 		}
 	}
-}
+
 #endif
+}

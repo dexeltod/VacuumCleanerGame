@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 {
 	/// <summary>This component will update a Renderer component's sharedMaterial with a localized material, or use a fallback if none is found.</summary>
 	[ExecuteInEditMode]

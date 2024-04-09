@@ -1,8 +1,9 @@
-using UnityEngine;
 using System.Collections.Generic;
-using CW.Common;
+using Plugins.CW.Shared.Common.Required.Scripts;
+using UnityEditor;
+using UnityEngine;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
 	/// <summary>The class stores a token name (e.g. "AGE"), allowing it to be replaced with the token value (e.g. "20").
 	/// To use the token in your text, simply include the token name surrounded by braces (e.g. "I am {AGE} years old!")</summary>
@@ -113,21 +114,15 @@ namespace Lean.Localization
 			UnregisterAll();
 		}
 	}
-}
 
 #if UNITY_EDITOR
-namespace Lean.Localization.Editor
-{
-	using UnityEditor;
-	using TARGET = LeanToken;
-
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
+	[CustomEditor(typeof(LeanToken))]
 	public class LeanToken_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
+			LeanToken tgt; LeanToken[] tgts; GetTargets(out tgt, out tgts);
 
 			if (Draw("value", "This is the current value/text for this token. When this changes, it will automatically update all localizations that use this token.") == true)
 			{
@@ -141,5 +136,6 @@ namespace Lean.Localization.Editor
 			CwHelper.CreatePrefabAsset("New Token").AddComponent<LeanToken>();
 		}
 	}
-}
+
 #endif
+}

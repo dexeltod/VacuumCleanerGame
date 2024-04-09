@@ -3,12 +3,14 @@ using Sources.Controllers;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Common.Factory.Decorators;
+using Sources.Infrastructure.Configs.Scripts;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
+using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;
+using Sources.Services.Localization;
 using Sources.Services.Triggers;
 using Sources.ServicesInterfaces;
-using Sources.Utils.Configs.Scripts;
 
 namespace Sources.Infrastructure.Factories
 {
@@ -20,6 +22,7 @@ namespace Sources.Infrastructure.Factories
 		private readonly IPersistentProgressService _persistentProgressService;
 		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenter;
 		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
+		private readonly ITranslatorService _translatorService;
 		private readonly IUpgradeWindowPresenter _upgradeWindowPresenter;
 
 		public UpgradeWindowPresenterFactory(
@@ -28,7 +31,8 @@ namespace Sources.Infrastructure.Factories
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			IPersistentProgressService persistentProgressService,
 			IGameplayInterfacePresenter gameplayInterfacePresenter,
-			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider
+			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
+			ITranslatorService localizationService
 		)
 		{
 			_upgradeWindowViewFactory
@@ -42,6 +46,7 @@ namespace Sources.Infrastructure.Factories
 				throw new ArgumentNullException(nameof(gameplayInterfacePresenter));
 			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ??
 				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
+			_translatorService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 		}
 
 		private IResourcesModel GameProgressResourcesModel => _persistentProgressService.GlobalProgress.ResourcesModel;
@@ -49,24 +54,33 @@ namespace Sources.Infrastructure.Factories
 		private int SoftCurrencyCount => GameProgressResourcesModel.SoftCurrency.Count;
 
 		private string GameObjectsUpgradeTrigger => ResourcesAssetPath.GameObjects.UpgradeTrigger;
+		private string YesNoButtonsCanvas => ResourcesAssetPath.Scene.UIResources.YesNoButtonsCanvas;
 
 		public override UpgradeWindowPresenter Create()
 		{
-			IUpgradeWindow upgradeWindow = _upgradeWindowViewFactory.Create();
+			IUpgradeWindowPresentation upgradeWindowPresentation = _upgradeWindowViewFactory.Create();
 
 			UpgradeTriggerObserver upgradeTrigger = _assetFactory.InstantiateAndGetComponent<UpgradeTriggerObserver>(
 				GameObjectsUpgradeTrigger
 			);
-
 			UpgradeWindowPresenter presenter = new(
-				upgradeTrigger,
-				upgradeWindow,
+				upgradeWindowPresentation,
 				_progressSaveLoadDataService,
 				_gameplayInterfacePresenter,
 				_resourcesProgressPresenterProvider
 			);
 
-			upgradeWindow.Construct(presenter, SoftCurrencyCount);
+			var activator
+				= _assetFactory.InstantiateAndGetComponent<UpgradeWindowActivator>(YesNoButtonsCanvas);
+
+			activator.Phrases.Phrases = _translatorService.GetLocalize(activator.Phrases.Phrases);
+
+			activator.enabled = false;
+			activator.Construct(presenter, upgradeTrigger);
+			activator.enabled = true;
+
+			upgradeWindowPresentation.Construct(presenter, SoftCurrencyCount, activator);
+			upgradeWindowPresentation.UpgradeWindowMain.SetActive(false);
 
 			return presenter;
 		}

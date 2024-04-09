@@ -1,15 +1,16 @@
 using System;
-using Sources.Application.Bootstrapp;
-using Sources.ApplicationServicesInterfaces;
 using Sources.Controllers;
-using Sources.Infrastructure.Factories.LeaderBoard;
-using Sources.Presentation;
+using Sources.ControllersInterfaces;
+using Sources.Infrastructure.Factories.Domain;
+using Sources.Infrastructure.Providers;
+using Sources.InfrastructureInterfaces;
 using Sources.Presentation.UI;
+using Sources.PresentationInterfaces;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using UnityEngine;
 
-namespace Sources.Infrastructure.StateMachine.GameStates
+namespace Sources.Infrastructure.Factories.Authorization
 {
 	public sealed class AuthorizationFactory
 	{

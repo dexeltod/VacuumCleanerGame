@@ -1,9 +1,10 @@
 using System.Collections.Generic;
-using UnityEngine;
 using System.IO;
-using UnityEditorInternal;
 using UnityEditor;
-namespace ThemesPlugin
+using UnityEditorInternal;
+using UnityEngine;
+
+namespace EditorThemes.Editor
 { 
     public static class ThemesUtility
     {

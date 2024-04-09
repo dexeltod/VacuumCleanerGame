@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
-using Sources.Infrastructure.StateMachine.GameStates;
+using Sources.DomainInterfaces;
 
-namespace Sources.ApplicationServicesInterfaces
+namespace Sources.InfrastructureInterfaces
 {
 	public interface ICloudPlayerDataService
 	{

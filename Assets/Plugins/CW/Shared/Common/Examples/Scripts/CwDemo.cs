@@ -1,6 +1,8 @@
+using Plugins.CW.Shared.Common.Required.Scripts;
+using UnityEditor;
 using UnityEngine;
 
-namespace CW.Common
+namespace Plugins.CW.Shared.Common.Examples.Scripts
 {
 	/// <summary>This component is used by all the demo scenes to perform common tasks. Including modifying the current scene to make it look consistent between different rendering pipelines.</summary>
 	[ExecuteInEditMode]
@@ -180,20 +182,14 @@ namespace CW.Common
 #endif
 		}
 	}
-}
 
 #if UNITY_EDITOR
-namespace CW.Common
-{
-	using UnityEditor;
-	using TARGET = CwDemo;
-
-	[CustomEditor(typeof(TARGET))]
+	[CustomEditor(typeof(CwDemo))]
 	public class CwDemo_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
+			CwDemo tgt; CwDemo[] tgts; GetTargets(out tgt, out tgts);
 
 			Draw("upgradeInputModule", "If you enable this setting and your project is running with the new InputSystem then the EventSystem's InputModule component will be upgraded.");
 
@@ -208,5 +204,6 @@ namespace CW.Common
 			Draw("upgradeCamerasInHDRP", "If you enable this setting and your project is running with HDRP then any cameras missing the HDAdditionalCameraData component will have it added.");
 		}
 	}
-}
+
 #endif
+}

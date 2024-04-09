@@ -11,13 +11,14 @@
  * Attribution is not required, but it is always welcomed!
  * -------------------------------------*/
 
-using UnityEngine;
+using Graphy___Ultimate_Stats_Monitor.Runtime;
 using UnityEditor;
+using UnityEngine;
 
-namespace Tayx.Graphy
+namespace Graphy___Ultimate_Stats_Monitor.Editor
 {
     [CustomEditor(typeof(GraphyManager))]
-    internal class GraphyManagerEditor : Editor
+    internal class GraphyManagerEditor : UnityEditor.Editor
     {
         /* ----- TODO: ----------------------------
          * Add summaries to the variables.

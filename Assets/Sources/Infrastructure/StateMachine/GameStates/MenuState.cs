@@ -1,17 +1,19 @@
 using System;
 using Cysharp.Threading.Tasks;
-using Sources.Application.Bootstrapp;
 using Sources.ApplicationServicesInterfaces;
 using Sources.Controllers.MainMenu;
+using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
+using Sources.Infrastructure.Factories.Authorization;
 using Sources.Infrastructure.Factories.LeaderBoard;
+using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.InfrastructureInterfaces.States;
-using Sources.Presentation;
 using Sources.Presentation.SceneEntity;
 using Sources.Presentation.UI;
 using Sources.Presentation.UI.MainMenu.LeaderBoard;
+using Sources.PresentationInterfaces;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
@@ -105,10 +107,14 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				_translatorService
 			);
 
-			 _mainMenuView = await mainMenuFactory.Create();
+			_mainMenuView = await mainMenuFactory.Create();
 
-			_authorizationPresenter = new AuthorizationFactory(_assetFactory, _cloudServiceSdkFacadeProvider, 
-                _mainMenuView,_localizationService ).Create();
+			_authorizationPresenter = new AuthorizationFactory(
+				_assetFactory,
+				_cloudServiceSdkFacadeProvider,
+				_mainMenuView,
+				_localizationService
+			).Create();
 
 			_mainMenuPresenter = new MainMenuPresenter(
 				_mainMenuView,
@@ -117,7 +123,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				_levelConfigGetter,
 				_progressSaveLoadDataService,
 				_authorizationPresenter,
-				_mainMenuView.GetComponent<LeaderBoardView>()
+				_mainMenuView.GetComponent<LeaderBoardView>(),
+				_leaderBoardService
 			);
 
 			_mainMenuView.Construct(_mainMenuPresenter);

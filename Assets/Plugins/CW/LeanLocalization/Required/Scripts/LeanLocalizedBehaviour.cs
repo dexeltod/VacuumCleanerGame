@@ -1,8 +1,8 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
-using System.Collections.Generic;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
 	/// <summary>This component simplifies the updating process, extend it if you want to cause a specific object to get localized</summary>
 	public abstract class LeanLocalizedBehaviour : MonoBehaviour, ILocalizationHandler

@@ -1,12 +1,11 @@
 using System;
 using Sources.Controllers.Mesh;
+using Sources.Infrastructure.Configs.Scripts;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.Presentation;
 using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
-using Sources.Services;
 using Sources.ServicesInterfaces;
-using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Factories.Scene
@@ -14,7 +13,7 @@ namespace Sources.Infrastructure.Factories.Scene
 	public class SandFactory
 	{
 		private const float Error = 0.9f;
-		
+
 		private readonly IAssetFactory _assetFactory;
 		private readonly ILevelProgressFacade _levelProgressFacade;
 		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
@@ -50,13 +49,13 @@ namespace Sources.Infrastructure.Factories.Scene
 		}
 
 		private string GameObjectsSandGround => ResourcesAssetPath.GameObjects.SandGround;
-		private int HalfSandSize => (int)Math.Ceiling(_levelProgressFacade.MaxScoreCount * Error);
+		private int HalfSandSize => (int)Math.Ceiling(_levelProgressFacade.MaxScoreCount * Error / 2f);
 
 		public IMeshModifiable Create()
 		{
 			_gameObject = _assetFactory.Instantiate(GameObjectsSandGround);
 
-			MeshModificator meshModificator = _gameObject.GetComponent<MeshModificator>();
+			MeshView meshView = _gameObject.GetComponent<MeshView>();
 			SandGenerator sandGenerator = _gameObject.GetComponent<SandGenerator>();
 			_meshCollider = _gameObject.GetComponent<MeshCollider>();
 
@@ -68,12 +67,12 @@ namespace Sources.Infrastructure.Factories.Scene
 			var controller = new MeshDeformationPresenter(
 				_mesh,
 				_resourcesProgressPresenterProvider.Implementation,
-				meshModificator.RadiusDeformation,
-				meshModificator.GetComponent<MeshCollider>()
+				meshView.RadiusDeformation,
+				meshView.GetComponent<MeshCollider>()
 			);
 
-			meshModificator.Construct(_resourcesProgressPresenterProvider, controller);
-			return meshModificator;
+			meshView.Construct(_resourcesProgressPresenterProvider, controller);
+			return meshView;
 		}
 
 		private void Generate()
@@ -107,7 +106,6 @@ namespace Sources.Infrastructure.Factories.Scene
 			}
 
 			_mesh.vertices = _vertices;
-
 			_mesh.uv = uvs;
 			_mesh.tangents = tangents;
 		}

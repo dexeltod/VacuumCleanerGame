@@ -1,7 +1,7 @@
-﻿using Joystick_Pack.Scripts.Joysticks;
+﻿using Graphic.Joystick_Pack.Scripts.Joysticks;
 using UnityEngine;
 
-namespace Joystick_Pack.Examples
+namespace Graphic.Joystick_Pack.Examples
 {
     public class JoystickPlayerExample : MonoBehaviour
     {

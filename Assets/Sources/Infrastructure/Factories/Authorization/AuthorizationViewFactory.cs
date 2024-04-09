@@ -1,14 +1,14 @@
 using System;
-using DG.Tweening;
-using Sources.Presentation;
+using Sources.Infrastructure.Configs.Scripts;
+using Sources.Infrastructure.Factories.LeaderBoard;
 using Sources.Presentation.UI;
 using Sources.Presentation.UI.YandexAuthorization;
+using Sources.PresentationInterfaces;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
-using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 
-namespace Sources.Infrastructure.Factories.LeaderBoard
+namespace Sources.Infrastructure.Factories.Authorization
 {
 	public class AuthorizationViewFactory
 	{
@@ -35,10 +35,10 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 		private IAuthorizationView CreateYandexAuthorizationHandler()
 		{
 			var view = _assetFactory.InstantiateAndGetComponent<YandexAuthorizationView>(YandexAuthorizationView);
-			
+
 			var phrases = view.GetComponent<TextPhrases>();
 			view.Construct(view.GetComponent<RectTransform>(), null, phrases);
-			view.TextPhrases.Phrases = _localizationService.Localize(phrases.Phrases);
+			view.TextPhrases.Phrases = _localizationService.GetLocalize(phrases.Phrases);
 
 			return view;
 		}
@@ -48,7 +48,7 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 			var view = _assetFactory.InstantiateAndGetComponent<EditorAuthorizationView>(EditorAuthorizationView);
 			var phrases = view.GetComponent<TextPhrases>();
 			view.Construct(view.GetComponent<RectTransform>(), null, phrases);
-			view.TextPhrases.Phrases = _localizationService.Localize(phrases.Phrases);
+			view.TextPhrases.Phrases = _localizationService.GetLocalize(phrases.Phrases);
 			return view;
 		}
 	}

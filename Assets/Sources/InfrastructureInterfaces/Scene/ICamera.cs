@@ -1,6 +1,1 @@
-using UnityEngine;
-
-namespace Sources.InfrastructureInterfaces.Scene
-{
-	
-}
+namespace Sources.InfrastructureInterfaces.Scene { }

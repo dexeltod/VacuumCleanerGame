@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UIElements;
 
-namespace AYellowpaper.Editor
+namespace SerializeInterfaces.Editor.UIElements
 {
 	internal class Tab : Toggle
 	{

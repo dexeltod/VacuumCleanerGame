@@ -1,8 +1,8 @@
-﻿using Joystick_Pack.Scripts.Base;
+﻿using Graphic.Joystick_Pack.Scripts.Base;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Joystick_Pack.Scripts.Joysticks
+namespace Graphic.Joystick_Pack.Scripts.Joysticks
 {
     public class VariableJoystick : Joystick
     {

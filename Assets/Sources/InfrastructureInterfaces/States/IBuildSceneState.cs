@@ -1,7 +1,7 @@
+using Sources.Infrastructure.Configs.Scripts.Level;
 using Sources.InfrastructureInterfaces.States.StateMachineInterfaces;
-using Sources.Utils.Configs.Scripts;
 
 namespace Sources.InfrastructureInterfaces.States
 {
-	public interface IBuildSceneState : IGameState<LevelConfig>{ }
+	public interface IBuildSceneState : IGameState<ILevelConfig> { }
 }

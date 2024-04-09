@@ -1,9 +1,8 @@
 using System;
 
-
 namespace Sources.InfrastructureInterfaces.Scene
 {
-	public interface ISceneLoadInformer 
+	public interface ISceneLoadInformer
 	{
 		event Action SceneLoaded;
 		bool IsSceneLoaded { get; }

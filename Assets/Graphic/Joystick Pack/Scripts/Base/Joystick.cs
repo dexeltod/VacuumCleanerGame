@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Joystick_Pack.Scripts.Base
+namespace Graphic.Joystick_Pack.Scripts.Base
 {
 	public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 	{

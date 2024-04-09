@@ -1,12 +1,12 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-namespace Lean.Common
+namespace Plugins.CW.LeanCommon.Extras.Scripts
 {
 	/// <summary>This component stores a list of points that form a path.</summary>
 	[ExecuteInEditMode]
-	[HelpURL(LeanCommon.HelpUrlPrefix + "LeanPath")]
-	[AddComponentMenu(LeanCommon.ComponentPathPrefix + "Path")]
+	[HelpURL(Required.Scripts.LeanCommon.HelpUrlPrefix + "LeanPath")]
+	[AddComponentMenu(Required.Scripts.LeanCommon.ComponentPathPrefix + "Path")]
 	public class LeanPath : MonoBehaviour
 	{
 		/// <summary>The points along the path.</summary>

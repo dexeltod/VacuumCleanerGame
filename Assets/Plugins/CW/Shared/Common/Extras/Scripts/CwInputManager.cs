@@ -1,8 +1,9 @@
+using System.Collections.Generic;
+using Plugins.CW.Shared.Common.Required.Scripts;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using System.Collections.Generic;
 
-namespace CW.Common
+namespace Plugins.CW.Shared.Common.Extras.Scripts
 {
 	/// <summary>This component combines finger and mouse and keyboard inputs into a single interface.</summary>
 	[HelpURL(CwShared.HelpUrlPrefix + "CwInputManager")]

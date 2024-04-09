@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using Plugins.CW.Shared.Common.Required.Scripts;
+using UnityEditor;
+using UnityEngine;
 
-namespace CW.Common
+namespace Plugins.CW.Shared.Common.Examples.Scripts
 {
 	/// <summary>This component will change the light intensity based on the current render pipeline.</summary>
 	[ExecuteInEditMode]
@@ -10,25 +12,47 @@ namespace CW.Common
 	public class CwLightIntensity : MonoBehaviour
 	{
 		/// <summary>All light values will be multiplied by this before use.</summary>
-		public float Multiplier { set { multiplier = value; } get { return multiplier; } } [SerializeField] private float multiplier = 1.0f;
+		public float Multiplier
+		{
+			set { multiplier = value; }
+			get { return multiplier; }
+		}
+
+		[SerializeField] private float multiplier = 1.0f;
 
 		/// <summary>This allows you to control the intensity of the attached light when using the <b>Standard</b> rendering pipeline.
 		/// -1 = The attached light intensity will not be modified.</summary>
-		public float IntensityInStandard { set  { intensityInStandard = value; } get { return intensityInStandard; } } [SerializeField] private float intensityInStandard = 1.0f;
+		public float IntensityInStandard
+		{
+			set { intensityInStandard = value; }
+			get { return intensityInStandard; }
+		}
+
+		[SerializeField] private float intensityInStandard = 1.0f;
 
 		/// <summary>This allows you to control the intensity of the attached light when using the <b>URP</b> rendering pipeline.
 		/// -1 = The attached light intensity will not be modified.</summary>
-		public float IntensityInURP { set  { intensityInURP = value; } get { return intensityInURP; } } [SerializeField] private float intensityInURP = 1.0f;
+		public float IntensityInURP
+		{
+			set { intensityInURP = value; }
+			get { return intensityInURP; }
+		}
+
+		[SerializeField] private float intensityInURP = 1.0f;
 
 		/// <summary>This allows you to control the intensity of the attached light when using the <b>HDRP</b> rendering pipeline.
 		/// -1 = The attached light intensity will not be modified.</summary>
-		public float IntensityInHDRP { set  { intensityInHDRP = value; } get { return intensityInHDRP; } } [SerializeField] private float intensityInHDRP = 120000.0f;
+		public float IntensityInHDRP
+		{
+			set { intensityInHDRP = value; }
+			get { return intensityInHDRP; }
+		}
 
-		[System.NonSerialized]
-		private Light cachedLight;
+		[SerializeField] private float intensityInHDRP = 120000.0f;
 
-		[System.NonSerialized]
-		private bool cachedLightSet;
+		[System.NonSerialized] private Light cachedLight;
+
+		[System.NonSerialized] private bool cachedLightSet;
 
 #if __HDRP__
 		[System.NonSerialized]
@@ -41,7 +65,7 @@ namespace CW.Common
 			{
 				if (cachedLightSet == false)
 				{
-					cachedLight    = GetComponent<Light>();
+					cachedLight = GetComponent<Light>();
 					cachedLightSet = true;
 				}
 
@@ -73,11 +97,11 @@ namespace CW.Common
 			{
 				if (cachedLightSet == false)
 				{
-					cachedLight    = GetComponent<Light>();
+					cachedLight = GetComponent<Light>();
 					cachedLightSet = true;
 				}
 
-				#if __HDRP__
+#if __HDRP__
 					if (cachedLightData == null)
 					{
 						cachedLightData = GetComponent<UnityEngine.Rendering.HighDefinition.HDAdditionalLightData>();
@@ -87,31 +111,34 @@ namespace CW.Common
 					{
 						cachedLightData.SetIntensity(intensity * multiplier, UnityEngine.Rendering.HighDefinition.LightUnit.Lux);
 					}
-				#else
-					cachedLight.intensity = intensity * multiplier;
-				#endif
+#else
+				cachedLight.intensity = intensity * multiplier;
+#endif
 			}
 		}
 	}
-}
 
 #if UNITY_EDITOR
-namespace CW.Common
-{
-	using UnityEditor;
-	using TARGET = CwLightIntensity;
-
-	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
+	[CanEditMultipleObjects] [CustomEditor(typeof(CwLightIntensity))]
 	public class P3dLight_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
 			Draw("multiplier", "All light values will be multiplied by this before use.");
-			Draw("intensityInStandard", "This allows you to control the intensity of the attached light when using the Standard rendering pipeline.\n\n-1 = The attached light intensity will not be modified.");
-			Draw("intensityInURP", "This allows you to control the intensity of the attached light when using the URP rendering pipeline.\n\n-1 = The attached light intensity will not be modified.");
-			Draw("intensityInHDRP", "This allows you to control the intensity of the attached light when using the HDRP rendering pipeline.\n\n-1 = The attached light intensity will not be modified.");
+			Draw(
+				"intensityInStandard",
+				"This allows you to control the intensity of the attached light when using the Standard rendering pipeline.\n\n-1 = The attached light intensity will not be modified."
+			);
+			Draw(
+				"intensityInURP",
+				"This allows you to control the intensity of the attached light when using the URP rendering pipeline.\n\n-1 = The attached light intensity will not be modified."
+			);
+			Draw(
+				"intensityInHDRP",
+				"This allows you to control the intensity of the attached light when using the HDRP rendering pipeline.\n\n-1 = The attached light intensity will not be modified."
+			);
 		}
 	}
-}
+
 #endif
+}

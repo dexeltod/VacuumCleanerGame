@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using SerializeInterfaces.Runtime;
 using UnityEditor;
 using UnityEngine;
 
-namespace AYellowpaper.Editor
+namespace SerializeInterfaces.Editor
 {
     [CustomPropertyDrawer(typeof(InterfaceReference<>))]
     [CustomPropertyDrawer(typeof(InterfaceReference<,>))]

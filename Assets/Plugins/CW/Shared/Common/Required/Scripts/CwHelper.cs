@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using Plugins.CW.Shared.Common.Extras.Scripts;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Collections.Generic;
-using EventSystem = UnityEngine.EventSystems.EventSystem;
 
-namespace CW.Common
+namespace Plugins.CW.Shared.Common.Required.Scripts
 {
 	public static partial class CwHelper
 	{
@@ -27,24 +29,24 @@ namespace CW.Common
 		static CwHelper()
 		{
 			Camera.onPreRender += (camera) =>
-				{
-					if (OnCameraPreRender != null) OnCameraPreRender(camera);
-				};
+			{
+				if (OnCameraPreRender != null) OnCameraPreRender(camera);
+			};
 
 			Camera.onPostRender += (camera) =>
-				{
-					if (OnCameraPostRender != null) OnCameraPostRender(camera);
-				};
+			{
+				if (OnCameraPostRender != null) OnCameraPostRender(camera);
+			};
 
 			UnityEngine.Rendering.RenderPipelineManager.beginCameraRendering += (context, camera) =>
-				{
-					if (OnCameraPreRender != null) OnCameraPreRender(camera);
-				};
+			{
+				if (OnCameraPreRender != null) OnCameraPreRender(camera);
+			};
 
 			UnityEngine.Rendering.RenderPipelineManager.endCameraRendering += (context, camera) =>
-				{
-					if (OnCameraPostRender != null) OnCameraPostRender(camera);
-				};
+			{
+				if (OnCameraPostRender != null) OnCameraPostRender(camera);
+			};
 		}
 
 		public static Mesh GetQuadMesh()
@@ -83,21 +85,21 @@ namespace CW.Common
 			if (gameObject != null)
 			{
 #if UNITY_EDITOR
-					if (Application.isPlaying == true)
+				if (Application.isPlaying == true)
+				{
+					return gameObject.AddComponent<T>();
+				}
+				else
+				{
+					if (recordUndo == true)
 					{
-						return gameObject.AddComponent<T>();
+						return UnityEditor.Undo.AddComponent<T>(gameObject);
 					}
 					else
 					{
-						if (recordUndo == true)
-						{
-							return UnityEditor.Undo.AddComponent<T>(gameObject);
-						}
-						else
-						{
-							return gameObject.AddComponent<T>();
-						}
+						return gameObject.AddComponent<T>();
 					}
+				}
 #else
 					return gameObject.AddComponent<T>();
 #endif
@@ -467,7 +469,7 @@ namespace CW.Common
 		{
 			if (o != null)
 			{
-	#if UNITY_EDITOR
+#if UNITY_EDITOR
 				if (Application.isPlaying == true)
 				{
 					Object.Destroy(o);
@@ -476,9 +478,9 @@ namespace CW.Common
 				{
 					Object.DestroyImmediate(o);
 				}
-	#else
+#else
 				Object.Destroy(o);
-	#endif
+#endif
 			}
 
 			return null;
@@ -672,9 +674,9 @@ namespace CW.Common
 				newTexture = new Texture2D(width, height, format, mipMaps, false);
 
 				BeginActive(renderTexture);
-					Graphics.Blit(texture, renderTexture);
+				Graphics.Blit(texture, renderTexture);
 
-					newTexture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+				newTexture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
 				EndActive();
 
 				CwRenderTextureManager.ReleaseTemporary(renderTexture);
@@ -685,13 +687,8 @@ namespace CW.Common
 			return newTexture;
 		}
 	}
-}
 
 #if UNITY_EDITOR
-namespace CW.Common
-{
-	using UnityEditor;
-
 	public static partial class CwHelper
 	{
 		private static Material cachedShapeOutline;
@@ -921,5 +918,6 @@ namespace CW.Common
 			return prefab;
 		}
 	}
-}
+
 #endif
+}

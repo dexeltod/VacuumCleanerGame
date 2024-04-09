@@ -5,6 +5,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using UnityEngine;
 
 namespace Sources.Services.DomainServices
 {
@@ -28,7 +29,7 @@ namespace Sources.Services.DomainServices
 			}
 		}
 
-		private string DirectorySavePath => UnityEngine.Application.persistentDataPath + SavesDirectory;
+		private string DirectorySavePath => Application.persistentDataPath + SavesDirectory;
 
 		public void DeleteSaves()
 		{

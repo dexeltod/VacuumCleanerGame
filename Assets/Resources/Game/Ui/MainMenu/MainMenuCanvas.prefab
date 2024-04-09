@@ -1129,8 +1129,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e66f69d71f3495b8f2b1264eb289d43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _disabledObject: {fileID: 2358803281611974910}
-  _enabledObject: {fileID: 4499266157621514147}
+  _disabledObject:
+  - {fileID: 2358803281611974910}
+  _enabledObject:
+  - {fileID: 4499266157621514147}
 --- !u!1 &2358803280510504469
 GameObject:
   m_ObjectHideFlags: 0
@@ -1495,6 +1497,7 @@ GameObject:
   - component: {fileID: 2358803281449499056}
   - component: {fileID: 2358803281449499063}
   - component: {fileID: 2358803281449499062}
+  - component: {fileID: 8404736327483893025}
   m_Layer: 5
   m_Name: LeaderboardButton
   m_TagString: Untagged
@@ -1605,6 +1608,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8404736327483893025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2358803281449499060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e66f69d71f3495b8f2b1264eb289d43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _disabledObject:
+  - {fileID: 2358803281611974910}
+  _enabledObject:
+  - {fileID: 2540691213425669905}
 --- !u!1 &2358803281451307687
 GameObject:
   m_ObjectHideFlags: 0
@@ -2966,8 +2985,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e66f69d71f3495b8f2b1264eb289d43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _disabledObject: {fileID: 2540691213425669905}
-  _enabledObject: {fileID: 2358803281611974910}
+  _disabledObject:
+  - {fileID: 0}
+  _enabledObject:
+  - {fileID: 0}
 --- !u!114 &530480648899331818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3483,8 +3504,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e66f69d71f3495b8f2b1264eb289d43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _disabledObject: {fileID: 4499266157621514147}
-  _enabledObject: {fileID: 2358803281611974910}
+  _disabledObject:
+  - {fileID: 4499266157621514147}
+  _enabledObject:
+  - {fileID: 2358803281611974910}
 --- !u!114 &4559932785163103917
 MonoBehaviour:
   m_ObjectHideFlags: 0

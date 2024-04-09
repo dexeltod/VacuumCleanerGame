@@ -1,6 +1,5 @@
 using System;
 using Sources.ControllersInterfaces;
-using Sources.Domain.Progress.Player;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.ServicesInterfaces;

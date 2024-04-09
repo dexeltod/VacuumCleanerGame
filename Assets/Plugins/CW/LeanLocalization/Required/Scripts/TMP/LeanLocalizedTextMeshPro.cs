@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using TMPro;
+﻿using TMPro;
+using UnityEngine;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts.TMP
 {
 	/// <summary>This component will update a TMPro.TextMeshPro component with localized text, or use a fallback if none is found.</summary>
 	[ExecuteInEditMode]

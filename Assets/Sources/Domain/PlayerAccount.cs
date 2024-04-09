@@ -1,6 +1,7 @@
 using System;
+using Sources.DomainInterfaces;
 
-namespace Sources.Infrastructure.StateMachine.GameStates
+namespace Sources.Domain
 {
 	public sealed class PlayerAccount : IPlayerAccount
 	{

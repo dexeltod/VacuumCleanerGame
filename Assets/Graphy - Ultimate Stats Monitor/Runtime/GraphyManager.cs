@@ -12,19 +12,15 @@
  * -------------------------------------*/
 
 using System;
+using Graphy___Ultimate_Stats_Monitor.Runtime.Advanced;
+using Graphy___Ultimate_Stats_Monitor.Runtime.Audio;
+using Graphy___Ultimate_Stats_Monitor.Runtime.Fps;
+using Graphy___Ultimate_Stats_Monitor.Runtime.Ram;
+using Graphy___Ultimate_Stats_Monitor.Runtime.Util;
 using UnityEngine;
-using Tayx.Graphy.Audio;
-using Tayx.Graphy.Fps;
-using Tayx.Graphy.Ram;
-using Tayx.Graphy.Utils;
-using Tayx.Graphy.Advanced;
-using Tayx.Graphy.Utils.NumString;
-
-#if GRAPHY_NEW_INPUT
 using UnityEngine.InputSystem;
-#endif
 
-namespace Tayx.Graphy
+namespace Graphy___Ultimate_Stats_Monitor.Runtime
 {
     /// <summary>
     /// Main class to access the Graphy API.

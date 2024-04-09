@@ -1,12 +1,12 @@
 using System;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
+using Sources.Infrastructure.Configs.Scripts.Level;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.InfrastructureInterfaces.States;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
-using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 using VContainer;
 
@@ -20,7 +20,6 @@ namespace Sources.Infrastructure
 		private readonly IResourcesProgressPresenterProvider _progressPresenter;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IAdvertisement _rewardService;
-
 
 		[Inject]
 		public LevelChangerService(
@@ -41,6 +40,7 @@ namespace Sources.Infrastructure
 
 			_rewardService = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 		}
+
 		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Implementation;
 		private int LevelNumber => _levelProgressFacade.CurrentLevel;
 
@@ -54,11 +54,11 @@ namespace Sources.Infrastructure
 
 			await _progressSaveLoadDataService.SaveToCloud();
 
-			LevelConfig levelConfig = _levelConfigGetter.Get(LevelNumber);
+			ILevelConfig levelConfig = _levelConfigGetter.GetOrDefault(LevelNumber);
 
 			OnProcessEnded();
 
-			GameStateChanger.Enter<IBuildSceneState, LevelConfig>(levelConfig);
+			GameStateChanger.Enter<IBuildSceneState, ILevelConfig>(levelConfig);
 		}
 
 		private void OnProcessEnded()

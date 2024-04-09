@@ -7,24 +7,23 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure;
+using Sources.Infrastructure.Configs.Scripts;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Domain;
-using Sources.Infrastructure.Factories.LeaderBoard;
 using Sources.Infrastructure.Factories.Player;
 using Sources.Infrastructure.Factories.Presenters;
 using Sources.Infrastructure.Factories.Scene;
+using Sources.Infrastructure.Factories.StateMachine;
 using Sources.Infrastructure.Factories.UI;
 using Sources.Infrastructure.Factories.UpgradeShop;
 using Sources.Infrastructure.Providers;
 using Sources.Infrastructure.Services;
 using Sources.Infrastructure.Shop;
 using Sources.Infrastructure.StateMachine.GameStates;
-using Sources.Infrastructure.Yandex;
 using Sources.InfrastructureInterfaces.Common.Factories;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Scene;
-using Sources.Presentation;
 using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
 using Sources.Services;
@@ -34,13 +33,10 @@ using Sources.Services.Providers;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
 using Sources.Utils;
-using Sources.Utils.Configs.Scripts;
 using Sources.Utils.ConstantNames;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
-
-
 #if YANDEX_CODE
 using Sources.Services.DomainServices.YandexLeaderboard;
 #endif
@@ -49,7 +45,6 @@ namespace Sources.Application.Bootstrapp
 {
 	public class ServiceRegister
 	{
-		
 		private readonly IContainerBuilder _builder;
 
 		public ServiceRegister(IContainerBuilder builder) =>
@@ -65,7 +60,7 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<IShopProgressFacade, ShopProgressFacade>(Lifetime.Singleton);
 			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
 			_builder.Register<ITranslatorService, PhraseTranslatorService>(Lifetime.Singleton);
-            
+
 			_builder.Register<ProgressionConfig>(Lifetime.Singleton);
 
 			_builder.Register<ProgressCleaner>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
@@ -110,16 +105,18 @@ namespace Sources.Application.Bootstrapp
 #region Factories
 
 			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Scoped);
-			_builder.Register<IPresentableFactory<IUpgradeWindow, IUpgradeWindowPresenter>, UpgradeWindowViewFactory>(
-				Lifetime.Scoped
-			).AsImplementedInterfaces();
+			_builder
+				.Register<IPresentableFactory<IUpgradeWindowPresentation, IUpgradeWindowPresenter>,
+					UpgradeWindowViewFactory>(
+					Lifetime.Scoped
+				).AsImplementedInterfaces();
 			_builder.Register<ShopElementFactory>(Lifetime.Scoped);
 
 			_builder.Register<SaveLoaderFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
 			_builder.Register<InitialProgressFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
 			_builder.Register<CoroutineRunnerFactory>(Lifetime.Scoped);
 			_builder.Register<LoadingCurtainFactory>(Lifetime.Scoped);
-			
+
 			_builder.Register<GameplayInterfacePresenterFactory>(Lifetime.Scoped);
 			_builder.Register<GameStatesRepositoryFactory>(Lifetime.Scoped);
 			_builder.Register<IProgressUpgradeFactory, ProgressUpgradeFactory>(Lifetime.Scoped);

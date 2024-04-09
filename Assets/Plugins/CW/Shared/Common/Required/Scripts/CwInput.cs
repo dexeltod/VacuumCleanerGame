@@ -1,10 +1,10 @@
 ﻿#if ENABLE_INPUT_SYSTEM && __INPUTSYSTEM__
 	#define USE_NEW_INPUT_SYSTEM
-	using NewCode = UnityEngine.InputSystem.Key;
-#endif
 using UnityEngine;
+using NewCode = UnityEngine.InputSystem.Key;
+#endif
 
-namespace CW.Common
+	namespace Plugins.CW.Shared.Common.Required.Scripts
 {
     /// <summary>This class wraps <b>UnityEngine.Input</b> and <b>UnityEngine.InputSystem</b> so they can both be used from the same interface.</summary>
     public static class CwInput

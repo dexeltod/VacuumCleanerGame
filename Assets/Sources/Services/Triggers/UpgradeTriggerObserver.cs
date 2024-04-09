@@ -13,13 +13,13 @@ namespace Sources.Services.Triggers
 		private void OnTriggerEnter(Collider other)
 		{
 			if (other.TryGetComponent(out IPlayer _))
-				TriggerEntered.Invoke(true);
+				TriggerEntered!.Invoke(true);
 		}
 
 		private void OnTriggerExit(Collider other)
 		{
 			if (other.TryGetComponent(out IPlayer _))
-				TriggerEntered.Invoke(false);
+				TriggerEntered!.Invoke(false);
 		}
 	}
 }

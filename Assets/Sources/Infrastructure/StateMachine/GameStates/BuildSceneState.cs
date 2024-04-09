@@ -1,8 +1,9 @@
 using System;
 using Sources.Controllers;
-using Sources.Controllers.Mesh;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
+using Sources.Infrastructure.Configs.Scripts;
+using Sources.Infrastructure.Configs.Scripts.Level;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Player;
 using Sources.Infrastructure.Factories.Presenters;
@@ -11,16 +12,12 @@ using Sources.Infrastructure.Factories.UI;
 using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
-using Sources.InfrastructureInterfaces.Scene;
 using Sources.InfrastructureInterfaces.States;
-using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
 using Sources.PresentationInterfaces.Player;
-using Sources.Services;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
-using Sources.Utils.Configs.Scripts;
 using UnityEngine;
 using VContainer;
 
@@ -157,7 +154,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private GameObject SellTrigger => ResourcesPrefabs.Triggers.SellTrigger;
 		private IResourcesModel ResourcesModel => _persistentProgress.Implementation.GlobalProgress.ResourcesModel;
 
-		public async void Enter(LevelConfig payload)
+		public async void Enter(ILevelConfig payload)
 		{
 			await _sceneLoader.Load("Game");
 			Build();
@@ -185,11 +182,18 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 			RegisterUpgradeWindowPresenterProvider();
 
-			IMeshModifiable meshModifiable = new SandFactory(
+			new RockFactory(
 				_assetFactory,
 				_levelProgressFacade,
-				_resourcesProgressPresenterProvider
+				_resourcesProgressPresenterProvider,
+				_levelConfigGetter
 			).Create();
+
+			// IMeshModifiable meshModifiable = new SandFactory(
+			// 	_assetFactory,
+			// 	_levelProgressFacade,
+			// 	_resourcesProgressPresenterProvider
+			// ).Create();
 
 			new CameraFactory(_assetFactory, _playerFactory.Player, _resourcePathNameConfigProvider).Create();
 		}
@@ -221,7 +225,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				_progressSaveLoadDataService,
 				_persistentProgress.Implementation,
 				_gameplayInterfacePresenterProvider.Implementation,
-				_resourcesProgressPresenterProvider
+				_resourcesProgressPresenterProvider,
+				_translatorService
 			).Create();
 
 			_upgradeWindowPresenterProvider.Register(presenter);

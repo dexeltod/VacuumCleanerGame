@@ -2,10 +2,10 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Sources.ApplicationServicesInterfaces;
 using Sources.Controllers;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Factories;
+using Sources.Infrastructure.Factories.Domain;
 using Sources.Infrastructure.Factories.Player;
 using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Factory;
@@ -16,7 +16,7 @@ using Sources.ServicesInterfaces.Advertisement;
 using VContainer;
 using VContainer.Unity;
 
-namespace Sources.Application
+namespace Sources.Application.Bootstrapp
 {
 	public class GameBuilder : IAsyncStartable
 	{

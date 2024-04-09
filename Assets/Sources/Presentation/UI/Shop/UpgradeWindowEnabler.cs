@@ -4,7 +4,7 @@ namespace Sources.Presentation.UI.Shop
 {
 	public class UpgradeWindowEnabler : MonoBehaviour
 	{
-		[SerializeField] private UpgradeWindow _upgradeCanvas;
+		[SerializeField] private UpgradeWindowPresentation _upgradeCanvas;
 		[SerializeField] private GameObject _upgradeDiv;
 
 		public void Enable()

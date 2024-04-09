@@ -1,4 +1,4 @@
-namespace Sources.Infrastructure.StateMachine.GameStates
+namespace Sources.DomainInterfaces
 {
 	public interface IPlayerAccount
 	{

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Sources.Domain
+namespace Sources.Domain.Stats
 {
 	[Serializable] public class StatsConfig
 	{

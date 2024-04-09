@@ -2,7 +2,7 @@ using System;
 using Sources.Domain.Progress.ResourcesData;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Utils.Configs.Scripts;
+using Sources.Utils;
 using UnityEngine;
 
 namespace Sources.Domain.Progress.Player
@@ -10,12 +10,13 @@ namespace Sources.Domain.Progress.Player
 	[Serializable] public class ResourcesModel : IResourcesModel
 	{
 		private const int HundredPercent = 100;
+		private const int OnePoint = 1;
 
 		[SerializeField] private IntResource _softCurrency;
 		[SerializeField] private IntResource _hardCurrency;
 
 		[SerializeField] private IntResource _cashScore;
-		[SerializeField] private IntResource _globalScore;
+		[SerializeField] private IntResource _totalResourcesAmount;
 
 		[SerializeField] private int _maxCashScoreModifier;
 		[SerializeField] private int _maxGlobalScoreModifier;
@@ -35,23 +36,23 @@ namespace Sources.Domain.Progress.Player
 			_hardCurrency = hardCurrency as IntResource ?? throw new ArgumentNullException(nameof(hardCurrency));
 			_softCurrency = softCurrency as IntResource ?? throw new ArgumentNullException(nameof(softCurrency));
 			_cashScore = cashScore as IntResource ?? throw new ArgumentNullException(nameof(cashScore));
-			_globalScore = globalScore as IntResource ?? throw new ArgumentNullException(nameof(globalScore));
+			_totalResourcesAmount = globalScore as IntResource ?? throw new ArgumentNullException(nameof(globalScore));
 
 			_cashScore.Set(startScoreCount);
 			_hardCurrency.Set(startCurrencyCount);
 			_softCurrency.Set(startCurrencyCount);
-			_globalScore.Set(startGlobalScoreCount);
+			_totalResourcesAmount.Set(startGlobalScoreCount);
 		}
 
 		public IResourceReadOnly<int> Score => _cashScore;
 		public IResourceReadOnly<int> SoftCurrency => _softCurrency;
-		public IResourceReadOnly<int> GlobalScore => _globalScore;
+		public IResourceReadOnly<int> TotalResourcesAmount => _totalResourcesAmount;
 		public IResourceReadOnly<int> HardCurrency => _hardCurrency;
 
 		public int PercentOfScore => GetPercentMaxCashScore();
 
 		public int MaxCashScore => _maxCashScoreModifier + GameConfig.DefaultMaxSandFillCount;
-		public int MaxGlobalScore => _maxGlobalScoreModifier + GameConfig.DefaultMaxGlobalScore;
+		public int MaxGlobalScore => _maxGlobalScoreModifier + GameConfig.DefaultMaxTotalResource;
 
 		public int CurrentCashScore
 		{
@@ -59,21 +60,21 @@ namespace Sources.Domain.Progress.Player
 			private set => _cashScore.Set(value);
 		}
 
-		public int CurrentGlobalScore
+		public int CurrentTotalResources
 		{
-			get => _globalScore.Count;
-			private set => _globalScore.Set(value);
+			get => _totalResourcesAmount.Count;
+			private set => _totalResourcesAmount.Set(value);
 		}
 
-		public void AddScore(int newScore)
+		public void AddScore(int newCashScore)
 		{
 #if UNITY_EDITOR
-			newScore *= MultiplyFactor;
+			newCashScore *= MultiplyFactor;
 #endif
-			if (newScore <= 0) throw new ArgumentOutOfRangeException(nameof(newScore));
+			if (newCashScore <= 0) throw new ArgumentOutOfRangeException(nameof(newCashScore));
 
-			CurrentCashScore += newScore;
-			CurrentGlobalScore += newScore;
+			CurrentCashScore += newCashScore;
+			CurrentTotalResources += OnePoint;
 
 			_cashScore.Set(CurrentCashScore);
 		}
@@ -99,7 +100,7 @@ namespace Sources.Domain.Progress.Player
 		public void ClearScores()
 		{
 			_cashScore.Set(0);
-			_globalScore.Set(0);
+			_totalResourcesAmount.Set(0);
 		}
 
 		private int GetPercentMaxCashScore() =>
