@@ -11,7 +11,7 @@ namespace Sources.Services
 		private readonly ISandParticleSystemProvider _sandParticleSystem;
 		private readonly ICoroutineRunnerProvider _coroutineRunner;
 		private readonly WaitForSeconds _waitForSeconds;
-		private ISandParticleSystem ParticleSystem;
+		private ISandParticleSystem _particleSystem;
 
 		public SandParticlePlayerSystem(
 			ISandParticleSystemProvider sandParticleSystem,
@@ -31,12 +31,12 @@ namespace Sources.Services
 
 		private IEnumerator PlayParticleSystem()
 		{
-			ParticleSystem = _sandParticleSystem.Implementation;
-			ParticleSystem.Play();
+			_particleSystem = _sandParticleSystem.Implementation;
+			_particleSystem.Play();
 
 			yield return _waitForSeconds;
 
-			ParticleSystem.Stop();
+			_particleSystem.Stop();
 		}
 	}
 }

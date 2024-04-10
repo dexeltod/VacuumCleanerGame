@@ -50,7 +50,7 @@ namespace Sources.Infrastructure
 		private async void OnRewarded()
 		{
 			_levelProgressFacade.SetNextLevel();
-			_progressPresenter.Implementation.ClearScores();
+			_progressPresenter.Implementation.ClearTotalResources();
 
 			await _progressSaveLoadDataService.SaveToCloud();
 

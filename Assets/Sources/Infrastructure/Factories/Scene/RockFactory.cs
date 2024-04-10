@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Sources.Infrastructure.Configs.Scripts;
 using Sources.Infrastructure.Configs.Scripts.Level;
 using Sources.Infrastructure.Configs.Scripts.Level.LevelResouce;
 using Sources.Infrastructure.Providers;
 using Sources.Presentation.SceneEntity;
+using Sources.Presentation.Services;
 using Sources.ServicesInterfaces;
 using TheDeveloper.ColorChanger;
 using UnityEngine;
@@ -16,14 +16,12 @@ namespace Sources.Infrastructure.Factories.Scene
 {
 	public class RockFactory
 	{
-		private const int RocksVariants = 4;
 		private const float Offset = 0.2f;
 
 		private readonly IAssetFactory _assetFactory;
 		private readonly ILevelProgressFacade _levelProgressFacade;
 		private readonly ResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 		private readonly ILevelConfigGetter _levelConfigGetter;
-		private Material _sandMaterial;
 
 		public RockFactory(
 			IAssetFactory assetFactory,
@@ -40,120 +38,242 @@ namespace Sources.Infrastructure.Factories.Scene
 		}
 
 		private string ResourceSpawnPosition => ResourcesAssetPath.GameObjects.ResourceSpawnPosition;
-		private string ResourceRock => ResourcesAssetPath.GameObjects.ResourceRock;
 
 		public void Create()
 		{
-			_sandMaterial = _assetFactory.LoadFromResources<Material>(ResourcesAssetPath.Materials.Sand);
-			var levelConfig = _levelConfigGetter.GetOrDefault(_levelProgressFacade.CurrentLevel);
+			int totalResource = 0;
 
-			GameObject gameObject = new("Rocks");
-			int totalScore = 0;
+			ILevelConfig levelConfig = _levelConfigGetter.GetOrDefault(_levelProgressFacade.CurrentLevel);
 
-			int rocksCount = Mathf.CeilToInt(Mathf.Sqrt(_levelProgressFacade.MaxScoreCount));
+			GameObject rocksObject = new GameObject("Rocks");
+			int hardCurrencySpawnIndex = Random.Range(0, _levelProgressFacade.MaxTotalResourceCount);
+			int areaSize = Mathf.CeilToInt(Mathf.Sqrt(_levelProgressFacade.MaxTotalResourceCount));
 
-			Dictionary<int, ISoftMinedResource> rocksVariants = InitSoftResources(levelConfig);
+			int hardResourceCount = Mathf.CeilToInt(_levelProgressFacade.MaxTotalResourceCount / 100f);
+
+			var softResources = InitSoftResources(levelConfig);
+			var hardVariants = InitHardResources(levelConfig);
 
 			GameObject resourceSpawnPosition = _assetFactory.Instantiate(ResourceSpawnPosition);
-			resourceSpawnPosition.transform.SetParent(gameObject.transform);
+			resourceSpawnPosition.transform.SetParent(rocksObject.transform);
 
-			Instantiate(
+			InstantiateResources(
 				levelConfig.SoftMinedResource.Count,
-				rocksCount,
-				rocksVariants,
-				totalScore,
+				areaSize,
+				softResources,
+				hardVariants,
+				totalResource,
 				resourceSpawnPosition,
-				levelConfig
+				levelConfig,
+				hardResourceCount,
+				hardCurrencySpawnIndex
 			);
 		}
 
-		private void Instantiate(
+		private void InstantiateResources(
 			int softResourcesVariantsCount,
-			int rocksCount,
-			Dictionary<int, ISoftMinedResource> rocksVariants,
-			int totalScore,
+			int areaSize,
+			Dictionary<int, ISoftMinedResource> softVariants,
+			Dictionary<int, IHardMinedResource> hardVariants,
+			int totalResource,
 			GameObject resourceSpawnPosition,
-			ILevelConfig levelConfig
+			ILevelConfig levelConfig,
+			int hardResourceCount,
+			int hardResourceSpawnIndex
 		)
 		{
-			for (int i = 0; i < rocksCount; i++)
+			for (int i = 0; i < areaSize; i++)
 			{
-				for (int j = 0; j < rocksCount; j++)
+				for (int j = 0; j < areaSize; j++)
 				{
-					int randomRockIndex = Random.Range(0, softResourcesVariantsCount);
-
-					var resourcePresentation = levelConfig.SoftMinedResource[randomRockIndex].Prefab
-						.GetComponent<ResourcePresentation>();
-
-					var config = rocksVariants.ElementAt(randomRockIndex).Value;
-
-					if (totalScore > _levelProgressFacade.MaxScoreCount)
+					if (totalResource > _levelProgressFacade.MaxTotalResourceCount)
 						return;
 
-					float offsetPosition = randomRockIndex * Offset;
-
-					Vector3 rockPosition = new Vector3(
-						i + offsetPosition,
-						resourcePresentation.transform.position.y,
-						j + offsetPosition
-					) + resourceSpawnPosition.transform.position;
-
-					ResourcePresentation resourceObject = Object.Instantiate(
-						resourcePresentation,
-						rockPosition,
-						Quaternion.identity
-					).GetComponent<ResourcePresentation>();
-
-					SetMaterial(resourceObject, config);
-					SetParticleColor(resourcePresentation, config);
-					resourceObject.Construct(_resourcesProgressPresenterProvider, config.Score);
-					resourceObject.transform.SetParent(resourceSpawnPosition.transform);
+					if (totalResource >= hardResourceSpawnIndex && hardResourceCount > 0)
+					{
+						hardResourceCount = SpawnHardResource(
+							hardVariants,
+							ref totalResource,
+							resourceSpawnPosition,
+							levelConfig,
+							hardResourceCount,
+							i,
+							j
+						);
+					}
+					else
+					{
+						SpawnSoftCurrency(
+							softResourcesVariantsCount,
+							softVariants,
+							ref totalResource,
+							resourceSpawnPosition,
+							levelConfig,
+							i,
+							j
+						);
+					}
 				}
 			}
 		}
 
-		private void SetParticleColor(ResourcePresentation resourcePresentation, ISoftMinedResource config)
+		private void SpawnSoftCurrency(
+			int softResourcesVariantsCount,
+			Dictionary<int, ISoftMinedResource> softVariants,
+			ref int totalResource,
+			GameObject resourceSpawnPosition,
+			ILevelConfig levelConfig,
+			int i,
+			int j
+		)
 		{
-			var a = resourcePresentation.Particle.GetComponent<PS_ColorChanger>();
+			int randomRockIndex = Random.Range(0, softResourcesVariantsCount);
 
-			var particleSystem = resourcePresentation.Particle.GetComponent<ParticleSystem>();
-			var renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+			ResourcePresentation resourcePresentation
+				= levelConfig.SoftMinedResource[randomRockIndex].Prefab
+					.GetComponent<ResourcePresentation>();
 
-			renderer.material = new Material(_sandMaterial)
+			IMinedResource config = softVariants[randomRockIndex];
+
+			totalResource++;
+
+			float offsetPosition = randomRockIndex * Offset;
+			Vector3 position = new Vector3(
+				i + offsetPosition,
+				resourcePresentation.transform.position.y,
+				j + offsetPosition
+			) + resourceSpawnPosition.transform.position;
+
+			ResourcePresentation resourceObject = InstantiateAndSetPosition(resourcePresentation, position);
+
+			SetViewAndData(resourceSpawnPosition, resourceObject, config);
+		}
+
+		private int SpawnHardResource(
+			Dictionary<int, IHardMinedResource> hardVariants,
+			ref int totalResource,
+			GameObject resourceSpawnPosition,
+			ILevelConfig levelConfig,
+			int hardResourceCount,
+			int x,
+			int z
+		)
+		{
+			int index = Random.Range(0, hardVariants.Count);
+			IHardMinedResource hardConfig = hardVariants[index];
+
+			ResourcePresentation resourcePresentation = levelConfig.HardMinedResource[index].Prefab
+				.GetComponent<ResourcePresentation>();
+
+			Vector3 position
+				= new Vector3(
+					x + Offset,
+					resourcePresentation.transform.position.y,
+					z + Offset
+				) + resourceSpawnPosition.transform.position;
+
+			ResourcePresentation hardResource = InstantiateAndSetPosition(resourcePresentation, position);
+
+			hardResourceCount--;
+			totalResource++;
+
+			SetViewAndData(resourceSpawnPosition, hardResource, hardConfig);
+			AddHardResourceParticle(hardConfig, hardResource);
+
+			return hardResourceCount;
+		}
+
+		private void AddHardResourceParticle(IHardMinedResource hardConfig, ResourcePresentation hardResource)
+		{
+			ParticleSystem particleSystem = Object.Instantiate(
+				hardConfig.HardResourceEffect,
+				hardResource.transform.position,
+				Quaternion.identity
+			);
+
+			var activationExtension
+				= hardResource.gameObject.AddComponent<ParticleSystemActivationExtension>();
+
+			activationExtension.Construct(particleSystem, hardResource);
+			particleSystem.Play();
+		}
+
+		private void SetViewAndData(
+			GameObject resourceSpawnPosition,
+			ResourcePresentation hardResource,
+			IMinedResource hardConfig
+		)
+		{
+			SetMaterial(hardResource, hardConfig);
+			SetParticleColor(hardResource, hardConfig, hardConfig.Material);
+			hardResource.Construct(_resourcesProgressPresenterProvider, hardConfig.Score);
+			hardResource.transform.SetParent(resourceSpawnPosition.transform);
+		}
+
+		private ResourcePresentation InstantiateAndSetPosition(
+			ResourcePresentation resourcePresentation,
+			Vector3 rockPosition
+		) =>
+			Object.Instantiate(
+				resourcePresentation,
+				rockPosition,
+				Quaternion.identity
+			).GetComponent<ResourcePresentation>();
+
+		private void SetParticleColor(
+			ResourcePresentation resourcePresentation,
+			IMinedResource config,
+			Material material
+		)
+		{
+			PS_ColorChanger colorChanger = resourcePresentation.Particle.GetComponent<PS_ColorChanger>();
+
+			ParticleSystem particleSystem = resourcePresentation.Particle.GetComponent<ParticleSystem>();
+			ParticleSystemRenderer renderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+
+			renderer.material = new Material(material)
 			{
 				color = config.Color
 			};
 
-			// resourcePresentation.Particle.GetComponent<ParticleSystemRenderer>().material
-			// 	.color = config.Color;
-
-			a.newColor = config.Color;
-			a.ChangeColor();
+			colorChanger.newColor = config.Color;
+			colorChanger.ChangeColor();
 		}
 
-		private void SetMaterial(ResourcePresentation resourceObject, ISoftMinedResource config)
+		private void SetMaterial(ResourcePresentation resourceObject, IMinedResource config)
 		{
-			Material material = GetMaterial(resourceObject);
+			var renderer = resourceObject.View.GetComponent<MeshRenderer>();
 
-			material.color = config.Color;
+			renderer.material = new Material(config.Material)
+			{
+				color = config.Color
+			};
 		}
 
-		private Material GetMaterial(ResourcePresentation resourceObject) =>
-			resourceObject.View.GetComponent<MeshRenderer>().material;
-
-		private Dictionary<int, ISoftMinedResource> InitSoftResources(
-			ILevelConfig levelConfig
-		)
+		private Dictionary<int, ISoftMinedResource> InitSoftResources(ILevelConfig levelConfig)
 		{
-			var rocksVariants = new Dictionary<int, ISoftMinedResource>(RocksVariants);
+			var resources = new Dictionary<int, ISoftMinedResource>(levelConfig.SoftMinedResource.Count);
 
 			for (int i = 0; i < levelConfig.SoftMinedResource.Count; i++)
 			{
 				ISoftMinedResource resource = levelConfig.SoftMinedResource[i];
-				rocksVariants.Add(i, resource);
+				resources.Add(i, resource);
 			}
 
-			return rocksVariants;
+			return resources;
+		}
+
+		private Dictionary<int, IHardMinedResource> InitHardResources(ILevelConfig levelConfig)
+		{
+			var resources = new Dictionary<int, IHardMinedResource>(levelConfig.HardMinedResource.Count);
+
+			for (int i = 0; i < levelConfig.HardMinedResource.Count; i++)
+			{
+				IHardMinedResource resource = levelConfig.HardMinedResource[i];
+				resources.Add(i, resource);
+			}
+
+			return resources;
 		}
 	}
 }

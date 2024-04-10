@@ -2,10 +2,8 @@ using UnityEngine;
 
 namespace Sources.Infrastructure.Configs.Scripts.Level.LevelResouce
 {
-	public interface IHardMinedResource
+	public interface IHardMinedResource : IMinedResource
 	{
-		Color Color { get; }
-		GameObject Prefab { get; }
-		int Score { get; }
+		ParticleSystem HardResourceEffect { get; }
 	}
 }

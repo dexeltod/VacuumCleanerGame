@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1981145548016226117}
   - component: {fileID: 461128339766955512}
   m_Layer: 0
-  m_Name: ResourceRock4
+  m_Name: ResourceRock5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -389,7 +389,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.8490566, g: 0.16166931, b: 0.13216448, a: 1}
+      maxColor: {r: 0.8490566, g: 0.6936141, b: 0.13216448, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -4927,7 +4927,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: aa462666008c28940b2dce8ad6829b91, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4991,7 +4991,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  newColor: {r: 0.7075472, g: 0.36506543, b: 0.27033645, a: 0}
+  newColor: {r: 0.8301887, g: 0.3176181, b: 0.17621933, a: 0}
 --- !u!1 &8629106466530252399
 GameObject:
   m_ObjectHideFlags: 0

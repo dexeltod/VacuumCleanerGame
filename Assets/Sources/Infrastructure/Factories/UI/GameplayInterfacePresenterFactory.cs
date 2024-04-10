@@ -37,6 +37,7 @@ namespace Sources.Infrastructure.Factories.UI
 		private readonly IPlayerStatsServiceProvider _playerStatsServiceProvider;
 		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
 		private readonly IAdvertisement _advertisement;
+		private readonly ILevelProgressFacade _levelProgressFacade;
 		private readonly IPlayerStatChangeable _playerStatChangeable;
 
 		[Inject]
@@ -50,7 +51,8 @@ namespace Sources.Infrastructure.Factories.UI
 			IGameStateChangerProvider gameStateChanger,
 			IPlayerStatsServiceProvider playerStatsServiceProvider,
 			ICoroutineRunnerProvider coroutineRunnerProvider,
-			IAdvertisement advertisement
+			IAdvertisement advertisement,
+			ILevelProgressFacade levelProgressFacade
 		)
 		{
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
@@ -70,6 +72,7 @@ namespace Sources.Infrastructure.Factories.UI
 			_coroutineRunnerProvider = coroutineRunnerProvider ??
 				throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
+			_levelProgressFacade = levelProgressFacade;
 		}
 
 		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Implementation;
@@ -93,7 +96,8 @@ namespace Sources.Infrastructure.Factories.UI
 					_playerStatsServiceProvider.Implementation.Get("Speed") as IPlayerStatChangeable,
 					_coroutineRunnerProvider,
 					_advertisement,
-					Time
+					Time,
+					_levelProgressFacade
 				),
 				CashScore,
 				_coroutineRunnerProvider,

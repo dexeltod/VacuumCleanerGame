@@ -25,9 +25,9 @@ namespace Sources.Infrastructure.Factories.UpgradeShop
 			if (_items != null)
 				return _items;
 
-			UpgradeItemList upgradeItemList = _assetFactory.LoadFromResources<UpgradeItemList>(UIResourcesShopItems);
+			UpgradeItemListData upgradeItemListData = _assetFactory.LoadFromResources<UpgradeItemListData>(UIResourcesShopItems);
 
-			IUpgradeItemData[] upgradeItemData = upgradeItemList.Items;
+			IUpgradeItemData[] upgradeItemData = upgradeItemListData.Items;
 
 			_items = upgradeItemData ?? throw new NullReferenceException("ShopItems is null");
 

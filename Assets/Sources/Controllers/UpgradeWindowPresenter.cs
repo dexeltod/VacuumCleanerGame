@@ -56,8 +56,11 @@ namespace Sources.Controllers
 		public void SetMoney(int money) =>
 			_upgradeWindowPresentation.SetMoney(money);
 
-		public void EnableWindow() =>
+		public void EnableWindow()
+		{
+			_upgradeWindowPresentation.SetMoney(SoftCurrencyCount);
 			_upgradeWindowPresentation.UpgradeWindowMain.SetActive(true);
+		}
 
 		private async void OnClose()
 		{

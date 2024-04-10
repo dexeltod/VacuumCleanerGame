@@ -73,9 +73,9 @@ namespace Sources.Controllers
 		private void SetEnableSand() =>
 			_fillMeshShaderControllerProvider.Implementation.FillArea(CurrentScore, 0, _resourcesData.MaxCashScore);
 
-		public void ClearScores()
+		public void ClearTotalResources()
 		{
-			_resourcesData.ClearScores();
+			_resourcesData.ClearTotalResources();
 			SetView();
 		}
 
@@ -149,14 +149,14 @@ namespace Sources.Controllers
 
 		private void SetView()
 		{
-			GameplayInterfacePresenter.SetGlobalScore(_resourcesData.CurrentTotalResources);
+			GameplayInterfacePresenter.SetTotalResourceCount(_resourcesData.CurrentTotalResources);
 			GameplayInterfacePresenter.SetCashScore(_resourcesData.CurrentCashScore);
 			FillMeshShaderController.FillArea(CurrentScore, 0, _resourcesData.MaxCashScore);
 		}
 
 		private bool IsHalfScoreReached()
 		{
-			int halfScore = Mathf.CeilToInt(_resourcesData.MaxGlobalScore / 2f);
+			int halfScore = Mathf.CeilToInt(_resourcesData.MaxTotalResourceCount / 2f);
 
 			return _resourcesData.CurrentTotalResources >= halfScore;
 		}

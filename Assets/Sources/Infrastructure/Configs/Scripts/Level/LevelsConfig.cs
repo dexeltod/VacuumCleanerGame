@@ -18,6 +18,8 @@ namespace Sources.Infrastructure.Configs.Scripts.Level
 			if (level - 1 >= _levels.Count)
 				return _levels.Last();
 
+			Debug.Log(level - 1);
+
 			return _levels[level - 1];
 		}
 	}

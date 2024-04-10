@@ -53,16 +53,18 @@ namespace Sources.Infrastructure.Factories.UI
 
 		public IUpgradeWindowPresentation Create()
 		{
-			_upgradeWindowPresentation
-				= _assetFactory.InstantiateAndGetComponent<UpgradeWindowPresentation>(
-					UIResourcesUpgradeWindow
-				);
+			_upgradeWindowPresentation = GetPresentation();
 
 			Localize();
-			_shopElementFactory.Instantiate(UpgradeWindowContainerTransform);
+			_shopElementFactory.Create(UpgradeWindowContainerTransform);
 
 			return _upgradeWindowPresentation;
 		}
+
+		private UpgradeWindowPresentation GetPresentation() =>
+			_assetFactory.InstantiateAndGetComponent<UpgradeWindowPresentation>(
+				UIResourcesUpgradeWindow
+			);
 
 		private void Localize() =>
 			_upgradeWindowPresentation.Phrases = _translatorService.GetLocalize(_upgradeWindowPresentation.Phrases);

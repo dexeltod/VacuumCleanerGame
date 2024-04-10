@@ -61,7 +61,7 @@ namespace Sources.Controllers
 		public void SetSoftCurrency(int soft) =>
 			_gameplayInterfaceView.SetSoftCurrencyText(soft);
 
-		public void SetGlobalScore(int globalScore) =>
+		public void SetTotalResourceCount(int globalScore) =>
 			_gameplayInterfaceView.SetGlobalScore(globalScore);
 
 		public void SetCashScore(int cashScore) =>
@@ -80,9 +80,6 @@ namespace Sources.Controllers
 			IncreaseSpeedButton.onClick.RemoveListener(OnIncreaseSpeed);
 			GoToNextLevelButton.onClick.RemoveListener(OnGoToNextLevel);
 		}
-
-		public void StartCooldownSpeedButton(float time) =>
-			_coroutineRunnerProvider.Implementation.Run(StartCooldownSpeedRoutine(time));
 
 		private IEnumerator StartCooldownSpeedRoutine(float time)
 		{

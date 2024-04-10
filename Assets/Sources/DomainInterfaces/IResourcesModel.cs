@@ -13,12 +13,14 @@ namespace Sources.DomainInterfaces
 		int CurrentCashScore { get; }
 		int CurrentTotalResources { get; }
 		int PercentOfScore { get; }
-		int MaxGlobalScore { get; }
+		int MaxTotalResourceCount { get; }
 
 		void AddScore(int newCashScore);
+		void AddMaxTotalResourceModifier(int newAmount);
 		void DecreaseCashScore(int newValue);
 		void AddMoney(int newValue);
 		void DecreaseMoney(int newValue);
-		void ClearScores();
+		void ClearAllScores();
+		void ClearTotalResources();
 	}
 }

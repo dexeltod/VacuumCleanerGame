@@ -49,7 +49,7 @@ namespace Sources.Infrastructure.Factories.Scene
 		}
 
 		private string GameObjectsSandGround => ResourcesAssetPath.GameObjects.SandGround;
-		private int HalfSandSize => (int)Math.Ceiling(_levelProgressFacade.MaxScoreCount * Error / 2f);
+		private int HalfSandSize => (int)Math.Ceiling(_levelProgressFacade.MaxTotalResourceCount * Error / 2f);
 
 		public IMeshModifiable Create()
 		{

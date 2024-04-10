@@ -3,6 +3,7 @@ using System.Collections;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
+using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
 using Sources.Utils;
 using UnityEngine;
@@ -21,7 +22,8 @@ namespace Sources.Infrastructure.Services.Decorators
 			IPlayerStatChangeable playerStat,
 			ICoroutineRunnerProvider coroutineRunnerProvider,
 			IAdvertisement advertisement,
-			float time
+			float time,
+			ILevelProgressFacade levelProgressFacade
 		)
 		{
 			if (time < 0) throw new ArgumentOutOfRangeException(nameof(time));

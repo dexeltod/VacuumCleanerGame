@@ -61,69 +61,79 @@ namespace Sources.Infrastructure.Factories
 
 		private IProgressSetterFacade ProgressSetterFacade => _playerProgressSetterFacadeProvider.Implementation;
 
-		public List<UpgradeElementPrefabView> Instantiate(Transform transform)
+		public List<UpgradeElementPrefabView> Create(Transform transform)
 		{
 			List<IUpgradeProgressData> progress = ShopProgress.GetAll();
 
-			UpgradeItemList items
-				= _assetFactory.LoadFromResources<UpgradeItemList>(UIResourcesShopItems);
+			UpgradeItemListData items = LoadItemsList();
+
 			SetUpgradeLevelsToItems(progress, items);
 
 			return Instantiate(transform, items, progress);
 		}
 
+		private UpgradeItemListData LoadItemsList() =>
+			_assetFactory.LoadFromResources<UpgradeItemListData>(UIResourcesShopItems);
+
 		private List<UpgradeElementPrefabView> Instantiate(
 			Component transform,
-			UpgradeItemList items,
+			UpgradeItemListData items,
 			ICollection progress
 		)
 		{
-			List<UpgradeElementPrefabView> buttons = new();
+			List<UpgradeElementPrefabView> views = new();
 
-			for (int i = 0; i < progress.Count; i++)
-			{
-				UpgradeElementPrefabView button = InstantiatePrefab(transform, items, i);
+			for (int itemIndex = 0; itemIndex < progress.Count; itemIndex++)
+				Initialize(transform, items, itemIndex, views);
 
-				UpgradeElementPresenter presenter = new UpgradeElementPresenter(
-					ProgressSetterFacade,
-					button,
-					items.Items[i],
-					_persistentProgressServiceProvider,
-					_upgradeWindowPresenterProvider,
-					_resourcesProgressPresenterProvider,
-					_gameplayInterfaceProvider
-				);
-
-				var title = Localize(items.Items[i].Title);
-				var description = Localize(items.Items[i].Description);
-
-				button.Construct(
-					presenter,
-					(IItemChangeable)items.Items[i],
-					items.ReadOnlyItems[i].Icon,
-					items.Items[i].BoughtPointsCount,
-					items.Items[i].Price,
-					title,
-					description
-				);
-
-				buttons.Add(button);
-			}
-
-			return buttons;
+			return views;
 		}
 
-		private void SetUpgradeLevelsToItems(List<IUpgradeProgressData> progress, IUpgradeItemList upgradeItems)
+		private void Initialize(
+			Component transform,
+			UpgradeItemListData items,
+			int itemIndex,
+			List<UpgradeElementPrefabView> views
+		)
+		{
+			var view = items.ReadOnlyItems[itemIndex].PrefabView;
+
+			UpgradeElementPrefabView upgradeElementPrefabView = Object.Instantiate(
+				view,
+				transform.transform
+			);
+
+			UpgradeElementPresenter presenter = new UpgradeElementPresenter(
+				ProgressSetterFacade,
+				upgradeElementPrefabView,
+				items.Items[itemIndex],
+				_persistentProgressServiceProvider,
+				_upgradeWindowPresenterProvider,
+				_resourcesProgressPresenterProvider,
+				_gameplayInterfaceProvider
+			);
+
+			var title = Localize(items.Items[itemIndex].Title);
+			var description = Localize(items.Items[itemIndex].Description);
+
+			upgradeElementPrefabView.Construct(
+				presenter,
+				(IItemChangeable)items.Items[itemIndex],
+				items.ReadOnlyItems[itemIndex].Icon,
+				items.Items[itemIndex].BoughtPointsCount,
+				items.Items[itemIndex].Price,
+				title,
+				description
+			);
+
+			views.Add(upgradeElementPrefabView);
+		}
+
+		private void SetUpgradeLevelsToItems(List<IUpgradeProgressData> progress, IUpgradeItemListData upgradeItems)
 		{
 			for (var i = 0; i < upgradeItems.Items.Length; i++)
 				upgradeItems.Items[i].SetUpgradeLevel(progress[i].Value);
 		}
-
-		private UpgradeElementPrefabView InstantiatePrefab(Component transform, UpgradeItemList items, int i) =>
-			Object.Instantiate(
-				items.ReadOnlyItems[i].PrefabView,
-				transform.transform
-			);
 
 		private string Localize(string phrase) =>
 			_translatorService.GetLocalize(phrase);

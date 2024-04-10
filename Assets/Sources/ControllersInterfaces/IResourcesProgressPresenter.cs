@@ -9,7 +9,7 @@ namespace Sources.ControllersInterfaces
 		IResourceReadOnly<int> SoftCurrency { get; }
 
 		bool TryAddSand(int newScore);
-		void ClearScores();
+		void ClearTotalResources();
 		void SellSand();
 		void AddMoney(int count);
 		void DecreaseMoney(int count);

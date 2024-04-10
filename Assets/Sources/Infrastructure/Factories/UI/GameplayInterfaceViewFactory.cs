@@ -62,7 +62,7 @@ namespace Sources.Infrastructure.Factories.UI
 				_resourcesModel.CurrentCashScore,
 				_resourcesModel.CurrentTotalResources,
 				_resourcesModel.MaxCashScore,
-				_resourcesModel.MaxGlobalScore,
+				_resourcesModel.MaxTotalResourceCount,
 				_resourcesModel.SoftCurrency.Count,
 				isHalfScoreReached,
 				IsGlobalScoreViewed

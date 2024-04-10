@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 namespace Sources.Presentation.SceneEntity
 {
-	public class ResourcePresentation : MonoBehaviour
+	public class ResourcePresentation : MonoBehaviour, ICollectable
 	{
 		[SerializeField] private GameObject _view;
 
@@ -28,6 +28,8 @@ namespace Sources.Presentation.SceneEntity
 
 		public AudioSource Sound => _sound;
 
+		public event Action Collected;
+
 		private IResourcesProgressPresenter ResourcesProgressPresenter =>
 			_resourcesProgressPresenterProvider.Implementation;
 
@@ -42,6 +44,7 @@ namespace Sources.Presentation.SceneEntity
 			_view.SetActive(false);
 			_particle.Play();
 			_sound.Play();
+			Collected?.Invoke();
 		}
 
 		public void Construct(IResourcesProgressPresenterProvider resourcesProgressPresenterProvider, int score)

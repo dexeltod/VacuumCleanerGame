@@ -52,7 +52,7 @@ namespace Sources.Domain.Progress.Player
 		public int PercentOfScore => GetPercentMaxCashScore();
 
 		public int MaxCashScore => _maxCashScoreModifier + GameConfig.DefaultMaxSandFillCount;
-		public int MaxGlobalScore => _maxGlobalScoreModifier + GameConfig.DefaultMaxTotalResource;
+		public int MaxTotalResourceCount => _maxGlobalScoreModifier + GameConfig.DefaultMaxTotalResource;
 
 		public int CurrentCashScore
 		{
@@ -79,6 +79,9 @@ namespace Sources.Domain.Progress.Player
 			_cashScore.Set(CurrentCashScore);
 		}
 
+		public void AddMaxTotalResourceModifier(int newAmount) =>
+			_maxGlobalScoreModifier += newAmount;
+
 		public void DecreaseCashScore(int newValue)
 		{
 			if (newValue <= 0) throw new ArgumentOutOfRangeException(nameof(newValue));
@@ -97,11 +100,14 @@ namespace Sources.Domain.Progress.Player
 			_softCurrency.Set(_softCurrency.Count - newValue);
 		}
 
-		public void ClearScores()
+		public void ClearAllScores()
 		{
 			_cashScore.Set(0);
 			_totalResourcesAmount.Set(0);
 		}
+
+		public void ClearTotalResources() =>
+			_totalResourcesAmount.Set(0);
 
 		private int GetPercentMaxCashScore() =>
 			(_cashScore.Count / HundredPercent) * MaxCashScore;
