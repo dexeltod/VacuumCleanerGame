@@ -20,6 +20,7 @@ using Sources.Infrastructure.Providers;
 using Sources.Infrastructure.Services;
 using Sources.Infrastructure.Shop;
 using Sources.Infrastructure.StateMachine.GameStates;
+using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Common.Factories;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
@@ -119,7 +120,7 @@ namespace Sources.Application.Bootstrapp
 
 			_builder.Register<GameplayInterfacePresenterFactory>(Lifetime.Scoped);
 			_builder.Register<GameStatesRepositoryFactory>(Lifetime.Scoped);
-			_builder.Register<IProgressUpgradeFactory, ProgressUpgradeFactory>(Lifetime.Scoped);
+			_builder.Register<ProgressUpgradeFactory>(Lifetime.Scoped);
 			_builder.Register<GameStateChangerFactory>(Lifetime.Scoped).AsImplementedInterfaces();
 			_builder.Register<ProgressFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
 			_builder.Register<PlayerStatsFactory>(Lifetime.Scoped);

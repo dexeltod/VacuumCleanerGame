@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Sources.Application.MainMenu;
 using Sources.Infrastructure.UI;
+using Sources.InfrastructureInterfaces;
 using Sources.Services;
 using Sources.ServicesInterfaces;
 using UnityEngine;
@@ -10,7 +11,6 @@ using VContainer.Unity;
 
 namespace Sources.Application
 {
-
 	[RequireComponent(typeof(UIElementGetterFacade))]
 	public class StartMenuViewModel : MonoBehaviour, IPostStartable
 	{
@@ -28,7 +28,6 @@ namespace Sources.Application
 		private List<Button> _allButtons = new();
 		private ILevelConfigGetter _levelConfigGetter;
 		private ILocalizationService _localization;
-
 
 		private void Construct(
 			ILevelConfigGetter levelConfigGetter,

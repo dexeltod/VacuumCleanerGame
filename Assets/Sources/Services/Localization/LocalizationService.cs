@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using Plugins.CW.LeanLocalization.Required.Scripts;
-using Sources.Infrastructure.Configs.Scripts;
 using Sources.Services.Localization.Serializable;
 using Sources.ServicesInterfaces;
+using Sources.Utils;
 using UnityEngine;
 
 namespace Sources.Services.Localization

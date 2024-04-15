@@ -1,12 +1,12 @@
 using UnityEngine;
 
-namespace Sources.Infrastructure.Configs.Scripts.Level.LevelResouce
+namespace Sources.InfrastructureInterfaces
 {
 	public interface IMinedResource
 	{
 		Color Color { get; }
 		Material Material { get; }
-		GameObject Prefab { get; }
+		UnityEngine.GameObject Prefab { get; }
 		int Score { get; }
 	}
 }

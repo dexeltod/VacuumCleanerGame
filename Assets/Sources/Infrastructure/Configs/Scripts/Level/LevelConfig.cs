@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Sources.Infrastructure.Configs.Scripts.Level.LevelResouce;
+using Sources.Infrastructure.Configs.Scripts.Level.LevelResource;
+using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Configs;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Configs.Scripts.Level

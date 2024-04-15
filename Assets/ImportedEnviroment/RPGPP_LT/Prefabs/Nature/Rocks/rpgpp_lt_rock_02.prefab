@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4372973593729692}
   - component: {fileID: 33031301588932660}
   - component: {fileID: 23309717094965422}
+  - component: {fileID: 6627774529611879625}
   m_Layer: 0
   m_Name: rpgpp_lt_rock_02
   m_TagString: Untagged
@@ -83,3 +84,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6627774529611879625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1290125285081394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9145babad3f468a9f4b0d8487694082, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _view: {fileID: 0}
+  _particle: {fileID: 0}
+  _sound: {fileID: 0}
+  _minPitchRange: 0.6
+  _maxPitchRange: 0.8
+  _soundVolume: 0.6

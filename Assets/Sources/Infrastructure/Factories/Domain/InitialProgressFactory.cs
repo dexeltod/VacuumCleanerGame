@@ -3,6 +3,7 @@ using Sources.Domain.Progress;
 using Sources.Domain.Progress.Player;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.Infrastructure.Factories.UpgradeShop;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.Utils;
@@ -15,13 +16,13 @@ namespace Sources.Infrastructure.Factories.Domain
 	{
 		private const int MaxUpgradePointsCount = 6;
 
-		private readonly IProgressUpgradeFactory _progressUpgradeFactory;
+		private readonly ProgressUpgradeFactory _progressUpgradeFactory;
 		private readonly IResourceService _resourceService;
 		private readonly IPlayerStatsServiceProvider _playerStatsService;
 
 		[Inject]
 		public InitialProgressFactory(
-			IProgressUpgradeFactory progressUpgradeFactory,
+			ProgressUpgradeFactory progressUpgradeFactory,
 			IResourceService resourceService,
 			ProgressConstantNames progressConstantNames,
 			IPlayerProgressSetterFacadeProvider playerProgressSetterFacadeProvider,

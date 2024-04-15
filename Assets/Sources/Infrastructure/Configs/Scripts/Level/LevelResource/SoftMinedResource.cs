@@ -1,18 +1,44 @@
 using System;
+using Sirenix.OdinInspector;
+using Sources.InfrastructureInterfaces;
+using Sources.Presentation.SceneEntity;
 using UnityEngine;
 
-namespace Sources.Infrastructure.Configs.Scripts.Level.LevelResouce
+namespace Sources.Infrastructure.Configs.Scripts.Level.LevelResource
 {
 	[Serializable] public class SoftMinedResource : ISoftMinedResource
 	{
-		[SerializeField] private GameObject _prefab;
-		[SerializeField] private int _score;
-		[SerializeField] private Color _color;
-		[SerializeField] private Material _material;
+		[HorizontalGroup("Split", Width = 200), InlineEditor(InlineEditorModes.LargePreview), HideLabel,
+		 Required, OnValueChanged("AddPresentationIfNull"), AssetsOnly, SerializeField]
+		private GameObject _prefab;
 
+		[Required] [VerticalGroup("Split/Properties")] [SerializeField]
+		private int _score;
+
+		[Required] [VerticalGroup("Split/Properties")] [SerializeField]
+		private Color _color;
+
+		[Required] [VerticalGroup("Split/Properties")] [SerializeField]
+		private Material _material;
+
+		public ResourceType ResourceType;
 		public Material Material => _material;
 		public Color Color => _color;
 		public GameObject Prefab => _prefab;
 		public int Score => _score;
+
+		private void AddPresentationIfNull()
+		{
+			if (_prefab.TryGetComponent<ResourcePresentation>(out _) == false)
+				_prefab.AddComponent<ResourcePresentation>();
+		}
+	}
+
+	public enum ResourceType
+	{
+		Egdgdsfg,
+		Gdsfgdsg,
+		Hdfg,
+		Ddfg
 	}
 }

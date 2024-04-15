@@ -89,10 +89,9 @@ namespace Sources.Controllers
 			if (CurrentScore > _resourcesData.MaxCashScore)
 				return false;
 
-			int score = Mathf.Clamp(newScore, 0, _resourcesData.MaxCashScore);
-
 			_lastCashScore = _resourcesData.CurrentCashScore;
 
+			int score = Mathf.Clamp(newScore, 0, _resourcesData.MaxCashScore);
 			_resourcesData.AddScore(score);
 
 			PlayParticleSystem();
@@ -137,7 +136,6 @@ namespace Sources.Controllers
 
 		public void AddMoney(int count)
 		{
-			//TODO: When the user will be watching video
 			_resourcesData.AddMoney(count);
 			SetMoneyTextView();
 		}

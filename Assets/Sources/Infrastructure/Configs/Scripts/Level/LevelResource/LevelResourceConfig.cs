@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Sources.Infrastructure.Configs.Scripts.Level.LevelResouce
+namespace Sources.Infrastructure.Configs.Scripts.Level.LevelResource
 {
 	[Serializable] public class LevelResourceConfig
 	{

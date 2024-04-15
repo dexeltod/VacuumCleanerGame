@@ -8,6 +8,9 @@ namespace Sources.Services.PlayerServices
 {
 	public sealed class PlayerStatsService : IPlayerStatsService
 	{
+		public const string Speed = "Speed";
+		public const string ScoreCash = "ScoreCash";
+
 		private readonly ShopPointsToStatsConverter _converter;
 
 		private readonly List<IUpgradeProgressData> _progress;
@@ -27,7 +30,7 @@ namespace Sources.Services.PlayerServices
 			_converter = statsConverter ?? throw new ArgumentNullException(nameof(statsConverter));
 		}
 
-		public IPlayerStat Get(string progressName)
+		public IPlayerStatReadOnly Get(string progressName)
 		{
 			if (_statNames.Contains(progressName) == false)
 				throw new InvalidOperationException("The progress name " + progressName + "not exists");
@@ -44,6 +47,7 @@ namespace Sources.Services.PlayerServices
 		{
 			if (_statNames.Contains(progressName) == false)
 				throw new InvalidOperationException("The progress name " + progressName + "not exists");
+			
 			if (value < 0)
 				throw new ArgumentOutOfRangeException(nameof(value));
 

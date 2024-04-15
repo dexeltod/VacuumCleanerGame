@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Sources.ControllersInterfaces;
 using Sources.Infrastructure.Configs.Scripts;
+using Sources.Infrastructure.Factories.UpgradeShop;
 using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
@@ -9,6 +10,7 @@ using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
+using Sources.Utils;
 using UnityEngine;
 using VContainer;
 
@@ -29,7 +31,7 @@ namespace Sources.Infrastructure.Factories.UI
 		[Inject]
 		public UpgradeWindowViewFactory(
 			IAssetFactory assetFactory,
-			IProgressUpgradeFactory progressUpgradeFactory,
+			ProgressUpgradeFactory progressUpgradeFactory,
 			ResourcesProgressPresenterProvider resourceProgressPresenter,
 			IPersistentProgressServiceProvider persistentProgressService,
 			IShopProgressFacade shopProgressFacade,

@@ -1,6 +1,6 @@
 using System;
 
-namespace Sources.Presentation.SceneEntity
+namespace Sources.PresentationInterfaces
 {
 	public interface ICollectable
 	{

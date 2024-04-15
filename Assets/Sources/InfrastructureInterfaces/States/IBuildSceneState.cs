@@ -1,4 +1,4 @@
-using Sources.Infrastructure.Configs.Scripts.Level;
+using Sources.InfrastructureInterfaces.Configs;
 using Sources.InfrastructureInterfaces.States.StateMachineInterfaces;
 
 namespace Sources.InfrastructureInterfaces.States

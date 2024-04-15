@@ -11,11 +11,11 @@
  * Attribution is not required, but it is always welcomed!
  * -------------------------------------*/
 
-using Graphy___Ultimate_Stats_Monitor.Runtime.Util;
 using UnityEngine;
 using UnityEngine.UI;
+using Tayx.Graphy.Utils.NumString;
 
-namespace Graphy___Ultimate_Stats_Monitor.Runtime.Ram
+namespace Tayx.Graphy.Ram
 {
     public class G_RamText : MonoBehaviour
     {

@@ -1,4 +1,4 @@
-namespace Sources.Infrastructure.Configs.Scripts
+namespace Sources.Utils
 {
 	public static class ResourcesAssetPath
 	{

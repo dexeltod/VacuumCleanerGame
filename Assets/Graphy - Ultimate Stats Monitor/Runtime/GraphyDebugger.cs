@@ -11,17 +11,20 @@
  * Attribution is not required, but it is always welcomed!
  * -------------------------------------*/
 
-using System.Collections.Generic;
-using System.Linq;
-using Graphy___Ultimate_Stats_Monitor.Runtime.Audio;
-using Graphy___Ultimate_Stats_Monitor.Runtime.Fps;
-using Graphy___Ultimate_Stats_Monitor.Runtime.Ram;
-using Graphy___Ultimate_Stats_Monitor.Runtime.Util;
 using UnityEngine;
 using UnityEngine.Events;
 using Debug = UnityEngine.Debug;
 
-namespace Graphy___Ultimate_Stats_Monitor.Runtime
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using Tayx.Graphy.Audio;
+using Tayx.Graphy.Fps;
+using Tayx.Graphy.Ram;
+using Tayx.Graphy.Utils;
+
+namespace Tayx.Graphy
 {
     /// <summary>
     /// Main class to access the Graphy Debugger API.

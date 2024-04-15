@@ -6,6 +6,7 @@ using Sources.Presentation.UI.YandexAuthorization;
 using Sources.PresentationInterfaces;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
+using Sources.Utils;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Factories.Authorization

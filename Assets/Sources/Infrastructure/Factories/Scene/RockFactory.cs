@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using Sources.Infrastructure.Configs.Scripts;
 using Sources.Infrastructure.Configs.Scripts.Level;
-using Sources.Infrastructure.Configs.Scripts.Level.LevelResouce;
 using Sources.Infrastructure.Providers;
+using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Configs;
 using Sources.Presentation.SceneEntity;
 using Sources.Presentation.Services;
 using Sources.ServicesInterfaces;
+using Sources.Utils;
 using TheDeveloper.ColorChanger;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -138,6 +140,7 @@ namespace Sources.Infrastructure.Factories.Scene
 			totalResource++;
 
 			float offsetPosition = randomRockIndex * Offset;
+
 			Vector3 position = new Vector3(
 				i + offsetPosition,
 				resourcePresentation.transform.position.y,
@@ -217,8 +220,11 @@ namespace Sources.Infrastructure.Factories.Scene
 			Object.Instantiate(
 				resourcePresentation,
 				rockPosition,
-				Quaternion.identity
+				new Quaternion(GetRandomAngle(), GetRandomAngle(), GetRandomAngle(), 1)
 			).GetComponent<ResourcePresentation>();
+
+		private float GetRandomAngle() =>
+			Random.Range(0, 360);
 
 		private void SetParticleColor(
 			ResourcePresentation resourcePresentation,

@@ -14,8 +14,10 @@ using Sources.InfrastructureInterfaces.Services;
 using Sources.Presentation;
 using Sources.Presentation.UI;
 using Sources.Services.Localization;
+using Sources.Services.PlayerServices;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
+using Sources.Utils;
 using VContainer;
 
 namespace Sources.Infrastructure.Factories.UI
@@ -85,6 +87,10 @@ namespace Sources.Infrastructure.Factories.UI
 			_persistentProgressServiceProvider.Implementation.GlobalProgress.ResourcesModel
 				.CurrentCashScore;
 
+		private int MaxCashScore =>
+			_persistentProgressServiceProvider.Implementation.GlobalProgress.ResourcesModel
+				.MaxCashScore;
+
 		public override GameplayInterfacePresenter Create()
 		{
 			GameplayInterfaceView gameplayInterfaceView = Load();
@@ -93,15 +99,17 @@ namespace Sources.Infrastructure.Factories.UI
 				_levelChangerService,
 				gameplayInterfaceView,
 				new SpeedDecorator(
-					_playerStatsServiceProvider.Implementation.Get("Speed") as IPlayerStatChangeable,
+					_playerStatsServiceProvider.Implementation.Get(PlayerStatsService.Speed) as IPlayerStatChangeable,
 					_coroutineRunnerProvider,
 					_advertisement,
 					Time,
 					_levelProgressFacade
 				),
-				CashScore,
+				_playerStatsServiceProvider.Implementation.Get(PlayerStatsService.ScoreCash),
 				_coroutineRunnerProvider,
-				Time
+				Time,
+				CashScore,
+				MaxCashScore
 			);
 
 			var gameMenuView = gameplayInterfaceView.GetComponent<GameMenuView>();

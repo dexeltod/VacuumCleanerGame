@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Sources.Infrastructure
 {
-	[CreateAssetMenu(fileName = "ResourcesPrefabs", menuName = "Configs/ResourcesPrefabs")]
+	[CreateAssetMenu(fileName = "ResourcesPrefabs", menuName = "ViewConfigs/ResourcesPrefabs")]
 	public class ResourcesPrefabs : ScriptableObject
 	{
 		[SerializeField] private SceneGameObjects _sceneGameObjects;

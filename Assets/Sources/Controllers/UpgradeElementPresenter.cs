@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
@@ -12,21 +13,19 @@ namespace Sources.Controllers
 	public class UpgradeElementPresenter : Presenter, IUpgradeElementPresenter
 	{
 		private readonly IProgressSetterFacade _progressSetterFacade;
-		private readonly IUpgradeElementChangeable _button;
-		private readonly IUpgradeItemData _upgradeItemData;
+		private readonly Dictionary<int, IUpgradeElementChangeableView> _button;
+		private readonly Dictionary<int, IUpgradeItemData> _upgradeItemData;
 		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
 		private readonly IUpgradeWindowPresenterProvider _upgradeWindowPresenter;
-		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenter;
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
 		private readonly ISaveLoader _saveLoader;
 
 		public UpgradeElementPresenter(
 			IProgressSetterFacade progressSetterFacade,
-			IUpgradeElementChangeable button,
-			IUpgradeItemData upgradeItemData,
+			Dictionary<int, IUpgradeElementChangeableView> button,
+			Dictionary<int, IUpgradeItemData> upgradeItemData,
 			IPersistentProgressServiceProvider persistentProgressServiceProvider,
 			IUpgradeWindowPresenterProvider upgradeWindowPresenter,
-			IResourcesProgressPresenterProvider resourcesProgressPresenter,
 			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider
 		)
 		{
@@ -38,8 +37,6 @@ namespace Sources.Controllers
 				throw new ArgumentNullException(nameof(persistentProgressServiceProvider));
 			_upgradeWindowPresenter = upgradeWindowPresenter ??
 				throw new ArgumentNullException(nameof(upgradeWindowPresenter));
-			_resourcesProgressPresenter = resourcesProgressPresenter ??
-				throw new ArgumentNullException(nameof(resourcesProgressPresenter));
 			_gameplayInterfacePresenterProvider = gameplayInterfacePresenterProvider ??
 				throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
 		}
@@ -50,13 +47,16 @@ namespace Sources.Controllers
 			_persistentProgressServiceProvider.Implementation
 				.GlobalProgress.ResourcesModel.SoftCurrency.Count;
 
-		public void Upgrade()
+		public void Upgrade(int id)
 		{
-			if (_progressSetterFacade.TryAddOneProgressPoint(_upgradeItemData.IdName, _upgradeItemData) == false)
+			IUpgradeItemData itemData = _upgradeItemData[id];
+			IUpgradeElementChangeableView button = _button[id];
+
+			if (_progressSetterFacade.TryAddOneProgressPoint(itemData.IdName, itemData) == false)
 				throw new InvalidOperationException();
 
-			_button.AddProgressPointColor();
-			_button.SetPriceText(_upgradeItemData.Price);
+			button.AddProgressPointColor();
+			button.SetPriceText(itemData.Price);
 
 			UpgradeWindowPresenter.SetMoney(Money);
 			_gameplayInterfacePresenterProvider.Implementation.SetSoftCurrency(Money);

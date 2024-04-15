@@ -44,7 +44,7 @@ namespace Sources.Controllers
 	// 	}
 	// 	public void ChangeColor(string idName)
 	// 	{
-	// 		IUpgradeElementChangeable color = _upgradeElements
+	// 		IUpgradeElementChangeableView color = _upgradeElements
 	// 			.FirstOrDefault(element => element.IdName == idName);
 	//
 	// 		color?.AddProgressPointColor(Point);

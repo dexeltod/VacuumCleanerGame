@@ -1,33 +1,38 @@
 using System;
+using System.Collections.Generic;
+using Sources.Infrastructure.Configs;
 using Sources.Infrastructure.Configs.Scripts;
+using Sources.Infrastructure.ScriptableObjects;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.Presentation.SceneEntity;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Upgrade;
+using Sources.Utils;
 using VContainer;
 
 namespace Sources.Infrastructure.Factories.UpgradeShop
 {
-	public class ProgressUpgradeFactory : IProgressUpgradeFactory
+	public class ProgressUpgradeFactory
 	{
 		private readonly LoadingCurtain _loadingCurtain;
 		private readonly IAssetFactory _assetFactory;
 
-		private IUpgradeItemData[] _items;
+		private IReadOnlyCollection<UpgradeItemViewConfig> _items;
 		private string UIResourcesShopItems => ResourcesAssetPath.Scene.UIResources.ShopItems;
 
 		[Inject]
 		public ProgressUpgradeFactory(IAssetFactory assetFactory) =>
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 
-		public IUpgradeItemData[] LoadItems()
+		public IReadOnlyCollection<UpgradeItemViewConfig> LoadItems()
 		{
 			if (_items != null)
 				return _items;
 
-			UpgradeItemListData upgradeItemListData = _assetFactory.LoadFromResources<UpgradeItemListData>(UIResourcesShopItems);
+			UpgradeItemListConfig upgradeItemListConfig
+				= _assetFactory.LoadFromResources<UpgradeItemListConfig>(UIResourcesShopItems);
 
-			IUpgradeItemData[] upgradeItemData = upgradeItemListData.Items;
+			IReadOnlyCollection<UpgradeItemViewConfig> upgradeItemData = upgradeItemListConfig.ReadOnlyItems;
 
 			_items = upgradeItemData ?? throw new NullReferenceException("ShopItems is null");
 

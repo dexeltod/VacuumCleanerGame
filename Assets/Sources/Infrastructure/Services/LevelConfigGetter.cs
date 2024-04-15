@@ -1,8 +1,10 @@
-using Sources.Infrastructure.Configs.Scripts;
 using Sources.Infrastructure.Configs.Scripts.Level;
+using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Configs;
 using Sources.ServicesInterfaces;
+using Sources.Utils;
 
-namespace Sources.InfrastructureInterfaces.Scene
+namespace Sources.Infrastructure.Services
 {
 	public sealed class LevelConfigGetter : ILevelConfigGetter
 	{

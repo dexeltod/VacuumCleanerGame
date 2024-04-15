@@ -10,11 +10,11 @@
       "Translations": [
         {
           "Language": "Russian",
-          "Text": "Улучшение!"
+          "Text": "Улучшение"
         },
         {
           "Language": "English",
-          "Text": "Upgrade!"
+          "Text": "Upgrade"
         },
         {
           "Language": "Turkish",
@@ -214,7 +214,7 @@
       "Translations": [
         {
           "Language": "Russian",
-          "Text": "Увеличь скорость машины"
+          "Text": "Увеличить скорость машины"
         },
         {
           "Language": "English",
@@ -325,6 +325,40 @@
         {
           "Language": "Turkish",
           "Text": "Arabanızı geliştirmek mi istiyorsunuz?"
+        }
+      ]
+    },
+    {
+      "Name": "ScoreCash",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Размер хранилища"
+        },
+        {
+          "Language": "English",
+          "Text": "Storage size"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Depolama boyutu"
+        }
+      ]
+    },
+    {
+      "Name": "ScoreCashDescription",
+      "Translations": [
+        {
+          "Language": "Russian",
+          "Text": "Увеличить максимально количество собираемых ресурсов"
+        },
+        {
+          "Language": "English",
+          "Text": "Increase the maximum amount of collected resources"
+        },
+        {
+          "Language": "Turkish",
+          "Text": "Toplanan kaynakların maksimum miktarını artırın"
         }
       ]
     }

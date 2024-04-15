@@ -7,9 +7,7 @@ namespace Sources.Infrastructure.ScriptableObjects.Shop
 {
 	[Serializable] public class ProgressItemData : ScriptableObject, IUpgradeItemData, IItemChangeable
 	{
-		private const int MaxPoint = 6;
-
-		[SerializeField] private List<int> _prices = new(MaxPoint);
+		[SerializeField] private List<int> _prices;
 
 		[SerializeField] private string _title;
 		[SerializeField] private string _description;
@@ -18,7 +16,7 @@ namespace Sources.Infrastructure.ScriptableObjects.Shop
 		private int _pointIndex;
 
 		public string Description => _description;
-		public int MaxPointLevel => MaxPoint;
+		public int MaxPointLevel => _prices.Count;
 		public int BoughtPointsCount => _pointIndex;
 
 		public int Price
@@ -51,15 +49,14 @@ namespace Sources.Infrastructure.ScriptableObjects.Shop
 			if (_pointIndex <= 0)
 				_pointIndex = 0;
 
-			if (_prices.Count > MaxPoint)
-				for (int i = MaxPoint; i < _prices.Count; i++)
+			if (_prices.Count > _stats.Length)
+				for (int i = _stats.Length; i < _prices.Count; i++)
 					_prices.RemoveAt(i);
 
-			if (_prices.Count < MaxPoint)
-			{
-				for (int i = _prices.Count; i < MaxPoint; i++)
-					_prices.Add(0);
-			}
+			if (_prices.Count >= _stats.Length) return;
+
+			for (int i = _prices.Count; i < _stats.Length; i++)
+				_prices.Add(0);
 		}
 	}
 }

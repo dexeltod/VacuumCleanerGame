@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Sources.Infrastructure.Configs.Scripts.Level.LevelResouce
+namespace Sources.InfrastructureInterfaces
 {
 	public interface IHardMinedResource : IMinedResource
 	{

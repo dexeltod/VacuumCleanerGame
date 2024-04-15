@@ -15,11 +15,11 @@ namespace Sources.Controllers
 		public readonly float VacuumDistance;
 
 		private readonly Joystick _joystick;
-		private readonly IPlayerStat _speedStat;
+		private readonly IPlayerStatReadOnly _speedStatReadOnly;
 
 		private Vector3 _offset;
 
-		private float Speed => _speedStat.Value;
+		private float Speed => _speedStatReadOnly.Value;
 
 		public PlayerTransformable(
 			Transform transform,
@@ -27,7 +27,7 @@ namespace Sources.Controllers
 			IPlayerStatsService stats
 		) : base(transform)
 		{
-			_speedStat = stats.Get(PlayerStatNames.Speed);
+			_speedStatReadOnly = stats.Get(PlayerStatNames.Speed);
 
 			_joystick = joystick;
 		}

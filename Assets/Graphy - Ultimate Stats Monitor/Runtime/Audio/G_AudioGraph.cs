@@ -11,12 +11,11 @@
  * Attribution is not required, but it is always welcomed!
  * -------------------------------------*/
 
-using Graphy___Ultimate_Stats_Monitor.Runtime.Graph;
-using Graphy___Ultimate_Stats_Monitor.Runtime.Shader;
+using Tayx.Graphy.Graph;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Graphy___Ultimate_Stats_Monitor.Runtime.Audio
+namespace Tayx.Graphy.Audio
 {
     public class G_AudioGraph : G_Graph
     {
@@ -25,8 +24,8 @@ namespace Graphy___Ultimate_Stats_Monitor.Runtime.Audio
         [SerializeField] private    Image           m_imageGraph = null;
         [SerializeField] private    Image           m_imageGraphHighestValues = null;
 
-        [SerializeField] private    UnityEngine.Shader          ShaderFull = null;
-        [SerializeField] private    UnityEngine.Shader          ShaderLight = null;
+        [SerializeField] private    Shader          ShaderFull = null;
+        [SerializeField] private    Shader          ShaderLight = null;
 
         [SerializeField] private    bool            m_isInitialized = false;
 

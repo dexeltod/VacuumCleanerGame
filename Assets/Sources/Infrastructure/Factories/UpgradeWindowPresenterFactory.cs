@@ -3,7 +3,6 @@ using Sources.Controllers;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Common.Factory.Decorators;
-using Sources.Infrastructure.Configs.Scripts;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.Presentation.UI.Shop;
@@ -11,6 +10,7 @@ using Sources.PresentationInterfaces;
 using Sources.Services.Localization;
 using Sources.Services.Triggers;
 using Sources.ServicesInterfaces;
+using Sources.Utils;
 
 namespace Sources.Infrastructure.Factories
 {
@@ -70,8 +70,7 @@ namespace Sources.Infrastructure.Factories
 				_resourcesProgressPresenterProvider
 			);
 
-			var activator
-				= _assetFactory.InstantiateAndGetComponent<UpgradeWindowActivator>(YesNoButtonsCanvas);
+			var activator = _assetFactory.InstantiateAndGetComponent<UpgradeWindowActivator>(YesNoButtonsCanvas);
 
 			activator.Phrases.Phrases = _translatorService.GetLocalize(activator.Phrases.Phrases);
 

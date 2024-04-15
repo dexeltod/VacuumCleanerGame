@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 4882807750832277217}
   - component: {fileID: 6775376248325374976}
   m_Layer: 5
-  m_Name: UpgradePointRaw-div
+  m_Name: PointsContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -360,14 +360,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 4
+    m_Left: 10
+    m_Right: 10
+    m_Top: 10
+    m_Bottom: 10
+  m_ChildAlignment: 3
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 70, y: 30}
+  m_CellSize: {x: 30, y: 30}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -800,7 +800,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6807d44064a0af419d40cc5d584d1f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxPoints: 6
   _pointElement: {fileID: 5220799815932149384, guid: 7c70e425e036970469a149381cbb8bf7, type: 3}
   _notBoughtPointColor: {r: 0.7176471, g: 0.7176471, b: 0.7176471, a: 1}
   _boughtPointColor: {r: 0.2, g: 0.8392157, b: 0.12941177, a: 1}

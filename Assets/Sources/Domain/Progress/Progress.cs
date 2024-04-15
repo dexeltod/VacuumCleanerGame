@@ -19,7 +19,7 @@ namespace Sources.Domain.Progress
 		{
 			if (maxUpgradePointsCount < 0) throw new ArgumentOutOfRangeException(nameof(maxUpgradePointsCount));
 			_progressData = progress ?? throw new ArgumentNullException(nameof(progress));
-			
+
 			_maxUpgradePointsCount = maxUpgradePointsCount;
 			_progressNames = new List<string>();
 
@@ -54,12 +54,10 @@ namespace Sources.Domain.Progress
 
 			IUpgradeProgressData element = _progressData.FirstOrDefault(x => x.Name == progressName);
 
-			IUpgradeProgressData upgradeProgress = element;
-
-			if (upgradeProgress == null)
+			if (element == null)
 				throw new ArgumentNullException("upgradeProgress is null");
 
-			upgradeProgress.Value = progressValue;
+			element.Value = progressValue;
 		}
 	}
 }

@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Sources.Controllers;
+using Sources.ControllersInterfaces;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
-using Sources.ServicesInterfaces.Upgrade;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,8 +12,6 @@ namespace Sources.Presentation.UI.Shop
 	public class UpgradeElementPrefabView : PresentableView<IUpgradeElementPresenter>, IUpgradeElementPrefabView
 	{
 		private const int StartIndex = 0;
-
-		[Header("Points")] [SerializeField] private int _maxPoints = 6;
 
 		[SerializeField] private GameObject _pointElement;
 		[SerializeField] private Color _notBoughtPointColor;
@@ -33,17 +30,23 @@ namespace Sources.Presentation.UI.Shop
 
 		private int _boughtPoints;
 		private bool _isInit;
+		private int _id;
+		private int _maxPoints;
 
 		public void Construct(
 			IUpgradeElementPresenter presenter,
-			IItemChangeable itemChangeable,
+			int id,
 			Sprite icon,
 			int boughtPointsCount,
 			int price,
 			string title,
-			string description
+			string description,
+			int maxPoints
 		)
 		{
+			if (maxPoints < 0) throw new ArgumentOutOfRangeException(nameof(maxPoints));
+			_maxPoints = maxPoints;
+			_id = id;
 			if (_isInit)
 				throw new InvalidOperationException($"{name} view is already constructed");
 
@@ -66,7 +69,7 @@ namespace Sources.Presentation.UI.Shop
 		{
 			if (count <= 0)
 				throw new ArgumentOutOfRangeException(nameof(count));
-			
+
 			if (_boughtPoints + count > _maxPoints)
 				return;
 
@@ -82,20 +85,14 @@ namespace Sources.Presentation.UI.Shop
 		public void SetPriceText(int price) =>
 			_price.SetText(price.ToString());
 
-		private void OnEnable()
-		{
-			Presenter.Enable();
+		private void OnEnable() =>
 			_buttonBuy.onClick.AddListener(OnBuyButtonPressed);
-		}
 
-		private void OnDisable()
-		{
-			Presenter.Disable();
+		private void OnDisable() =>
 			_buttonBuy.onClick.RemoveListener(OnBuyButtonPressed);
-		}
 
 		private void OnBuyButtonPressed() =>
-			Presenter.Upgrade();
+			Presenter.Upgrade(_id);
 
 		private void InstantiatePoints()
 		{

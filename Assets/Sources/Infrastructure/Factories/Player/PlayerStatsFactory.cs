@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sources.Domain.Stats;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Common.Factory;
+using Sources.Infrastructure.Configs;
+using Sources.Infrastructure.Factories.UpgradeShop;
+using Sources.Infrastructure.ScriptableObjects;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.Services;
@@ -15,7 +19,7 @@ namespace Sources.Infrastructure.Factories.Player
 {
 	public class PlayerStatsFactory : Factory<IPlayerStatsService>
 	{
-		private readonly IProgressUpgradeFactory _shopFactory;
+		private readonly ProgressUpgradeFactory _shopFactory;
 		private readonly IPersistentProgressServiceProvider _persistentProgressService;
 		private readonly IPlayerStatsServiceProvider _playerStatsServiceProvider;
 
@@ -23,7 +27,7 @@ namespace Sources.Infrastructure.Factories.Player
 
 		[Inject]
 		public PlayerStatsFactory(
-			IProgressUpgradeFactory progressUpgradeFactory,
+			ProgressUpgradeFactory progressUpgradeFactory,
 			IPersistentProgressServiceProvider persistentProgressService,
 			IPlayerStatsServiceProvider playerStatsServiceProvider
 		)
@@ -48,11 +52,12 @@ namespace Sources.Infrastructure.Factories.Player
 			string[] statNames = new string[progressCount];
 			IPlayerStatChangeable[] playerStats = new IPlayerStatChangeable[progressCount];
 
-			IUpgradeItemData[] items = _shopFactory.LoadItems();
+			IReadOnlyCollection<UpgradeItemViewConfig> items = _shopFactory.LoadItems();
 
 			Dictionary<string, int[]> stats = CreateStatsDictionary(items);
 
 			ShopPointsToStatsConverter converter = new ShopPointsToStatsConverter(stats);
+
 			FillArrays(progress, statNames, playerStats, converter);
 
 			_playerStatsService = new PlayerStatsService(statNames, playerStats, progress, converter);
@@ -61,16 +66,9 @@ namespace Sources.Infrastructure.Factories.Player
 			return _playerStatsService;
 		}
 
-		private Dictionary<string, int[]> CreateStatsDictionary(IUpgradeItemData[] upgradeItemData)
-		{
-			Dictionary<string, int[]> stats = new Dictionary<string, int[]>();
-			{
-				foreach (IUpgradeItemData stat in upgradeItemData)
-					stats.Add(stat.IdName, stat.Stats);
-			}
-
-			return stats;
-		}
+		private Dictionary<string, int[]> CreateStatsDictionary(IEnumerable<UpgradeItemViewConfig> upgradeItemData) =>
+			upgradeItemData.Cast<IUpgradeItemData>()
+				.ToDictionary(stat => stat.IdName, stat => stat.Stats);
 
 		private void FillArrays(
 			List<IUpgradeProgressData> progress,

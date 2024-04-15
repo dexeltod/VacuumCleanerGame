@@ -1,6 +1,6 @@
-using Sources.Infrastructure.Configs.Scripts.Level;
+using Sources.InfrastructureInterfaces.Configs;
 
-namespace Sources.ServicesInterfaces
+namespace Sources.InfrastructureInterfaces
 {
 	public interface ILevelConfigGetter
 	{
