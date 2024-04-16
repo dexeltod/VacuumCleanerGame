@@ -31,7 +31,7 @@ namespace Sources.Infrastructure.Factories.UI
 		[Inject]
 		public UpgradeWindowViewFactory(
 			IAssetFactory assetFactory,
-			ProgressUpgradeFactory progressUpgradeFactory,
+			ProgressEntityFactory progressEntityFactory,
 			ResourcesProgressPresenterProvider resourceProgressPresenter,
 			IPersistentProgressServiceProvider persistentProgressService,
 			IShopProgressFacade shopProgressFacade,

@@ -14,42 +14,38 @@ namespace Sources.Infrastructure.Factories.Domain
 {
 	public class InitialProgressFactory : IInitialProgressFactory
 	{
-		private const int MaxUpgradePointsCount = 6;
-
-		private readonly ProgressUpgradeFactory _progressUpgradeFactory;
+		private readonly ProgressEntityFactory _progressEntityFactory;
 		private readonly IResourceService _resourceService;
 		private readonly IPlayerStatsServiceProvider _playerStatsService;
 
 		[Inject]
 		public InitialProgressFactory(
-			ProgressUpgradeFactory progressUpgradeFactory,
+			ProgressEntityFactory progressEntityFactory,
 			IResourceService resourceService,
 			ProgressConstantNames progressConstantNames,
 			IPlayerProgressSetterFacadeProvider playerProgressSetterFacadeProvider,
 			IPersistentProgressServiceProvider persistentProgressServiceProvider
 		)
 		{
-			_progressUpgradeFactory = progressUpgradeFactory ??
-				throw new ArgumentNullException(nameof(progressUpgradeFactory));
+			_progressEntityFactory = progressEntityFactory ??
+				throw new ArgumentNullException(nameof(progressEntityFactory));
 			_resourceService = resourceService ?? throw new ArgumentNullException(nameof(resourceService));
 		}
 
 		public IGlobalProgress Create()
 		{
-			var itemsList = _progressUpgradeFactory.LoadItems();
+			var itemsList = _progressEntityFactory.Load();
 
 			if (itemsList == null) throw new ArgumentNullException(nameof(itemsList));
 
 			ResourcesModel resourcesModel = new ResourcesModelFactory(_resourceService).Create();
 
 			PlayerProgress playerProgressModel = new PlayerProgressFactory(
-				new ProgressUpgradeDataFactory(itemsList).Create(),
-				MaxUpgradePointsCount
+				new ProgressUpgradeDataFactory(itemsList).Create()
 			).Create();
 
 			UpgradeProgressModel upgradeProgressModelModel = new(
-				new ProgressUpgradeDataFactory(itemsList).Create(),
-				MaxUpgradePointsCount
+				new ProgressUpgradeDataFactory(itemsList).Create()
 			);
 
 			LevelProgress levelProgressModel = new LevelProgressFactory(

@@ -8,8 +8,7 @@ namespace Sources.Domain.Progress
 	{
 		[JsonConstructor]
 		public UpgradeProgressModel(
-			List<ProgressUpgradeData> progress,
-			int maxUpgradePointsCount
-		) : base(progress, maxUpgradePointsCount) { }
+			List<ProgressUpgradeData> progress
+		) : base(progress) { }
 	}
 }

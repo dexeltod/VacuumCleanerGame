@@ -2,7 +2,7 @@ namespace Sources.DomainInterfaces
 {
 	public interface IGlobalProgress
 	{
-		IGameProgress ShopProgress { get; }
+		IGameProgress UpgradeProgressModel { get; }
 		ILevelProgress LevelProgress { get; }
 		IGameProgress PlayerProgress { get; }
 		IResourcesModel ResourcesModel { get; }

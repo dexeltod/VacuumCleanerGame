@@ -8,19 +8,13 @@ namespace Sources.Domain.Progress
 {
 	[Serializable] public abstract class Progress : IGameProgress
 	{
-		[SerializeField] private int _maxUpgradePointsCount;
-
 		[SerializeField] private List<ProgressUpgradeData> _progressData;
 		[SerializeField] private List<string> _progressNames;
 
-		public int MaxUpgradePointCount => _maxUpgradePointsCount;
-
-		protected Progress(List<ProgressUpgradeData> progress, int maxUpgradePointsCount)
+		protected Progress(List<ProgressUpgradeData> progress)
 		{
-			if (maxUpgradePointsCount < 0) throw new ArgumentOutOfRangeException(nameof(maxUpgradePointsCount));
 			_progressData = progress ?? throw new ArgumentNullException(nameof(progress));
 
-			_maxUpgradePointsCount = maxUpgradePointsCount;
 			_progressNames = new List<string>();
 
 			for (int i = 0; i < progress.Count; i++)

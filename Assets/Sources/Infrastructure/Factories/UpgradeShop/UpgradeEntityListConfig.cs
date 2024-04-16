@@ -6,11 +6,11 @@ using UnityEngine.Serialization;
 namespace Sources.Infrastructure.Factories.UpgradeShop
 {
 	[CreateAssetMenu(fileName = "ShopItems", menuName = "Data/Shop/Upgrade/ItemsList")]
-	public class UpgradeItemListConfig : ScriptableObject
+	public class UpgradeEntityListConfig : ScriptableObject
 	{
 		[FormerlySerializedAs("_list")] [SerializeField]
-		private UpgradeItemViewConfig[] _items;
+		private UpgradeEntityViewConfig[] _items;
 
-		public IReadOnlyCollection<UpgradeItemViewConfig> ReadOnlyItems => _items;
+		public IReadOnlyCollection<UpgradeEntityViewConfig> ReadOnlyItems => _items;
 	}
 }

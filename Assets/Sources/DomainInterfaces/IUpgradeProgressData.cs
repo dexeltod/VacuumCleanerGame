@@ -4,5 +4,6 @@ namespace Sources.DomainInterfaces
 	{
 		string Name { get; }
 		int Value { get; set; }
+		int MaxPointLevel { get; }
 	}
 }

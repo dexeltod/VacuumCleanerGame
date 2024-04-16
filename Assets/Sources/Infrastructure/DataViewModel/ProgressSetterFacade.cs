@@ -40,7 +40,7 @@ namespace Sources.Infrastructure.DataViewModel
 			_persistentProgressServiceProvider.Implementation.GlobalProgress.PlayerProgress;
 
 		private IGameProgress ShopProgress =>
-			_persistentProgressServiceProvider.Implementation.GlobalProgress.ShopProgress;
+			_persistentProgressServiceProvider.Implementation.GlobalProgress.UpgradeProgressModel;
 
 		private IPlayerStatsService PlayerStatsService => _playerStatsProvider.Implementation;
 
@@ -52,7 +52,7 @@ namespace Sources.Infrastructure.DataViewModel
 
 			int newProgressValue = upgradeProgress.Value + OnePoint;
 
-			if (newProgressValue > PlayerProgress.MaxUpgradePointCount)
+			if (newProgressValue > itemData.MaxPointLevel)
 				return false;
 
 			PlayerStatsService.Set(upgradeProgress.Name, newProgressValue);

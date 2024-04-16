@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 namespace Sources.Infrastructure.Configs
 {
 	[Serializable] [CreateAssetMenu(fileName = "Item", menuName = "Data/Shop/Upgrade/Item")]
-	public class UpgradeItemViewConfig : ProgressItemData
+	public class UpgradeEntityViewConfig : ProgressItemData
 	{
 		[FormerlySerializedAs("_upgradeElementPrefab")] [SerializeField]
 		private UpgradeElementPrefabView _upgradeElementPrefabView;

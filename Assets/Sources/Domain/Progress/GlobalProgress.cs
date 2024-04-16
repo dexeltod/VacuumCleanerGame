@@ -9,10 +9,10 @@ namespace Sources.Domain.Progress
 	{
 		[SerializeField] private ResourcesModel _resources;
 		[SerializeField] private PlayerProgress _playerProgress;
-		[SerializeField] private UpgradeProgressModel _upgradeProgressModel;
+		[SerializeField] private UpgradeProgressModel _upgradeProgressModelModel;
 		[SerializeField] private LevelProgress _levelProgress;
 
-		public IGameProgress ShopProgress => _upgradeProgressModel;
+		public IGameProgress UpgradeProgressModel => _upgradeProgressModelModel;
 		public ILevelProgress LevelProgress => _levelProgress;
 		public IGameProgress PlayerProgress => _playerProgress;
 		public IResourcesModel ResourcesModel => _resources;
@@ -20,13 +20,13 @@ namespace Sources.Domain.Progress
 		public GlobalProgress(
 			ResourcesModel resourcesModel,
 			PlayerProgress playerProgress,
-			UpgradeProgressModel upgradeProgressModel,
+			UpgradeProgressModel upgradeProgressModelModel,
 			LevelProgress levelProgress
 		)
 		{
 			_resources = resourcesModel;
 			_playerProgress = playerProgress;
-			_upgradeProgressModel = upgradeProgressModel;
+			_upgradeProgressModelModel = upgradeProgressModelModel;
 			_levelProgress = levelProgress;
 		}
 	}

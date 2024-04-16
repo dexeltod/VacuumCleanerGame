@@ -19,7 +19,7 @@ namespace Sources.Infrastructure.Factories.Domain
 
 			foreach (IUpgradeItemData itemData in _itemsList)
 			{
-				progressList.Add(new ProgressUpgradeData(itemData.IdName, 0));
+				progressList.Add(new ProgressUpgradeData(itemData.IdName, 0, itemData.MaxPointLevel));
 				itemData.SetUpgradeLevel(0);
 			}
 

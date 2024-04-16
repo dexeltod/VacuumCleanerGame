@@ -13,7 +13,7 @@ namespace Sources.Infrastructure.Shop
 		private readonly IPersistentProgressServiceProvider _progressService;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadService;
 
-		private IGameProgress ShopProgress => _progressService.Implementation.GlobalProgress.ShopProgress;
+		private IGameProgress ShopProgress => _progressService.Implementation.GlobalProgress.UpgradeProgressModel;
 
 		[Inject]
 		public ShopProgressFacade(
@@ -36,7 +36,7 @@ namespace Sources.Infrastructure.Shop
 
 			int newProgressPoint = upgradeProgress.Value + Point;
 
-			if (newProgressPoint > ShopProgress.MaxUpgradePointCount)
+			if (newProgressPoint > upgradeProgress.MaxPointLevel)
 				return;
 
 			ShopProgress.Set(progressName, newProgressPoint);

@@ -9,6 +9,7 @@ using Sources.DomainInterfaces;
 using Sources.Infrastructure.Common.Factory.Decorators;
 using Sources.Infrastructure.Configs.Scripts;
 using Sources.Infrastructure.Services.Decorators;
+using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.Presentation;
@@ -40,6 +41,7 @@ namespace Sources.Infrastructure.Factories.UI
 		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
 		private readonly IAdvertisement _advertisement;
 		private readonly ILevelProgressFacade _levelProgressFacade;
+		private readonly IPlayerStatsNames _playerStatsNames;
 		private readonly IPlayerStatChangeable _playerStatChangeable;
 
 		[Inject]
@@ -54,7 +56,8 @@ namespace Sources.Infrastructure.Factories.UI
 			IPlayerStatsServiceProvider playerStatsServiceProvider,
 			ICoroutineRunnerProvider coroutineRunnerProvider,
 			IAdvertisement advertisement,
-			ILevelProgressFacade levelProgressFacade
+			ILevelProgressFacade levelProgressFacade,
+			IPlayerStatsNames playerStatsNames
 		)
 		{
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
@@ -75,6 +78,7 @@ namespace Sources.Infrastructure.Factories.UI
 				throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 			_levelProgressFacade = levelProgressFacade;
+			_playerStatsNames = playerStatsNames ?? throw new ArgumentNullException(nameof(playerStatsNames));
 		}
 
 		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Implementation;
@@ -99,13 +103,13 @@ namespace Sources.Infrastructure.Factories.UI
 				_levelChangerService,
 				gameplayInterfaceView,
 				new SpeedDecorator(
-					_playerStatsServiceProvider.Implementation.Get(PlayerStatsService.Speed) as IPlayerStatChangeable,
+					_playerStatsServiceProvider.Implementation.Get(_playerStatsNames.Speed) as IPlayerStatChangeable,
 					_coroutineRunnerProvider,
 					_advertisement,
 					Time,
 					_levelProgressFacade
 				),
-				_playerStatsServiceProvider.Implementation.Get(PlayerStatsService.ScoreCash),
+				_playerStatsServiceProvider.Implementation.Get(_playerStatsNames.ScoreCash),
 				_coroutineRunnerProvider,
 				Time,
 				CashScore,

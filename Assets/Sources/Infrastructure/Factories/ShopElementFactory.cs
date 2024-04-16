@@ -61,7 +61,7 @@ namespace Sources.Infrastructure.Factories
 		private string UIResourcesShopItems => ResourcesAssetPath.Scene.UIResources.ShopItems;
 
 		private IGameProgress ShopProgress =>
-			_persistentProgressServiceProvider.Implementation.GlobalProgress.ShopProgress;
+			_persistentProgressServiceProvider.Implementation.GlobalProgress.UpgradeProgressModel;
 
 		private IProgressSetterFacade ProgressSetterFacade => _playerProgressSetterFacadeProvider.Implementation;
 
@@ -69,36 +69,36 @@ namespace Sources.Infrastructure.Factories
 		{
 			List<IUpgradeProgressData> progress = ShopProgress.GetAll();
 
-			UpgradeItemListConfig items = LoadItemsList();
+			UpgradeEntityListConfig entities = LoadItemsList();
 
-			SetUpgradeLevelsToItems(progress, items);
+			SetUpgradeLevelsToItems(progress, entities);
 
-			return Instantiate(transform, items);
+			return Instantiate(transform, entities);
 		}
 
-		private UpgradeItemListConfig LoadItemsList() =>
-			_assetFactory.LoadFromResources<UpgradeItemListConfig>(UIResourcesShopItems);
+		private UpgradeEntityListConfig LoadItemsList() =>
+			_assetFactory.LoadFromResources<UpgradeEntityListConfig>(UIResourcesShopItems);
 
 		private Dictionary<int, IUpgradeElementPrefabView> Instantiate(
 			Component transform,
-			UpgradeItemListConfig items
+			UpgradeEntityListConfig entities
 		)
 		{
 			Dictionary<int, IUpgradeItemData> itemsDictionary = new();
 			Dictionary<int, IUpgradeElementPrefabView> views = new();
 			Dictionary<int, IUpgradeElementChangeableView> changeableViews = new();
 
-			for (int i = 0; i < items.ReadOnlyItems.Count; i++)
+			for (int i = 0; i < entities.ReadOnlyItems.Count; i++)
 			{
-				UpgradeItemViewConfig viewConfig = items.ReadOnlyItems.ElementAt(i);
+				UpgradeEntityViewConfig viewConfig = entities.ReadOnlyItems.ElementAt(i);
 				itemsDictionary.Add(i, viewConfig);
 			}
 
-			for (int i = 0; i < items.ReadOnlyItems.Count; i++)
+			for (int i = 0; i < entities.ReadOnlyItems.Count; i++)
 			{
-				UpgradeItemViewConfig item = items.ReadOnlyItems.ElementAt(i);
+				UpgradeEntityViewConfig entity = entities.ReadOnlyItems.ElementAt(i);
 
-				var view = Object.Instantiate(item.PrefabView, transform.transform);
+				var view = Object.Instantiate(entity.PrefabView, transform.transform);
 
 				views.Add(i, view);
 				changeableViews.Add(i, view);
@@ -115,27 +115,27 @@ namespace Sources.Infrastructure.Factories
 
 			for (int i = 0; i < views.Count; i++)
 			{
-				UpgradeItemViewConfig upgradeItemViewConfig = items.ReadOnlyItems.ElementAt(i);
+				UpgradeEntityViewConfig upgradeEntityViewConfig = entities.ReadOnlyItems.ElementAt(i);
 
-				var translatedTitle = Localize(upgradeItemViewConfig.Title);
-				var translatedDescription = Localize(upgradeItemViewConfig.Description);
+				var translatedTitle = Localize(upgradeEntityViewConfig.Title);
+				var translatedDescription = Localize(upgradeEntityViewConfig.Description);
 
 				views[i].Construct(
 					presenter,
 					i,
-					upgradeItemViewConfig.Icon,
-					upgradeItemViewConfig.BoughtPointsCount,
-					upgradeItemViewConfig.Price,
+					upgradeEntityViewConfig.Icon,
+					upgradeEntityViewConfig.BoughtPointsCount,
+					upgradeEntityViewConfig.Price,
 					translatedTitle,
 					translatedDescription,
-					upgradeItemViewConfig.MaxPointLevel
+					upgradeEntityViewConfig.MaxPointLevel
 				);
 			}
 
 			return views;
 		}
 
-		private void SetUpgradeLevelsToItems(List<IUpgradeProgressData> progress, UpgradeItemListConfig config)
+		private void SetUpgradeLevelsToItems(List<IUpgradeProgressData> progress, UpgradeEntityListConfig config)
 		{
 			for (var i = 0; i < config.ReadOnlyItems.Count; i++)
 				config.ReadOnlyItems.ElementAt(i).SetUpgradeLevel(progress[i].Value);
