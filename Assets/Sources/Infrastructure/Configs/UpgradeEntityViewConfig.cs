@@ -1,20 +1,20 @@
 using System;
 using Sources.Infrastructure.ScriptableObjects.Shop;
+using Sources.InfrastructureInterfaces.Configs;
 using Sources.Presentation.UI.Shop;
+using Sources.PresentationInterfaces;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Sources.Infrastructure.Configs
 {
 	[Serializable] [CreateAssetMenu(fileName = "Item", menuName = "Data/Shop/Upgrade/Item")]
-	public class UpgradeEntityViewConfig : ProgressItemData
+	public class UpgradeEntityViewConfig : ProgressItemConfig, IUpgradeEntityViewConfig
 	{
-		[FormerlySerializedAs("_upgradeElementPrefab")] [SerializeField]
-		private UpgradeElementPrefabView _upgradeElementPrefabView;
+		[SerializeField] private UpgradeElementPrefabView _upgradeElementPrefabView;
 
 		[SerializeField] private Sprite _icon;
 
 		public Sprite Icon => _icon;
-		public UpgradeElementPrefabView PrefabView => _upgradeElementPrefabView;
+		public IUpgradeElementPrefabView PrefabView => _upgradeElementPrefabView;
 	}
 }

@@ -3,46 +3,36 @@ using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.Services;
-using Sources.ServicesInterfaces;
 using UnityEngine;
 
 namespace Sources.Controllers
 {
 	public class ResourcesProgressPresenter : Presenter, IResourcesProgressPresenter
 	{
-		private readonly IResourcesModel _resourcesData;
+		private readonly IResourceModelModifiable _resourceData;
 		private readonly ISandContainerViewProvider _sandContainerViewProvider;
 		private readonly IFillMeshShaderControllerProvider _fillMeshShaderControllerProvider;
 		private readonly SandParticlePlayerSystem _sandParticlePlayerSystem;
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenter;
-		private readonly IGameProgress _upgradeProgressModel;
-		private readonly IPlayerStatsServiceProvider _playerStatsServiceProvider;
-		private readonly IPlayerStatsNames _playerStatsNames;
+		private readonly IResourceModelReadOnly _resourceReadOnly;
 
 		private int _increasedDelta;
 		private int _lastCashScore;
 
 		public ResourcesProgressPresenter(
 			IGameplayInterfacePresenterProvider gameplayInterfaceView,
-			IResourcesModel persistentProgressService,
+			IResourceModelReadOnly resourceReadOnly,
+			IResourceModelModifiable persistentProgressService,
 			IFillMeshShaderControllerProvider fillMeshShaderControllerProvider,
-			SandParticlePlayerSystem sandParticlePlayerSystem,
-			IGameProgress upgradeProgressModel,
-			IPlayerStatsServiceProvider playerStatsServiceProvider,
-			IPlayerStatsNames playerStatsNames
+			SandParticlePlayerSystem sandParticlePlayerSystem
 		)
 		{
-			_upgradeProgressModel
-				= upgradeProgressModel ?? throw new ArgumentNullException(nameof(upgradeProgressModel));
-			_playerStatsServiceProvider = playerStatsServiceProvider ??
-				throw new ArgumentNullException(nameof(playerStatsServiceProvider));
-			_playerStatsNames = playerStatsNames;
 			_gameplayInterfacePresenter
 				= gameplayInterfaceView ?? throw new ArgumentNullException(nameof(gameplayInterfaceView));
-			_resourcesData = persistentProgressService ??
+			_resourceReadOnly = resourceReadOnly ?? throw new ArgumentNullException(nameof(resourceReadOnly));
+			_resourceData = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
 			_fillMeshShaderControllerProvider = fillMeshShaderControllerProvider ??
 				throw new ArgumentNullException(nameof(fillMeshShaderControllerProvider));
@@ -50,18 +40,11 @@ namespace Sources.Controllers
 				throw new ArgumentNullException(nameof(sandParticlePlayerSystem));
 		}
 
-		public IResourceReadOnly<int> SoftCurrency => _resourcesData.SoftCurrency;
+		public IResourceReadOnly<int> SoftCurrency => _resourceReadOnly.SoftCurrency;
 		private IFillMeshShaderController FillMeshShaderController => _fillMeshShaderControllerProvider.Implementation;
 		private IGameplayInterfacePresenter GameplayInterfacePresenter => _gameplayInterfacePresenter.Implementation;
-		private IPlayerStatsService PlayerStats => _playerStatsServiceProvider.Implementation;
 
-		private int MaxScoreCash =>
-			_playerStatsServiceProvider.Implementation.Get(
-				_playerStatsNames
-					.MaxScoreCash
-			).Value;
-
-		private int CurrentScore => _resourcesData.CurrentCashScore;
+		private int CurrentScore => _resourceReadOnly.CurrentCashScore;
 
 		private bool IsHalfGlobalScore => IsHalfScoreReached();
 
@@ -78,24 +61,24 @@ namespace Sources.Controllers
 			if (count <= 0)
 				throw new ArgumentOutOfRangeException(nameof(count));
 
-			return _resourcesData.SoftCurrency.Count - count;
+			return _resourceReadOnly.SoftCurrency.Count - count;
 		}
 
 		public void SellSand()
 		{
-			if (_resourcesData.CurrentCashScore <= 0)
+			if (_resourceReadOnly.CurrentCashScore <= 0)
 				return;
 
 			_increasedDelta++;
 
-			if (_resourcesData.CurrentCashScore - _increasedDelta < 0)
+			if (_resourceReadOnly.CurrentCashScore - _increasedDelta < 0)
 			{
 				_increasedDelta = 0;
 				return;
 			}
 
-			_resourcesData.AddMoney(_increasedDelta);
-			_resourcesData.DecreaseCashScore(_increasedDelta);
+			_resourceData.AddMoney(_increasedDelta);
+			_resourceData.DecreaseCashScore(_increasedDelta);
 
 			SetMoneyTextView();
 			SetView();
@@ -103,16 +86,16 @@ namespace Sources.Controllers
 
 		public void AddMoney(int count)
 		{
-			_resourcesData.AddMoney(count);
+			_resourceData.AddMoney(count);
 			SetMoneyTextView();
 		}
 
 		public void DecreaseMoney(int count)
 		{
-			if (_resourcesData.SoftCurrency.Count - count < 0)
+			if (_resourceReadOnly.SoftCurrency.Count - count < 0)
 				throw new ArgumentOutOfRangeException($"{SoftCurrency} less than zero");
 
-			_resourcesData.DecreaseMoney(count);
+			_resourceData.DecreaseMoney(count);
 			SetMoneyTextView();
 		}
 
@@ -120,13 +103,12 @@ namespace Sources.Controllers
 			_fillMeshShaderControllerProvider.Implementation.FillArea(
 				CurrentScore,
 				0,
-				PlayerStats.Get
-					(_playerStatsNames.ScoreCash).Value
+				_resourceReadOnly.MaxCashScore
 			);
 
 		public void ClearTotalResources()
 		{
-			_resourcesData.ClearTotalResources();
+			_resourceData.ClearTotalResources();
 			SetView();
 		}
 
@@ -134,13 +116,13 @@ namespace Sources.Controllers
 		{
 			if (newScore <= 0) throw new ArgumentOutOfRangeException(nameof(newScore));
 
-			if (CurrentScore > _resourcesData.MaxCashScore)
+			if (CurrentScore > _resourceReadOnly.MaxCashScore)
 				return false;
 
-			_lastCashScore = _resourcesData.CurrentCashScore;
+			_lastCashScore = _resourceReadOnly.CurrentCashScore;
 
-			int score = Mathf.Clamp(newScore, 0, MaxScoreCash);
-			_resourcesData.AddScore(score);
+			int score = Mathf.Clamp(newScore, 0, _resourceReadOnly.MaxCashScore);
+			_resourceData.AddScore(score);
 
 			PlayParticleSystem();
 			SetView();
@@ -152,12 +134,12 @@ namespace Sources.Controllers
 
 		private void PlayParticleSystem()
 		{
-			if (_lastCashScore < _resourcesData.CurrentCashScore)
+			if (_lastCashScore < _resourceReadOnly.CurrentCashScore)
 				_sandParticlePlayerSystem.Play();
 		}
 
 		private bool CheckMaxScore() =>
-			_resourcesData.CurrentCashScore < _resourcesData.MaxCashScore;
+			_resourceReadOnly.CurrentCashScore < _resourceReadOnly.MaxCashScore;
 
 		private void OnHalfScoreReached()
 		{
@@ -165,23 +147,17 @@ namespace Sources.Controllers
 				GameplayInterfacePresenter.SetActiveGoToNextLevelButton(true);
 		}
 
-		private void SetMoneyTextView()
-		{
-			GameplayInterfacePresenter.SetSoftCurrency(_resourcesData.SoftCurrency.Count);
-		}
+		private void SetMoneyTextView() =>
+			GameplayInterfacePresenter.SetSoftCurrency(_resourceReadOnly.SoftCurrency.Count);
 
 		private void SetView()
 		{
-			GameplayInterfacePresenter.SetTotalResourceCount(_resourcesData.CurrentTotalResources);
-			GameplayInterfacePresenter.SetCashScore(_resourcesData.CurrentCashScore);
-			FillMeshShaderController.FillArea(CurrentScore, 0, _resourcesData.MaxCashScore);
+			GameplayInterfacePresenter.SetTotalResourceCount(_resourceReadOnly.CurrentTotalResources);
+			GameplayInterfacePresenter.SetCashScore(_resourceReadOnly.CurrentCashScore);
+			FillMeshShaderController.FillArea(CurrentScore, 0, _resourceReadOnly.MaxCashScore);
 		}
 
-		private bool IsHalfScoreReached()
-		{
-			int halfScore = Mathf.CeilToInt(_resourcesData.MaxTotalResourceCount / 2f);
-
-			return _resourcesData.CurrentTotalResources >= halfScore;
-		}
+		private bool IsHalfScoreReached() =>
+			_resourceReadOnly.CurrentTotalResources >= Mathf.CeilToInt(_resourceReadOnly.MaxTotalResourceCount / 2f);
 	}
 }

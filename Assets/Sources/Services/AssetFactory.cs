@@ -113,7 +113,7 @@ namespace Sources.Services.Providers
 		private void CheckPathException(string path, object @object)
 		{
 			if (string.IsNullOrEmpty(path))
-				throw new ArgumentNullException(nameof(path));
+				throw new ArgumentNullException($"File from resource not found:" + nameof(path));
 
 			if (@object == null)
 				throw new ArgumentNullException(nameof(@object) + path);

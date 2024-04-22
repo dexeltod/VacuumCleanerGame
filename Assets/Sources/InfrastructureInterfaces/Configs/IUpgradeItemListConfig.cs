@@ -4,7 +4,7 @@ namespace Sources.InfrastructureInterfaces.Configs
 {
 	public interface IUpgradeItemListConfig
 	{
-		IUpgradeItemData[] Items { get; }
+		IProgressItemConfig[] Items { get; }
 		// UpgradeItemConfig[] Configs { get; }
 	}
 }

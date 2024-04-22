@@ -8,13 +8,13 @@ namespace Sources.PresentationInterfaces
 		IUpgradeElementChangeableView
 	{
 		void Construct(
-			IUpgradeElementPresenter presenter,
-			int id,
 			Sprite icon,
-			int boughtPointsCount,
-			int price,
+			IUpgradeElementPresenter presenter,
 			string title,
 			string description,
+			int id,
+			int boughtPointsCount,
+			int price,
 			int maxPoints
 		);
 	}

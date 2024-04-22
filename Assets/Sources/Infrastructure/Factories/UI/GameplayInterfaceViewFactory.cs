@@ -16,7 +16,7 @@ namespace Sources.Infrastructure.Factories.UI
 		private readonly IGameMenuPresenterProvider _gameMenuPresenterProvider;
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
 		private readonly GameplayInterfaceView _gameplayInterfaceView;
-		private readonly IResourcesModel _resourcesModel;
+		private readonly IResourceModelReadOnly _resourceModelReadOnly;
 		private readonly IGameStateChangerProvider _stateChangerProvider;
 		private readonly ITranslatorService _translatorService;
 
@@ -25,7 +25,7 @@ namespace Sources.Infrastructure.Factories.UI
 			IGameMenuPresenterProvider gameMenuPresenterProvider,
 			IGameStateChangerProvider stateChangerProvider,
 			ITranslatorService translatorService,
-			IResourcesModel resourcesModel,
+			IResourceModelReadOnly resourceModelReadOnly,
 			GameplayInterfaceView gameplayInterfaceView
 		)
 		{
@@ -36,7 +36,8 @@ namespace Sources.Infrastructure.Factories.UI
 			_stateChangerProvider
 				= stateChangerProvider ?? throw new ArgumentNullException(nameof(stateChangerProvider));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
-			_resourcesModel = resourcesModel ?? throw new ArgumentNullException(nameof(resourcesModel));
+			_resourceModelReadOnly
+				= resourceModelReadOnly ?? throw new ArgumentNullException(nameof(resourceModelReadOnly));
 			_gameplayInterfaceView = gameplayInterfaceView
 				? gameplayInterfaceView
 				: throw new ArgumentNullException(nameof(gameplayInterfaceView));
@@ -44,7 +45,7 @@ namespace Sources.Infrastructure.Factories.UI
 
 		public void Create()
 		{
-			if (_resourcesModel == null) throw new ArgumentNullException(nameof(_resourcesModel));
+			if (_resourceModelReadOnly == null) throw new ArgumentNullException(nameof(_resourceModelReadOnly));
 
 			_gameMenuPresenterProvider.Register<IGameMenuPresenter>(
 				new GameMenuPresenter(
@@ -55,15 +56,15 @@ namespace Sources.Infrastructure.Factories.UI
 			);
 
 			bool isHalfScoreReached
-				= _resourcesModel.CurrentTotalResources > _resourcesModel.CurrentTotalResources / 2;
+				= _resourceModelReadOnly.CurrentTotalResources > _resourceModelReadOnly.CurrentTotalResources / 2;
 
 			_gameplayInterfaceView.Construct(
 				_gameplayInterfacePresenterProvider.Implementation,
-				_resourcesModel.CurrentCashScore,
-				_resourcesModel.CurrentTotalResources,
-				_resourcesModel.MaxCashScore,
-				_resourcesModel.MaxTotalResourceCount,
-				_resourcesModel.SoftCurrency.Count,
+				_resourceModelReadOnly.CurrentCashScore,
+				_resourceModelReadOnly.CurrentTotalResources,
+				_resourceModelReadOnly.MaxCashScore,
+				_resourceModelReadOnly.MaxTotalResourceCount,
+				_resourceModelReadOnly.SoftCurrency.Count,
 				isHalfScoreReached,
 				IsGlobalScoreViewed
 			);

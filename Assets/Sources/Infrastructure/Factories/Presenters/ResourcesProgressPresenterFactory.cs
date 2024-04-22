@@ -2,7 +2,6 @@ using System;
 using Sources.Controllers;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Common.Factory.Decorators;
-using Sources.Infrastructure.Services;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.Services;
 using VContainer;
@@ -16,14 +15,9 @@ namespace Sources.Infrastructure.Factories.Presenters
 		private readonly IFillMeshShaderControllerProvider _fillMeshShaderControllerProvider;
 		private readonly ISandParticleSystemProvider _sandParticleSystemProvider;
 		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
-		private readonly IPlayerStatsServiceProvider _playerStatsServiceProvider;
-		private readonly PlayerStatsNames _playerStatsNames;
 
-		private IResourcesModel ResourcesModel =>
-			_persistentProgressService.Implementation.GlobalProgress.ResourcesModel;
-
-		private IGameProgress UpgradeProgressModel =>
-			_persistentProgressService.Implementation.GlobalProgress.UpgradeProgressModel;
+		private IResourceModelReadOnly ResourceModelReadOnly =>
+			_persistentProgressService.Implementation.GlobalProgress.ResourceModelReadOnly;
 
 		[Inject]
 		public ResourcesProgressPresenterFactory(
@@ -31,9 +25,7 @@ namespace Sources.Infrastructure.Factories.Presenters
 			IPersistentProgressServiceProvider persistentProgressService,
 			IFillMeshShaderControllerProvider fillMeshShaderControllerProvider,
 			ISandParticleSystemProvider sandParticleSystemProvider,
-			ICoroutineRunnerProvider coroutineRunnerProvider,
-			IPlayerStatsServiceProvider playerStatsServiceProvider,
-			PlayerStatsNames playerStatsNames
+			ICoroutineRunnerProvider coroutineRunnerProvider
 		)
 		{
 			_gameplayInterfacePresenterProvider = gameplayInterfacePresenterProvider ??
@@ -46,9 +38,6 @@ namespace Sources.Infrastructure.Factories.Presenters
 				throw new ArgumentNullException(nameof(sandParticleSystemProvider));
 			_coroutineRunnerProvider = coroutineRunnerProvider ??
 				throw new ArgumentNullException(nameof(coroutineRunnerProvider));
-			_playerStatsServiceProvider = playerStatsServiceProvider ??
-				throw new ArgumentNullException(nameof(playerStatsServiceProvider));
-			_playerStatsNames = playerStatsNames ?? throw new ArgumentNullException(nameof(playerStatsNames));
 		}
 
 		public override ResourcesProgressPresenter Create()
@@ -62,12 +51,10 @@ namespace Sources.Infrastructure.Factories.Presenters
 
 			return new ResourcesProgressPresenter(
 				_gameplayInterfacePresenterProvider,
-				ResourcesModel,
+				ResourceModelReadOnly,
+				ResourceModelReadOnly as IResourceModelModifiable,
 				_fillMeshShaderControllerProvider,
-				sandParticlePlayerSystem,
-				UpgradeProgressModel,
-				_playerStatsServiceProvider,
-				_playerStatsNames
+				sandParticlePlayerSystem
 			);
 		}
 	}

@@ -1,67 +1,47 @@
 using System;
 using Sources.ControllersInterfaces;
+using Sources.Domain.Progress.Player;
+using Sources.Domain.Temp;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.ServicesInterfaces;
-using Sources.ServicesInterfaces.Upgrade;
 
 namespace Sources.Infrastructure.DataViewModel
 {
 	public class ProgressSetterFacade : IProgressSetterFacade
 	{
-		private const int OnePoint = 1;
-
-		private readonly IPlayerStatsServiceProvider _playerStatsProvider;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
 		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
+		private readonly IProgressService _progressService;
 		private readonly IPersistentProgressService _persistentProgressService;
 
 		public ProgressSetterFacade(
-			IPlayerStatsServiceProvider playerStats,
 			IProgressSaveLoadDataService persistentProgressService,
 			IPersistentProgressServiceProvider persistentProgressServiceProvider,
-			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider
+			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
+			IProgressService progressService
 		)
 		{
-			_playerStatsProvider = playerStats ?? throw new ArgumentNullException(nameof(playerStats));
 			_progressSaveLoadDataService = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
 			_persistentProgressServiceProvider = persistentProgressServiceProvider ??
 				throw new ArgumentNullException(nameof(persistentProgressServiceProvider));
 			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ??
 				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
+			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
 		}
 
 		private IResourcesProgressPresenter ResourcesProgressPresenter =>
 			_resourcesProgressPresenterProvider.Implementation;
 
-		private IGameProgress PlayerProgress =>
-			_persistentProgressServiceProvider.Implementation.GlobalProgress.PlayerProgress;
-
-		private IGameProgress ShopProgress =>
-			_persistentProgressServiceProvider.Implementation.GlobalProgress.UpgradeProgressModel;
-
-		private IPlayerStatsService PlayerStatsService => _playerStatsProvider.Implementation;
-
-		public bool TryAddOneProgressPoint(string progressName, IUpgradeItemData itemData)
+		public bool TryAddOneProgressPoint(int id)
 		{
-			if (itemData == null) throw new ArgumentNullException(nameof(itemData));
+			IResourceModelModifiable resourceModel = _persistentProgressServiceProvider.Implementation.GlobalProgress
+				.ResourceModelReadOnly as IResourceModelModifiable;
 
-			IUpgradeProgressData upgradeProgress = PlayerProgress.GetByName(progressName);
-
-			int newProgressValue = upgradeProgress.Value + OnePoint;
-
-			if (newProgressValue > itemData.MaxPointLevel)
-				return false;
-
-			PlayerStatsService.Set(upgradeProgress.Name, newProgressValue);
-			PlayerProgress.Set(progressName, newProgressValue);
-			ShopProgress.Set(progressName, newProgressValue);
-
-			ResourcesProgressPresenter.DecreaseMoney(itemData.Price);
-
-			itemData.SetUpgradeLevel(upgradeProgress.Value);
+			resourceModel!.DecreaseMoney(_progressService.GetPrice(id));
+			_progressService.AddProgressPoint(id);
 
 			_progressSaveLoadDataService.SaveToCloud();
 

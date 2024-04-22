@@ -3,7 +3,7 @@ using System.Collections;
 using Graphic.Joystick_Pack.Scripts.Base;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
-using Sources.DomainInterfaces;
+using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
 using UnityEngine;
@@ -18,7 +18,6 @@ namespace Sources.Controllers
 		private readonly IGameplayInterfaceView _gameplayInterfaceView;
 		private readonly ILevelChangerService _levelChangerService;
 		private readonly ISpeedDecorator _speedDecorator;
-		private readonly IPlayerStatSubscribable _maxCashScoreChangeable;
 		private readonly int _cashScore;
 		private readonly int _maxCashScore;
 
@@ -26,7 +25,6 @@ namespace Sources.Controllers
 			ILevelChangerService levelChangerService,
 			IGameplayInterfaceView gameplayInterfaceView,
 			ISpeedDecorator speedDecorator,
-			IPlayerStatSubscribable maxCashScoreChangeable,
 			ICoroutineRunnerProvider coroutineRunnerProvider,
 			float time,
 			int cashScore,
@@ -37,8 +35,6 @@ namespace Sources.Controllers
 			_gameplayInterfaceView
 				= gameplayInterfaceView ?? throw new ArgumentNullException(nameof(gameplayInterfaceView));
 			_speedDecorator = speedDecorator ?? throw new ArgumentNullException(nameof(speedDecorator));
-			_maxCashScoreChangeable = maxCashScoreChangeable ??
-				throw new ArgumentNullException(nameof(maxCashScoreChangeable));
 			_coroutineRunnerProvider = coroutineRunnerProvider ??
 				throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 			if (time <= 0) throw new ArgumentOutOfRangeException(nameof(time));
@@ -78,7 +74,8 @@ namespace Sources.Controllers
 
 		public override void Enable()
 		{
-			_maxCashScoreChangeable.ValueChanged += OnMaxCashScoreChanged;
+			//TODO: refactor
+			// _resourcesModelSoftCurrency.ValueChanged += OnMaxCashScoreChanged;
 			IncreaseSpeedButton.onClick.AddListener(OnIncreaseSpeed);
 			GoToNextLevelButton.onClick.AddListener(OnGoToNextLevel);
 
@@ -87,7 +84,7 @@ namespace Sources.Controllers
 
 		public override void Disable()
 		{
-			_maxCashScoreChangeable.ValueChanged -= OnMaxCashScoreChanged;
+			// _maxCashScoreChangeable.ValueChanged -= OnMaxCashScoreChanged;
 			IncreaseSpeedButton.onClick.RemoveListener(OnIncreaseSpeed);
 			GoToNextLevelButton.onClick.RemoveListener(OnGoToNextLevel);
 		}

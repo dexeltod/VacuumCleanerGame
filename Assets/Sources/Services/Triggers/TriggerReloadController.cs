@@ -19,7 +19,7 @@ namespace Sources.Services.Triggers
 		private IResourcesProgressPresenter ResourceProgress => _progressPresenterProvider.Implementation;
 
 		private int CurrentScore =>
-			_persistentProgressService.Implementation.GlobalProgress.ResourcesModel.CurrentCashScore;
+			_persistentProgressService.Implementation.GlobalProgress.ResourceModelReadOnly.CurrentCashScore;
 
 		[Inject]
 		private void Construct(

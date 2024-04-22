@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Sources.ControllersInterfaces;
-using Sources.Infrastructure.Configs.Scripts;
-using Sources.Infrastructure.Factories.UpgradeShop;
 using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
@@ -18,10 +15,9 @@ namespace Sources.Infrastructure.Factories.UI
 {
 	public class UpgradeWindowViewFactory : IUpgradeWindowViewFactory
 	{
-		private readonly ResourcesProgressPresenterProvider _resourceProgressPresenterProvider;
 		private readonly IAssetFactory _assetFactory;
 		private readonly ITranslatorService _translatorService;
-		private readonly ShopElementFactory _shopElementFactory;
+		private readonly ShopViewFactory _shopViewFactory;
 
 		private List<UpgradeElementPrefabView> _upgradeElementsPrefabs;
 
@@ -31,42 +27,33 @@ namespace Sources.Infrastructure.Factories.UI
 		[Inject]
 		public UpgradeWindowViewFactory(
 			IAssetFactory assetFactory,
-			ProgressEntityFactory progressEntityFactory,
 			ResourcesProgressPresenterProvider resourceProgressPresenter,
 			IPersistentProgressServiceProvider persistentProgressService,
-			IShopProgressFacade shopProgressFacade,
 			IPlayerProgressSetterFacadeProvider playerProgressSetterFacade,
 			ITranslatorService translatorService,
-			ShopElementFactory shopElementFactory
+			ShopViewFactory shopViewFactory
 		)
 		{
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
-			_resourceProgressPresenterProvider = resourceProgressPresenter ??
-				throw new ArgumentNullException(nameof(resourceProgressPresenter));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
-			_shopElementFactory = shopElementFactory ?? throw new ArgumentNullException(nameof(shopElementFactory));
+			_shopViewFactory = shopViewFactory ?? throw new ArgumentNullException(nameof(shopViewFactory));
 		}
 
 		private string UIResourcesUpgradeWindow => ResourcesAssetPath.Scene.UIResources.UpgradeWindow;
 		private Transform UpgradeWindowContainerTransform => _upgradeWindowPresentation.ContainerTransform;
-
-		private IResourcesProgressPresenter ResourcesProgressPresenter =>
-			_resourceProgressPresenterProvider.Implementation;
 
 		public IUpgradeWindowPresentation Create()
 		{
 			_upgradeWindowPresentation = GetPresentation();
 
 			Localize();
-			_shopElementFactory.Create(UpgradeWindowContainerTransform);
+			_shopViewFactory.Create(UpgradeWindowContainerTransform);
 
 			return _upgradeWindowPresentation;
 		}
 
 		private UpgradeWindowPresentation GetPresentation() =>
-			_assetFactory.InstantiateAndGetComponent<UpgradeWindowPresentation>(
-				UIResourcesUpgradeWindow
-			);
+			_assetFactory.InstantiateAndGetComponent<UpgradeWindowPresentation>(UIResourcesUpgradeWindow);
 
 		private void Localize() =>
 			_upgradeWindowPresentation.Phrases = _translatorService.GetLocalize(_upgradeWindowPresentation.Phrases);

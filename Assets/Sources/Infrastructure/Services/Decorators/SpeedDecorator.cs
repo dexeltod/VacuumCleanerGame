@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using Sources.ControllersInterfaces;
+using Sources.Domain.Common;
+using Sources.Domain.Temp;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
-using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
 using Sources.Utils;
 using UnityEngine;
@@ -13,24 +14,28 @@ namespace Sources.Infrastructure.Services.Decorators
 	public class SpeedDecorator : ISpeedDecorator
 	{
 		private readonly IAdvertisement _advertisement;
+		private readonly IModifiableStat _speed;
+		private readonly int _baseSpeed;
 		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
 
-		private readonly IPlayerStatChangeable _playerStat;
 		private readonly WaitForSeconds _waitForSeconds;
 
+		private int _currentBaseSpeed;
+
 		public SpeedDecorator(
-			IPlayerStatChangeable playerStat,
 			ICoroutineRunnerProvider coroutineRunnerProvider,
 			IAdvertisement advertisement,
 			float time,
-			ILevelProgressFacade levelProgressFacade
+			IModifiableStat speed
 		)
 		{
 			if (time < 0) throw new ArgumentOutOfRangeException(nameof(time));
-			_playerStat = playerStat ?? throw new ArgumentNullException(nameof(playerStat));
+
 			_coroutineRunnerProvider = coroutineRunnerProvider ??
 				throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
+			_speed = speed;
+
 			_waitForSeconds = new WaitForSeconds(time);
 		}
 
@@ -47,10 +52,12 @@ namespace Sources.Infrastructure.Services.Decorators
 		private IEnumerator StartSpeedRoutine()
 		{
 			IsDecorated = true;
-			_playerStat.SetValue(_playerStat.Value + 2);
+			_speed.Increase(2);
+
 			yield return _waitForSeconds;
 
-			_playerStat.SetValue(_playerStat.Value - 2);
+			_speed.Clear();
+
 			IsDecorated = false;
 		}
 	}

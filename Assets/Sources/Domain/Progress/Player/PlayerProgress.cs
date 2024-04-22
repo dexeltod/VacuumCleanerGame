@@ -1,14 +1,10 @@
 using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+using Sources.Domain.Temp;
 
 namespace Sources.Domain.Progress.Player
 {
-	[Serializable] public class PlayerProgress : Progress
+	[Serializable] public class PlayerProgress : ProgressEntity
 	{
-		[JsonConstructor]
-		public PlayerProgress(List<ProgressUpgradeData> progress) : base(
-			progress
-		) { }
+		public PlayerProgress(int currentLevel, int configName) : base(currentLevel, configName) { }
 	}
 }

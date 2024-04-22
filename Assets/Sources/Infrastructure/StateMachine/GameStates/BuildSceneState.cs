@@ -85,8 +85,6 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			DissolveShaderViewControllerProvider dissolveShaderViewControllerProvider,
 			FillMeshShaderControllerProvider fillMeshShaderControllerProvider,
 			ISandParticleSystemProvider sandParticleSystemProvider,
-			IPlayerStatsServiceProvider playerStatsServiceProvider,
-			PlayerStatsFactory playerStatsFactory,
 			GameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
 			GameMenuPresenterProvider gameMenuPresenterProvider,
 			GameStateChangerProvider gameStateChangerProvider,
@@ -154,7 +152,6 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private GameObject SpawnPoint => _resourcePathNameConfigProvider.Implementation.SceneGameObjects.SpawnPoint;
 		private ResourcesPrefabs ResourcesPrefabs => _resourcePathNameConfigProvider.Implementation;
 		private GameObject SellTrigger => ResourcesPrefabs.Triggers.SellTrigger;
-		private IResourcesModel ResourcesModel => _persistentProgress.Implementation.GlobalProgress.ResourcesModel;
 
 		public async void Enter(ILevelConfig payload)
 		{
@@ -190,12 +187,6 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				_resourcesProgressPresenterProvider,
 				_levelConfigGetter
 			).Create();
-
-			// IMeshModifiable meshModifiable = new SandFactory(
-			// 	_assetFactory,
-			// 	_levelProgressFacade,
-			// 	_resourcesProgressPresenterProvider
-			// ).Create();
 
 			new CameraFactory(_assetFactory, _playerFactory.Player, _resourcePathNameConfigProvider).Create();
 		}

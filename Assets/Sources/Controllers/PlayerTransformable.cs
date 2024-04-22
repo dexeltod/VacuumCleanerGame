@@ -1,9 +1,8 @@
+using System;
 using Graphic.Joystick_Pack.Scripts.Base;
 using Sources.Controllers.Common;
-using Sources.DomainInterfaces;
+using Sources.Domain.Temp;
 using Sources.PresentationInterfaces;
-using Sources.ServicesInterfaces;
-using Sources.Utils;
 using UnityEngine;
 
 namespace Sources.Controllers
@@ -15,21 +14,20 @@ namespace Sources.Controllers
 		public readonly float VacuumDistance;
 
 		private readonly Joystick _joystick;
-		private readonly IPlayerStatReadOnly _speedStatReadOnly;
+		private readonly IModifiableStat _speed;
 
 		private Vector3 _offset;
 
-		private float Speed => _speedStatReadOnly.Value;
+		private int _currentSpeedValue;
 
 		public PlayerTransformable(
 			Transform transform,
 			Joystick joystick,
-			IPlayerStatsService stats
+			IModifiableStat entity
 		) : base(transform)
 		{
-			_speedStatReadOnly = stats.Get(PlayerStatNames.Speed);
-
-			_joystick = joystick;
+			_joystick = joystick ? joystick : throw new ArgumentNullException(nameof(joystick));
+			_speed = entity ?? throw new ArgumentNullException(nameof(entity));
 		}
 
 		public void Update(float deltaTime) =>
@@ -38,7 +36,7 @@ namespace Sources.Controllers
 		private void Move(float deltaTime)
 		{
 			Vector3 joystickDirection = new Vector3(_joystick.Direction.x, 0, _joystick.Direction.y);
-			Vector3 direction = joystickDirection * (Speed * deltaTime);
+			Vector3 direction = joystickDirection * (_speed.Value * deltaTime);
 			_offset = Transform.position + direction;
 
 			if (Transform.position.y > MaxTransformHeight)

@@ -26,7 +26,6 @@ namespace Sources.Application.Bootstrapp
 		private readonly IGameStateChangerFactory _gameStateChangerFactory;
 		private readonly ResourcePathConfigServiceFactory _resourcePathConfigServiceFactory;
 		private readonly ResourcePathNameConfigProvider _pathNameConfigProvider;
-		private readonly PlayerStatsFactory _playerStatsFactory;
 		private readonly ISaveLoaderProvider _saveLoaderProvider;
 		private readonly SaveLoaderFactory _saveLoaderFactory;
 		private readonly AdvertisementHandlerProvider _advertisementHandlerProvider;
@@ -40,8 +39,6 @@ namespace Sources.Application.Bootstrapp
 			IGameStateChangerFactory gameStateChangerFactory,
 			ResourcePathConfigServiceFactory resourcePathConfigServiceFactory,
 			ResourcePathNameConfigProvider pathNameConfigProvider,
-			PlayerStatsFactory playerStatsFactory,
-			IPlayerStatsServiceProvider playerStatsServiceProvider,
 			IPersistentProgressServiceProvider persistentProgressService,
 			ISaveLoaderProvider saveLoaderProvider,
 			SaveLoaderFactory saveLoaderFactory,
@@ -59,7 +56,6 @@ namespace Sources.Application.Bootstrapp
 				throw new ArgumentNullException(nameof(resourcePathConfigServiceFactory));
 			_pathNameConfigProvider = pathNameConfigProvider ??
 				throw new ArgumentNullException(nameof(pathNameConfigProvider));
-			_playerStatsFactory = playerStatsFactory ?? throw new ArgumentNullException(nameof(playerStatsFactory));
 			_saveLoaderProvider = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
 			_saveLoaderFactory = saveLoaderFactory ?? throw new ArgumentNullException(nameof(saveLoaderFactory));
 			_advertisementHandlerProvider = advertisementHandlerProvider ??
@@ -86,8 +82,6 @@ namespace Sources.Application.Bootstrapp
 			_advertisementHandlerProvider.Register(new AdvertisementHandler(_advertisement));
 			_pathNameConfigProvider.Register(_resourcePathConfigServiceFactory.Create());
 			_gameStateChangerProvider.Register(_gameStateChangerFactory.Create());
-
-			_playerStatsFactory.Create();
 		}
 	}
 }

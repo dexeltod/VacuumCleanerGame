@@ -61,12 +61,9 @@ namespace Sources.Presentation.UI
 
 		public ITextPhrases Phrases => _phrases;
 		public Button GoToNextLevelButton => _goToNextLevelButton;
-
 		public Button IncreaseSpeedButton => _increaseSpeedButton;
 		public GameObject InterfaceGameObject { get; private set; }
-
 		public Image IncreaseSpeedButtonImage => _increaseSpeedButtonImage;
-
 		public Joystick Joystick => _joystick;
 
 		public void Construct(

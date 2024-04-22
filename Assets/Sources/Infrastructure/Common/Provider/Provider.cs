@@ -46,16 +46,17 @@ namespace Sources.Infrastructure.Common.Provider
 
 #region Registration
 
-		public virtual void Register<TI>(TImplementation instance)
+		public virtual TImplementation Register<TI>(TImplementation instance)
 		{
 			_implementation = instance;
 
 			var a = instance.GetType().GetInterfaces();
 
 			_contracts = instance.GetType().GetInterfaces();
+			return _implementation;
 		}
 
-		public virtual void Register(TImplementation instance) =>
+		public virtual TImplementation Register(TImplementation instance) =>
 			_implementation = instance;
 
 #endregion

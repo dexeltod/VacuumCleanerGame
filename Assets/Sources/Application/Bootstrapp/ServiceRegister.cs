@@ -15,10 +15,10 @@ using Sources.Infrastructure.Factories.Presenters;
 using Sources.Infrastructure.Factories.Scene;
 using Sources.Infrastructure.Factories.StateMachine;
 using Sources.Infrastructure.Factories.UI;
-using Sources.Infrastructure.Factories.UpgradeShop;
 using Sources.Infrastructure.Providers;
+using Sources.Infrastructure.Repositories;
+using Sources.Infrastructure.Repository;
 using Sources.Infrastructure.Services;
-using Sources.Infrastructure.Shop;
 using Sources.Infrastructure.StateMachine.GameStates;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Common.Factories;
@@ -58,9 +58,9 @@ namespace Sources.Application.Bootstrapp
 #region BaseServices
 
 			_builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
-			_builder.Register<IShopProgressFacade, ShopProgressFacade>(Lifetime.Singleton);
 			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
 			_builder.Register<ITranslatorService, PhraseTranslatorService>(Lifetime.Singleton);
+			_builder.Register<ProgressService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
 			_builder.Register<ProgressionConfig>(Lifetime.Singleton);
 
@@ -72,19 +72,23 @@ namespace Sources.Application.Bootstrapp
 
 #region ConstantNames
 
-			_builder.Register<PlayerStatsNames>(Lifetime.Singleton).AsImplementedInterfaces()
-				.AsSelf();
-
 			_builder.Register<ProgressConstantNames>(Lifetime.Singleton);
 
 #endregion
 
 #region Providers
 
+#region Repositories
+
+			_builder.Register<ModifiableStatsRepositoryProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+			_builder.Register<UpgradeProgressRepositoryProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+
+#endregion
+
 			_builder.Register<SandCarContainerViewProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<GameStateChangerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<FillMeshShaderControllerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<PlayerStatsServiceProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+
 			_builder.Register<SandParticleSystemProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<CloudServiceSdkFacadeProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<AdvertisementHandlerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
@@ -96,6 +100,7 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<GameplayInterfacePresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces()
 				.AsSelf();
 			_builder.Register<PersistentProgressServiceProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+
 			_builder.Register<UpgradeWindowPresenterProvider>(Lifetime.Singleton);
 			_builder.Register<ICoroutineRunnerProvider, CoroutineRunnerProvider>(Lifetime.Singleton).AsSelf();
 			_builder.Register<ResourcesProgressPresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces()
@@ -114,7 +119,7 @@ namespace Sources.Application.Bootstrapp
 					UpgradeWindowViewFactory>(
 					Lifetime.Scoped
 				).AsImplementedInterfaces();
-			_builder.Register<ShopElementFactory>(Lifetime.Scoped);
+			_builder.Register<ShopViewFactory>(Lifetime.Scoped);
 
 			_builder.Register<SaveLoaderFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
 			_builder.Register<InitialProgressFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
@@ -123,10 +128,10 @@ namespace Sources.Application.Bootstrapp
 
 			_builder.Register<GameplayInterfacePresenterFactory>(Lifetime.Scoped);
 			_builder.Register<GameStatesRepositoryFactory>(Lifetime.Scoped);
-			_builder.Register<ProgressEntityFactory>(Lifetime.Scoped);
+
 			_builder.Register<GameStateChangerFactory>(Lifetime.Scoped).AsImplementedInterfaces();
 			_builder.Register<ProgressFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
-			_builder.Register<PlayerStatsFactory>(Lifetime.Scoped);
+
 			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Singleton);
 
 			_builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Singleton);

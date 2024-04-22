@@ -28,19 +28,20 @@ namespace Sources.Presentation.UI.Shop
 
 		private readonly List<Image> _pointsColors = new();
 
-		private int _boughtPoints;
 		private bool _isInit;
+
+		private int _boughtPoints;
 		private int _id;
 		private int _maxPoints;
 
 		public void Construct(
-			IUpgradeElementPresenter presenter,
-			int id,
 			Sprite icon,
-			int boughtPointsCount,
-			int price,
+			IUpgradeElementPresenter presenter,
 			string title,
 			string description,
+			int id,
+			int boughtPointsCount,
+			int price,
 			int maxPoints
 		)
 		{

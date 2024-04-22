@@ -17,7 +17,7 @@ namespace Sources.Services
 		public int GetConverted(string name, int value)
 		{
 			if (_stats.ContainsKey(name) == false)
-				throw new ArgumentException($"Stat {name} is not existing");
+				throw new ArgumentException($"Value {name} is not existing");
 
 			int[] convertedValues = _stats.FirstOrDefault(element => element.Key == name).Value;
 

@@ -1,11 +1,16 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Sources.Domain.Progress;
 using Sources.Domain.Progress.Player;
+using Sources.Domain.Temp;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Infrastructure.Factories.UpgradeShop;
+using Sources.Infrastructure.Factories.Player;
+using Sources.Infrastructure.Repositories;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
+using Sources.ServicesInterfaces;
 using Sources.Utils;
 using Sources.Utils.ConstantNames;
 using VContainer;
@@ -14,51 +19,34 @@ namespace Sources.Infrastructure.Factories.Domain
 {
 	public class InitialProgressFactory : IInitialProgressFactory
 	{
-		private readonly ProgressEntityFactory _progressEntityFactory;
 		private readonly IResourceService _resourceService;
-		private readonly IPlayerStatsServiceProvider _playerStatsService;
+		private readonly UpgradeProgressRepositoryProvider _upgradeProgressRepositoryProvider;
+		private readonly IAssetFactory _assetFactory;
 
 		[Inject]
 		public InitialProgressFactory(
-			ProgressEntityFactory progressEntityFactory,
 			IResourceService resourceService,
 			ProgressConstantNames progressConstantNames,
 			IPlayerProgressSetterFacadeProvider playerProgressSetterFacadeProvider,
-			IPersistentProgressServiceProvider persistentProgressServiceProvider
+			IPersistentProgressServiceProvider persistentProgressServiceProvider,
+			UpgradeProgressRepositoryProvider upgradeProgressRepositoryProvider,
+			IAssetFactory assetFactory
 		)
 		{
-			_progressEntityFactory = progressEntityFactory ??
-				throw new ArgumentNullException(nameof(progressEntityFactory));
 			_resourceService = resourceService ?? throw new ArgumentNullException(nameof(resourceService));
+			_upgradeProgressRepositoryProvider = upgradeProgressRepositoryProvider ??
+				throw new ArgumentNullException(nameof(upgradeProgressRepositoryProvider));
+			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 		}
 
-		public IGlobalProgress Create()
-		{
-			var itemsList = _progressEntityFactory.Load();
-
-			if (itemsList == null) throw new ArgumentNullException(nameof(itemsList));
-
-			ResourcesModel resourcesModel = new ResourcesModelFactory(_resourceService).Create();
-
-			PlayerProgress playerProgressModel = new PlayerProgressFactory(
-				new ProgressUpgradeDataFactory(itemsList).Create()
-			).Create();
-
-			UpgradeProgressModel upgradeProgressModelModel = new(
-				new ProgressUpgradeDataFactory(itemsList).Create()
+		public IGlobalProgress Create() =>
+			new GlobalProgress(
+				new ResourcesModelFactory(_resourceService).Create(),
+				new LevelProgressFactory(
+					firstLevel: 1,
+					GameConfig.DefaultMaxTotalResource
+				).Create(),
+				new ShopEntityFactory(_assetFactory).LoadList()
 			);
-
-			LevelProgress levelProgressModel = new LevelProgressFactory(
-				firstLevel: 1,
-				GameConfig.DefaultMaxTotalResource
-			).Create();
-
-			return new GlobalProgress(
-				resourcesModel,
-				playerProgressModel,
-				upgradeProgressModelModel,
-				levelProgressModel
-			);
-		}
 	}
 }

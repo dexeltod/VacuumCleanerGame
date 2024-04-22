@@ -49,9 +49,10 @@ namespace Sources.Infrastructure.Factories
 			_translatorService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 		}
 
-		private IResourcesModel GameProgressResourcesModel => _persistentProgressService.GlobalProgress.ResourcesModel;
+		private IResourceModelReadOnly GameProgressResourceModelReadOnly =>
+			_persistentProgressService.GlobalProgress.ResourceModelReadOnly;
 
-		private int SoftCurrencyCount => GameProgressResourcesModel.SoftCurrency.Count;
+		private int SoftCurrencyCount => GameProgressResourceModelReadOnly.SoftCurrency.Count;
 
 		private string GameObjectsUpgradeTrigger => ResourcesAssetPath.GameObjects.UpgradeTrigger;
 		private string YesNoButtonsCanvas => ResourcesAssetPath.Scene.UIResources.YesNoButtonsCanvas;
