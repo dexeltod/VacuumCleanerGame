@@ -2,9 +2,12 @@ using System;
 using Graphic.Joystick_Pack.Scripts.Base;
 using Sources.Controllers;
 using Sources.Domain.Temp;
+using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.DomainInterfaces.Models;
 using Sources.Infrastructure.Configs.Scripts;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
+using Sources.InfrastructureInterfaces.Repository;
 using Sources.ServicesInterfaces;
 using Sources.Utils;
 using UnityEngine;
@@ -18,14 +21,14 @@ namespace Sources.Infrastructure.Factories.Player
 		private readonly IAssetFactory _assetFactory;
 		private readonly IObjectResolver _objectResolver;
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfaceProvider;
-		private readonly IModifiableStatsRepositoryProvider _modifiableStatsRepositoryProvider;
+		private readonly IPlayerModelRepositoryProvider _playerModelRepository;
 
 		[Inject]
 		public PlayerFactory(
 			IAssetFactory assetFactory,
 			IObjectResolver objectResolver,
 			IGameplayInterfacePresenterProvider gameplayInterfaceProvider,
-			IModifiableStatsRepositoryProvider modifiableStatsRepositoryProvider
+			IPlayerModelRepositoryProvider playerModelRepository
 		)
 		{
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
@@ -33,9 +36,11 @@ namespace Sources.Infrastructure.Factories.Player
 
 			_gameplayInterfaceProvider = gameplayInterfaceProvider ??
 				throw new ArgumentNullException(nameof(gameplayInterfaceProvider));
-			_modifiableStatsRepositoryProvider = modifiableStatsRepositoryProvider ??
-				throw new ArgumentNullException(nameof(modifiableStatsRepositoryProvider));
+			_playerModelRepository = playerModelRepository ??
+				throw new ArgumentNullException(nameof(playerModelRepository));
 		}
+
+		private IPlayerModelRepository PlayerModelRepository => _playerModelRepository.Implementation;
 
 		private Joystick ImplementationJoystick => _gameplayInterfaceProvider.Implementation.Joystick;
 
@@ -65,7 +70,7 @@ namespace Sources.Infrastructure.Factories.Player
 			PlayerTransformable playerTransformable = new(
 				Player.transform,
 				joystick,
-				_modifiableStatsRepositoryProvider.Implementation.Get((int)ProgressType.Speed)
+				PlayerModelRepository.Get((int)ProgressType.Speed)
 			);
 
 			playerBodyComponentPresenter.Initialize(playerTransformable, body, animator, animationHasher);

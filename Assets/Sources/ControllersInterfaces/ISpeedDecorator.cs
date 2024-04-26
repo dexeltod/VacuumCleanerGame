@@ -4,5 +4,7 @@ namespace Sources.ControllersInterfaces
 	{
 		void Increase();
 		bool IsDecorated { get; }
+		void Enable();
+		void Disable();
 	}
 }

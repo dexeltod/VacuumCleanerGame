@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
+using Sources.Domain.Temp;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Repositories;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
-using Sources.ServicesInterfaces.Upgrade;
-using Sources.Utils;
 
 namespace Sources.Controllers
 {
@@ -21,6 +20,7 @@ namespace Sources.Controllers
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
 		private readonly IUpgradeProgressRepository _upgradeProgressRepository;
 		private readonly ISaveLoader _saveLoader;
+		private IReadOnlyList<IUpgradeEntityReadOnly> _entities;
 
 		public UpgradeElementPresenter(
 			IProgressSetterFacade progressSetterFacade,
@@ -49,23 +49,48 @@ namespace Sources.Controllers
 
 		private int Money =>
 			_persistentProgressServiceProvider.Implementation
-				.GlobalProgress.ResourceModelReadOnly.SoftCurrency.Count;
+				.GlobalProgress.ResourceModelReadOnly.SoftCurrency.Value;
 
 		public void Upgrade(int id)
 		{
-			_upgradeProgressRepository.GetEntity(id).AddOneLevel();
-			int price = _upgradeProgressRepository.GetPrice(id);
-
-			IUpgradeElementChangeableView panel = _upgradeElementChangeableViews[id];
+			_upgradeProgressRepository.AddOneLevel(id);
 
 			if (_progressSetterFacade.TryAddOneProgressPoint(id) == false)
 				throw new InvalidOperationException("Failed to add progress point");
 
+			SetView(id);
+		}
+
+		private void SetView(int id)
+		{
+			IUpgradeElementChangeableView panel = _upgradeElementChangeableViews[id];
+
 			panel.AddProgressPointColor();
-			panel.SetPriceText(price);
+			panel.SetPriceText(_upgradeProgressRepository.GetPrice(id));
 
 			UpgradeWindowPresenter.SetMoney(Money);
 			_gameplayInterfacePresenterProvider.Implementation.SetSoftCurrency(Money);
+		}
+
+		public override void Enable()
+		{
+			_entities = _upgradeProgressRepository.GetEntities();
+
+			foreach (IUpgradeEntityReadOnly entity in _entities)
+				entity.CurrentLevel.Changed += OnLevelChanged;
+		}
+
+		public override void Disable()
+		{
+			_entities = _upgradeProgressRepository.GetEntities();
+
+			foreach (IUpgradeEntityReadOnly entity in _entities)
+				entity.CurrentLevel.Changed -= OnLevelChanged;
+		}
+
+		private void OnLevelChanged()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

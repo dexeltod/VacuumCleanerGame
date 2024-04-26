@@ -7,6 +7,6 @@ namespace Sources.InfrastructureInterfaces.Repository
 		void Increase(int id, int value);
 		void Decrease(int id, int value);
 		void Clear(int id);
-		IModifiableStat Get(int id);
+		IStatChangeable Get(int id);
 	}
 }

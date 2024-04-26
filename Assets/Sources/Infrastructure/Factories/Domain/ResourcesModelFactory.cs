@@ -19,10 +19,10 @@ namespace Sources.Infrastructure.Factories.Domain
 
 		public override ResourceModelModifiableReadOnly Create()
 		{
-			Resource<int> soft = GetResource(ResourceType.Soft);
-			Resource<int> hard = GetResource(ResourceType.Hard);
-			Resource<int> cashScore = GetResource(ResourceType.CashScore);
-			Resource<int> globalScore = GetResource(ResourceType.GlobalScore);
+			Resource<int> soft = GetResource(CurrencyResourceType.Soft);
+			Resource<int> hard = GetResource(CurrencyResourceType.Hard);
+			Resource<int> cashScore = GetResource(CurrencyResourceType.CashScore);
+			Resource<int> globalScore = GetResource(CurrencyResourceType.GlobalScore);
 
 			return CreateResourceModel(soft, hard, cashScore, globalScore);
 		}
@@ -43,7 +43,7 @@ namespace Sources.Infrastructure.Factories.Domain
 				StartScoreCount
 			);
 
-		private Resource<int> GetResource(ResourceType type) =>
+		private Resource<int> GetResource(CurrencyResourceType type) =>
 			_resourceService.GetResource<int>(type) as Resource<int>;
 	}
 }

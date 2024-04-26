@@ -7,8 +7,8 @@ namespace Sources.Infrastructure.Repositories
 	public interface IUpgradeProgressRepository
 	{
 		IUpgradeEntityViewConfig GetConfig(int id);
-		IProgressEntity GetEntity(int id);
-		IReadOnlyList<IProgressEntity> GetEntities();
+		IUpgradeEntityReadOnly GetEntity(int id);
+		IReadOnlyList<IUpgradeEntityReadOnly> GetEntities();
 		IReadOnlyList<IUpgradeEntityViewConfig> GetConfigs();
 		int GetPrice(int id);
 		int GetStatByProgress(int id);

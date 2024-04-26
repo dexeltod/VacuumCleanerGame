@@ -7,26 +7,26 @@ namespace Sources.Infrastructure.Factories.Domain
 {
 	public class ResourceServiceFactory
 	{
-		private readonly Dictionary<ResourceType, IResource<float>> _floatResources = new();
-		private readonly Dictionary<ResourceType, IResource<int>> _intResources = new();
+		private readonly Dictionary<CurrencyResourceType, IResource<float>> _floatResources = new();
+		private readonly Dictionary<CurrencyResourceType, IResource<int>> _intResources = new();
 
 		public ResourceServiceFactory()
 		{
-			IResource<int> intResourceSoft = new IntResource(ResourceType.Soft);
-			IResource<int> intResourceHard = new IntResource(ResourceType.Hard);
-			IResource<int> intResourceScore = new IntResource(ResourceType.CashScore);
-			IResource<int> intResourceGlobalScore = new IntResource(ResourceType.GlobalScore);
+			IResource<int> intResourceSoft = new IntCurrency(CurrencyResourceType.Soft, 0);
+			IResource<int> intResourceHard = new IntCurrency(CurrencyResourceType.Hard, 0);
+			IResource<int> intResourceScore = new IntCurrency(CurrencyResourceType.CashScore, 0);
+			IResource<int> intResourceGlobalScore = new IntCurrency(CurrencyResourceType.GlobalScore, 0);
 
-			_intResources.Add(ResourceType.Soft, intResourceSoft);
-			_intResources.Add(ResourceType.Hard, intResourceHard);
-			_intResources.Add(ResourceType.CashScore, intResourceScore);
-			_intResources.Add(ResourceType.GlobalScore, intResourceGlobalScore);
+			_intResources.Add(CurrencyResourceType.Soft, intResourceSoft);
+			_intResources.Add(CurrencyResourceType.Hard, intResourceHard);
+			_intResources.Add(CurrencyResourceType.CashScore, intResourceScore);
+			_intResources.Add(CurrencyResourceType.GlobalScore, intResourceGlobalScore);
 		}
 
-		public Dictionary<ResourceType, IResource<int>> GetIntResources() =>
+		public Dictionary<CurrencyResourceType, IResource<int>> GetIntResources() =>
 			_intResources;
 
-		public Dictionary<ResourceType, IResource<float>> GetFloatResources() =>
+		public Dictionary<CurrencyResourceType, IResource<float>> GetFloatResources() =>
 			_floatResources;
 	}
 }

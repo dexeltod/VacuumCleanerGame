@@ -57,8 +57,11 @@ namespace Sources.Infrastructure.Services
 			succeededCallback?.Invoke();
 		}
 
-		public async UniTask ClearSaves() =>
-			await _progressCleaner.ClearAndSaveCloud();
+		public async UniTask ClearSaves()
+		{
+			IGlobalProgress progress = _progressCleaner.ClearAndSaveCloud();
+			await _saveLoader.Implementation.Save(progress);
+		}
 
 		public async UniTask<IGlobalProgress> LoadFromCloud()
 		{

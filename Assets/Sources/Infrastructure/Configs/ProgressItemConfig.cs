@@ -6,13 +6,13 @@ using UnityEngine;
 
 namespace Sources.Infrastructure.ScriptableObjects.Shop
 {
-	[Serializable] public class ProgressItemConfig : ScriptableObject, IProgressItemConfig
+	[Serializable] public class ProgressItemConfig : IProgressItemConfig
 	{
 		[SerializeField] private List<int> _prices;
+		[SerializeField] private List<int> _stats;
 
 		[SerializeField] private string _title;
 		[SerializeField] private string _description;
-		[SerializeField] private List<int> _stats;
 
 		[SerializeField] private ProgressType _type;
 		[SerializeField] private bool _isModifiable = false;
@@ -27,17 +27,5 @@ namespace Sources.Infrastructure.ScriptableObjects.Shop
 		public IReadOnlyList<int> Stats => _stats;
 
 		public string Title => _title;
-
-		private void OnValidate()
-		{
-			if (_prices.Count > _stats.Count)
-				for (int i = _stats.Count; i < _prices.Count; i++)
-					_prices.RemoveAt(i);
-
-			if (_prices.Count >= _stats.Count) return;
-
-			for (int i = _prices.Count; i < _stats.Count; i++)
-				_prices.Add(0);
-		}
 	}
 }

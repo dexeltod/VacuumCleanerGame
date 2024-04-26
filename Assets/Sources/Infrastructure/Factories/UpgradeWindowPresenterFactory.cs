@@ -52,7 +52,7 @@ namespace Sources.Infrastructure.Factories
 		private IResourceModelReadOnly GameProgressResourceModelReadOnly =>
 			_persistentProgressService.GlobalProgress.ResourceModelReadOnly;
 
-		private int SoftCurrencyCount => GameProgressResourceModelReadOnly.SoftCurrency.Count;
+		private int SoftCurrencyCount => GameProgressResourceModelReadOnly.SoftCurrency.Value;
 
 		private string GameObjectsUpgradeTrigger => ResourcesAssetPath.GameObjects.UpgradeTrigger;
 		private string YesNoButtonsCanvas => ResourcesAssetPath.Scene.UIResources.YesNoButtonsCanvas;
@@ -71,15 +71,15 @@ namespace Sources.Infrastructure.Factories
 				_resourcesProgressPresenterProvider
 			);
 
-			var activator = _assetFactory.InstantiateAndGetComponent<UpgradeWindowActivator>(YesNoButtonsCanvas);
+			var enabler = _assetFactory.InstantiateAndGetComponent<UpgradeWindowActivator>(YesNoButtonsCanvas);
 
-			activator.Phrases.Phrases = _translatorService.GetLocalize(activator.Phrases.Phrases);
+			enabler.Phrases.Phrases = _translatorService.GetLocalize(enabler.Phrases.Phrases);
 
-			activator.enabled = false;
-			activator.Construct(presenter, upgradeTrigger);
-			activator.enabled = true;
+			enabler.enabled = false;
+			enabler.Construct(presenter, upgradeTrigger);
+			enabler.enabled = true;
 
-			upgradeWindowPresentation.Construct(presenter, SoftCurrencyCount, activator);
+			upgradeWindowPresentation.Construct(presenter, SoftCurrencyCount, enabler);
 			upgradeWindowPresentation.UpgradeWindowMain.SetActive(false);
 
 			return presenter;

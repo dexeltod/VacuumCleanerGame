@@ -6,9 +6,9 @@ namespace Sources.DomainInterfaces
 		void AddMaxTotalResourceModifier(int newAmount);
 		void DecreaseCashScore(int newValue);
 		void AddMoney(int newValue);
-		void DecreaseMoney(int newValue);
+		bool TryDecreaseMoney(int newValue);
 		void ClearAllScores();
 		void ClearTotalResources();
-		void AddMaxCashScoreModifier(int newAmount);
+		void SetMaxCashScore(int newAmount);
 	}
 }

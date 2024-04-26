@@ -24,22 +24,23 @@ namespace Sources.Infrastructure.Services
 
 		private IUpgradeProgressRepository UpgradeProgressRepository => _repositoryProvider.Implementation;
 
-		public int GetProgressValue(int id)
-		{
-			int levelProgress = UpgradeProgressRepository.GetEntity(id).CurrentLevel;
-			int valueByLevel
-				= UpgradeProgressRepository.GetConfig(id).Stats.ElementAt(levelProgress);
-
-			return valueByLevel;
-		}
+		public int GetProgressValue(int id) =>
+			UpgradeProgressRepository
+				.GetConfig(id)
+				.Stats
+				.ElementAt(
+					UpgradeProgressRepository
+						.GetEntity(id)
+						.Value
+				);
 
 		public void AddProgressPoint(int id) =>
-			UpgradeProgressRepository.GetEntity(id).AddOneLevel();
+			UpgradeProgressRepository.AddOneLevel(id);
 
-		public IProgressEntity GetEntity(int id) =>
+		public IUpgradeEntityReadOnly GetEntity(int id) =>
 			UpgradeProgressRepository.GetEntity(id);
 
-		public IReadOnlyList<IProgressEntity> GetEntities() =>
+		public IReadOnlyList<IUpgradeEntityReadOnly> GetEntities() =>
 			UpgradeProgressRepository.GetEntities();
 
 		public IUpgradeEntityViewConfig GetConfig(int id) =>

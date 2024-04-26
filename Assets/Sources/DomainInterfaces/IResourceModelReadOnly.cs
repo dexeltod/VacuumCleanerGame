@@ -4,10 +4,10 @@ namespace Sources.DomainInterfaces
 {
 	public interface IResourceModelReadOnly
 	{
-		IResourceReadOnly<int> SoftCurrency { get; }
-		IResourceReadOnly<int> TotalResourcesAmount { get; }
-		IResourceReadOnly<int> Score { get; }
-		IResourceReadOnly<int> HardCurrency { get; }
+		IReadOnlyProgressValue<int> SoftCurrency { get; }
+		IReadOnlyProgressValue<int> TotalAmount { get; }
+		IReadOnlyProgressValue<int> CashScore { get; }
+		IReadOnlyProgressValue<int> HardCurrency { get; }
 
 		int MaxCashScore { get; }
 		int CurrentCashScore { get; }

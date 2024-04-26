@@ -1,16 +1,13 @@
 using System;
 using Sources.DomainInterfaces;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Sources.Domain.Progress
 {
 	[Serializable] public class LevelProgress : ILevelProgress
 	{
 		[SerializeField] private int _currentLevel;
-
-		[FormerlySerializedAs("_maxScoreCount")] [SerializeField]
-		private int _maxTotalResourceCount;
+		[SerializeField] private int _maxTotalResourceCount;
 
 		public LevelProgress(int firstLevel, int maxPoint)
 		{

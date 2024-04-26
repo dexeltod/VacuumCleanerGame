@@ -64,7 +64,7 @@ namespace Sources.Infrastructure.Factories.UI
 				_resourceModelReadOnly.CurrentTotalResources,
 				_resourceModelReadOnly.MaxCashScore,
 				_resourceModelReadOnly.MaxTotalResourceCount,
-				_resourceModelReadOnly.SoftCurrency.Count,
+				_resourceModelReadOnly.SoftCurrency.Value,
 				isHalfScoreReached,
 				IsGlobalScoreViewed
 			);

@@ -103,7 +103,8 @@ namespace Sources.Presentation.UI.Shop
 
 		private void InstantiatePoints(int startIndex, int end, Color color)
 		{
-			if (startIndex < StartIndex) throw new ArgumentOutOfRangeException(nameof(startIndex));
+			if (startIndex < StartIndex)
+				throw new ArgumentOutOfRangeException(nameof(startIndex));
 
 			for (int i = startIndex; i < end; i++)
 			{

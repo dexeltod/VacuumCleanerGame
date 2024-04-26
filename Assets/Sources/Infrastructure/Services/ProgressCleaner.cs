@@ -32,11 +32,10 @@ namespace Sources.Infrastructure.Services
 				throw new ArgumentNullException(nameof(progressServiceProvider));
 		}
 
-		public async UniTask<IGlobalProgress> ClearAndSaveCloud()
+		public IGlobalProgress ClearAndSaveCloud()
 		{
 			IGlobalProgress clearedProgress = _initialProgressFactory.Create();
 			_progressServiceProvider.Register(new PersistentProgressService(clearedProgress));
-			await _saveLoader.Implementation.Save(clearedProgress);
 
 			return clearedProgress;
 		}

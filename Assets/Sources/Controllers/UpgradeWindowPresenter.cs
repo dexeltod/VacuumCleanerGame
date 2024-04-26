@@ -33,7 +33,7 @@ namespace Sources.Controllers
 				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
 		}
 
-		private int SoftCurrencyCount => _resourcesProgressPresenterProvider.Implementation.SoftCurrency.Count;
+		private int SoftCurrencyCount => _resourcesProgressPresenterProvider.Implementation.SoftCurrency.Value;
 
 		public void Dispose() =>
 			Disable();

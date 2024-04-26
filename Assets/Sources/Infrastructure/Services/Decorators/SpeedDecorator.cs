@@ -14,7 +14,7 @@ namespace Sources.Infrastructure.Services.Decorators
 	public class SpeedDecorator : ISpeedDecorator
 	{
 		private readonly IAdvertisement _advertisement;
-		private readonly IModifiableStat _speed;
+		private readonly IStatChangeable _speed;
 		private readonly int _baseSpeed;
 		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
 
@@ -26,7 +26,7 @@ namespace Sources.Infrastructure.Services.Decorators
 			ICoroutineRunnerProvider coroutineRunnerProvider,
 			IAdvertisement advertisement,
 			float time,
-			IModifiableStat speed
+			IStatChangeable speed
 		)
 		{
 			if (time < 0) throw new ArgumentOutOfRangeException(nameof(time));
@@ -34,7 +34,7 @@ namespace Sources.Infrastructure.Services.Decorators
 			_coroutineRunnerProvider = coroutineRunnerProvider ??
 				throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
-			_speed = speed;
+			_speed = speed ?? throw new ArgumentNullException(nameof(speed));
 
 			_waitForSeconds = new WaitForSeconds(time);
 		}
@@ -42,6 +42,12 @@ namespace Sources.Infrastructure.Services.Decorators
 		private ICoroutineRunner CoroutineRunner => _coroutineRunnerProvider.Implementation;
 
 		public bool IsDecorated { get; private set; }
+
+		public void Enable() =>
+			_speed.Enable();
+
+		public void Disable() =>
+			_speed.Disable();
 
 		public void Increase() =>
 			_advertisement.ShowAd(OnRewarded);

@@ -8,22 +8,22 @@ namespace Sources.Services.DomainServices
 {
 	public class ResourcesService : IResourceService
 	{
-		private readonly Dictionary<ResourceType, IResource<int>> _intResources;
-		private readonly Dictionary<ResourceType, IResource<float>> _floatResources;
+		private readonly Dictionary<CurrencyResourceType, IResource<int>> _intResources;
+		private readonly Dictionary<CurrencyResourceType, IResource<float>> _floatResources;
 
 		public ResourcesService(
-			Dictionary<ResourceType, IResource<int>> intResources,
-			Dictionary<ResourceType, IResource<float>> floatResources
+			Dictionary<CurrencyResourceType, IResource<int>> intResources,
+			Dictionary<CurrencyResourceType, IResource<float>> floatResources
 		)
 		{
 			_intResources = intResources;
 			_floatResources = floatResources;
 		}
 
-		public IResource<T> GetResource<T>(ResourceType type) =>
+		public IResource<T> GetResource<T>(CurrencyResourceType type) =>
 			FindResource<T>(type);
 
-		public void Set<T>(ResourceType type, T value)
+		public void Set<T>(CurrencyResourceType type, T value)
 		{
 			IResource<T> resource = FindResource<T>(type);
 
@@ -33,19 +33,20 @@ namespace Sources.Services.DomainServices
 			resource.Set(value);
 		}
 
-		private IResource<T> FindResource<T>(ResourceType resourceType)
+		private IResource<T> FindResource<T>(CurrencyResourceType currencyResourceType)
 		{
-			SeeContaining(resourceType);
+			SeeContaining(currencyResourceType);
 
 			if (typeof(T) == typeof(float))
-				return (IResource<T>)_floatResources.FirstOrDefault(element => element.Key == resourceType).Value;
+				return (IResource<T>)_floatResources.FirstOrDefault(element => element.Key == currencyResourceType)
+					.Value;
 			if (typeof(T) == typeof(int))
-				return (IResource<T>)_intResources.FirstOrDefault(element => element.Key == resourceType).Value;
+				return (IResource<T>)_intResources.FirstOrDefault(element => element.Key == currencyResourceType).Value;
 
 			throw new InvalidOperationException("Unknown resource type");
 		}
 
-		private void SeeContaining(ResourceType type)
+		private void SeeContaining(CurrencyResourceType type)
 		{
 			if (_floatResources.ContainsKey(type) != false) return;
 

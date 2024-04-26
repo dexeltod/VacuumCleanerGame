@@ -3,6 +3,8 @@ using System.Collections;
 using Graphic.Joystick_Pack.Scripts.Base;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
+using Sources.Domain.Temp;
+using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
@@ -13,13 +15,13 @@ namespace Sources.Controllers
 {
 	public class GameplayInterfacePresenter : Presenter, IGameplayInterfacePresenter
 	{
+		private readonly IUpgradeEntityReadOnly _maxCashScore;
 		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
 		private readonly float _time;
 		private readonly IGameplayInterfaceView _gameplayInterfaceView;
 		private readonly ILevelChangerService _levelChangerService;
 		private readonly ISpeedDecorator _speedDecorator;
 		private readonly int _cashScore;
-		private readonly int _maxCashScore;
 
 		public GameplayInterfacePresenter(
 			ILevelChangerService levelChangerService,
@@ -28,9 +30,11 @@ namespace Sources.Controllers
 			ICoroutineRunnerProvider coroutineRunnerProvider,
 			float time,
 			int cashScore,
-			int maxCashScore
+			IUpgradeEntityReadOnly maxCashScore
 		)
 		{
+			_maxCashScore = maxCashScore ??
+				throw new ArgumentNullException(nameof(maxCashScore));
 			_levelChangerService = levelChangerService ?? throw new ArgumentNullException(nameof(levelChangerService));
 			_gameplayInterfaceView
 				= gameplayInterfaceView ?? throw new ArgumentNullException(nameof(gameplayInterfaceView));
@@ -39,10 +43,8 @@ namespace Sources.Controllers
 				throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 			if (time <= 0) throw new ArgumentOutOfRangeException(nameof(time));
 			if (cashScore < 0) throw new ArgumentOutOfRangeException(nameof(cashScore));
-			if (maxCashScore < 0) throw new ArgumentOutOfRangeException(nameof(maxCashScore));
 			_time = time;
 			_cashScore = cashScore;
-			_maxCashScore = maxCashScore;
 		}
 
 		public Joystick Joystick => _gameplayInterfaceView.Joystick;
@@ -74,8 +76,9 @@ namespace Sources.Controllers
 
 		public override void Enable()
 		{
-			//TODO: refactor
-			// _resourcesModelSoftCurrency.ValueChanged += OnMaxCashScoreChanged;
+			_maxCashScore.CurrentLevel.Changed += OnMaxCashScoreChanged;
+			_speedDecorator.Enable();
+
 			IncreaseSpeedButton.onClick.AddListener(OnIncreaseSpeed);
 			GoToNextLevelButton.onClick.AddListener(OnGoToNextLevel);
 
@@ -84,13 +87,15 @@ namespace Sources.Controllers
 
 		public override void Disable()
 		{
-			// _maxCashScoreChangeable.ValueChanged -= OnMaxCashScoreChanged;
+			_maxCashScore.CurrentLevel.Changed -= OnMaxCashScoreChanged;
+			_speedDecorator.Disable();
+
 			IncreaseSpeedButton.onClick.RemoveListener(OnIncreaseSpeed);
 			GoToNextLevelButton.onClick.RemoveListener(OnGoToNextLevel);
 		}
 
 		private void OnMaxCashScoreChanged() =>
-			_gameplayInterfaceView.SetMaxCashScore(_maxCashScore);
+			_gameplayInterfaceView.SetMaxCashScore(_maxCashScore.Value);
 
 		private IEnumerator StartCooldownSpeedRoutine(float time)
 		{

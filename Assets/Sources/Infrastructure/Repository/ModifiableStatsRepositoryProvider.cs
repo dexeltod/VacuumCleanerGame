@@ -4,6 +4,6 @@ using Sources.InfrastructureInterfaces.Repository;
 
 namespace Sources.Infrastructure.Repository
 {
-	public class ModifiableStatsRepositoryProvider : Provider<IModifiableStatsRepository>,
+	public sealed class ModifiableStatsRepositoryProvider : Provider<IModifiableStatsRepository>,
 		IModifiableStatsRepositoryProvider { }
 }

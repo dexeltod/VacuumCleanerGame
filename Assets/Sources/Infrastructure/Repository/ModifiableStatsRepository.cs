@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Sources.Domain.Common;
 using Sources.Domain.Temp;
 using Sources.InfrastructureInterfaces.Repository;
@@ -9,18 +8,14 @@ namespace Sources.Infrastructure.Repository
 {
 	public class ModifiableStatsRepository : IModifiableStatsRepository
 	{
-		private readonly Dictionary<int, IModifiableStat> _stats;
+		private readonly Dictionary<int, IStatChangeable> _stats;
 
-		public ModifiableStatsRepository(Dictionary<int, IModifiableStat> stats) =>
+		public ModifiableStatsRepository(Dictionary<int, IStatChangeable> stats) =>
 			_stats = stats ?? throw new ArgumentNullException(nameof(stats));
 
 		public void Increase(int id, int value)
 		{
-			if (_stats != null && _stats[id] is not ModifiableStat)
-				throw new ArgumentException($"stat {_stats[id].GetType()} is not modifiable");
-
-			if (_stats != null && _stats.ContainsKey(id) == false)
-				throw new ArgumentNullException($"stat with id {id} not found");
+			Validate(id);
 
 			_stats![id].Increase(value);
 		}
@@ -44,7 +39,7 @@ namespace Sources.Infrastructure.Repository
 				throw new ArgumentNullException($"stat with id {id} not found");
 		}
 
-		public IModifiableStat Get(int id)
+		public IStatChangeable Get(int id)
 		{
 			Validate(id);
 
@@ -53,7 +48,7 @@ namespace Sources.Infrastructure.Repository
 
 		private void Validate(int id)
 		{
-			if (_stats != null && _stats[id] is not ModifiableStat)
+			if (_stats != null && _stats[id] is not StatChangeable)
 				throw new ArgumentException($"stat {_stats[id].GetType()} is not modifiable");
 
 			if (_stats != null && _stats.ContainsKey(id) == false)

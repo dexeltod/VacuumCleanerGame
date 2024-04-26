@@ -1,12 +1,11 @@
-
 using Sources.Utils;
 
 namespace Sources.DomainInterfaces.DomainServicesInterfaces
 {
-	public interface IResourceService 
+	public interface IResourceService
 	{
-		IResource<T> GetResource<T>(ResourceType type);
+		IResource<T> GetResource<T>(CurrencyResourceType type);
 
-		void Set<T>(ResourceType type, T value);
+		void Set<T>(CurrencyResourceType type, T value);
 	}
 }

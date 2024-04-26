@@ -22,7 +22,7 @@ namespace Sources.Controllers
 		public void FillArea(float originalCount, float minFillCount, float maxFillCount)
 		{
 			if (originalCount < minFillCount)
-				throw new ArgumentOutOfRangeException($"Count {originalCount} is less than minFillArea {minFillCount}");
+				throw new ArgumentOutOfRangeException($"Value {originalCount} is less than minFillArea {minFillCount}");
 
 			float normalized = Normalize(originalCount, minFillCount, maxFillCount);
 			_renderer.material.SetFloat(FillAreaShaderPropertyId, normalized);

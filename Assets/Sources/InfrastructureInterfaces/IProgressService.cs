@@ -8,8 +8,8 @@ namespace Sources.ServicesInterfaces
 	{
 		int GetProgressValue(int id);
 		void AddProgressPoint(int id);
-		IProgressEntity GetEntity(int id);
-		IReadOnlyList<IProgressEntity> GetEntities();
+		IUpgradeEntityReadOnly GetEntity(int id);
+		IReadOnlyList<IUpgradeEntityReadOnly> GetEntities();
 		IUpgradeEntityViewConfig GetConfig(int id);
 		IReadOnlyList<IUpgradeEntityViewConfig> GetConfigs();
 		int GetPrice(int id);

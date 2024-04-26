@@ -152,6 +152,7 @@ namespace Sources.Presentation.UI
 		public void SetMaxCashScore(int newScore)
 		{
 			if (newScore < 0) throw new ArgumentOutOfRangeException(nameof(newScore));
+			Debug.Log("SetMaxCashScore" + newScore);
 			_maxCashScore = newScore;
 			_maxGlobalScoreText.SetText($"{_maxCashScore}");
 		}
@@ -188,6 +189,7 @@ namespace Sources.Presentation.UI
 				_maxCashScore
 			);
 
+			Debug.Log(" SetScoreBarValue _maxCashScore" + _maxCashScore);
 			_scoreFillBar.fillAmount = value;
 		}
 

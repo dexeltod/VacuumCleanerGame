@@ -9,6 +9,7 @@ using Sources.Domain.Temp;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Common.Factory.Decorators;
 using Sources.Infrastructure.Configs.Scripts;
+using Sources.Infrastructure.Repositories;
 using Sources.Infrastructure.Services.Decorators;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
@@ -41,6 +42,7 @@ namespace Sources.Infrastructure.Factories.UI
 		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
 		private readonly IAdvertisement _advertisement;
 		private readonly IModifiableStatsRepositoryProvider _modifiableStatsRepositoryProvider;
+		private readonly UpgradeProgressRepositoryProvider _upgradeProgressRepositoryProvider;
 
 		[Inject]
 		public GameplayInterfacePresenterFactory(
@@ -55,7 +57,8 @@ namespace Sources.Infrastructure.Factories.UI
 			IAdvertisement advertisement,
 			ILevelProgressFacade levelProgressFacade,
 			IProgressService progressService,
-			IModifiableStatsRepositoryProvider modifiableStatsRepositoryProvider
+			IModifiableStatsRepositoryProvider modifiableStatsRepositoryProvider,
+			UpgradeProgressRepositoryProvider upgradeProgressRepositoryProvider
 		)
 
 		{
@@ -76,6 +79,8 @@ namespace Sources.Infrastructure.Factories.UI
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 			_modifiableStatsRepositoryProvider = modifiableStatsRepositoryProvider ??
 				throw new ArgumentNullException(nameof(modifiableStatsRepositoryProvider));
+			_upgradeProgressRepositoryProvider = upgradeProgressRepositoryProvider ??
+				throw new ArgumentNullException(nameof(upgradeProgressRepositoryProvider));
 		}
 
 		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Implementation;
@@ -90,10 +95,6 @@ namespace Sources.Infrastructure.Factories.UI
 
 		private IModifiableStatsRepository ModifiableStatsRepository =>
 			_modifiableStatsRepositoryProvider.Implementation;
-
-		private int MaxCashScore =>
-			_persistentProgressServiceProvider.Implementation.GlobalProgress.ResourceModelReadOnly
-				.MaxCashScore;
 
 		public override GameplayInterfacePresenter Create()
 		{
@@ -113,7 +114,7 @@ namespace Sources.Infrastructure.Factories.UI
 				_coroutineRunnerProvider,
 				Time,
 				CashScore,
-				MaxCashScore
+				_upgradeProgressRepositoryProvider.Implementation.GetEntity((int)ProgressType.MaxCashScore)
 			);
 
 			GameMenuView gameMenuView = gameplayInterfaceView.GetComponent<GameMenuView>();

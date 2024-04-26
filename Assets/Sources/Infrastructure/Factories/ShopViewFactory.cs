@@ -31,6 +31,7 @@ namespace Sources.Infrastructure.Factories
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfaceProvider;
 		private readonly UpgradeProgressRepositoryProvider _upgradeProgressRepositoryProvider;
 		private readonly IProgressService _progressService;
+		private readonly IPlayerModelRepositoryProvider _playerModelRepositoryProvider;
 
 		[Inject]
 		public ShopViewFactory(
@@ -42,7 +43,8 @@ namespace Sources.Infrastructure.Factories
 			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
 			IGameplayInterfacePresenterProvider gameplayInterfaceProvider,
 			UpgradeProgressRepositoryProvider upgradeProgressRepositoryProvider,
-			IProgressService progressService
+			IProgressService progressService,
+			IPlayerModelRepositoryProvider playerModelRepositoryProvider
 		)
 		{
 			_playerProgressSetterFacadeProvider = playerProgressSetterFacadeProvider ??
@@ -56,6 +58,8 @@ namespace Sources.Infrastructure.Factories
 			_upgradeProgressRepositoryProvider = upgradeProgressRepositoryProvider ??
 				throw new ArgumentNullException(nameof(upgradeProgressRepositoryProvider));
 			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
+			_playerModelRepositoryProvider = playerModelRepositoryProvider ??
+				throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
 			_persistentProgressServiceProvider = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
@@ -66,7 +70,7 @@ namespace Sources.Infrastructure.Factories
 
 		private string UIResourcesShopItems => ResourcesAssetPath.Scene.UIResources.ShopItems;
 
-		private IShopEntity ShopProgress => _persistentProgressServiceProvider.Implementation.GlobalProgress.ShopEntity;
+		private IShopModel ShopProgress => _persistentProgressServiceProvider.Implementation.GlobalProgress.ShopModel;
 
 		private IUpgradeProgressRepository UpgradeProgressRepository =>
 			_upgradeProgressRepositoryProvider.Implementation;
@@ -76,7 +80,7 @@ namespace Sources.Infrastructure.Factories
 		public Dictionary<int, IUpgradeElementPrefabView> Create(Transform transform)
 		{
 			IReadOnlyList<IUpgradeEntityViewConfig> configs = _progressService.GetConfigs();
-			IReadOnlyList<IProgressEntity> entities = _progressService.GetEntities();
+			IReadOnlyList<IUpgradeEntityReadOnly> entities = _progressService.GetEntities();
 
 			return Instantiate(transform, configs, entities);
 		}
@@ -84,7 +88,7 @@ namespace Sources.Infrastructure.Factories
 		private Dictionary<int, IUpgradeElementPrefabView> Instantiate(
 			Component transform,
 			IReadOnlyList<IUpgradeEntityViewConfig> configs,
-			IReadOnlyList<IProgressEntity> entities
+			IReadOnlyList<IUpgradeEntityReadOnly> entities
 		)
 		{
 			Dictionary<int, IUpgradeElementPrefabView> views = new();
@@ -111,7 +115,7 @@ namespace Sources.Infrastructure.Factories
 
 			for (int i = 0; i < views.Count; i++)
 			{
-				IProgressEntity progress = entities.ElementAt(i);
+				IUpgradeEntityReadOnly upgrade = entities.ElementAt(i);
 				IUpgradeEntityViewConfig upgradeEntityViewConfig = configs.ElementAt(i);
 
 				var translatedTitle = Localize(upgradeEntityViewConfig.Title);
@@ -125,7 +129,7 @@ namespace Sources.Infrastructure.Factories
 					translatedTitle,
 					translatedDescription,
 					configId,
-					progress.CurrentLevel,
+					upgrade.Value,
 					_progressService.GetPrice(configId),
 					upgradeEntityViewConfig.MaxProgressCount
 				);

@@ -40,7 +40,7 @@ namespace Sources.Controllers
 				throw new ArgumentNullException(nameof(sandParticlePlayerSystem));
 		}
 
-		public IResourceReadOnly<int> SoftCurrency => _resourceReadOnly.SoftCurrency;
+		public IReadOnlyProgressValue<int> SoftCurrency => _resourceReadOnly.SoftCurrency;
 		private IFillMeshShaderController FillMeshShaderController => _fillMeshShaderControllerProvider.Implementation;
 		private IGameplayInterfacePresenter GameplayInterfacePresenter => _gameplayInterfacePresenter.Implementation;
 
@@ -61,10 +61,10 @@ namespace Sources.Controllers
 			if (count <= 0)
 				throw new ArgumentOutOfRangeException(nameof(count));
 
-			return _resourceReadOnly.SoftCurrency.Count - count;
+			return _resourceReadOnly.SoftCurrency.Value - count;
 		}
 
-		public void SellSand()
+		public void Sell()
 		{
 			if (_resourceReadOnly.CurrentCashScore <= 0)
 				return;
@@ -92,10 +92,10 @@ namespace Sources.Controllers
 
 		public void DecreaseMoney(int count)
 		{
-			if (_resourceReadOnly.SoftCurrency.Count - count < 0)
+			if (_resourceReadOnly.SoftCurrency.Value - count < 0)
 				throw new ArgumentOutOfRangeException($"{SoftCurrency} less than zero");
 
-			_resourceData.DecreaseMoney(count);
+			_resourceData.TryDecreaseMoney(count);
 			SetMoneyTextView();
 		}
 
@@ -148,7 +148,7 @@ namespace Sources.Controllers
 		}
 
 		private void SetMoneyTextView() =>
-			GameplayInterfacePresenter.SetSoftCurrency(_resourceReadOnly.SoftCurrency.Count);
+			GameplayInterfacePresenter.SetSoftCurrency(_resourceReadOnly.SoftCurrency.Value);
 
 		private void SetView()
 		{

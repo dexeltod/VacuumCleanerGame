@@ -54,7 +54,7 @@ namespace Sources.Services.Triggers
 
 		private IEnumerator SellRoutine()
 		{
-			_progressPresenterProvider.Implementation.SellSand();
+			_progressPresenterProvider.Implementation.Sell();
 			return null;
 		}
 	}

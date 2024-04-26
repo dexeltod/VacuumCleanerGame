@@ -88,6 +88,7 @@ namespace Sources.Application.Bootstrapp
 			_builder.Register<SandCarContainerViewProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<GameStateChangerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<FillMeshShaderControllerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+			_builder.Register<PlayerModelRepositoryProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
 			_builder.Register<SandParticleSystemProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<CloudServiceSdkFacadeProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
@@ -230,8 +231,9 @@ namespace Sources.Application.Bootstrapp
 		{
 			ResourceServiceFactory resourceServiceFactory = new ResourceServiceFactory();
 
-			Dictionary<ResourceType, IResource<int>> intResources = resourceServiceFactory.GetIntResources();
-			Dictionary<ResourceType, IResource<float>> floatResources = resourceServiceFactory.GetFloatResources();
+			Dictionary<CurrencyResourceType, IResource<int>> intResources = resourceServiceFactory.GetIntResources();
+			Dictionary<CurrencyResourceType, IResource<float>> floatResources
+				= resourceServiceFactory.GetFloatResources();
 
 			_builder.RegisterInstance<IResourceService>
 			(

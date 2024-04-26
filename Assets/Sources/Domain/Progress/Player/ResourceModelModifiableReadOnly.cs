@@ -4,6 +4,7 @@ using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Utils;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Sources.Domain.Progress.Player
 {
@@ -12,11 +13,12 @@ namespace Sources.Domain.Progress.Player
 		private const int HundredPercent = 100;
 		private const int OnePoint = 1;
 
-		[SerializeField] private IntResource _softCurrency;
-		[SerializeField] private IntResource _hardCurrency;
+		[SerializeField] private IntCurrency _softCurrency;
+		[SerializeField] private IntCurrency _hardCurrency;
 
-		[SerializeField] private IntResource _cashScore;
-		[SerializeField] private IntResource _totalResourcesAmount;
+		[SerializeField] private IntCurrency _cashCashScore;
+
+		[SerializeField] private IntCurrency _totalAmount;
 
 		[SerializeField] private int _maxCashScoreModifier;
 		[SerializeField] private int _maxGlobalScoreModifier;
@@ -33,40 +35,58 @@ namespace Sources.Domain.Progress.Player
 			int startGlobalScoreCount
 		)
 		{
-			_hardCurrency = hardCurrency as IntResource ?? throw new ArgumentNullException(nameof(hardCurrency));
-			_softCurrency = softCurrency as IntResource ?? throw new ArgumentNullException(nameof(softCurrency));
-			_cashScore = cashScore as IntResource ?? throw new ArgumentNullException(nameof(cashScore));
-			_totalResourcesAmount = globalScore as IntResource ?? throw new ArgumentNullException(nameof(globalScore));
+			_hardCurrency = hardCurrency as IntCurrency ?? throw new ArgumentNullException(nameof(hardCurrency));
+			_softCurrency = softCurrency as IntCurrency ?? throw new ArgumentNullException(nameof(softCurrency));
+			_cashCashScore = cashScore as IntCurrency ?? throw new ArgumentNullException(nameof(cashScore));
+			_totalAmount = globalScore as IntCurrency ?? throw new ArgumentNullException(nameof(globalScore));
 
-			_cashScore.Set(startScoreCount);
+			_cashCashScore.Set(startScoreCount);
 			_hardCurrency.Set(startCurrencyCount);
 			_softCurrency.Set(startCurrencyCount);
-			_totalResourcesAmount.Set(startGlobalScoreCount);
+			_totalAmount.Set(startGlobalScoreCount);
 		}
 
-		public IResourceReadOnly<int> Score => _cashScore;
-		public IResourceReadOnly<int> SoftCurrency => _softCurrency;
-		public IResourceReadOnly<int> TotalResourcesAmount => _totalResourcesAmount;
-		public IResourceReadOnly<int> HardCurrency => _hardCurrency;
+		public IReadOnlyProgressValue<int> CashScore => _cashCashScore;
+		public IReadOnlyProgressValue<int> SoftCurrency => _softCurrency;
+		public IReadOnlyProgressValue<int> TotalAmount => _totalAmount;
+		public IReadOnlyProgressValue<int> HardCurrency => _hardCurrency;
 
-		public int PercentOfScore => (_cashScore.Count / HundredPercent) * MaxCashScore;
+		public int PercentOfScore => (_cashCashScore.Value / HundredPercent) * MaxCashScore;
 		public int MaxCashScore => _maxCashScoreModifier + GameConfig.DefaultMaxSandFillCount;
 		public int MaxTotalResourceCount => _maxGlobalScoreModifier + GameConfig.DefaultMaxTotalResource;
 
 		public int CurrentCashScore
 		{
-			get => _cashScore.Count;
-			private set => _cashScore.Set(value);
+			get => _cashCashScore.Value;
+			private set
+			{
+				if (value < 0)
+					throw new ArgumentOutOfRangeException(nameof(value));
+
+				_cashCashScore.Set(value);
+
+				if (_cashCashScore.Value >= 0) return;
+
+				_cashCashScore.Set(0);
+
+				throw new ArgumentOutOfRangeException(
+					$"Current cash value {_cashCashScore.Value} is less than zero. It will be zero",
+					nameof(value)
+				);
+			}
 		}
 
 		public int CurrentTotalResources
 		{
-			get => _totalResourcesAmount.Count;
-			private set => _totalResourcesAmount.Set(value);
+			get => _totalAmount.Value;
+			private set => _totalAmount.Set(value);
 		}
 
-		public void AddMaxCashScoreModifier(int newAmount) =>
-			_maxCashScoreModifier += newAmount;
+		public void SetMaxCashScore(int newAmount)
+		{
+			if (newAmount <= 0) throw new ArgumentOutOfRangeException(nameof(newAmount));
+			_maxCashScoreModifier = newAmount;
+		}
 
 		public void AddScore(int newCashScore)
 		{
@@ -78,7 +98,7 @@ namespace Sources.Domain.Progress.Player
 			CurrentCashScore += newCashScore;
 			CurrentTotalResources += OnePoint;
 
-			_cashScore.Set(CurrentCashScore);
+			_cashCashScore.Set(CurrentCashScore);
 		}
 
 		public void AddMaxTotalResourceModifier(int newAmount) =>
@@ -93,22 +113,28 @@ namespace Sources.Domain.Progress.Player
 		public void AddMoney(int newValue)
 		{
 			if (newValue <= 0) throw new ArgumentOutOfRangeException(nameof(newValue));
-			_softCurrency.Set(newValue + _softCurrency.Count);
+			_softCurrency.Set(newValue + _softCurrency.Value);
 		}
 
-		public void DecreaseMoney(int newValue)
+		public bool TryDecreaseMoney(int newValue)
 		{
-			if (newValue < 0) throw new ArgumentOutOfRangeException(nameof(newValue));
-			_softCurrency.Set(_softCurrency.Count - newValue);
+			if (newValue < 0)
+				throw new ArgumentOutOfRangeException(nameof(newValue));
+
+			if (_softCurrency.Value - newValue < 0)
+				throw new ArgumentOutOfRangeException(nameof(newValue), "Not enough money");
+
+			_softCurrency.Set(_softCurrency.Value - newValue);
+			return true;
 		}
 
 		public void ClearAllScores()
 		{
-			_cashScore.Set(0);
-			_totalResourcesAmount.Set(0);
+			_cashCashScore.Set(0);
+			_totalAmount.Set(0);
 		}
 
 		public void ClearTotalResources() =>
-			_totalResourcesAmount.Set(0);
+			_totalAmount.Set(0);
 	}
 }

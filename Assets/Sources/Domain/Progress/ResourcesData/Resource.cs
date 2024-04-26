@@ -1,27 +1,24 @@
 using System;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Utils;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Sources.Domain.Progress.ResourcesData
 {
 	[Serializable] public abstract class Resource<T> : IResource<T>
 	{
-		[SerializeField] private T            _count;
-		[SerializeField] private ResourceType _resourceType;
+		[SerializeField] private T _value;
 
-		public T Count => _count;
+		protected Resource(T value) =>
+			_value = value;
 
-		public ResourceType    ResourceType => _resourceType;
-		public event Action<T> ResourceChanged;
-
-		protected Resource(ResourceType resourceType) =>
-			_resourceType = resourceType;
+		public T Value => _value;
+		public event Action Changed;
 
 		public void Set(T value)
 		{
-			_count = value;
-			ResourceChanged?.Invoke(_count);
+			_value = value ?? throw new ArgumentNullException(nameof(value));
+			Changed?.Invoke();
 		}
 	}
 }
