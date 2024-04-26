@@ -9,6 +9,5 @@ namespace Sources.DomainInterfaces
 		bool TryDecreaseMoney(int newValue);
 		void ClearAllScores();
 		void ClearTotalResources();
-		void SetMaxCashScore(int newAmount);
 	}
 }

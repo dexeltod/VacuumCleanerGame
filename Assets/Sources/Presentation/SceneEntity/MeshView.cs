@@ -17,8 +17,7 @@ namespace Sources.Presentation.SceneEntity
 		private IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 		private MeshDeformationPresenter _meshDeformationPresenter;
 
-		private IResourcesProgressPresenter ResourcesProgressPresenter =>
-			_resourcesProgressPresenterProvider.Implementation;
+		private IResourcesProgressPresenter ResourcesProgressPresenter => _resourcesProgressPresenterProvider.Self;
 
 		public float RadiusDeformation => _radiusDeformation;
 

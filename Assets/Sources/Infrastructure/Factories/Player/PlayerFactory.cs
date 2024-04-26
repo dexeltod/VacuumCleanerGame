@@ -40,20 +40,17 @@ namespace Sources.Infrastructure.Factories.Player
 				throw new ArgumentNullException(nameof(playerModelRepository));
 		}
 
-		private IPlayerModelRepository PlayerModelRepository => _playerModelRepository.Implementation;
+		private IPlayerModelRepository PlayerModelRepository => _playerModelRepository.Self;
 
-		private Joystick ImplementationJoystick => _gameplayInterfaceProvider.Implementation.Joystick;
-
-		public GameObject Player { get; private set; }
+		private Joystick ImplementationJoystick => _gameplayInterfaceProvider.Self.Joystick;
 
 		public GameObject Create(GameObject spawnPoint)
 		{
 			if (spawnPoint == null) throw new ArgumentNullException(nameof(spawnPoint));
 
-			var joystick =
-				ImplementationJoystick
-					? ImplementationJoystick
-					: throw new ArgumentNullException(nameof(ImplementationJoystick));
+			var joystick = ImplementationJoystick
+				? ImplementationJoystick
+				: throw new ArgumentNullException(nameof(ImplementationJoystick));
 
 			AnimationHasher animationHasher = new AnimationHasher();
 
@@ -62,13 +59,12 @@ namespace Sources.Infrastructure.Factories.Player
 			_objectResolver.Inject(playerBodyComponentPresenter);
 
 			GameObject character = playerBodyComponentPresenter.gameObject;
-			Player = character;
-			Rigidbody body = Player.GetComponent<Rigidbody>();
+			Rigidbody body = character.GetComponent<Rigidbody>();
 
-			Animator animator = Player.GetComponentInChildren<Animator>();
+			Animator animator = character.GetComponentInChildren<Animator>();
 
 			PlayerTransformable playerTransformable = new(
-				Player.transform,
+				character.transform,
 				joystick,
 				PlayerModelRepository.Get((int)ProgressType.Speed)
 			);

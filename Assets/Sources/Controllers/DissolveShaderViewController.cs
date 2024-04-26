@@ -28,7 +28,7 @@ namespace Sources.Controllers
 		}
 
 		public void StartDissolving() =>
-			_coroutineRunnerProvider.Implementation.Run(DissolvingRoutine());
+			_coroutineRunnerProvider.Self.Run(DissolvingRoutine());
 
 		private IEnumerator DissolvingRoutine()
 		{

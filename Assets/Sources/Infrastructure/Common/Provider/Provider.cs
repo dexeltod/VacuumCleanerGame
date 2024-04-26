@@ -10,7 +10,7 @@ namespace Sources.Infrastructure.Common.Provider
 
 		private Type[] _contracts;
 
-		public TImplementation Implementation
+		public TImplementation Self
 		{
 			get
 			{

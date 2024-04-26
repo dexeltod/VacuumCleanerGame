@@ -149,8 +149,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 #endregion
 		}
 
-		private GameObject SpawnPoint => _resourcePathNameConfigProvider.Implementation.SceneGameObjects.SpawnPoint;
-		private ResourcesPrefabs ResourcesPrefabs => _resourcePathNameConfigProvider.Implementation;
+		private GameObject SpawnPoint => _resourcePathNameConfigProvider.Self.SceneGameObjects.SpawnPoint;
+		private ResourcesPrefabs ResourcesPrefabs => _resourcePathNameConfigProvider.Self;
 		private GameObject SellTrigger => ResourcesPrefabs.Triggers.SellTrigger;
 
 		public async void Enter(ILevelConfig payload)
@@ -158,7 +158,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			await _sceneLoader.Load("Game");
 			Build();
 
-			_gameStateMachine.Implementation.Enter<GameLoopState>();
+			_gameStateMachine.Self.Enter<GameLoopState>();
 		}
 
 		private void Build()
@@ -188,7 +188,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				_levelConfigGetter
 			).Create();
 
-			new CameraFactory(_assetFactory, _playerFactory.Player, _resourcePathNameConfigProvider).Create();
+			new CameraFactory(_assetFactory, playerGameObject, _resourcePathNameConfigProvider).Create();
 		}
 
 		private void CreateSandInCar(GameObject playerGameObject)
@@ -216,8 +216,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				_upgradeWindowViewFactory,
 				_assetFactory,
 				_progressSaveLoadDataService,
-				_persistentProgress.Implementation,
-				_gameplayInterfacePresenterProvider.Implementation,
+				_persistentProgress.Self,
+				_gameplayInterfacePresenterProvider.Self,
 				_resourcesProgressPresenterProvider,
 				_translatorService
 			).Create();

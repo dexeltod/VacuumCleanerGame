@@ -3761,7 +3761,7 @@
                     exposes 'id' as a named value.
                 </para>
 
-                <para>Implementation example: public object Method(Type id).</para>
+                <para>Self example: public object Method(Type id).</para>
             </example>
         </member>
         <member name="F:Sirenix.OdinInspector.PolymorphicFieldSettingsAttribute.OnInstanceAssigned">
@@ -3777,7 +3777,7 @@
                     exposes 'instance' as a named value.
                 </para>
 
-                <para>Implementation example: public void Method(SomeBaseType instance).</para>
+                <para>Self example: public void Method(SomeBaseType instance).</para>
             </example>
         </member>
         <member name="T:Sirenix.OdinInspector.PreviewFieldAttribute">
@@ -6117,7 +6117,7 @@
                     exposes 'id' as a named value.
                 </para>
 
-                <para>Implementation example: public bool SomeFilterMethod(Type id).</para>
+                <para>Self example: public bool SomeFilterMethod(Type id).</para>
             </example>
         </member>
         <!-- Badly formed XML comment ignored for member "T:Sirenix.OdinInspector.UnitAttribute" -->

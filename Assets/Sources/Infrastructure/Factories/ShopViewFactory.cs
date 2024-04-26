@@ -70,12 +70,11 @@ namespace Sources.Infrastructure.Factories
 
 		private string UIResourcesShopItems => ResourcesAssetPath.Scene.UIResources.ShopItems;
 
-		private IShopModel ShopProgress => _persistentProgressServiceProvider.Implementation.GlobalProgress.ShopModel;
+		private IShopModel ShopProgress => _persistentProgressServiceProvider.Self.GlobalProgress.ShopModel;
 
-		private IUpgradeProgressRepository UpgradeProgressRepository =>
-			_upgradeProgressRepositoryProvider.Implementation;
+		private IUpgradeProgressRepository UpgradeProgressRepository => _upgradeProgressRepositoryProvider.Self;
 
-		private IProgressSetterFacade ProgressSetterFacade => _playerProgressSetterFacadeProvider.Implementation;
+		private IProgressSetterFacade ProgressSetterFacade => _playerProgressSetterFacadeProvider.Self;
 
 		public Dictionary<int, IUpgradeElementPrefabView> Create(Transform transform)
 		{

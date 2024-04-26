@@ -36,7 +36,6 @@ namespace Sources.Infrastructure.Factories
 		private readonly UpgradeProgressRepositoryProvider _upgradeProgressRepositoryProvider;
 		private readonly IAssetFactory _assetFactory;
 		private readonly IProgressService _progressService;
-		private readonly IModifiableStatsRepositoryProvider _modifiableStatsRepositoryProvider;
 		private readonly IPlayerModelRepositoryProvider _playerModelRepositoryProvider;
 
 		private IPlayerProgressSetterFacadeProvider _playerProgressSetterFacadeProvider;
@@ -74,8 +73,6 @@ namespace Sources.Infrastructure.Factories
 				throw new ArgumentNullException(nameof(upgradeProgressRepositoryProvider));
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
-			_modifiableStatsRepositoryProvider = modifiableStatsRepositoryProvider ??
-				throw new ArgumentNullException(nameof(modifiableStatsRepositoryProvider));
 			_playerModelRepositoryProvider = playerModelRepositoryProvider ??
 				throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
 		}
@@ -107,7 +104,7 @@ namespace Sources.Infrastructure.Factories
 
 			loadedProgress = _progressCleaner.ClearAndSaveCloud();
 
-			await _saveLoaderProvider.Implementation.Save(loadedProgress);
+			await _saveLoaderProvider.Self.Save(loadedProgress);
 			return loadedProgress;
 		}
 
@@ -116,7 +113,7 @@ namespace Sources.Infrastructure.Factories
 			_playerModelRepositoryProvider.Register(new PlayerModelRepository(progress.PlayerModel));
 
 			var configs = new Dictionary<int, IUpgradeEntityViewConfig>();
-			var stats = new Dictionary<int, IStatChangeable>();
+			var stats = new Dictionary<int, IStat>();
 
 			var entities = progress.ShopModel.ProgressEntities;
 
@@ -130,8 +127,6 @@ namespace Sources.Infrastructure.Factories
 
 				configs.Add(id, configList.ReadOnlyItems.ElementAt(i));
 			}
-
-			// InitModifiableStatsRepositoryProvider(progress, entities, stats, configs);
 
 			RegisterUpgradeProgressRepositoryProvider(entities, configs);
 			RegisterProgressServiceProvider(new PersistentProgressService(progress));
@@ -149,36 +144,7 @@ namespace Sources.Infrastructure.Factories
 				)
 			);
 
-		// private void InitModifiableStatsRepositoryProvider(
-		// 	IGlobalProgress progress,
-		// 	IReadOnlyList<IUpgradeEntityReadOnly> entities,
-		// 	Dictionary<int, IStatChangeable> stats,
-		// 	Dictionary<int, IUpgradeEntityViewConfig> configs
-		// )
-		// {
-		// 	for (int i = 0; i < entities.Count(); i++)
-		// 	{
-		// 		IUpgradeEntityViewConfig config = configs.ElementAt(i).Value;
-		//
-		// 		if (config.IsModifiable == false)
-		// 			continue;
-		//
-		// 		IUpgradeEntityReadOnly entity = progress.ShopModel.ProgressEntities[i];
-		//
-		// 		stats.Add(
-		// 			config.Id,
-		// 			new StatChangeable(
-		// 				GetProgressValue(progress, configs, i),
-		// 				entity.CurrentLevel as IntEntityValue,
-		// 				entity.ConfigId
-		// 			)
-		// 		);
-		// 	}
-		//
-		// 	_modifiableStatsRepositoryProvider.Register(new ModifiableStatsRepository(stats));
-		// }
-
-		private int GetProgressValue(
+		private float GetProgressStatValue(
 			IGlobalProgress progress,
 			Dictionary<int, IUpgradeEntityViewConfig> configs,
 			int i
@@ -201,7 +167,7 @@ namespace Sources.Infrastructure.Factories
 					_persistentProgressServiceProvider,
 					_resourcesProgressPresenterProvider,
 					_progressService,
-					_playerModelRepositoryProvider.Implementation
+					_playerModelRepositoryProvider.Self
 				)
 			);
 

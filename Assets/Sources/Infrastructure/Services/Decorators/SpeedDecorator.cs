@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
 using Sources.ControllersInterfaces;
-using Sources.Domain.Common;
 using Sources.Domain.Temp;
-using Sources.DomainInterfaces;
+using Sources.Infrastructure.Services.Decorators.Common;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.ServicesInterfaces.Advertisement;
 using Sources.Utils;
@@ -11,22 +10,22 @@ using UnityEngine;
 
 namespace Sources.Infrastructure.Services.Decorators
 {
-	public class SpeedDecorator : ISpeedDecorator
+	public class SpeedDecorator : Decorator, ISpeedDecorator
 	{
 		private readonly IAdvertisement _advertisement;
-		private readonly IStatChangeable _speed;
-		private readonly int _baseSpeed;
+		private readonly IStat _speed;
+		private readonly float _baseSpeed;
 		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
 
 		private readonly WaitForSeconds _waitForSeconds;
 
-		private int _currentBaseSpeed;
+		private float _currentBaseSpeed;
 
 		public SpeedDecorator(
 			ICoroutineRunnerProvider coroutineRunnerProvider,
 			IAdvertisement advertisement,
 			float time,
-			IStatChangeable speed
+			IStat speed
 		)
 		{
 			if (time < 0) throw new ArgumentOutOfRangeException(nameof(time));
@@ -39,15 +38,12 @@ namespace Sources.Infrastructure.Services.Decorators
 			_waitForSeconds = new WaitForSeconds(time);
 		}
 
-		private ICoroutineRunner CoroutineRunner => _coroutineRunnerProvider.Implementation;
+		private ICoroutineRunner CoroutineRunner => _coroutineRunnerProvider.Self;
 
 		public bool IsDecorated { get; private set; }
 
-		public void Enable() =>
-			_speed.Enable();
-
-		public void Disable() =>
-			_speed.Disable();
+		public override void Disable() =>
+			_speed.Clear();
 
 		public void Increase() =>
 			_advertisement.ShowAd(OnRewarded);

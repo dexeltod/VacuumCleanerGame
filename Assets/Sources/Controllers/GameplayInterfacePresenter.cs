@@ -15,7 +15,7 @@ namespace Sources.Controllers
 {
 	public class GameplayInterfacePresenter : Presenter, IGameplayInterfacePresenter
 	{
-		private readonly IUpgradeEntityReadOnly _maxCashScore;
+		private readonly IStatReadOnly _maxCashScore;
 		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
 		private readonly float _time;
 		private readonly IGameplayInterfaceView _gameplayInterfaceView;
@@ -30,7 +30,7 @@ namespace Sources.Controllers
 			ICoroutineRunnerProvider coroutineRunnerProvider,
 			float time,
 			int cashScore,
-			IUpgradeEntityReadOnly maxCashScore
+			IStatReadOnly maxCashScore
 		)
 		{
 			_maxCashScore = maxCashScore ??
@@ -57,8 +57,10 @@ namespace Sources.Controllers
 
 		public void OnIncreaseSpeed()
 		{
-			if (_speedDecorator.IsDecorated != false) return;
-			_coroutineRunnerProvider.Implementation.Run(StartCooldownSpeedRoutine(_time));
+			if (_speedDecorator.IsDecorated != false)
+				return;
+
+			_coroutineRunnerProvider.Self.Run(StartViewCooldownSpeedRoutine(_time));
 			_speedDecorator.Increase();
 		}
 
@@ -76,7 +78,7 @@ namespace Sources.Controllers
 
 		public override void Enable()
 		{
-			_maxCashScore.CurrentLevel.Changed += OnMaxCashScoreChanged;
+			_maxCashScore.Changed += OnMaxCashScoreChanged;
 			_speedDecorator.Enable();
 
 			IncreaseSpeedButton.onClick.AddListener(OnIncreaseSpeed);
@@ -87,17 +89,17 @@ namespace Sources.Controllers
 
 		public override void Disable()
 		{
-			_maxCashScore.CurrentLevel.Changed -= OnMaxCashScoreChanged;
+			_maxCashScore.Changed -= OnMaxCashScoreChanged;
 			_speedDecorator.Disable();
-
+			
 			IncreaseSpeedButton.onClick.RemoveListener(OnIncreaseSpeed);
 			GoToNextLevelButton.onClick.RemoveListener(OnGoToNextLevel);
 		}
 
 		private void OnMaxCashScoreChanged() =>
-			_gameplayInterfaceView.SetMaxCashScore(_maxCashScore.Value);
+			_gameplayInterfaceView.SetMaxCashScore((int)_maxCashScore.Value);
 
-		private IEnumerator StartCooldownSpeedRoutine(float time)
+		private IEnumerator StartViewCooldownSpeedRoutine(float time)
 		{
 			_gameplayInterfaceView.FillSpeedButtonImage(0);
 

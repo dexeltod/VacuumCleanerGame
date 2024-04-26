@@ -4,6 +4,7 @@ using Sources.DomainInterfaces;
 using Sources.Infrastructure.Common.Factory.Decorators;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.Services;
+using Sources.Utils;
 using VContainer;
 
 namespace Sources.Infrastructure.Factories.Presenters
@@ -15,9 +16,10 @@ namespace Sources.Infrastructure.Factories.Presenters
 		private readonly IFillMeshShaderControllerProvider _fillMeshShaderControllerProvider;
 		private readonly ISandParticleSystemProvider _sandParticleSystemProvider;
 		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
+		private readonly IPlayerModelRepositoryProvider _playerModelRepositoryProvider;
 
 		private IResourceModelReadOnly ResourceModelReadOnly =>
-			_persistentProgressService.Implementation.GlobalProgress.ResourceModelReadOnly;
+			_persistentProgressService.Self.GlobalProgress.ResourceModelReadOnly;
 
 		[Inject]
 		public ResourcesProgressPresenterFactory(
@@ -25,7 +27,8 @@ namespace Sources.Infrastructure.Factories.Presenters
 			IPersistentProgressServiceProvider persistentProgressService,
 			IFillMeshShaderControllerProvider fillMeshShaderControllerProvider,
 			ISandParticleSystemProvider sandParticleSystemProvider,
-			ICoroutineRunnerProvider coroutineRunnerProvider
+			ICoroutineRunnerProvider coroutineRunnerProvider,
+			IPlayerModelRepositoryProvider playerModelRepositoryProvider
 		)
 		{
 			_gameplayInterfacePresenterProvider = gameplayInterfacePresenterProvider ??
@@ -38,6 +41,8 @@ namespace Sources.Infrastructure.Factories.Presenters
 				throw new ArgumentNullException(nameof(sandParticleSystemProvider));
 			_coroutineRunnerProvider = coroutineRunnerProvider ??
 				throw new ArgumentNullException(nameof(coroutineRunnerProvider));
+			_playerModelRepositoryProvider = playerModelRepositoryProvider ??
+				throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
 		}
 
 		public override ResourcesProgressPresenter Create()
@@ -54,7 +59,8 @@ namespace Sources.Infrastructure.Factories.Presenters
 				ResourceModelReadOnly,
 				ResourceModelReadOnly as IResourceModelModifiable,
 				_fillMeshShaderControllerProvider,
-				sandParticlePlayerSystem
+				sandParticlePlayerSystem,
+				_playerModelRepositoryProvider.Self.Get(ProgressType.MaxCashScore)
 			);
 		}
 	}

@@ -7,6 +7,7 @@ namespace Sources.Utils
 
 		public readonly string LevelsConfig = "Config/ScriptableObjects/LevelsConfig";
 		public readonly string ShopItems = "Config/ScriptableObjects/ShopItems";
+		public readonly string StartStats = "Config/ScriptableObjects/StartStats";
 		public readonly string ConfigsUpgradePaths = "Config/ScriptableObjects/ConfigsUpgradePaths";
 	}
 }

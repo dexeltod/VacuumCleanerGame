@@ -8,9 +8,9 @@ namespace Sources.Infrastructure.Repository
 {
 	public class ModifiableStatsRepository : IModifiableStatsRepository
 	{
-		private readonly Dictionary<int, IStatChangeable> _stats;
+		private readonly Dictionary<int, IStat> _stats;
 
-		public ModifiableStatsRepository(Dictionary<int, IStatChangeable> stats) =>
+		public ModifiableStatsRepository(Dictionary<int, IStat> stats) =>
 			_stats = stats ?? throw new ArgumentNullException(nameof(stats));
 
 		public void Increase(int id, int value)
@@ -39,7 +39,7 @@ namespace Sources.Infrastructure.Repository
 				throw new ArgumentNullException($"stat with id {id} not found");
 		}
 
-		public IStatChangeable Get(int id)
+		public IStat Get(int id)
 		{
 			Validate(id);
 
@@ -48,7 +48,7 @@ namespace Sources.Infrastructure.Repository
 
 		private void Validate(int id)
 		{
-			if (_stats != null && _stats[id] is not StatChangeable)
+			if (_stats != null && _stats[id] is not Stat)
 				throw new ArgumentException($"stat {_stats[id].GetType()} is not modifiable");
 
 			if (_stats != null && _stats.ContainsKey(id) == false)

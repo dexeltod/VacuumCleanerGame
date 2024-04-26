@@ -20,7 +20,6 @@ namespace Sources.Domain.Progress.Player
 
 		[SerializeField] private IntCurrency _totalAmount;
 
-		[SerializeField] private int _maxCashScoreModifier;
 		[SerializeField] private int _maxGlobalScoreModifier;
 
 		private const int MultiplyFactor = 1;
@@ -51,8 +50,6 @@ namespace Sources.Domain.Progress.Player
 		public IReadOnlyProgressValue<int> TotalAmount => _totalAmount;
 		public IReadOnlyProgressValue<int> HardCurrency => _hardCurrency;
 
-		public int PercentOfScore => (_cashCashScore.Value / HundredPercent) * MaxCashScore;
-		public int MaxCashScore => _maxCashScoreModifier + GameConfig.DefaultMaxSandFillCount;
 		public int MaxTotalResourceCount => _maxGlobalScoreModifier + GameConfig.DefaultMaxTotalResource;
 
 		public int CurrentCashScore
@@ -80,12 +77,6 @@ namespace Sources.Domain.Progress.Player
 		{
 			get => _totalAmount.Value;
 			private set => _totalAmount.Set(value);
-		}
-
-		public void SetMaxCashScore(int newAmount)
-		{
-			if (newAmount <= 0) throw new ArgumentOutOfRangeException(nameof(newAmount));
-			_maxCashScoreModifier = newAmount;
 		}
 
 		public void AddScore(int newCashScore)

@@ -20,9 +20,9 @@ namespace Sources.Services
 		)
 		{
 			if (progressService == null) throw new ArgumentNullException(nameof(progressService));
-			_progressService = progressService.Implementation.GlobalProgress.LevelProgress;
+			_progressService = progressService.Self.GlobalProgress.LevelProgress;
 			_resourceModelModifiable
-				= progressService.Implementation.GlobalProgress.ResourceModelReadOnly as IResourceModelModifiable;
+				= progressService.Self.GlobalProgress.ResourceModelReadOnly as IResourceModelModifiable;
 		}
 
 		public int CurrentLevel => _progressService.CurrentLevel;

@@ -31,8 +31,7 @@ namespace Sources.Presentation.SceneEntity
 
 		public event Action Collected;
 
-		private IResourcesProgressPresenter ResourcesProgressPresenter =>
-			_resourcesProgressPresenterProvider.Implementation;
+		private IResourcesProgressPresenter ResourcesProgressPresenter => _resourcesProgressPresenterProvider.Self;
 
 		public void HandleCollide(Collision collision)
 		{
@@ -41,7 +40,7 @@ namespace Sources.Presentation.SceneEntity
 
 			if (collision.collider.name is not ("VacuumColliderBottom" or "VacuumColliderTop")) return;
 
-			_resourcesProgressPresenterProvider.Implementation.TryAddSand(_score);
+			_resourcesProgressPresenterProvider.Self.TryAddSand(_score);
 			_view.SetActive(false);
 			_particle.Play();
 			_sound.Play();

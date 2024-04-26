@@ -1,7 +1,7 @@
 ﻿/* ---------------------------------------
  * Author:          Martin Pane (martintayx@gmail.com) (@tayx94)
  * Contributors:    https://github.com/Tayx94/graphy/graphs/contributors
- * Project:         Graphy - Ultimate Stats Monitor
+ * Project:         Graphy - Ultimate Stat Monitor
  * Date:            05-Mar-18
  * Studio:          Tayx
  *
@@ -18,27 +18,27 @@ namespace Graphy___Ultimate_Stats_Monitor.Scene___Customization.Customization_Sc
 {
 	public class ForceSliderToMultipleOf3 : MonoBehaviour
 	{
-        #region Variables -> Serialized Private
+#region Variables -> Serialized Private
 
-        [SerializeField] private Slider m_slider = null;
+		[SerializeField] private Slider m_slider = null;
 
-		#endregion
+#endregion
 
-		#region Methods -> Unity Callbacks
+#region Methods -> Unity Callbacks
 
 		void Update()
-        {
-            int roundedValue = (int)m_slider.value;
+		{
+			int roundedValue = (int)m_slider.value;
 
-            // Forces the value to be a multiple of 3, this way the audio graph is painted correctly
-            if ( roundedValue % 3 != 0 && roundedValue < 300 )
-            {
-                roundedValue += 3 - roundedValue % 3;
-            }
+			// Forces the value to be a multiple of 3, this way the audio graph is painted correctly
+			if (roundedValue % 3 != 0 && roundedValue < 300)
+			{
+				roundedValue += 3 - roundedValue % 3;
+			}
 
-            m_slider.value = roundedValue;
-        }
+			m_slider.value = roundedValue;
+		}
 
-		#endregion
-    }
+#endregion
+	}
 }

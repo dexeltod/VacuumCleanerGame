@@ -22,9 +22,9 @@ namespace Sources.Infrastructure.Services
 			_repositoryProvider = repositoryProvider ??
 				throw new ArgumentNullException(nameof(repositoryProvider));
 
-		private IUpgradeProgressRepository UpgradeProgressRepository => _repositoryProvider.Implementation;
+		private IUpgradeProgressRepository UpgradeProgressRepository => _repositoryProvider.Self;
 
-		public int GetProgressValue(int id) =>
+		public float GetProgressStatValue(int id) =>
 			UpgradeProgressRepository
 				.GetConfig(id)
 				.Stats

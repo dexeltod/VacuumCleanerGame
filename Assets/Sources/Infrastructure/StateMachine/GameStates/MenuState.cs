@@ -42,7 +42,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private IAuthorizationPresenter _authorizationPresenter;
 		private MainMenuView _mainMenuView;
 
-		private IGameStateChanger GameStateMachine => _gameStateChangerProvider.Implementation;
+		private IGameStateChanger GameStateMachine => _gameStateChangerProvider.Self;
 
 		[Inject]
 		public MenuState(

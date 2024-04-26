@@ -37,11 +37,11 @@ namespace Sources.Infrastructure.Services
 			_jsonDataLoader = new JsonDataSaveLoader();
 		}
 
-		private ISaveLoader SaveLoaderImplementation => _saveLoader.Implementation;
+		private ISaveLoader SaveLoaderImplementation => _saveLoader.Self;
 
 		public bool IsCallbackReceived { get; private set; }
 
-		private IPersistentProgressService PersistentProgressService => _progressServiceProvider.Implementation;
+		private IPersistentProgressService PersistentProgressService => _progressServiceProvider.Self;
 
 		public async UniTask SaveToCloud(IGlobalProgress progress, Action succeededCallback = null)
 		{
@@ -60,7 +60,7 @@ namespace Sources.Infrastructure.Services
 		public async UniTask ClearSaves()
 		{
 			IGlobalProgress progress = _progressCleaner.ClearAndSaveCloud();
-			await _saveLoader.Implementation.Save(progress);
+			await _saveLoader.Self.Save(progress);
 		}
 
 		public async UniTask<IGlobalProgress> LoadFromCloud()

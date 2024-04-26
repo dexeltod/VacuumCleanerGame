@@ -1,6 +1,6 @@
 namespace Sources.Domain.Temp
 {
-	public interface IStatChangeable
+	public interface IStat : IStatReadOnly
 	{
 		void Set(float value);
 		void Increase(float value);

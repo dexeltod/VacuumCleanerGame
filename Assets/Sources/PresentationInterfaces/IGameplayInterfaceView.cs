@@ -24,7 +24,7 @@ namespace Sources.PresentationInterfaces
 		);
 
 		void SetActiveGoToNextLevelButton(bool isActive);
-		void SetMaxCashScore(int newScore);
+		void SetMaxCashScore(int maxScore);
 		void SetGlobalScore(int newScore);
 		void SetCashScore(int newScore);
 		void SetSoftCurrencyText(int newMoney);

@@ -2,7 +2,7 @@ namespace Sources.InfrastructureInterfaces.Common.Providers
 {
 	public interface IProvider<T>
 	{
-		public T Implementation { get; }
+		public T Self { get; }
 		public T Register(T instance);
 		T Register<TI>(T instance);
 		void Unregister();

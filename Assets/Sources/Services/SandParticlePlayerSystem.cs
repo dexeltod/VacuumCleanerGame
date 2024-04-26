@@ -27,11 +27,11 @@ namespace Sources.Services
 		}
 
 		public void Play() =>
-			_coroutineRunner.Implementation.Run(PlayParticleSystem());
+			_coroutineRunner.Self.Run(PlayParticleSystem());
 
 		private IEnumerator PlayParticleSystem()
 		{
-			_particleSystem = _sandParticleSystem.Implementation;
+			_particleSystem = _sandParticleSystem.Self;
 			_particleSystem.Play();
 
 			yield return _waitForSeconds;

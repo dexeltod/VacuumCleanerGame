@@ -52,20 +52,19 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		}
 
 		private IDissolveShaderViewController DissolveShaderViewController =>
-			_dissolveShaderViewControllerProvider.Implementation;
+			_dissolveShaderViewControllerProvider.Self;
 
-		private IResourcesProgressPresenter ResourcesProgressPresenter =>
-			_resourcesProgressPresenterProvider.Implementation;
+		private IResourcesProgressPresenter ResourcesProgressPresenter => _resourcesProgressPresenterProvider.Self;
 
 		public void Enter()
 		{
 			_localizationService.UpdateTranslations();
 
-			_upgradeWindowPresenterProvider.Implementation.Enable();
-			_gameplayInterfacePresenterProvider.Implementation.Enable();
-			_resourcesProgressPresenterProvider.Implementation.Enable();
-			_gameMenuPresenterProvider.Implementation.Enable();
-			_advertisementHandlerProvider.Implementation.Enable();
+			_upgradeWindowPresenterProvider.Self.Enable();
+			_gameplayInterfacePresenterProvider.Self.Enable();
+			_resourcesProgressPresenterProvider.Self.Enable();
+			_gameMenuPresenterProvider.Self.Enable();
+			_advertisementHandlerProvider.Self.Enable();
 
 			_loadingCurtain.HideSlowly();
 			DissolveShaderViewController.StartDissolving();
@@ -73,12 +72,12 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 		public void Exit()
 		{
-			_upgradeWindowPresenterProvider.Implementation.Disable();
-			_gameplayInterfacePresenterProvider.Implementation.Disable();
-			_resourcesProgressPresenterProvider.Implementation.Disable();
-			_gameMenuPresenterProvider.Implementation.Disable();
+			_upgradeWindowPresenterProvider.Self.Disable();
+			_gameplayInterfacePresenterProvider.Self.Disable();
+			_resourcesProgressPresenterProvider.Self.Disable();
+			_gameMenuPresenterProvider.Self.Disable();
 			_loadingCurtain.Show();
-			_advertisementHandlerProvider.Implementation.Disable();
+			_advertisementHandlerProvider.Self.Disable();
 		}
 	}
 }

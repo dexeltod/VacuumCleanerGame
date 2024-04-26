@@ -3,9 +3,11 @@ using Sources.Controllers;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
+using Sources.InfrastructureInterfaces.Repository;
 using Sources.Presentation.UI;
 using Sources.PresentationInterfaces;
 using Sources.Services.Localization;
+using Sources.Utils;
 
 namespace Sources.Infrastructure.Factories.UI
 {
@@ -17,6 +19,7 @@ namespace Sources.Infrastructure.Factories.UI
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
 		private readonly GameplayInterfaceView _gameplayInterfaceView;
 		private readonly IResourceModelReadOnly _resourceModelReadOnly;
+		private readonly IPlayerModelRepository _playerModelRepository;
 		private readonly IGameStateChangerProvider _stateChangerProvider;
 		private readonly ITranslatorService _translatorService;
 
@@ -26,7 +29,8 @@ namespace Sources.Infrastructure.Factories.UI
 			IGameStateChangerProvider stateChangerProvider,
 			ITranslatorService translatorService,
 			IResourceModelReadOnly resourceModelReadOnly,
-			GameplayInterfaceView gameplayInterfaceView
+			GameplayInterfaceView gameplayInterfaceView,
+			IPlayerModelRepository playerModelRepository
 		)
 		{
 			_gameplayInterfacePresenterProvider = gameplayInterfacePresenterProvider ??
@@ -38,6 +42,8 @@ namespace Sources.Infrastructure.Factories.UI
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 			_resourceModelReadOnly
 				= resourceModelReadOnly ?? throw new ArgumentNullException(nameof(resourceModelReadOnly));
+			_playerModelRepository
+				= playerModelRepository ?? throw new ArgumentNullException(nameof(playerModelRepository));
 			_gameplayInterfaceView = gameplayInterfaceView
 				? gameplayInterfaceView
 				: throw new ArgumentNullException(nameof(gameplayInterfaceView));
@@ -51,7 +57,7 @@ namespace Sources.Infrastructure.Factories.UI
 				new GameMenuPresenter(
 					_gameplayInterfaceView.GetComponent<IGameMenuView>(),
 					_stateChangerProvider
-						.Implementation
+						.Self
 				)
 			);
 
@@ -59,10 +65,10 @@ namespace Sources.Infrastructure.Factories.UI
 				= _resourceModelReadOnly.CurrentTotalResources > _resourceModelReadOnly.CurrentTotalResources / 2;
 
 			_gameplayInterfaceView.Construct(
-				_gameplayInterfacePresenterProvider.Implementation,
+				_gameplayInterfacePresenterProvider.Self,
 				_resourceModelReadOnly.CurrentCashScore,
 				_resourceModelReadOnly.CurrentTotalResources,
-				_resourceModelReadOnly.MaxCashScore,
+				(int)_playerModelRepository.Get(ProgressType.MaxCashScore).Value,
 				_resourceModelReadOnly.MaxTotalResourceCount,
 				_resourceModelReadOnly.SoftCurrency.Value,
 				isHalfScoreReached,

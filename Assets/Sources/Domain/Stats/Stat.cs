@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Sources.Domain.Common
 {
-	[Serializable] public sealed class StatChangeable : IStatReadOnly, IStatChangeable
+	[Serializable] public sealed class Stat : IStat
 	{
 		[SerializeField] private float _startValue;
 		[SerializeField] private IntEntityValue _currentLevel;
@@ -13,13 +13,14 @@ namespace Sources.Domain.Common
 		[SerializeField] private float _value;
 		[SerializeField] private int _id;
 
-		public StatChangeable(float startValue, IntEntityValue currentLevel, int id)
+		public Stat(float startValue, IntEntityValue currentLevel, int id)
 		{
 			if (startValue < 0) throw new ArgumentOutOfRangeException(nameof(startValue));
 
 			_startValue = startValue;
 			_currentLevel = currentLevel ?? throw new ArgumentNullException(nameof(currentLevel));
 			_value = startValue;
+			_id = id;
 		}
 
 		public float Value => _value;

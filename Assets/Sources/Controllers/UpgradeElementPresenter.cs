@@ -18,7 +18,7 @@ namespace Sources.Controllers
 		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
 		private readonly IUpgradeWindowPresenterProvider _upgradeWindowPresenter;
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
-		private readonly IUpgradeProgressRepository _upgradeProgressRepository;
+		private readonly IProgressService _upgradeProgressRepository;
 		private readonly ISaveLoader _saveLoader;
 		private IReadOnlyList<IUpgradeEntityReadOnly> _entities;
 
@@ -28,7 +28,7 @@ namespace Sources.Controllers
 			IPersistentProgressServiceProvider persistentProgressServiceProvider,
 			IUpgradeWindowPresenterProvider upgradeWindowPresenter,
 			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
-			IUpgradeProgressRepository upgradeProgressRepository
+			IProgressService upgradeProgressRepository
 		)
 		{
 			_progressSetterFacade = progressSetterFacade ??
@@ -45,18 +45,18 @@ namespace Sources.Controllers
 				throw new ArgumentNullException(nameof(upgradeProgressRepository));
 		}
 
-		private IUpgradeWindowPresenter UpgradeWindowPresenter => _upgradeWindowPresenter.Implementation;
+		private IUpgradeWindowPresenter UpgradeWindowPresenter => _upgradeWindowPresenter.Self;
 
 		private int Money =>
-			_persistentProgressServiceProvider.Implementation
+			_persistentProgressServiceProvider.Self
 				.GlobalProgress.ResourceModelReadOnly.SoftCurrency.Value;
 
 		public void Upgrade(int id)
 		{
-			_upgradeProgressRepository.AddOneLevel(id);
-
 			if (_progressSetterFacade.TryAddOneProgressPoint(id) == false)
 				throw new InvalidOperationException("Failed to add progress point");
+
+			_upgradeProgressRepository.AddProgressPoint(id);
 
 			SetView(id);
 		}
@@ -69,7 +69,7 @@ namespace Sources.Controllers
 			panel.SetPriceText(_upgradeProgressRepository.GetPrice(id));
 
 			UpgradeWindowPresenter.SetMoney(Money);
-			_gameplayInterfacePresenterProvider.Implementation.SetSoftCurrency(Money);
+			_gameplayInterfacePresenterProvider.Self.SetSoftCurrency(Money);
 		}
 
 		public override void Enable()

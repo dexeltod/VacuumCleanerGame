@@ -29,7 +29,6 @@ namespace Sources.Infrastructure.Factories.UI
 	{
 		private const float Time = 10f;
 
-		private readonly string _uiResourcesUI = ResourcesAssetPath.Scene.UIResources.UI;
 		private readonly IAssetFactory _assetFactory;
 		private readonly GameplayInterfaceViewFactory _gameplayInterfaceViewFactory;
 		private readonly IResourcesProgressPresenterProvider _resourceProgressProgressPresenterProvider;
@@ -41,8 +40,7 @@ namespace Sources.Infrastructure.Factories.UI
 		private readonly IGameStateChangerProvider _gameStateChangerProvider;
 		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
 		private readonly IAdvertisement _advertisement;
-		private readonly IModifiableStatsRepositoryProvider _modifiableStatsRepositoryProvider;
-		private readonly UpgradeProgressRepositoryProvider _upgradeProgressRepositoryProvider;
+		private readonly IPlayerModelRepositoryProvider _playerModelRepositoryProvider;
 
 		[Inject]
 		public GameplayInterfacePresenterFactory(
@@ -57,8 +55,7 @@ namespace Sources.Infrastructure.Factories.UI
 			IAdvertisement advertisement,
 			ILevelProgressFacade levelProgressFacade,
 			IProgressService progressService,
-			IModifiableStatsRepositoryProvider modifiableStatsRepositoryProvider,
-			UpgradeProgressRepositoryProvider upgradeProgressRepositoryProvider
+			IPlayerModelRepositoryProvider playerModelRepositoryProvider
 		)
 
 		{
@@ -77,34 +74,35 @@ namespace Sources.Infrastructure.Factories.UI
 			_coroutineRunnerProvider = coroutineRunnerProvider ??
 				throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
-			_modifiableStatsRepositoryProvider = modifiableStatsRepositoryProvider ??
-				throw new ArgumentNullException(nameof(modifiableStatsRepositoryProvider));
-			_upgradeProgressRepositoryProvider = upgradeProgressRepositoryProvider ??
-				throw new ArgumentNullException(nameof(upgradeProgressRepositoryProvider));
+			_playerModelRepositoryProvider = playerModelRepositoryProvider ??
+				throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
 		}
 
-		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Implementation;
+		private IPlayerModelRepository PlayerModelRepository => _playerModelRepositoryProvider.Self;
+		private string UIResourcesUI => ResourcesAssetPath.Scene.UIResources.UI;
+
+		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Self;
 
 		private IResourceModelReadOnly ResourceModelReadOnly =>
-			_persistentProgressServiceProvider.Implementation.GlobalProgress
+			_persistentProgressServiceProvider.Self.GlobalProgress
 				.ResourceModelReadOnly;
 
 		private int CashScore =>
-			_persistentProgressServiceProvider.Implementation.GlobalProgress.ResourceModelReadOnly
+			_persistentProgressServiceProvider.Self.GlobalProgress.ResourceModelReadOnly
 				.CurrentCashScore;
-
-		private IModifiableStatsRepository ModifiableStatsRepository =>
-			_modifiableStatsRepositoryProvider.Implementation;
 
 		public override GameplayInterfacePresenter Create()
 		{
 			GameplayInterfaceView gameplayInterfaceView = Load();
 
+			var stat = PlayerModelRepository.Get(ProgressType.Speed) as IStat;
+			var maxCashScore = PlayerModelRepository.Get(ProgressType.MaxCashScore);
+
 			var speedDecorator = new SpeedDecorator(
 				_coroutineRunnerProvider,
 				_advertisement,
 				Time,
-				ModifiableStatsRepository.Get((int)ProgressType.Speed)
+				stat
 			);
 
 			GameplayInterfacePresenter presenter = new GameplayInterfacePresenter(
@@ -114,13 +112,13 @@ namespace Sources.Infrastructure.Factories.UI
 				_coroutineRunnerProvider,
 				Time,
 				CashScore,
-				_upgradeProgressRepositoryProvider.Implementation.GetEntity((int)ProgressType.MaxCashScore)
+				maxCashScore
 			);
 
 			GameMenuView gameMenuView = gameplayInterfaceView.GetComponent<GameMenuView>();
 
 			_gameMenuPresenterProvider.Register(new GameMenuPresenter(gameMenuView, GameStateChanger));
-			gameMenuView.Construct(_gameMenuPresenterProvider.Implementation);
+			gameMenuView.Construct(_gameMenuPresenterProvider.Self);
 
 			_gameplayInterfacePresenterProvider.Register<IGameplayInterfacePresenter>(presenter);
 
@@ -130,13 +128,14 @@ namespace Sources.Infrastructure.Factories.UI
 				_gameStateChangerProvider,
 				_translatorService,
 				ResourceModelReadOnly,
-				gameplayInterfaceView
+				gameplayInterfaceView,
+				PlayerModelRepository
 			).Create();
 
 			return presenter;
 		}
 
 		private GameplayInterfaceView Load() =>
-			_assetFactory.Instantiate(_uiResourcesUI).GetComponent<GameplayInterfaceView>();
+			_assetFactory.Instantiate(UIResourcesUI).GetComponent<GameplayInterfaceView>();
 	}
 }

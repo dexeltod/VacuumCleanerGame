@@ -42,7 +42,7 @@ namespace Sources.Infrastructure.Repositories
 			return config.Prices[entity.Value];
 		}
 
-		public int GetStatByProgress(int id)
+		public float GetStatByProgress(int id)
 		{
 			IUpgradeEntityViewConfig config = _configs[id];
 

@@ -27,12 +27,11 @@ namespace Sources.Infrastructure.Factories.Scene
 				throw new ArgumentNullException(nameof(assetPathNameConfigProvider));
 		}
 
-		private GameObject CustomCameraConfiner =>
-			_assetPathNameConfigProvider.Implementation.SceneGameObjects.CameraConfiner;
+		private GameObject CustomCameraConfiner => _assetPathNameConfigProvider.Self.SceneGameObjects.CameraConfiner;
 
-		private GameObject MainCamera => _assetPathNameConfigProvider.Implementation.SceneGameObjects.MainCamera;
+		private GameObject MainCamera => _assetPathNameConfigProvider.Self.SceneGameObjects.MainCamera;
 
-		private GameObject VirtualCamera => _assetPathNameConfigProvider.Implementation.SceneGameObjects.VirtualCamera;
+		private GameObject VirtualCamera => _assetPathNameConfigProvider.Self.SceneGameObjects.VirtualCamera;
 
 		public CinemachineVirtualCamera Create()
 		{

@@ -63,7 +63,7 @@ namespace Sources.Application.Bootstrapp
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 		}
 
-		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Implementation;
+		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Self;
 
 		public async UniTask StartAsync(CancellationToken cancellation)
 		{

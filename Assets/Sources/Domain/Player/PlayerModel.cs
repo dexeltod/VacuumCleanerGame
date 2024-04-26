@@ -10,29 +10,29 @@ namespace Sources.Domain.Player
 {
 	[Serializable] public class PlayerModel : IPlayerModel
 	{
-		[SerializeField] private List<StatChangeable> _stats;
+		[SerializeField] private List<Stat> _stats;
 
-		public PlayerModel(List<StatChangeable> intStats) =>
+		public PlayerModel(List<Stat> intStats) =>
 			_stats = intStats ?? throw new ArgumentNullException(nameof(intStats));
 
 		public IStatReadOnly Get(int id)
 		{
-			StatChangeable statChangeable = _stats.First(elem => elem.Id == id);
+			Stat stat = _stats.First(elem => elem.Id == id);
 
-			if (statChangeable == null)
-				throw new ArgumentOutOfRangeException(nameof(id), $"statChangeable with id {id} not found");
+			if (stat == null)
+				throw new ArgumentOutOfRangeException(nameof(id), $"stat with id {id} not found");
 
-			return statChangeable;
+			return stat;
 		}
 
 		public void Set(int id, float value)
 		{
-			StatChangeable statChangeable = _stats.First(elem => elem.Id == id);
+			Stat stat = _stats.First(elem => elem.Id == id);
 
-			if (statChangeable == null)
-				throw new ArgumentOutOfRangeException(nameof(id), $"statChangeable with id {id} not found");
+			if (stat == null)
+				throw new ArgumentOutOfRangeException(nameof(id), $"stat with id {id} not found");
 
-			statChangeable.Set(value);
+			stat.Set(value);
 		}
 	}
 }

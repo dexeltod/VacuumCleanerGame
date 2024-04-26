@@ -11,7 +11,7 @@ namespace Sources.Infrastructure.Repositories
 		IReadOnlyList<IUpgradeEntityReadOnly> GetEntities();
 		IReadOnlyList<IUpgradeEntityViewConfig> GetConfigs();
 		int GetPrice(int id);
-		int GetStatByProgress(int id);
+		float GetStatByProgress(int id);
 		void AddOneLevel(int id);
 	}
 }

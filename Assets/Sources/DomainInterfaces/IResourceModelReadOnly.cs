@@ -9,10 +9,8 @@ namespace Sources.DomainInterfaces
 		IReadOnlyProgressValue<int> CashScore { get; }
 		IReadOnlyProgressValue<int> HardCurrency { get; }
 
-		int MaxCashScore { get; }
 		int CurrentCashScore { get; }
 		int CurrentTotalResources { get; }
-		int PercentOfScore { get; }
 		int MaxTotalResourceCount { get; }
 	}
 }

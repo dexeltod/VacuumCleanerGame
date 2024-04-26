@@ -15,11 +15,11 @@ namespace Sources.Services.Triggers
 		private ICoroutineRunnerProvider _coroutineRunnerProvider;
 		private Coroutine _coroutine;
 		private IPersistentProgressServiceProvider _persistentProgressService;
-		private ICoroutineRunner CoroutineRunner => _coroutineRunnerProvider.Implementation;
-		private IResourcesProgressPresenter ResourceProgress => _progressPresenterProvider.Implementation;
+		private ICoroutineRunner CoroutineRunner => _coroutineRunnerProvider.Self;
+		private IResourcesProgressPresenter ResourceProgress => _progressPresenterProvider.Self;
 
 		private int CurrentScore =>
-			_persistentProgressService.Implementation.GlobalProgress.ResourceModelReadOnly.CurrentCashScore;
+			_persistentProgressService.Self.GlobalProgress.ResourceModelReadOnly.CurrentCashScore;
 
 		[Inject]
 		private void Construct(
@@ -54,7 +54,7 @@ namespace Sources.Services.Triggers
 
 		private IEnumerator SellRoutine()
 		{
-			_progressPresenterProvider.Implementation.Sell();
+			_progressPresenterProvider.Self.Sell();
 			return null;
 		}
 	}

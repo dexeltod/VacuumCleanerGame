@@ -8,7 +8,7 @@ namespace Sources.ServicesInterfaces.Upgrade
 		string Title { get; }
 		string Description { get; }
 		int MaxProgressCount { get; }
-		IReadOnlyList<int> Stats { get; }
+		IReadOnlyList<float> Stats { get; }
 		IReadOnlyList<int> Prices { get; }
 		ProgressType Type { get; }
 		int Id { get; }

@@ -9,7 +9,7 @@ namespace Sources.Infrastructure.ScriptableObjects.Shop
 	[Serializable] public class ProgressItemConfig : IProgressItemConfig
 	{
 		[SerializeField] private List<int> _prices;
-		[SerializeField] private List<int> _stats;
+		[SerializeField] private List<float> _stats;
 
 		[SerializeField] private string _title;
 		[SerializeField] private string _description;
@@ -24,7 +24,7 @@ namespace Sources.Infrastructure.ScriptableObjects.Shop
 		public string Description => _description;
 		public IReadOnlyList<int> Prices => _prices;
 
-		public IReadOnlyList<int> Stats => _stats;
+		public IReadOnlyList<float> Stats => _stats;
 
 		public string Title => _title;
 	}

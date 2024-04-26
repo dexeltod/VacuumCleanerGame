@@ -1,6 +1,7 @@
 using System;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
+using Sources.Domain.Temp;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
@@ -15,6 +16,7 @@ namespace Sources.Controllers
 		private readonly ISandContainerViewProvider _sandContainerViewProvider;
 		private readonly IFillMeshShaderControllerProvider _fillMeshShaderControllerProvider;
 		private readonly SandParticlePlayerSystem _sandParticlePlayerSystem;
+		private readonly IStatReadOnly _statReadOnly;
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenter;
 		private readonly IResourceModelReadOnly _resourceReadOnly;
 
@@ -26,7 +28,8 @@ namespace Sources.Controllers
 			IResourceModelReadOnly resourceReadOnly,
 			IResourceModelModifiable persistentProgressService,
 			IFillMeshShaderControllerProvider fillMeshShaderControllerProvider,
-			SandParticlePlayerSystem sandParticlePlayerSystem
+			SandParticlePlayerSystem sandParticlePlayerSystem,
+			IStatReadOnly statReadOnly
 		)
 		{
 			_gameplayInterfacePresenter
@@ -38,11 +41,12 @@ namespace Sources.Controllers
 				throw new ArgumentNullException(nameof(fillMeshShaderControllerProvider));
 			_sandParticlePlayerSystem = sandParticlePlayerSystem ??
 				throw new ArgumentNullException(nameof(sandParticlePlayerSystem));
+			_statReadOnly = statReadOnly ?? throw new ArgumentNullException(nameof(statReadOnly));
 		}
 
 		public IReadOnlyProgressValue<int> SoftCurrency => _resourceReadOnly.SoftCurrency;
-		private IFillMeshShaderController FillMeshShaderController => _fillMeshShaderControllerProvider.Implementation;
-		private IGameplayInterfacePresenter GameplayInterfacePresenter => _gameplayInterfacePresenter.Implementation;
+		private IFillMeshShaderController FillMeshShaderController => _fillMeshShaderControllerProvider.Self;
+		private IGameplayInterfacePresenter GameplayInterfacePresenter => _gameplayInterfacePresenter.Self;
 
 		private int CurrentScore => _resourceReadOnly.CurrentCashScore;
 
@@ -100,10 +104,10 @@ namespace Sources.Controllers
 		}
 
 		private void SetEnableSand() =>
-			_fillMeshShaderControllerProvider.Implementation.FillArea(
+			_fillMeshShaderControllerProvider.Self.FillArea(
 				CurrentScore,
 				0,
-				_resourceReadOnly.MaxCashScore
+				_statReadOnly.Value
 			);
 
 		public void ClearTotalResources()
@@ -116,12 +120,12 @@ namespace Sources.Controllers
 		{
 			if (newScore <= 0) throw new ArgumentOutOfRangeException(nameof(newScore));
 
-			if (CurrentScore > _resourceReadOnly.MaxCashScore)
+			if (CurrentScore > _statReadOnly.Value)
 				return false;
 
 			_lastCashScore = _resourceReadOnly.CurrentCashScore;
 
-			int score = Mathf.Clamp(newScore, 0, _resourceReadOnly.MaxCashScore);
+			int score = (int)Mathf.Clamp(newScore, 0, _statReadOnly.Value);
 			_resourceData.AddScore(score);
 
 			PlayParticleSystem();
@@ -139,7 +143,7 @@ namespace Sources.Controllers
 		}
 
 		private bool CheckMaxScore() =>
-			_resourceReadOnly.CurrentCashScore < _resourceReadOnly.MaxCashScore;
+			_resourceReadOnly.CurrentCashScore < _statReadOnly.Value;
 
 		private void OnHalfScoreReached()
 		{
@@ -154,7 +158,7 @@ namespace Sources.Controllers
 		{
 			GameplayInterfacePresenter.SetTotalResourceCount(_resourceReadOnly.CurrentTotalResources);
 			GameplayInterfacePresenter.SetCashScore(_resourceReadOnly.CurrentCashScore);
-			FillMeshShaderController.FillArea(CurrentScore, 0, _resourceReadOnly.MaxCashScore);
+			FillMeshShaderController.FillArea(CurrentScore, 0, _statReadOnly.Value);
 		}
 
 		private bool IsHalfScoreReached() =>

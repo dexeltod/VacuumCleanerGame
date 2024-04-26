@@ -6,7 +6,7 @@ namespace Sources.ServicesInterfaces
 {
 	public interface IProgressService
 	{
-		int GetProgressValue(int id);
+		float GetProgressStatValue(int id);
 		void AddProgressPoint(int id);
 		IUpgradeEntityReadOnly GetEntity(int id);
 		IReadOnlyList<IUpgradeEntityReadOnly> GetEntities();

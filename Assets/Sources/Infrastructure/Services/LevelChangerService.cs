@@ -43,7 +43,7 @@ namespace Sources.Infrastructure
 			_rewardService = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 		}
 
-		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Implementation;
+		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Self;
 		private int LevelNumber => _levelProgressFacade.CurrentLevel;
 
 		public void GoNextLevelWithReward() =>
@@ -52,7 +52,7 @@ namespace Sources.Infrastructure
 		private async void OnRewarded()
 		{
 			_levelProgressFacade.SetNextLevel();
-			_progressPresenter.Implementation.ClearTotalResources();
+			_progressPresenter.Self.ClearTotalResources();
 
 			await _progressSaveLoadDataService.SaveToCloud();
 

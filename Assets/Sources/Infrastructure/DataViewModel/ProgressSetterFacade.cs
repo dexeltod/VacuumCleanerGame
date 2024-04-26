@@ -37,11 +37,10 @@ namespace Sources.Infrastructure.DataViewModel
 				= playerModelRepository ?? throw new ArgumentNullException(nameof(playerModelRepository));
 		}
 
-		private IResourcesProgressPresenter ResourcesProgressPresenter =>
-			_resourcesProgressPresenterProvider.Implementation;
+		private IResourcesProgressPresenter ResourcesProgressPresenter => _resourcesProgressPresenterProvider.Self;
 
 		private IResourceModelReadOnly GlobalProgressResourceModelReadOnly =>
-			_persistentProgressServiceProvider.Implementation.GlobalProgress
+			_persistentProgressServiceProvider.Self.GlobalProgress
 				.ResourceModelReadOnly;
 
 		public bool TryAddOneProgressPoint(int id)
@@ -61,7 +60,7 @@ namespace Sources.Infrastructure.DataViewModel
 		}
 
 		private void SetStat(int id) =>
-			((IStatChangeable)_playerModelRepository.Get(id))
-			.Set(_progressService.GetProgressValue(id));
+			((IStat)_playerModelRepository.Get(id))
+			.Set(_progressService.GetProgressStatValue(id));
 	}
 }

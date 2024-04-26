@@ -4,6 +4,7 @@ using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using Graphic.Joystick_Pack.Scripts.Base;
 using Sources.ControllersInterfaces;
+using Sources.Domain.Temp;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
@@ -81,7 +82,7 @@ namespace Sources.Presentation.UI
 			if (gameplayInterfacePresenter == null) throw new ArgumentNullException(nameof(gameplayInterfacePresenter));
 
 			if (cashScore < 0) throw new ArgumentOutOfRangeException(nameof(cashScore));
-			if (maxCashScore < 0) throw new ArgumentOutOfRangeException(nameof(maxCashScore));
+
 			if (maxGlobalScore < 0) throw new ArgumentOutOfRangeException(nameof(maxGlobalScore));
 
 			base.Construct(gameplayInterfacePresenter);
@@ -149,11 +150,11 @@ namespace Sources.Presentation.UI
 			_globalScoreText.SetText($"{_globalScore}");
 		}
 
-		public void SetMaxCashScore(int newScore)
+		public void SetMaxCashScore(int maxScore)
 		{
-			if (newScore < 0) throw new ArgumentOutOfRangeException(nameof(newScore));
-			Debug.Log("SetMaxCashScore" + newScore);
-			_maxCashScore = newScore;
+			if (maxScore < 0) throw new ArgumentOutOfRangeException(nameof(maxScore));
+			Debug.Log("SetMaxCashScore" + maxScore);
+			_maxCashScore = maxScore;
 			_maxGlobalScoreText.SetText($"{_maxCashScore}");
 		}
 

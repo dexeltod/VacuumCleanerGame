@@ -67,7 +67,7 @@ namespace Sources.Infrastructure.Factories.Scene
 
 			var controller = new MeshDeformationPresenter(
 				_mesh,
-				_resourcesProgressPresenterProvider.Implementation,
+				_resourcesProgressPresenterProvider.Self,
 				meshView.RadiusDeformation,
 				meshView.GetComponent<MeshCollider>()
 			);

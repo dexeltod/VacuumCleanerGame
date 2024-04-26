@@ -1,7 +1,7 @@
 ﻿/* ---------------------------------------
  * Author:          Martin Pane (martintayx@gmail.com) (@tayx94)
  * Contributors:    https://github.com/Tayx94/graphy/graphs/contributors
- * Project:         Graphy - Ultimate Stats Monitor
+ * Project:         Graphy - Ultimate Stat Monitor
  * Date:            05-Mar-18
  * Studio:          Tayx
  *
@@ -16,33 +16,32 @@ using UnityEngine.UI;
 
 namespace Graphy___Ultimate_Stats_Monitor.Scene___Customization.Customization_Scripts
 {
-    [RequireComponent(typeof(Text))]
-	public class UpdateTextWithSliderValue : MonoBehaviour
+	[RequireComponent(typeof(Text))] public class UpdateTextWithSliderValue : MonoBehaviour
 	{
-        #region Variables -> Serialized Private
+#region Variables -> Serialized Private
 
-        [SerializeField] private Slider m_slider = null;
+		[SerializeField] private Slider m_slider = null;
 
-        #endregion
+#endregion
 
-        #region Variables -> Private
+#region Variables -> Private
 
-        private Text m_text;
+		private Text m_text;
 
-        #endregion
+#endregion
 
-        #region Methods -> Unity Callbacks
+#region Methods -> Unity Callbacks
 
-        void Start()
+		void Start()
 		{
 			m_text = GetComponent<Text>();
 		}
 
-        void LateUpdate()
-        {
-            m_text.text = m_slider.value.ToString();
-        }
+		void LateUpdate()
+		{
+			m_text.text = m_slider.value.ToString();
+		}
 
-        #endregion
-    }
+#endregion
+	}
 }
