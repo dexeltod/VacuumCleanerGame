@@ -1,3 +1,10 @@
+using System;
+using Cysharp.Threading.Tasks;
+using Sources.Domain;
+using Sources.DomainInterfaces;
+using Sources.Infrastructure.Yandex;
+using Sources.InfrastructureInterfaces;
+
 namespace Sources.Infrastructure.Adapters
 {
 #if YANDEX_CODE
@@ -11,7 +18,7 @@ namespace Sources.Infrastructure.Adapters
 
 		public async UniTask<IPlayerAccount> GetPlayerAccount()
 		{
-			PlayerAccountProfileDataResponse account = await _yandexServiceSdkFacade.GetPlayerAccount();
+			var account = await _yandexServiceSdkFacade.GetPlayerAccount();
 
 			return new PlayerAccount(
 				account.publicName,
@@ -26,6 +33,8 @@ namespace Sources.Infrastructure.Adapters
 
 		public void Authorize() =>
 			_yandexServiceSdkFacade.Authorize();
+
+		public bool IsAuthorized { get; }
 	}
 #endif
 }

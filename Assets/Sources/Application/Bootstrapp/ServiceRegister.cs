@@ -36,6 +36,7 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 #if YANDEX_CODE
+using Sources.Infrastructure.Yandex;
 using Sources.Services.DomainServices.YandexLeaderboard;
 #endif
 
