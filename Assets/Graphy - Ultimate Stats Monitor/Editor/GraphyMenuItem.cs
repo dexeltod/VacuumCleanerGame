@@ -14,7 +14,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Tayx.Graphy
+namespace Graphy___Ultimate_Stats_Monitor.Editor
 {
     public class GraphyMenuItem
     {

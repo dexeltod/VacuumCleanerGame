@@ -11,20 +11,18 @@
  * Attribution is not required, but it is always welcomed!
  * -------------------------------------*/
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Graphy___Ultimate_Stats_Monitor.Runtime.Audio;
+using Graphy___Ultimate_Stats_Monitor.Runtime.Fps;
+using Graphy___Ultimate_Stats_Monitor.Runtime.Ram;
+using Graphy___Ultimate_Stats_Monitor.Runtime.Util;
 using UnityEngine;
 using UnityEngine.Events;
 using Debug = UnityEngine.Debug;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Tayx.Graphy.Audio;
-using Tayx.Graphy.Fps;
-using Tayx.Graphy.Ram;
-using Tayx.Graphy.Utils;
-
-namespace Tayx.Graphy
+namespace Graphy___Ultimate_Stats_Monitor.Runtime
 {
     /// <summary>
     /// Main class to access the Graphy Debugger API.
@@ -81,7 +79,7 @@ namespace Tayx.Graphy
 
         #region Structs -> Public
 
-        [System.Serializable]
+        [Serializable]
         public struct DebugCondition
         {
             [Tooltip("Variable to compare against")]
@@ -96,7 +94,7 @@ namespace Tayx.Graphy
 
         #region Helper Classes
 
-        [System.Serializable]
+        [Serializable]
         public class DebugPacket
         {
 
@@ -125,7 +123,7 @@ namespace Tayx.Graphy
             [Tooltip("If true, it pauses the editor")]
             public bool                 DebugBreak              = false;
             public UnityEvent           UnityEvents;
-            public List<System.Action>  Callbacks               = new List<System.Action>();
+            public List<Action>  Callbacks               = new List<Action>();
 
 
             private bool canBeChecked = false;
@@ -210,7 +208,7 @@ namespace Tayx.Graphy
             MessageType newMessageType,
             string newMessage,
             bool newDebugBreak,
-            System.Action newCallback
+            Action newCallback
         )
         {
             DebugPacket newDebugPacket = new DebugPacket();
@@ -235,7 +233,7 @@ namespace Tayx.Graphy
             MessageType newMessageType,
             string newMessage,
             bool newDebugBreak,
-            System.Action newCallback
+            Action newCallback
         )
         {
             DebugPacket newDebugPacket = new DebugPacket();
@@ -260,7 +258,7 @@ namespace Tayx.Graphy
             MessageType newMessageType,
             string newMessage,
             bool newDebugBreak,
-            List<System.Action> newCallbacks
+            List<Action> newCallbacks
         )
         {
             DebugPacket newDebugPacket = new DebugPacket();
@@ -285,7 +283,7 @@ namespace Tayx.Graphy
             MessageType newMessageType,
             string newMessage,
             bool newDebugBreak,
-            List<System.Action> newCallbacks
+            List<Action> newCallbacks
         )
         {
             DebugPacket newDebugPacket = new DebugPacket();
@@ -351,7 +349,7 @@ namespace Tayx.Graphy
         /// </summary>
         /// <param name="callback"></param>
         /// <param name="id"></param>
-        public void AddCallbackToFirstDebugPacketWithId(System.Action callback, int id)
+        public void AddCallbackToFirstDebugPacketWithId(Action callback, int id)
         {
             if (GetFirstDebugPacketWithId(id) != null)
             {
@@ -364,7 +362,7 @@ namespace Tayx.Graphy
         /// </summary>
         /// <param name="callback"></param>
         /// <param name="id"></param>
-        public void AddCallbackToAllDebugPacketWithId(System.Action callback, int id)
+        public void AddCallbackToAllDebugPacketWithId(Action callback, int id)
         {
             if (GetAllDebugPacketsWithId(id) != null)
             {
@@ -526,7 +524,7 @@ namespace Tayx.Graphy
 
                 if (debugPacket.Message != "")
                 {
-                    string message = "[Graphy] (" + System.DateTime.Now + "): " + debugPacket.Message;
+                    string message = "[Graphy] (" + DateTime.Now + "): " + debugPacket.Message;
 
                     switch (debugPacket.MessageType)
                     {
@@ -544,7 +542,7 @@ namespace Tayx.Graphy
 
                 if (debugPacket.TakeScreenshot)
                 {
-                    string path = debugPacket.ScreenshotFileName + "_" + System.DateTime.Now + ".png";
+                    string path = debugPacket.ScreenshotFileName + "_" + DateTime.Now + ".png";
                     path = path.Replace("/", "-").Replace(" ", "_").Replace(":", "-");
 
 #if UNITY_2017_1_OR_NEWER

@@ -13,7 +13,7 @@
 
 using UnityEngine;
 
-namespace Tayx.Graphy.Utils.NumString
+namespace Graphy___Ultimate_Stats_Monitor.Runtime.Util
 {
     public static class G_FloatString
     {

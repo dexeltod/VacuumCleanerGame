@@ -1,8 +1,9 @@
 using System;
-using Sources.Domain.Temp;
+using Sources.DomainInterfaces.Entities;
 using Sources.DomainInterfaces.Models;
 using Sources.InfrastructureInterfaces.Repository;
 using Sources.Utils;
+using Sources.Utils.Enums;
 
 namespace Sources.Infrastructure.Repository
 {
@@ -19,7 +20,7 @@ namespace Sources.Infrastructure.Repository
 		public IStatReadOnly Get(int id) =>
 			_playerModel.Get(id);
 
-		public void Set(ProgressType type, int value) =>
+		public void Set(ProgressType type, float value) =>
 			_playerModel.Set((int)type, value);
 	}
 }

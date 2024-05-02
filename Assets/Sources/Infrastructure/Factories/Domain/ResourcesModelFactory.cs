@@ -7,7 +7,7 @@ using Sources.Utils;
 
 namespace Sources.Infrastructure.Factories.Domain
 {
-	public class ResourcesModelFactory : Factory<ResourceModelModifiableReadOnly>
+	public class ResourcesModelFactory : Factory<ResourceModel>
 	{
 		private const int StartCurrencyCount = 0;
 		private const int StartScoreCount = 0;
@@ -17,7 +17,7 @@ namespace Sources.Infrastructure.Factories.Domain
 		public ResourcesModelFactory(IResourceService resourceService) =>
 			_resourceService = resourceService ?? throw new ArgumentNullException(nameof(resourceService));
 
-		public override ResourceModelModifiableReadOnly Create()
+		public override ResourceModel Create()
 		{
 			Resource<int> soft = GetResource(CurrencyResourceType.Soft);
 			Resource<int> hard = GetResource(CurrencyResourceType.Hard);
@@ -27,7 +27,7 @@ namespace Sources.Infrastructure.Factories.Domain
 			return CreateResourceModel(soft, hard, cashScore, globalScore);
 		}
 
-		private ResourceModelModifiableReadOnly CreateResourceModel(
+		private ResourceModel CreateResourceModel(
 			Resource<int> soft,
 			Resource<int> hard,
 			Resource<int> cashScore,

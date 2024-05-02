@@ -29,7 +29,6 @@ namespace Sources.Infrastructure.Factories.UI
 			IAssetFactory assetFactory,
 			ResourcesProgressPresenterProvider resourceProgressPresenter,
 			IPersistentProgressServiceProvider persistentProgressService,
-			IPlayerProgressSetterFacadeProvider playerProgressSetterFacade,
 			ITranslatorService translatorService,
 			ShopViewFactory shopViewFactory
 		)

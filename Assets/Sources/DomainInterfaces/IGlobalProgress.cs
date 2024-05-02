@@ -1,4 +1,5 @@
 using Sources.DomainInterfaces.Models;
+using Sources.DomainInterfaces.Models.Shop;
 
 namespace Sources.DomainInterfaces
 {

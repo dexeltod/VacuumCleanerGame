@@ -1,5 +1,6 @@
-using Sources.Domain.Temp;
+using Sources.DomainInterfaces.Entities;
 using Sources.Utils;
+using Sources.Utils.Enums;
 
 namespace Sources.InfrastructureInterfaces.Repository
 {
@@ -7,6 +8,6 @@ namespace Sources.InfrastructureInterfaces.Repository
 	{
 		IStatReadOnly Get(ProgressType type);
 		IStatReadOnly Get(int id);
-		void Set(ProgressType type, int value);
+		void Set(ProgressType type, float value);
 	}
 }

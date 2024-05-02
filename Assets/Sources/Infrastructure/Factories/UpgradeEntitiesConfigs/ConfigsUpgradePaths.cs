@@ -1,7 +1,8 @@
 using Sources.Infrastructure.Configs;
+using Sources.Utils.AssetPathAttribute;
 using UnityEngine;
 
-namespace Sources.Infrastructure.Factories.UpgradeShop
+namespace Sources.Infrastructure.Factories.UpgradeEntitiesConfigs
 {
 	[CreateAssetMenu(fileName = "ShopItems", menuName = "Data/Shop/Upgrade/Items")]
 	public class ConfigsUpgradePaths : ScriptableObject

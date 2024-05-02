@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Sources.Domain.Progress;
-using Sources.Domain.Temp;
 using Sources.Infrastructure.Common.Factory;
 using Sources.ServicesInterfaces.Upgrade;
 

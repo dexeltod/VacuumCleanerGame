@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Sources.ServicesInterfaces.Upgrade;
-using Sources.Utils;
+using Sources.Utils.Enums;
 using UnityEngine;
 
-namespace Sources.Infrastructure.ScriptableObjects.Shop
+namespace Sources.Infrastructure.Configs
 {
 	[Serializable] public class ProgressItemConfig : IProgressItemConfig
 	{

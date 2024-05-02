@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Sources.Domain.Temp;
 using Sources.DomainInterfaces;
+using Sources.DomainInterfaces.Models.Shop;
+using Sources.DomainInterfaces.Models.Shop.Upgrades;
 using UnityEngine;
 
 namespace Sources.Domain.Progress

@@ -1,8 +1,8 @@
 using System;
-using Sources.Utils;
+using Sources.Utils.Enums;
 using UnityEngine;
 
-namespace Sources.Infrastructure.Factories.UpgradeShop
+namespace Sources.Infrastructure.Factories.UpgradeEntitiesConfigs
 {
 	[Serializable] public class StartStatConfig
 	{

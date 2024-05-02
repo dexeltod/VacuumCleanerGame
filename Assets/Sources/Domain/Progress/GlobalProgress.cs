@@ -3,6 +3,7 @@ using Sources.Domain.Player;
 using Sources.Domain.Progress.Player;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.Models;
+using Sources.DomainInterfaces.Models.Shop;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -10,7 +11,7 @@ namespace Sources.Domain.Progress
 {
 	[Serializable] public class GlobalProgress : IGlobalProgress
 	{
-		[SerializeField] private ResourceModelModifiableReadOnly _resource;
+		[SerializeField] private ResourceModel _resource;
 
 		[SerializeField] private LevelProgress _levelProgress;
 		[SerializeField] private ShopModel _shopModel;
@@ -23,14 +24,14 @@ namespace Sources.Domain.Progress
 		public IPlayerModel PlayerModel => _playerModel;
 
 		public GlobalProgress(
-			ResourceModelModifiableReadOnly resourceModelModifiableReadOnly,
+			ResourceModel resourceModel,
 			LevelProgress levelProgress,
 			ShopModel shopModel,
 			PlayerModel playerModel
 		)
 		{
-			_resource = resourceModelModifiableReadOnly ??
-				throw new ArgumentNullException(nameof(resourceModelModifiableReadOnly));
+			_resource = resourceModel ??
+				throw new ArgumentNullException(nameof(resourceModel));
 
 			_levelProgress = levelProgress ?? throw new ArgumentNullException(nameof(levelProgress));
 			_shopModel = shopModel ?? throw new ArgumentNullException(nameof(shopModel));

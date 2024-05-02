@@ -13,7 +13,7 @@
 
 using UnityEngine;
 
-namespace Tayx.Graphy.Graph
+namespace Graphy___Ultimate_Stats_Monitor.Runtime.Graph
 {
     public abstract class G_Graph : MonoBehaviour
     {

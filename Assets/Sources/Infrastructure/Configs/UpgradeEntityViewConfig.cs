@@ -1,5 +1,4 @@
 using System;
-using Sources.Infrastructure.ScriptableObjects.Shop;
 using Sources.InfrastructureInterfaces.Configs;
 using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;

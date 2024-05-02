@@ -1,9 +1,9 @@
 using System;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
-using Sources.Domain.Temp;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.DomainInterfaces.Entities;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.Services;
 using UnityEngine;
@@ -12,7 +12,7 @@ namespace Sources.Controllers
 {
 	public class ResourcesProgressPresenter : Presenter, IResourcesProgressPresenter
 	{
-		private readonly IResourceModelModifiable _resourceData;
+		private readonly IResourceModel _resourceData;
 		private readonly ISandContainerViewProvider _sandContainerViewProvider;
 		private readonly IFillMeshShaderControllerProvider _fillMeshShaderControllerProvider;
 		private readonly SandParticlePlayerSystem _sandParticlePlayerSystem;
@@ -26,7 +26,7 @@ namespace Sources.Controllers
 		public ResourcesProgressPresenter(
 			IGameplayInterfacePresenterProvider gameplayInterfaceView,
 			IResourceModelReadOnly resourceReadOnly,
-			IResourceModelModifiable persistentProgressService,
+			IResourceModel persistentProgressService,
 			IFillMeshShaderControllerProvider fillMeshShaderControllerProvider,
 			SandParticlePlayerSystem sandParticlePlayerSystem,
 			IStatReadOnly statReadOnly
@@ -60,7 +60,13 @@ namespace Sources.Controllers
 		public override void Disable() =>
 			SetEnableSand();
 
-		public int GetDecreasedMoney(int count)
+		/// <summary>
+		///	Calculates how much money will be decreased.
+		/// </summary>
+		/// <param name="count"></param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentOutOfRangeException"></exception>
+		public int GetCalculatedDecreasedMoney(int count)
 		{
 			if (count <= 0)
 				throw new ArgumentOutOfRangeException(nameof(count));
@@ -94,26 +100,26 @@ namespace Sources.Controllers
 			SetMoneyTextView();
 		}
 
-		public void DecreaseMoney(int count)
-		{
-			if (_resourceReadOnly.SoftCurrency.Value - count < 0)
-				throw new ArgumentOutOfRangeException($"{SoftCurrency} less than zero");
-
-			_resourceData.TryDecreaseMoney(count);
-			SetMoneyTextView();
-		}
-
-		private void SetEnableSand() =>
-			_fillMeshShaderControllerProvider.Self.FillArea(
-				CurrentScore,
-				0,
-				_statReadOnly.Value
-			);
-
 		public void ClearTotalResources()
 		{
 			_resourceData.ClearTotalResources();
 			SetView();
+		}
+
+		public bool DecreaseMoney(int count)
+		{
+			if (_resourceReadOnly.SoftCurrency.Value - count < 0)
+				throw new ArgumentOutOfRangeException($"{SoftCurrency} less than zero");
+
+			bool result = _resourceData.TryDecreaseMoney(count);
+
+			if (result == false)
+				throw new ArgumentOutOfRangeException(
+					$"Not enough money: {_resourceReadOnly.SoftCurrency.Value}. Count: {count}"
+				);
+
+			SetMoneyTextView();
+			return true;
 		}
 
 		public bool TryAddSand(int newScore)
@@ -160,6 +166,13 @@ namespace Sources.Controllers
 			GameplayInterfacePresenter.SetCashScore(_resourceReadOnly.CurrentCashScore);
 			FillMeshShaderController.FillArea(CurrentScore, 0, _statReadOnly.Value);
 		}
+
+		private void SetEnableSand() =>
+			_fillMeshShaderControllerProvider.Self.FillArea(
+				CurrentScore,
+				0,
+				_statReadOnly.Value
+			);
 
 		private bool IsHalfScoreReached() =>
 			_resourceReadOnly.CurrentTotalResources >= Mathf.CeilToInt(_resourceReadOnly.MaxTotalResourceCount / 2f);

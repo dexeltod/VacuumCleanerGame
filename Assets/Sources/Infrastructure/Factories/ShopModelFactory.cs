@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using Sources.Domain.Progress;
 using Sources.Domain.Progress.Entities.Values;
-using Sources.Domain.Temp;
 using Sources.Infrastructure.Configs;
-using Sources.Infrastructure.Factories.UpgradeShop;
+using Sources.Infrastructure.Factories.UpgradeEntitiesConfigs;
 using Sources.ServicesInterfaces;
 using Sources.Utils;
 
-namespace Sources.Infrastructure.Factories.Player
+namespace Sources.Infrastructure.Factories
 {
 	public class ShopModelFactory
 	{

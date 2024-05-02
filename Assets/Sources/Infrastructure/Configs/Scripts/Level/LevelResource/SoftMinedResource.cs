@@ -8,7 +8,7 @@ namespace Sources.Infrastructure.Configs.Scripts.Level.LevelResource
 {
 	[Serializable] public class SoftMinedResource : ISoftMinedResource
 	{
-		[HorizontalGroup("Split", Width = 200), InlineEditor(InlineEditorModes.LargePreview), HideLabel,
+		[HorizontalGroup("Split", Width = 50), PreviewField, HideLabel,
 		 Required, OnValueChanged("AddPresentationIfNull"), AssetsOnly, SerializeField]
 		private GameObject _prefab;
 
@@ -21,7 +21,6 @@ namespace Sources.Infrastructure.Configs.Scripts.Level.LevelResource
 		[Required] [VerticalGroup("Split/Properties")] [SerializeField]
 		private Material _material;
 
-		public ResourceType ResourceType;
 		public Material Material => _material;
 		public Color Color => _color;
 		public GameObject Prefab => _prefab;
@@ -32,13 +31,5 @@ namespace Sources.Infrastructure.Configs.Scripts.Level.LevelResource
 			if (_prefab.TryGetComponent<ResourcePresentation>(out _) == false)
 				_prefab.AddComponent<ResourcePresentation>();
 		}
-	}
-
-	public enum ResourceType
-	{
-		Egdgdsfg,
-		Gdsfgdsg,
-		Hdfg,
-		Ddfg
 	}
 }

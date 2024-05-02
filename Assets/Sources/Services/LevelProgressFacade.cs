@@ -12,7 +12,7 @@ namespace Sources.Services
 		private const int MaxScoreDelta = 50;
 
 		private readonly ILevelProgress _progressService;
-		private readonly IResourceModelModifiable _resourceModelModifiable;
+		private readonly IResourceModel _resourceModel;
 
 		[Inject]
 		public LevelProgressFacade(
@@ -21,8 +21,8 @@ namespace Sources.Services
 		{
 			if (progressService == null) throw new ArgumentNullException(nameof(progressService));
 			_progressService = progressService.Self.GlobalProgress.LevelProgress;
-			_resourceModelModifiable
-				= progressService.Self.GlobalProgress.ResourceModelReadOnly as IResourceModelModifiable;
+			_resourceModel
+				= progressService.Self.GlobalProgress.ResourceModelReadOnly as IResourceModel;
 		}
 
 		public int CurrentLevel => _progressService.CurrentLevel;
@@ -31,7 +31,7 @@ namespace Sources.Services
 		public void SetNextLevel()
 		{
 			_progressService.AddLevel(MaxScoreDelta, OnePoint);
-			_resourceModelModifiable.AddMaxTotalResourceModifier(MaxScoreDelta);
+			_resourceModel.AddMaxTotalResourceModifier(MaxScoreDelta);
 		}
 	}
 }

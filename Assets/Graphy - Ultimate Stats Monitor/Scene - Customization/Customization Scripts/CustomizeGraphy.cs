@@ -13,10 +13,9 @@
 
 using System;
 using System.Collections.Generic;
+using Graphy___Ultimate_Stats_Monitor.Runtime;
 using Graphy___Ultimate_Stats_Monitor.Scene___Customization.Color_Picker;
-using Tayx.Graphy;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Graphy___Ultimate_Stats_Monitor.Scene___Customization.Customization_Scripts

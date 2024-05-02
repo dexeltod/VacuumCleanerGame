@@ -1,60 +1,61 @@
 ﻿using System;
 using UnityEngine;
 
-
-
-public partial class AssetPath
+namespace Sources.Utils.AssetPathAttribute
 {
-    /// <summary>
-    /// We limit this attributes to fields and only allow one. Should
-    /// only be applied to string types. 
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
-    public class Attribute : PropertyAttribute
+    public partial class AssetPath
     {
-        private Types m_PathType;
-        private Type m_Type;
-
         /// <summary>
-        /// Gets the type of asset path this attribute is watching.
+        /// We limit this attributes to fields and only allow one. Should
+        /// only be applied to string types. 
         /// </summary>
-        public Types pathType
+        [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
+        public class Attribute : PropertyAttribute
         {
-            get { return m_PathType; }
-        }
+            private Types m_PathType;
+            private Type m_Type;
 
-        /// <summary>
-        /// Gets the type of asset this attribute is expecting.
-        /// </summary>
-        public Type type
-        {
-            get { return m_Type; }
-        }
-
-        /// <summary>
-        /// Creates the default instance of AssetPathAttribute
-        /// </summary>
-        public Attribute(Type type)
-        {
-            m_Type = type; 
-            m_PathType = Types.Project;
-        }
-
-
-
-        public string SuperProperty
-        {
-            get
+            /// <summary>
+            /// Gets the type of asset path this attribute is watching.
+            /// </summary>
+            public Types pathType
             {
-                /* whole pile of work done here */
-                return "Complex string example"; 
+                get { return m_PathType; }
             }
-        }
 
-        public void Evulate()
-        {
+            /// <summary>
+            /// Gets the type of asset this attribute is expecting.
+            /// </summary>
+            public Type type
+            {
+                get { return m_Type; }
+            }
 
-            string value = SuperProperty; 
+            /// <summary>
+            /// Creates the default instance of AssetPathAttribute
+            /// </summary>
+            public Attribute(Type type)
+            {
+                m_Type = type; 
+                m_PathType = Types.Project;
+            }
+
+
+
+            public string SuperProperty
+            {
+                get
+                {
+                    /* whole pile of work done here */
+                    return "Complex string example"; 
+                }
+            }
+
+            public void Evulate()
+            {
+
+                string value = SuperProperty; 
+            }
         }
     }
 }

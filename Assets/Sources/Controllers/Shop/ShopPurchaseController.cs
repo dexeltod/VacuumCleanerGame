@@ -1,40 +1,39 @@
 using System;
-using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.InfrastructureInterfaces.Providers;
-using Sources.ServicesInterfaces;
+using Sources.ControllersInterfaces;
+using Sources.InfrastructureInterfaces;
+using Sources.InfrastructureInterfaces.Repository;
+using Sources.Utils.Enums;
 
-namespace Sources.Controllers
+namespace Sources.Controllers.Shop
 {
 	public class ShopPurchaseController
 	{
 		private readonly IProgressService _progressService;
-		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
-		private readonly ISaveLoader _saveLoader;
+		private readonly IResourcesProgressPresenter _resourcesProgressPresenter;
+		private readonly IPlayerModelRepository _playerModelRepository;
 
 		public ShopPurchaseController(
 			IProgressService progressService,
-			IPersistentProgressServiceProvider persistentProgressServiceProvider,
-			ISaveLoader saveLoader
+			IResourcesProgressPresenter resourcesProgressPresenter,
+			IPlayerModelRepository playerModelRepository
 		)
 		{
 			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
-			_persistentProgressServiceProvider = persistentProgressServiceProvider ??
-				throw new ArgumentNullException(nameof(persistentProgressServiceProvider));
-			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
+			_resourcesProgressPresenter = resourcesProgressPresenter;
+			_playerModelRepository
+				= playerModelRepository ?? throw new ArgumentNullException(nameof(playerModelRepository));
 		}
-
-		private int Money =>
-			_persistentProgressServiceProvider.Self.GlobalProgress.ResourceModelReadOnly
-				.SoftCurrency.Value;
 
 		public bool TryAddOneProgressPoint(int id)
 		{
 			var price = _progressService.GetPrice(id);
 
-			if (Money - price < 0)
-				throw new InvalidOperationException($"Not enough money. Need {price} but have {Money}");
+			if (_resourcesProgressPresenter.DecreaseMoney(price) == false)
+				return false;
 
 			_progressService.AddProgressPoint(id);
+
+			_playerModelRepository.Set((ProgressType)id, _progressService.GetProgressStatValue(id));
 			return true;
 		}
 	}

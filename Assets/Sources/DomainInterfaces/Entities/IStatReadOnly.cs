@@ -1,6 +1,6 @@
 using System;
 
-namespace Sources.Domain.Temp
+namespace Sources.DomainInterfaces.Entities
 {
 	public interface IStatReadOnly
 	{

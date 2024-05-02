@@ -12,7 +12,7 @@ namespace Sources.ControllersInterfaces
 		void ClearTotalResources();
 		void Sell();
 		void AddMoney(int count);
-		void DecreaseMoney(int count);
-		int GetDecreasedMoney(int count);
+		int GetCalculatedDecreasedMoney(int count);
+		bool DecreaseMoney(int count);
 	}
 }

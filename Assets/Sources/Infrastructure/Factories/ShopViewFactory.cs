@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sources.Controllers;
-using Sources.Domain.Temp;
 using Sources.DomainInterfaces;
+using Sources.DomainInterfaces.Models.Shop;
+using Sources.DomainInterfaces.Models.Shop.Upgrades;
 using Sources.Infrastructure.Configs;
 using Sources.Infrastructure.Providers;
-using Sources.Infrastructure.Repositories;
+using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Configs;
 using Sources.InfrastructureInterfaces.Providers;
+using Sources.InfrastructureInterfaces.Repository;
 using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;
 using Sources.Services.Localization;
@@ -25,30 +27,28 @@ namespace Sources.Infrastructure.Factories
 		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
 		private readonly IAssetFactory _assetFactory;
 		private readonly ITranslatorService _translatorService;
-		private readonly IPlayerProgressSetterFacadeProvider _playerProgressSetterFacadeProvider;
 		private readonly UpgradeWindowPresenterProvider _upgradeWindowPresenterProvider;
 		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfaceProvider;
 		private readonly UpgradeProgressRepositoryProvider _upgradeProgressRepositoryProvider;
 		private readonly IProgressService _progressService;
 		private readonly IPlayerModelRepositoryProvider _playerModelRepositoryProvider;
+		private readonly ISaveLoaderProvider _saveLoaderProvider;
 
 		[Inject]
 		public ShopViewFactory(
 			IPersistentProgressServiceProvider persistentProgressService,
 			IAssetFactory assetFactory,
 			ITranslatorService translatorService,
-			IPlayerProgressSetterFacadeProvider playerProgressSetterFacadeProvider,
 			UpgradeWindowPresenterProvider upgradeWindowPresenterProvider,
 			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
 			IGameplayInterfacePresenterProvider gameplayInterfaceProvider,
 			UpgradeProgressRepositoryProvider upgradeProgressRepositoryProvider,
 			IProgressService progressService,
-			IPlayerModelRepositoryProvider playerModelRepositoryProvider
+			IPlayerModelRepositoryProvider playerModelRepositoryProvider,
+			ISaveLoaderProvider saveLoaderProvider
 		)
 		{
-			_playerProgressSetterFacadeProvider = playerProgressSetterFacadeProvider ??
-				throw new ArgumentNullException(nameof(playerProgressSetterFacadeProvider));
 			_upgradeWindowPresenterProvider = upgradeWindowPresenterProvider ??
 				throw new ArgumentNullException(nameof(upgradeWindowPresenterProvider));
 			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ??
@@ -60,12 +60,11 @@ namespace Sources.Infrastructure.Factories
 			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
 			_playerModelRepositoryProvider = playerModelRepositoryProvider ??
 				throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
+			_saveLoaderProvider = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
 			_persistentProgressServiceProvider = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
-			_playerProgressSetterFacadeProvider = playerProgressSetterFacadeProvider ??
-				throw new ArgumentNullException(nameof(playerProgressSetterFacadeProvider));
 		}
 
 		private string UIResourcesShopItems => ResourcesAssetPath.Scene.UIResources.ShopItems;
@@ -73,8 +72,6 @@ namespace Sources.Infrastructure.Factories
 		private IShopModel ShopProgress => _persistentProgressServiceProvider.Self.GlobalProgress.ShopModel;
 
 		private IUpgradeProgressRepository UpgradeProgressRepository => _upgradeProgressRepositoryProvider.Self;
-
-		private IProgressSetterFacade ProgressSetterFacade => _playerProgressSetterFacadeProvider.Self;
 
 		public Dictionary<int, IUpgradeElementPrefabView> Create(Transform transform)
 		{
@@ -104,12 +101,14 @@ namespace Sources.Infrastructure.Factories
 			}
 
 			UpgradeElementPresenter presenter = new(
-				ProgressSetterFacade,
 				changeableViews,
 				_persistentProgressServiceProvider,
 				_upgradeWindowPresenterProvider,
 				_gameplayInterfaceProvider,
-				UpgradeProgressRepository
+				_progressService,
+				_saveLoaderProvider.Self,
+				_resourcesProgressPresenterProvider,
+				_playerModelRepositoryProvider
 			);
 
 			for (int i = 0; i < views.Count; i++)

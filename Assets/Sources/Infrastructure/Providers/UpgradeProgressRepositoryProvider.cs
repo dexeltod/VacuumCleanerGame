@@ -1,7 +1,8 @@
 using Sources.Infrastructure.Common.Provider;
 using Sources.InfrastructureInterfaces.Providers;
+using Sources.InfrastructureInterfaces.Repository;
 
-namespace Sources.Infrastructure.Repositories
+namespace Sources.Infrastructure.Providers
 {
 	public sealed class UpgradeProgressRepositoryProvider : Provider<IUpgradeProgressRepository>,
 		IProgressEntityRepositoryProvider { }

@@ -1,5 +1,4 @@
 ﻿using Graphic.Joystick_Pack.Scripts.Base;
-using UnityEngine.EventSystems;
 
 namespace Graphic.Joystick_Pack.Scripts.Joysticks
 {

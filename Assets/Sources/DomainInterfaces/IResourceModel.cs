@@ -1,6 +1,6 @@
 namespace Sources.DomainInterfaces
 {
-	public interface IResourceModelModifiable
+	public interface IResourceModel
 	{
 		void AddScore(int newCashScore);
 		void AddMaxTotalResourceModifier(int newAmount);

@@ -24,8 +24,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+using System;
 using UnityEngine;
-using UnityEngine.UI;
+using Random = System.Random;
 #if GRAPHY_NEW_INPUT
 using UnityEngine.InputSystem;
 #endif
@@ -36,7 +37,7 @@ namespace Graphy___Ultimate_Stats_Monitor.Scene___Customization.Color_Picker
     {
         public Color Color { get { return _color; } set { Setup( value ); } }
         
-        public void SetOnValueChangeCallback( System.Action<Color> onValueChange )
+        public void SetOnValueChangeCallback( Action<Color> onValueChange )
         {
             _onValueChange = onValueChange;
         }
@@ -46,8 +47,8 @@ namespace Graphy___Ultimate_Stats_Monitor.Scene___Customization.Color_Picker
         [SerializeField] private Image alphaSliderBGImage       = null;
 
         private Color _color                                    = new Color32(255, 0, 0, 128);
-        private System.Action<Color> _onValueChange             = null;
-        private System.Action _update                           = null;
+        private Action<Color> _onValueChange             = null;
+        private Action _update                           = null;
     
         private static void RGBToHSV( Color color, out float h, out float s, out float v )
         {
@@ -131,7 +132,7 @@ namespace Graphy___Ultimate_Stats_Monitor.Scene___Customization.Color_Picker
             var satvalTex = new Texture2D(2,2);
             satvalGO.GetComponent<Image>().sprite = Sprite.Create( satvalTex, new Rect( 0.5f, 0.5f, 1, 1 ), new Vector2( 0.5f, 0.5f ) );
 
-            System.Action resetSatValTexture = () => {
+            Action resetSatValTexture = () => {
                 for ( int j = 0; j < 2; j++ ) {
                     for ( int i = 0; i < 2; i++ ) {
                         satvalTex.SetPixel( i, j, satvalColors[i + j * 2] );
@@ -144,7 +145,7 @@ namespace Graphy___Ultimate_Stats_Monitor.Scene___Customization.Color_Picker
             float Hue, Saturation, Value;
             RGBToHSV( inputColor, out Hue, out Saturation, out Value );
 
-            System.Action applyHue = () => 
+            Action applyHue = () => 
             {
                 var i0 = Mathf.Clamp( ( int )Hue, 0, 5 );
                 var i1 = ( i0 + 1 ) % 6;
@@ -153,7 +154,7 @@ namespace Graphy___Ultimate_Stats_Monitor.Scene___Customization.Color_Picker
                 resetSatValTexture();
             };
 
-            System.Action applySaturationValue = () => 
+            Action applySaturationValue = () => 
             {
                 var sv = new Vector2( Saturation, Value );
                 var isv = new Vector2( 1 - sv.x, 1 - sv.y );
@@ -179,9 +180,9 @@ namespace Graphy___Ultimate_Stats_Monitor.Scene___Customization.Color_Picker
             applySaturationValue();
             satvalKnob.transform.localPosition = new Vector2( Saturation * satvalSz.x, Value * satvalSz.y );
             hueKnob.transform.localPosition = new Vector2( hueKnob.transform.localPosition.x, Hue / 6 * satvalSz.y );
-            System.Action dragH = null;
-            System.Action dragSV = null;
-            System.Action idle = () => {
+            Action dragH = null;
+            Action dragSV = null;
+            Action idle = () => {
 #if GRAPHY_NEW_INPUT
                 if ( Mouse.current.leftButton.wasPressedThisFrame ) {
 #else
@@ -233,7 +234,7 @@ namespace Graphy___Ultimate_Stats_Monitor.Scene___Customization.Color_Picker
     
         public void SetRandomColor()
         {
-            var rng = new System.Random();
+            var rng = new Random();
             var r = ( rng.Next() % 1000 ) / 1000.0f;
             var g = ( rng.Next() % 1000 ) / 1000.0f;
             var b = ( rng.Next() % 1000 ) / 1000.0f;

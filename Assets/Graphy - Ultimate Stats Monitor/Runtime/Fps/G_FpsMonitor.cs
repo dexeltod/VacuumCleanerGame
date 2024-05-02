@@ -12,11 +12,9 @@
  * -------------------------------------*/
 
 using System;
-using System.Xml.Linq;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
-namespace Tayx.Graphy.Fps
+namespace Graphy___Ultimate_Stats_Monitor.Runtime.Fps
 {
     public class G_FpsMonitor : MonoBehaviour
     {

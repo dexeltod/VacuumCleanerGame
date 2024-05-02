@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using Sources.ControllersInterfaces;
-using Sources.Domain.Temp;
+using Sources.DomainInterfaces.Entities;
 using Sources.Infrastructure.Services.Decorators.Common;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.ServicesInterfaces.Advertisement;

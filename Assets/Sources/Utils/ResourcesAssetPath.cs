@@ -1,3 +1,5 @@
+using Sources.Utils.AssetPaths;
+
 namespace Sources.Utils
 {
 	public static class ResourcesAssetPath

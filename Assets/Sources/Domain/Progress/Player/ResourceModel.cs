@@ -3,12 +3,13 @@ using Sources.Domain.Progress.ResourcesData;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Utils;
+using Sources.Utils.AssetPaths;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Sources.Domain.Progress.Player
 {
-	[Serializable] public class ResourceModelModifiableReadOnly : IResourceModelReadOnly, IResourceModelModifiable
+	[Serializable] public class ResourceModel : IResourceModelReadOnly
 	{
 		private const int HundredPercent = 100;
 		private const int OnePoint = 1;
@@ -20,11 +21,12 @@ namespace Sources.Domain.Progress.Player
 
 		[SerializeField] private IntCurrency _totalAmount;
 
-		[SerializeField] private int _maxGlobalScoreModifier;
+		[FormerlySerializedAs("_maxGlobalScoreModifier")] [SerializeField]
+		private int _maxTotalResourceModifier;
 
 		private const int MultiplyFactor = 1;
 
-		public ResourceModelModifiableReadOnly(
+		public ResourceModel(
 			Resource<int> softCurrency,
 			Resource<int> hardCurrency,
 			Resource<int> cashScore,
@@ -50,7 +52,7 @@ namespace Sources.Domain.Progress.Player
 		public IReadOnlyProgressValue<int> TotalAmount => _totalAmount;
 		public IReadOnlyProgressValue<int> HardCurrency => _hardCurrency;
 
-		public int MaxTotalResourceCount => _maxGlobalScoreModifier + GameConfig.DefaultMaxTotalResource;
+		public int MaxTotalResourceCount => _maxTotalResourceModifier + GameConfig.DefaultMaxTotalResource;
 
 		public int CurrentCashScore
 		{
@@ -92,8 +94,11 @@ namespace Sources.Domain.Progress.Player
 			_cashCashScore.Set(CurrentCashScore);
 		}
 
-		public void AddMaxTotalResourceModifier(int newAmount) =>
-			_maxGlobalScoreModifier += newAmount;
+		public void AddMaxTotalResourceModifier(int newAmount)
+		{
+			if (newAmount <= 0) throw new ArgumentOutOfRangeException(nameof(newAmount));
+			_maxTotalResourceModifier += newAmount;
+		}
 
 		public void DecreaseCashScore(int newValue)
 		{
@@ -107,6 +112,9 @@ namespace Sources.Domain.Progress.Player
 			_softCurrency.Set(newValue + _softCurrency.Value);
 		}
 
+		/// <summary>
+		/// Decrease soft currency. Validates that there is enough money.	
+		/// </summary>
 		public bool TryDecreaseMoney(int newValue)
 		{
 			if (newValue < 0)
@@ -116,6 +124,7 @@ namespace Sources.Domain.Progress.Player
 				throw new ArgumentOutOfRangeException(nameof(newValue), "Not enough money");
 
 			_softCurrency.Set(_softCurrency.Value - newValue);
+
 			return true;
 		}
 

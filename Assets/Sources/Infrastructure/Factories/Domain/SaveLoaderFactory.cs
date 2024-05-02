@@ -18,9 +18,7 @@ namespace Sources.Infrastructure.Factories.Domain
 
 		public ISaveLoader GetSaveLoader()
 		{
-#if YANDEX_CODE
 			return new YandexSaveLoader(_cloudSave);
-#endif
 
 #if UNITY_EDITOR
 			return GetEditorSaveLoader();

@@ -5,6 +5,7 @@ using Sources.Infrastructure.Common.Factory.Decorators;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.Services;
 using Sources.Utils;
+using Sources.Utils.Enums;
 using VContainer;
 
 namespace Sources.Infrastructure.Factories.Presenters
@@ -57,7 +58,7 @@ namespace Sources.Infrastructure.Factories.Presenters
 			return new ResourcesProgressPresenter(
 				_gameplayInterfacePresenterProvider,
 				ResourceModelReadOnly,
-				ResourceModelReadOnly as IResourceModelModifiable,
+				ResourceModelReadOnly as IResourceModel,
 				_fillMeshShaderControllerProvider,
 				sandParticlePlayerSystem,
 				_playerModelRepositoryProvider.Self.Get(ProgressType.MaxCashScore)

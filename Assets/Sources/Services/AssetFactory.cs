@@ -5,7 +5,7 @@ using VContainer;
 using VContainer.Unity;
 using Object = UnityEngine.Object;
 
-namespace Sources.Services.Providers
+namespace Sources.Services
 {
 	public sealed class AssetFactory : IAssetFactory
 	{

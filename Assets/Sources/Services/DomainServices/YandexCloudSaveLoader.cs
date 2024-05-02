@@ -1,6 +1,7 @@
 using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
+using Sources.Domain;
 using Sources.DomainInterfaces;
 using UnityEngine;
 

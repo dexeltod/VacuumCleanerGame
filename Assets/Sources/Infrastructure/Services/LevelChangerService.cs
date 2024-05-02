@@ -1,7 +1,6 @@
 using System;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
-using Sources.Infrastructure.Configs.Scripts.Level;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Configs;
 using Sources.InfrastructureInterfaces.Providers;
@@ -12,7 +11,7 @@ using Sources.ServicesInterfaces.Advertisement;
 using UnityEngine;
 using VContainer;
 
-namespace Sources.Infrastructure
+namespace Sources.Infrastructure.Services
 {
 	public sealed class LevelChangerService : ILevelChangerService
 	{

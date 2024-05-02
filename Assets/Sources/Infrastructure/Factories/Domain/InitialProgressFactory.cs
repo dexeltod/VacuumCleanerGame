@@ -6,11 +6,12 @@ using Sources.Domain.Progress.Player;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Factories.Player;
-using Sources.Infrastructure.Repositories;
+using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.ServicesInterfaces;
 using Sources.Utils;
+using Sources.Utils.AssetPaths;
 using Sources.Utils.ConstantNames;
 using VContainer;
 
@@ -25,7 +26,6 @@ namespace Sources.Infrastructure.Factories.Domain
 		public InitialProgressFactory(
 			IResourceService resourceService,
 			ProgressConstantNames progressConstantNames,
-			IPlayerProgressSetterFacadeProvider playerProgressSetterFacadeProvider,
 			IPersistentProgressServiceProvider persistentProgressServiceProvider,
 			UpgradeProgressRepositoryProvider upgradeProgressRepositoryProvider,
 			IAssetFactory assetFactory

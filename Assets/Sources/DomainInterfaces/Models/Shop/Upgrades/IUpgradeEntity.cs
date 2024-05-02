@@ -1,4 +1,4 @@
-namespace Sources.Domain.Temp
+namespace Sources.DomainInterfaces.Models.Shop.Upgrades
 {
 	public interface IUpgradeEntity
 	{

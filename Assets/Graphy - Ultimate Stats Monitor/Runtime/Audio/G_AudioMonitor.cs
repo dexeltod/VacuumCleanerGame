@@ -14,7 +14,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Tayx.Graphy.Audio
+namespace Graphy___Ultimate_Stats_Monitor.Runtime.Audio
 {
     /// <summary>
     /// Note: this class only works with Unity's AudioListener.
@@ -124,7 +124,7 @@ namespace Tayx.Graphy.Audio
 
         private void OnDestroy()
         {
-            UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
         #endregion
@@ -202,7 +202,7 @@ namespace Tayx.Graphy.Audio
             
             UpdateParameters();
 
-            UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         #endregion

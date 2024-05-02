@@ -1,4 +1,4 @@
-namespace Sources.Domain.Temp
+namespace Sources.DomainInterfaces.Entities
 {
 	public interface IStat : IStatReadOnly
 	{

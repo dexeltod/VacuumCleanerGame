@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Sources.Controllers.Common;
+using Sources.Controllers.Shop;
 using Sources.ControllersInterfaces;
-using Sources.Domain.Temp;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Infrastructure.Repositories;
+using Sources.DomainInterfaces.Models.Shop.Upgrades;
+using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
@@ -13,36 +14,43 @@ namespace Sources.Controllers
 {
 	public class UpgradeElementPresenter : Presenter, IUpgradeElementPresenter
 	{
-		private readonly IProgressSetterFacade _progressSetterFacade;
 		private readonly Dictionary<int, IUpgradeElementChangeableView> _upgradeElementChangeableViews;
 		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
 		private readonly IUpgradeWindowPresenterProvider _upgradeWindowPresenter;
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
-		private readonly IProgressService _upgradeProgressRepository;
+		private readonly IProgressService _progressService;
 		private readonly ISaveLoader _saveLoader;
+
+		private readonly ShopPurchaseController _shopPurchaseController;
 		private IReadOnlyList<IUpgradeEntityReadOnly> _entities;
 
 		public UpgradeElementPresenter(
-			IProgressSetterFacade progressSetterFacade,
 			Dictionary<int, IUpgradeElementChangeableView> panel,
 			IPersistentProgressServiceProvider persistentProgressServiceProvider,
 			IUpgradeWindowPresenterProvider upgradeWindowPresenter,
 			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
-			IProgressService upgradeProgressRepository
+			IProgressService upgradeProgressRepository,
+			ISaveLoader saveLoader,
+			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
+			IPlayerModelRepositoryProvider playerModelRepositoryProvider
 		)
 		{
-			_progressSetterFacade = progressSetterFacade ??
-				throw new ArgumentNullException(nameof(progressSetterFacade));
 			_upgradeElementChangeableViews = panel ?? throw new ArgumentNullException(nameof(panel));
-
 			_persistentProgressServiceProvider = persistentProgressServiceProvider ??
 				throw new ArgumentNullException(nameof(persistentProgressServiceProvider));
 			_upgradeWindowPresenter = upgradeWindowPresenter ??
 				throw new ArgumentNullException(nameof(upgradeWindowPresenter));
 			_gameplayInterfacePresenterProvider = gameplayInterfacePresenterProvider ??
 				throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
-			_upgradeProgressRepository = upgradeProgressRepository ??
+			_progressService = upgradeProgressRepository ??
 				throw new ArgumentNullException(nameof(upgradeProgressRepository));
+			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
+
+			_shopPurchaseController = new ShopPurchaseController(
+				_progressService,
+				resourcesProgressPresenterProvider.Self,
+				playerModelRepositoryProvider.Self
+			);
 		}
 
 		private IUpgradeWindowPresenter UpgradeWindowPresenter => _upgradeWindowPresenter.Self;
@@ -53,11 +61,10 @@ namespace Sources.Controllers
 
 		public void Upgrade(int id)
 		{
-			if (_progressSetterFacade.TryAddOneProgressPoint(id) == false)
+			if (_shopPurchaseController.TryAddOneProgressPoint(id) == false)
 				throw new InvalidOperationException("Failed to add progress point");
 
-			_upgradeProgressRepository.AddProgressPoint(id);
-
+			_saveLoader.Save(_persistentProgressServiceProvider.Self.GlobalProgress);
 			SetView(id);
 		}
 
@@ -66,7 +73,7 @@ namespace Sources.Controllers
 			IUpgradeElementChangeableView panel = _upgradeElementChangeableViews[id];
 
 			panel.AddProgressPointColor();
-			panel.SetPriceText(_upgradeProgressRepository.GetPrice(id));
+			panel.SetPriceText(_progressService.GetPrice(id));
 
 			UpgradeWindowPresenter.SetMoney(Money);
 			_gameplayInterfacePresenterProvider.Self.SetSoftCurrency(Money);
@@ -74,7 +81,7 @@ namespace Sources.Controllers
 
 		public override void Enable()
 		{
-			_entities = _upgradeProgressRepository.GetEntities();
+			_entities = _progressService.GetEntities();
 
 			foreach (IUpgradeEntityReadOnly entity in _entities)
 				entity.CurrentLevel.Changed += OnLevelChanged;
@@ -82,7 +89,7 @@ namespace Sources.Controllers
 
 		public override void Disable()
 		{
-			_entities = _upgradeProgressRepository.GetEntities();
+			_entities = _progressService.GetEntities();
 
 			foreach (IUpgradeEntityReadOnly entity in _entities)
 				entity.CurrentLevel.Changed -= OnLevelChanged;
@@ -90,6 +97,7 @@ namespace Sources.Controllers
 
 		private void OnLevelChanged()
 		{
+			// TODO: ЗАБЫЛ ЧЕ Я ТУТ ХОТЕЛ СДЕЛАТЬ
 			throw new NotImplementedException();
 		}
 	}

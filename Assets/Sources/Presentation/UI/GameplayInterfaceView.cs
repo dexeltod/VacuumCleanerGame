@@ -4,7 +4,6 @@ using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using Graphic.Joystick_Pack.Scripts.Base;
 using Sources.ControllersInterfaces;
-using Sources.Domain.Temp;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
 using Sources.ServicesInterfaces;
@@ -190,7 +189,6 @@ namespace Sources.Presentation.UI
 				_maxCashScore
 			);
 
-			Debug.Log(" SetScoreBarValue _maxCashScore" + _maxCashScore);
 			_scoreFillBar.fillAmount = value;
 		}
 

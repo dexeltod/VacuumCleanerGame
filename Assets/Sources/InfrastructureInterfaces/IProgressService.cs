@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Sources.Domain.Temp;
+using Sources.DomainInterfaces.Models.Shop.Upgrades;
 using Sources.InfrastructureInterfaces.Configs;
 
-namespace Sources.ServicesInterfaces
+namespace Sources.InfrastructureInterfaces
 {
 	public interface IProgressService
 	{

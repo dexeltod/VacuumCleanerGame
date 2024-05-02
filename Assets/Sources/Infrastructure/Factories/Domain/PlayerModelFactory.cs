@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sources.Domain.Common;
 using Sources.Domain.Player;
 using Sources.Domain.Progress;
 using Sources.Domain.Progress.Entities.Values;
-using Sources.Domain.Temp;
+using Sources.Domain.Stats;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Configs;
-using Sources.Infrastructure.Factories.UpgradeShop;
+using Sources.Infrastructure.Factories.UpgradeEntitiesConfigs;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Repository;
 using Sources.ServicesInterfaces;

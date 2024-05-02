@@ -1,9 +1,10 @@
 using System;
 using Sources.Domain.Progress.Entities.Values;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.DomainInterfaces.Models.Shop.Upgrades;
 using UnityEngine;
 
-namespace Sources.Domain.Temp
+namespace Sources.Domain.Progress
 {
 	[Serializable] public class UpgradeEntity : IUpgradeEntity, IUpgradeEntityReadOnly
 	{

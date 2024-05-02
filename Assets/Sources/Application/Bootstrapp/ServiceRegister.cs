@@ -16,8 +16,6 @@ using Sources.Infrastructure.Factories.Scene;
 using Sources.Infrastructure.Factories.StateMachine;
 using Sources.Infrastructure.Factories.UI;
 using Sources.Infrastructure.Providers;
-using Sources.Infrastructure.Repositories;
-using Sources.Infrastructure.Repository;
 using Sources.Infrastructure.Services;
 using Sources.Infrastructure.StateMachine.GameStates;
 using Sources.InfrastructureInterfaces;
@@ -30,7 +28,6 @@ using Sources.PresentationInterfaces;
 using Sources.Services;
 using Sources.Services.DomainServices;
 using Sources.Services.Localization;
-using Sources.Services.Providers;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
 using Sources.Utils;
@@ -80,7 +77,6 @@ namespace Sources.Application.Bootstrapp
 
 #region Repositories
 
-			_builder.Register<ModifiableStatsRepositoryProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<UpgradeProgressRepositoryProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
 #endregion
@@ -96,8 +92,7 @@ namespace Sources.Application.Bootstrapp
 
 			_builder.Register<GameMenuPresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<SaveLoaderProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<PlayerProgressSetterFacadeProvider>(Lifetime.Singleton).AsImplementedInterfaces()
-				.AsSelf();
+
 			_builder.Register<GameplayInterfacePresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces()
 				.AsSelf();
 			_builder.Register<PersistentProgressServiceProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();

@@ -1,4 +1,4 @@
-using Sources.Domain.Temp;
+using Sources.DomainInterfaces.Entities;
 
 namespace Sources.DomainInterfaces.Models
 {

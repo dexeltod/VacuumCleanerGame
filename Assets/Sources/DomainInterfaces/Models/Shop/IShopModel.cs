@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Sources.Domain.Temp;
+using Sources.DomainInterfaces.Models.Shop.Upgrades;
 
-namespace Sources.DomainInterfaces
+namespace Sources.DomainInterfaces.Models.Shop
 {
 	public interface IShopModel
 	{

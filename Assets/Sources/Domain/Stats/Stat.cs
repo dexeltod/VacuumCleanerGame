@@ -1,9 +1,9 @@
 using System;
 using Sources.Domain.Progress.Entities.Values;
-using Sources.Domain.Temp;
+using Sources.DomainInterfaces.Entities;
 using UnityEngine;
 
-namespace Sources.Domain.Common
+namespace Sources.Domain.Stats
 {
 	[Serializable] public sealed class Stat : IStat
 	{
@@ -60,6 +60,7 @@ namespace Sources.Domain.Common
 		{
 			if (value < 0) throw new ArgumentOutOfRangeException(nameof(value));
 			_value = value;
+			_startValue = value;
 			Changed?.Invoke();
 		}
 

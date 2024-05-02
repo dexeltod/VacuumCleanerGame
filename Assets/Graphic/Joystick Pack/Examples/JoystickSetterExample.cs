@@ -1,7 +1,6 @@
 ﻿using Graphic.Joystick_Pack.Scripts.Base;
 using Graphic.Joystick_Pack.Scripts.Joysticks;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Graphic.Joystick_Pack.Examples
 {

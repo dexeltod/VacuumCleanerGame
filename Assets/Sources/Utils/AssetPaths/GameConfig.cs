@@ -1,4 +1,4 @@
-namespace Sources.Utils
+namespace Sources.Utils.AssetPaths
 {
 	public static class GameConfig
 	{

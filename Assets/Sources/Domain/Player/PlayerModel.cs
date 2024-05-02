@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sources.Domain.Common;
-using Sources.Domain.Temp;
+using Sources.Domain.Stats;
+using Sources.DomainInterfaces.Entities;
 using Sources.DomainInterfaces.Models;
 using UnityEngine;
 

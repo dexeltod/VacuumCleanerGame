@@ -12,7 +12,6 @@
  * -------------------------------------*/
 
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Graphy___Ultimate_Stats_Monitor.Scene___Customization.Customization_Scripts
 {

@@ -1,20 +1,20 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public partial class AssetPath
+﻿namespace Sources.Utils.AssetPathAttribute
 {
-    /// <summary>
-    /// A enum containing all the types of paths we can watch
-    /// </summary>
-    public enum Types
+    public partial class AssetPath
     {
         /// <summary>
-        /// The path will be contained within the 'Asset/*' directory.
+        /// A enum containing all the types of paths we can watch
         /// </summary>
-        Project,
-        /// <summary>
-        /// The path will be contained within a resources folder.
-        /// </summary>
-        Resources,
+        public enum Types
+        {
+            /// <summary>
+            /// The path will be contained within the 'Asset/*' directory.
+            /// </summary>
+            Project,
+            /// <summary>
+            /// The path will be contained within a resources folder.
+            /// </summary>
+            Resources,
+        }
     }
 }

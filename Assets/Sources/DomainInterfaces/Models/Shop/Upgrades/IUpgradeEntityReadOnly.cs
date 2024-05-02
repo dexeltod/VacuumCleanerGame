@@ -1,6 +1,6 @@
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 
-namespace Sources.Domain.Temp
+namespace Sources.DomainInterfaces.Models.Shop.Upgrades
 {
 	public interface IUpgradeEntityReadOnly
 	{

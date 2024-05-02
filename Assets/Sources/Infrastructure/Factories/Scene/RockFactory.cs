@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Sources.Infrastructure.Configs.Scripts;
-using Sources.Infrastructure.Configs.Scripts.Level;
 using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Configs;
@@ -9,7 +7,7 @@ using Sources.Presentation.SceneEntity;
 using Sources.Presentation.Services;
 using Sources.ServicesInterfaces;
 using Sources.Utils;
-using TheDeveloper.ColorChanger;
+using Sources.Utils.ParticleColorChanger.Scripts;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -121,7 +119,7 @@ namespace Sources.Infrastructure.Factories.Scene
 
 		private void SpawnSoftCurrency(
 			int softResourcesVariantsCount,
-			Dictionary<int, ISoftMinedResource> softVariants,
+			IReadOnlyDictionary<int, ISoftMinedResource> softVariants,
 			ref int totalResource,
 			GameObject resourceSpawnPosition,
 			ILevelConfig levelConfig,
@@ -131,9 +129,7 @@ namespace Sources.Infrastructure.Factories.Scene
 		{
 			int randomRockIndex = Random.Range(0, softResourcesVariantsCount);
 
-			ResourcePresentation resourcePresentation
-				= levelConfig.SoftMinedResource[randomRockIndex].Prefab
-					.GetComponent<ResourcePresentation>();
+			ResourcePresentation resourcePresentation = GetResourcePresentation(levelConfig, randomRockIndex);
 
 			IMinedResource config = softVariants[randomRockIndex];
 
@@ -141,16 +137,30 @@ namespace Sources.Infrastructure.Factories.Scene
 
 			float offsetPosition = randomRockIndex * Offset;
 
-			Vector3 position = new Vector3(
-				i + offsetPosition,
-				resourcePresentation.transform.position.y,
-				j + offsetPosition
-			) + resourceSpawnPosition.transform.position;
+			Vector3 position = SetTransformPosition(resourceSpawnPosition, i, j, offsetPosition, resourcePresentation);
 
 			ResourcePresentation resourceObject = InstantiateAndSetPosition(resourcePresentation, position);
 
 			SetViewAndData(resourceSpawnPosition, resourceObject, config);
 		}
+
+		private ResourcePresentation GetResourcePresentation(ILevelConfig levelConfig, int randomRockIndex) =>
+			levelConfig.SoftMinedResource[randomRockIndex].Prefab
+				.GetComponent<ResourcePresentation>() ??
+			throw new ArgumentNullException($"ResourcePresentation is null");
+
+		private Vector3 SetTransformPosition(
+			GameObject resourceSpawnPosition,
+			int i,
+			int j,
+			float offsetPosition,
+			ResourcePresentation resourcePresentation
+		) =>
+			new Vector3(
+				i + offsetPosition,
+				resourcePresentation.transform.position.y,
+				j + offsetPosition
+			) + resourceSpawnPosition.transform.position;
 
 		private int SpawnHardResource(
 			Dictionary<int, IHardMinedResource> hardVariants,
@@ -228,7 +238,7 @@ namespace Sources.Infrastructure.Factories.Scene
 
 		private void SetParticleColor(
 			ResourcePresentation resourcePresentation,
-			IMinedResource config,
+			IMinedResource sceneObject,
 			Material material
 		)
 		{
@@ -239,10 +249,10 @@ namespace Sources.Infrastructure.Factories.Scene
 
 			renderer.material = new Material(material)
 			{
-				color = config.Color
+				color = sceneObject.Color
 			};
 
-			colorChanger.newColor = config.Color;
+			colorChanger.newColor = sceneObject.Color;
 			colorChanger.ChangeColor();
 		}
 

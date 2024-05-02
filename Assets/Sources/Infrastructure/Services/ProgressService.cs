@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sources.Domain.Temp;
-using Sources.Infrastructure.Configs;
-using Sources.Infrastructure.Repositories;
+using Sources.DomainInterfaces.Models.Shop.Upgrades;
+using Sources.Infrastructure.Providers;
+using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Configs;
-using Sources.PresentationInterfaces;
+using Sources.InfrastructureInterfaces.Repository;
 using Sources.ServicesInterfaces;
-using Sources.ServicesInterfaces.Upgrade;
-using Sources.Utils;
 using VContainer;
 
 namespace Sources.Infrastructure.Services

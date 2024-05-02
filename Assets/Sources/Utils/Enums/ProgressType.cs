@@ -1,4 +1,4 @@
-namespace Sources.Utils
+namespace Sources.Utils.Enums
 {
 	public enum ProgressType
 	{

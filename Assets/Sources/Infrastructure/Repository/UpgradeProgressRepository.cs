@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sources.Domain.Temp;
+using Sources.DomainInterfaces.Models.Shop.Upgrades;
 using Sources.InfrastructureInterfaces.Configs;
+using Sources.InfrastructureInterfaces.Repository;
 
-namespace Sources.Infrastructure.Repositories
+namespace Sources.Infrastructure.Repository
 {
 	public sealed class UpgradeProgressRepository : IUpgradeProgressRepository
 	{

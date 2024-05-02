@@ -1,5 +1,5 @@
-using Sources.Infrastructure.Repositories;
 using Sources.InfrastructureInterfaces.Common.Providers;
+using Sources.InfrastructureInterfaces.Repository;
 
 namespace Sources.InfrastructureInterfaces.Providers
 {
