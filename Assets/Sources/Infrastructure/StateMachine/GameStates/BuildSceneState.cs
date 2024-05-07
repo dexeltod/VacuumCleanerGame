@@ -159,7 +159,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			await _sceneLoader.Load("Game");
 			Build();
 
-			_gameStateMachine.Self.Enter<GameLoopState>();
+			_gameStateMachine.Self.Enter<IGameLoopState>();
 		}
 
 		private void Build()

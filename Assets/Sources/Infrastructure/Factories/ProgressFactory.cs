@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Sources.Domain.Progress;
 using Sources.Domain.Progress.Entities.Values;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
@@ -59,18 +60,9 @@ namespace Sources.Infrastructure.Factories
 				throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
 		}
 
-		public async UniTask<IGlobalProgress> Load() =>
-			await _progressSaveLoadDataService.LoadFromCloud();
-
-		public async UniTask Save(IGlobalProgress provider)
-		{
-			if (provider == null) throw new ArgumentNullException(nameof(provider));
-			await _progressSaveLoadDataService.SaveToCloud();
-		}
-
 		public async UniTask Create()
 		{
-			var cloudSaves = await _progressSaveLoadDataService.LoadFromCloud();
+			IGlobalProgress cloudSaves = await _progressSaveLoadDataService.LoadFromCloud();
 
 			cloudSaves = await CreatNewIfNull(cloudSaves);
 
@@ -79,12 +71,10 @@ namespace Sources.Infrastructure.Factories
 
 		private async UniTask<IGlobalProgress> CreatNewIfNull(IGlobalProgress loadedProgress)
 		{
-			if (loadedProgress != null)
+			if (loadedProgress != null && loadedProgress.IsAllProgressNotNull())
 				return loadedProgress;
 
-			Debug.Log("New progress model created");
-
-			loadedProgress = _progressCleaner.ClearAndSaveCloud();
+			loadedProgress = _progressCleaner.CreateClearSaves();
 
 			await _saveLoaderProvider.Self.Save(loadedProgress);
 			return loadedProgress;
@@ -92,11 +82,15 @@ namespace Sources.Infrastructure.Factories
 
 		private void RegisterServices(IGlobalProgress progress)
 		{
+			if (progress == null)
+				throw new ArgumentNullException(nameof(progress), "Can't register services with null progress");
+
 			_playerModelRepositoryProvider.Register(new PlayerModelRepository(progress.PlayerModel));
 
 			var configs = new Dictionary<int, IUpgradeEntityViewConfig>();
-
 			var entities = progress.ShopModel.ProgressEntities;
+
+			Debug.Log($"Load configs from {ResourcesAssetPath.Configs.ShopItems}");
 
 			UpgradeEntityListConfig configList = _assetFactory.LoadFromResources<UpgradeEntityListConfig>(
 				ResourcesAssetPath.Configs.ShopItems
@@ -111,22 +105,31 @@ namespace Sources.Infrastructure.Factories
 
 			RegisterUpgradeProgressRepositoryProvider(entities, configs);
 			RegisterProgressServiceProvider(new PersistentProgressService(progress));
+			Debug.Log($"Service registered");
 		}
 
 		private void RegisterUpgradeProgressRepositoryProvider(
 			IEnumerable<IUpgradeEntityReadOnly> entities,
 			Dictionary<int, IUpgradeEntityViewConfig> configs
-		) =>
-			_upgradeProgressRepositoryProvider.Register(
+		)
+		{
+			if (entities == null) throw new ArgumentNullException(nameof(entities), $"entities is null");
+			if (configs == null) throw new ArgumentNullException(nameof(configs), $"configs is null");
+
+			Debug.Log($"Registering upgrade progress repository provider");
+			_upgradeProgressRepositoryProvider!.Register(
 				new UpgradeProgressRepository(
 					entities.ToDictionary(entity => entity.ConfigId),
 					configs
 				)
 			);
 
+			Debug.Log($" upgrade progress repository provider registered");
+		}
+
 		private float GetProgressStatValue(
 			IGlobalProgress progress,
-			Dictionary<int, IUpgradeEntityViewConfig> configs,
+			IReadOnlyDictionary<int, IUpgradeEntityViewConfig> configs,
 			int i
 		)
 		{

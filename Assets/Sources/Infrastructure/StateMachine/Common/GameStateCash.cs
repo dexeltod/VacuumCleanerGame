@@ -3,7 +3,7 @@ using Sources.InfrastructureInterfaces.States.StateMachineInterfaces;
 
 namespace Sources.Infrastructure.StateMachine.Common
 {
-	public class GameStateContainer : IGameStateContainer
+	public sealed class GameStateCash : IGameStateCash
 	{
 		public IExitState ActiveState { get; private set; }
 

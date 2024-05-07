@@ -71,7 +71,8 @@ namespace Sources.Controllers
 
 			_isCanSave = false;
 
-			await _progressSaveLoadService.SaveToCloud(() => _isCanSave = true);
+			await _progressSaveLoadService.SaveToCloud();
+			_isCanSave = true;
 		}
 	}
 }

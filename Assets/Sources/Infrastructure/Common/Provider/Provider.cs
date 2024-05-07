@@ -56,8 +56,11 @@ namespace Sources.Infrastructure.Common.Provider
 			return _implementation;
 		}
 
-		public virtual TImplementation Register(TImplementation instance) =>
-			_implementation = instance;
+		public virtual TImplementation Register(TImplementation instance)
+		{
+			if (instance == null) throw new ArgumentNullException(nameof(instance), $"{nameof(instance)}  is null");
+			return _implementation = instance;
+		}
 
 #endregion
 

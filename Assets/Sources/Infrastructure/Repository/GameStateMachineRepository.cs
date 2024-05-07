@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Sources.InfrastructureInterfaces.Repository;
 using Sources.InfrastructureInterfaces.States.StateMachineInterfaces;
+using UnityEngine;
 
 namespace Sources.Infrastructure.Repository
 {
@@ -22,6 +23,7 @@ namespace Sources.Infrastructure.Repository
 			if (state == null)
 				throw new ArgumentNullException(nameof(state));
 
+			Debug.Log("Добавляем хуйню");
 			_states.Add(typeof(TState), state);
 		}
 	}

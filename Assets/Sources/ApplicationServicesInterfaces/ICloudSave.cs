@@ -8,5 +8,6 @@ namespace Sources.ApplicationServicesInterfaces
 		UniTask Save(string json);
 		UniTask<string> Load();
 		UniTask DeleteSaves(IGlobalProgress globalProgress);
+		UniTask Initialize();
 	}
 }

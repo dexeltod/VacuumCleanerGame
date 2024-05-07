@@ -6,17 +6,17 @@ using Sources.Controllers;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Domain;
-using Sources.Infrastructure.Factories.Player;
 using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.InfrastructureInterfaces.States;
 using Sources.ServicesInterfaces.Advertisement;
+using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace Sources.Application.Bootstrapp
+namespace Sources.Application.Bootstrap
 {
 	public class GameBuilder : IAsyncStartable
 	{
@@ -80,8 +80,13 @@ namespace Sources.Application.Bootstrapp
 			await _progressFactory.Create();
 
 			_advertisementHandlerProvider.Register(new AdvertisementHandler(_advertisement));
+
 			_pathNameConfigProvider.Register(_resourcePathConfigServiceFactory.Create());
+
 			_gameStateChangerProvider.Register(_gameStateChangerFactory.Create());
+
+			Debug.Log("_gameStateChangerProvider initialized");
+			Debug.Log("Game builder initialized");
 		}
 	}
 }

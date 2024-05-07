@@ -13,15 +13,11 @@ namespace Sources.Infrastructure.Factories.StateMachine
 		private readonly GameStatesRepositoryFactory _gameStatesRepositoryFactory;
 
 		[Inject]
-		public GameStateChangerFactory(
-			GameStatesRepositoryFactory gameStatesRepositoryFactory
-		)
-		{
+		public GameStateChangerFactory(GameStatesRepositoryFactory gameStatesRepositoryFactory) =>
 			_gameStatesRepositoryFactory = gameStatesRepositoryFactory ??
 				throw new ArgumentNullException(nameof(gameStatesRepositoryFactory));
-		}
 
 		public override IGameStateChanger Create() =>
-			new GameStateChanger(new GameStateContainer(), _gameStatesRepositoryFactory.Create());
+			new GameStateChanger(new GameStateCash(), _gameStatesRepositoryFactory.Create());
 	}
 }
