@@ -1,7 +1,7 @@
 using VContainer;
 using VContainer.Unity;
 
-namespace Sources.Application.Bootstrap
+namespace Sources.Application.Bootstrapp
 {
 	// ▄▄▄▄    ▒█████   ▒█████  ▄▄▄█████▓
 	// ▓█████▄ ▒██▒  ██▒▒██▒  ██▒▓  ██▒ ▓▒

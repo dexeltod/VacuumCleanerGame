@@ -6,9 +6,8 @@ namespace Sources.DomainInterfaces
 	public interface IGlobalProgress
 	{
 		ILevelProgress LevelProgress { get; }
-		IResourceModel ResourceModelReadOnly { get; }
+		IResourceModelReadOnly ResourceModelReadOnly { get; }
 		IShopModel ShopModel { get; }
 		IPlayerModel PlayerModel { get; }
-		bool IsAllProgressNotNull();
 	}
 }

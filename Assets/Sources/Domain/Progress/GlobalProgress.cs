@@ -18,43 +18,10 @@ namespace Sources.Domain.Progress
 
 		[SerializeField] private PlayerModel _playerModel;
 
-		public ILevelProgress LevelProgress
-		{
-			get
-			{
-				if (_levelProgress != null) return _levelProgress;
-				throw new NullReferenceException("LevelProgress is null");
-			}
-		}
-
-		public IResourceModel ResourceModelReadOnly
-		{
-			get
-			{
-				if (_resource != null)
-					return _resource;
-
-				throw new NullReferenceException("IResourceModelReadOnly is null");
-			}
-		}
-
-		public IShopModel ShopModel
-		{
-			get
-			{
-				if (_shopModel != null) return _shopModel;
-				throw new NullReferenceException("IShopModel is null");
-			}
-		}
-
-		public IPlayerModel PlayerModel
-		{
-			get
-			{
-				if (_playerModel != null) return _playerModel;
-				throw new NullReferenceException("IPlayerModel is null");
-			}
-		}
+		public ILevelProgress LevelProgress => _levelProgress;
+		public IResourceModelReadOnly ResourceModelReadOnly => _resource;
+		public IShopModel ShopModel => _shopModel;
+		public IPlayerModel PlayerModel => _playerModel;
 
 		public GlobalProgress(
 			ResourceModel resourceModel,
@@ -70,12 +37,5 @@ namespace Sources.Domain.Progress
 			_shopModel = shopModel ?? throw new ArgumentNullException(nameof(shopModel));
 			_playerModel = playerModel ?? throw new ArgumentNullException(nameof(playerModel));
 		}
-
-		public bool IsAllProgressNotNull() =>
-			_levelProgress != null &&
-			_shopModel != null &&
-			_playerModel != null &&
-			_resource != null &&
-			_shopModel.ProgressEntities != null;
 	}
 }

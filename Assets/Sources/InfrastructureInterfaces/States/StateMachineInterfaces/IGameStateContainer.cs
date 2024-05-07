@@ -1,6 +1,6 @@
 namespace Sources.InfrastructureInterfaces.States.StateMachineInterfaces
 {
-	public interface IGameStateCash
+	public interface IGameStateContainer
 	{
 		IExitState ActiveState { get; }
 

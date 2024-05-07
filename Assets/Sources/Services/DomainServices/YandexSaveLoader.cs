@@ -2,7 +2,6 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
-using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using UnityEngine;
@@ -11,20 +10,21 @@ namespace Sources.Services.DomainServices
 {
 	public class YandexSaveLoader : ISaveLoader
 	{
-		private readonly ICloudSave _yandexCloudSave;
+		private readonly ICloudSave _yandexController;
 
 		public YandexSaveLoader(ICloudSave yandexCloudSave) =>
-			_yandexCloudSave = yandexCloudSave ?? throw new ArgumentNullException(nameof(yandexCloudSave));
+			_yandexController = yandexCloudSave ?? throw new ArgumentNullException(nameof(yandexCloudSave));
 
-		public async UniTask Save(IGlobalProgress @object)
+		public async UniTask Save(IGlobalProgress @object, Action succeededCallback = null)
 		{
-			if (@object == null) throw new ArgumentNullException(nameof(@object), "Save  is null");
-			await _yandexCloudSave.Save(JsonUtility.ToJson(@object));
+			await _yandexController.Save(JsonUtility.ToJson(@object));
+
+			succeededCallback?.Invoke();
 		}
 
-		public async UniTask<IGlobalProgress> Load()
+		public async UniTask<IGlobalProgress> Load(Action succeededCallback)
 		{
-			string json = await _yandexCloudSave.Load();
+			string json = await _yandexController.Load();
 
 			Debug.Log("JSON" + json);
 
@@ -36,8 +36,9 @@ namespace Sources.Services.DomainServices
 
 			try
 			{
-				Debug.Log("Yandex saves loaded" + json);
-				IGlobalProgress convertedJson = JsonUtility.FromJson<GlobalProgress>(json);
+				Debug.Log("" + json);
+				IGlobalProgress convertedJson = JsonUtility.FromJson<IGlobalProgress>(json);
+				succeededCallback.Invoke();
 				return convertedJson;
 			}
 			catch (Exception e)
@@ -47,11 +48,16 @@ namespace Sources.Services.DomainServices
 			}
 		}
 
-		public async UniTask ClearSaves(IGlobalProgress gameProgressModel) =>
-			await _yandexCloudSave.DeleteSaves(gameProgressModel as GlobalProgress);
+		public async UniTask ClearSaves(IGlobalProgress gameProgressModel, Action succeededCallback)
+		{
+			await _yandexController.DeleteSaves(gameProgressModel);
+			succeededCallback.Invoke();
+		}
 
-		public async UniTask Initialize() =>
-			await _yandexCloudSave.Initialize();
+		public UniTask Initialize()
+		{
+			return UniTask.CompletedTask;
+		}
 	}
 }
 #endif

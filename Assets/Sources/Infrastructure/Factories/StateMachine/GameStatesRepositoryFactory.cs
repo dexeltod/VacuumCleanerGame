@@ -3,43 +3,25 @@ using Sources.Infrastructure.Common.Factory;
 using Sources.Infrastructure.Repository;
 using Sources.Infrastructure.StateMachine.GameStates;
 using Sources.InfrastructureInterfaces.States;
-using UnityEngine;
 using VContainer;
 
 namespace Sources.Infrastructure.Factories.StateMachine
 {
 	public class GameStatesRepositoryFactory : Factory<GameStateMachineRepository>
 	{
-		private readonly IMenuState _menuState;
-		private readonly IBuildSceneState _buildSceneState;
-		private readonly IGameLoopState _gameLoopState;
+		private readonly IObjectResolver _resolver;
 
 		[Inject]
-		public GameStatesRepositoryFactory(
-			IMenuState menuState,
-			IBuildSceneState buildSceneState,
-			IGameLoopState gameLoopState
-		)
-		{
-			_menuState = menuState ?? throw new ArgumentNullException(nameof(menuState));
-			_buildSceneState = buildSceneState ?? throw new ArgumentNullException(nameof(buildSceneState));
-			_gameLoopState = gameLoopState ?? throw new ArgumentNullException(nameof(gameLoopState));
-		}
+		public GameStatesRepositoryFactory(IObjectResolver resolver) =>
+			_resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
 
 		public override GameStateMachineRepository Create()
 		{
-			GameStateMachineRepository gameStatesRepository = new GameStateMachineRepository();
+			var gameStatesRepository = new GameStateMachineRepository();
 
-			Debug.Log("ща тут будет резолвиться ");
-
-			Debug.Log("зарезолвили первую ситуацию( мы её не зарезолвили)");
-			gameStatesRepository.Set(_menuState);
-
-			Debug.Log("ща тут будет резолвиться  2");
-			gameStatesRepository.Set(_buildSceneState);
-
-			Debug.Log("ща тут будет резолвиться  3");
-			gameStatesRepository.Set(_gameLoopState);
+			gameStatesRepository.Set(_resolver.Resolve<IMenuState>());
+			gameStatesRepository.Set(_resolver.Resolve<IBuildSceneState>());
+			gameStatesRepository.Set(_resolver.Resolve<GameLoopState>());
 
 			return gameStatesRepository;
 		}

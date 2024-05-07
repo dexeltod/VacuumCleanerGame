@@ -1,12 +1,14 @@
 using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
+using Sources.Domain;
 using Sources.DomainInterfaces;
 using UnityEngine;
+using PlayerAccount = Agava.YandexGames.PlayerAccount;
 
 namespace Sources.Services.DomainServices
 {
-	public sealed class YandexCloudSaveLoader : ICloudSave
+	public class YandexCloudSaveLoader : ICloudSave
 	{
 		public async UniTask Save(string json)
 		{
@@ -50,12 +52,6 @@ namespace Sources.Services.DomainServices
 			await UniTask.WaitWhile(() => isCallbackReceived == false);
 
 			Debug.Log("DATA DELETED");
-		}
-
-		public async UniTask Initialize()
-		{
-			await YandexGamesSdk.Initialize();
-			YandexGamesSdk.GameReady();
 		}
 	}
 }

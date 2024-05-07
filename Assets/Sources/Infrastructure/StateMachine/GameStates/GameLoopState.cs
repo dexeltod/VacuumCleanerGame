@@ -2,13 +2,14 @@ using System;
 using Sources.ControllersInterfaces;
 using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Providers;
+using Sources.InfrastructureInterfaces.States.StateMachineInterfaces;
 using Sources.Presentation.SceneEntity;
 using Sources.ServicesInterfaces;
 using VContainer;
 
 namespace Sources.Infrastructure.StateMachine.GameStates
 {
-	public sealed class GameLoopState : IGameLoopState
+	public sealed class GameLoopState : IGameState
 	{
 		private readonly ILocalizationService _localizationService;
 		private readonly UpgradeWindowPresenterProvider _upgradeWindowPresenterProvider;

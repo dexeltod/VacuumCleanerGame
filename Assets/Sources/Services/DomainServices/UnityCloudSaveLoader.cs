@@ -8,17 +8,19 @@ using Unity.Services.CloudSave;
 
 namespace Sources.Services.DomainServices
 {
-	public class UnityCloudSaveLoader : ICloudSave
+	public class UnityCloudSaveLoader: ICloudSave
 	{
 		private const string GameProgressKey = "GameProgress";
-
-		public async UniTask Save(string json) =>
+		
+		public async UniTask Save(string json)
+		{
 			await CloudSaveService.Instance.Data.ForceSaveAsync(
 				new Dictionary<string, object>
 				{
 					{ GameProgressKey, json }
 				}
 			);
+		}
 
 		public async UniTask<string> Load()
 		{
@@ -38,6 +40,7 @@ namespace Sources.Services.DomainServices
 				string jsonSave = keyAndJsonSaves.Values.LastOrDefault();
 
 				return jsonSave;
+				
 			}
 			catch (Exception e)
 			{
@@ -46,9 +49,9 @@ namespace Sources.Services.DomainServices
 			}
 		}
 
-		public async UniTask DeleteSaves(IGlobalProgress globalProgress) { }
-
-		public UniTask Initialize() =>
-			throw new NotImplementedException();
+		public async UniTask DeleteSaves(IGlobalProgress globalProgress)
+		{
+			
+		}
 	}
 }

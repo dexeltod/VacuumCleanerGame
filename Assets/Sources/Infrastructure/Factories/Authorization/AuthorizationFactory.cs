@@ -34,24 +34,24 @@ namespace Sources.Infrastructure.Factories.Authorization
 
 		public IAuthorizationPresenter Create()
 		{
-			IAuthorizationView authorizationView
-				= new AuthorizationViewFactory(_assetFactory, _localizationService).Create();
+			
+				IAuthorizationView authorizationView = new AuthorizationViewFactory(_assetFactory, _localizationService).Create();
 
-			ICloudPlayerDataService cloudPlayerDataService = new CloudPlayerDataServiceFactory().Create();
+				ICloudPlayerDataService сloudPlayerDataService = new CloudPlayerDataServiceFactory().Create();
 
-			IAuthorizationPresenter authorizationPresenter =
-				new AuthorizationPresenter(
-					cloudPlayerDataService,
-					authorizationView
-				);
+				IAuthorizationPresenter authorizationPresenter =
+					new AuthorizationPresenter(
+						сloudPlayerDataService,
+						authorizationView
+					);
 
-			Construct(authorizationView, authorizationPresenter);
+				Construct(authorizationView, authorizationPresenter);
 
-			cloudPlayerDataService.SetStatusInitialized();
+				сloudPlayerDataService.SetStatusInitialized();
 
-			_cloudServiceSdkFacadeProvider.Register(cloudPlayerDataService);
+				_cloudServiceSdkFacadeProvider.Register(сloudPlayerDataService);
 
-			return authorizationPresenter;
+				return authorizationPresenter;
 		}
 
 		private void Construct(IAuthorizationView authorizationView, IAuthorizationPresenter authorizationPresenter)

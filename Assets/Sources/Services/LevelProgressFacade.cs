@@ -8,26 +8,30 @@ namespace Sources.Services
 {
 	public class LevelProgressFacade : ILevelProgressFacade
 	{
-		private readonly IPersistentProgressServiceProvider _progressService;
 		private const int OnePoint = 1;
 		private const int MaxScoreDelta = 50;
 
+		private readonly ILevelProgress _progressService;
+		private readonly IResourceModel _resourceModel;
+
 		[Inject]
-		public LevelProgressFacade(IPersistentProgressServiceProvider progressService) =>
-			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
+		public LevelProgressFacade(
+			IPersistentProgressServiceProvider progressService
+		)
+		{
+			if (progressService == null) throw new ArgumentNullException(nameof(progressService));
+			_progressService = progressService.Self.GlobalProgress.LevelProgress;
+			_resourceModel
+				= progressService.Self.GlobalProgress.ResourceModelReadOnly as IResourceModel;
+		}
 
-		public int CurrentLevel => _progressService.Self.GlobalProgress.LevelProgress.CurrentLevel;
-
-		public int MaxTotalResourceCount =>
-			_progressService.Self.GlobalProgress.ResourceModelReadOnly.MaxTotalResourceCount;
-
-		private IResourceModel ResourceModel =>
-			_progressService.Self.GlobalProgress.ResourceModelReadOnly as IResourceModel;
+		public int CurrentLevel => _progressService.CurrentLevel;
+		public int MaxTotalResourceCount => _progressService.MaxTotalResourceCount;
 
 		public void SetNextLevel()
 		{
-			_progressService.Self.GlobalProgress.LevelProgress.AddLevel(MaxScoreDelta, OnePoint);
-			ResourceModel.AddMaxTotalResourceModifier(MaxScoreDelta);
+			_progressService.AddLevel(MaxScoreDelta, OnePoint);
+			_resourceModel.AddMaxTotalResourceModifier(MaxScoreDelta);
 		}
 	}
 }

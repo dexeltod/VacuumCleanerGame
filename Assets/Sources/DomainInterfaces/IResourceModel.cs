@@ -1,6 +1,6 @@
 namespace Sources.DomainInterfaces
 {
-	public interface IResourceModel : IResourceModelReadOnly
+	public interface IResourceModel
 	{
 		void AddScore(int newCashScore);
 		void AddMaxTotalResourceModifier(int newAmount);

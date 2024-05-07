@@ -9,7 +9,7 @@ using UnityEngine.Serialization;
 
 namespace Sources.Domain.Progress.Player
 {
-	[Serializable] public class ResourceModel : IResourceModel
+	[Serializable] public class ResourceModel : IResourceModelReadOnly
 	{
 		private const int HundredPercent = 100;
 		private const int OnePoint = 1;

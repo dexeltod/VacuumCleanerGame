@@ -6,6 +6,7 @@ using Sources.ApplicationServicesInterfaces;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.Infrastructure;
 using Sources.Infrastructure.Configs.Scripts;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Domain;
@@ -17,7 +18,6 @@ using Sources.Infrastructure.Factories.UI;
 using Sources.Infrastructure.Providers;
 using Sources.Infrastructure.Services;
 using Sources.Infrastructure.StateMachine.GameStates;
-using Sources.Infrastructure.Yandex;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Common.Factories;
 using Sources.InfrastructureInterfaces.Factory;
@@ -27,7 +27,6 @@ using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
 using Sources.Services;
 using Sources.Services.DomainServices;
-using Sources.Services.DomainServices.YandexLeaderboard;
 using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
@@ -36,8 +35,12 @@ using Sources.Utils.ConstantNames;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+#if YANDEX_CODE
+using Sources.Infrastructure.Yandex;
+using Sources.Services.DomainServices.YandexLeaderboard;
+#endif
 
-namespace Sources.Application.Bootstrap
+namespace Sources.Application.Bootstrapp
 {
 	public class ServiceRegister
 	{
@@ -123,7 +126,7 @@ namespace Sources.Application.Bootstrap
 			_builder.Register<GameplayInterfacePresenterFactory>(Lifetime.Scoped);
 			_builder.Register<GameStatesRepositoryFactory>(Lifetime.Scoped);
 
-			_builder.Register<GameStateChangerFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
+			_builder.Register<GameStateChangerFactory>(Lifetime.Scoped).AsImplementedInterfaces();
 			_builder.Register<ProgressFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
 
 			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Singleton);
@@ -139,7 +142,7 @@ namespace Sources.Application.Bootstrap
 
 			_builder.Register<MenuState>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<BuildSceneState>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<GameLoopState>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+			_builder.Register<GameLoopState>(Lifetime.Singleton);
 
 #endregion
 
@@ -162,6 +165,7 @@ namespace Sources.Application.Bootstrap
 				Lifetime.Singleton
 			).AsImplementedInterfaces().AsSelf();
 
+			RegisterSaveLoader();
 			CreateResourceService();
 			CreateSceneLoadServices();
 
@@ -187,6 +191,8 @@ namespace Sources.Application.Bootstrap
 #endif
 			_builder.Register<IAdvertisement, EditorAdvertisement>(Lifetime.Singleton);
 		}
+
+		private void RegisterSaveLoader() { }
 
 		private void RegisterCloudSavers()
 		{

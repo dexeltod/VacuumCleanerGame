@@ -7,7 +7,6 @@ using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.Services.DomainServices;
-using UnityEngine;
 using VContainer;
 
 namespace Sources.Infrastructure.Services
@@ -40,29 +39,34 @@ namespace Sources.Infrastructure.Services
 
 		private ISaveLoader SaveLoaderImplementation => _saveLoader.Self;
 
+		public bool IsCallbackReceived { get; private set; }
+
 		private IPersistentProgressService PersistentProgressService => _progressServiceProvider.Self;
 
-		public async UniTask SaveToCloud(IGlobalProgress progress)
+		public async UniTask SaveToCloud(IGlobalProgress progress, Action succeededCallback = null)
 		{
 			if (progress != null)
 				await Save(progress);
+
+			succeededCallback?.Invoke();
 		}
 
-		public async UniTask SaveToCloud() =>
+		public async UniTask SaveToCloud(Action succeededCallback = null)
+		{
 			await Save(PersistentProgressService.GlobalProgress);
+			succeededCallback?.Invoke();
+		}
 
-		public async UniTask ClearSaves() =>
-			await _saveLoader.Self.Save(_progressCleaner.CreateClearSaves());
+		public async UniTask ClearSaves()
+		{
+			IGlobalProgress progress = _progressCleaner.ClearAndSaveCloud();
+			await _saveLoader.Self.Save(progress);
+		}
 
 		public async UniTask<IGlobalProgress> LoadFromCloud()
 		{
-			IGlobalProgress progress = await SaveLoaderImplementation.Load();
-
-			if (progress != null && progress.IsAllProgressNotNull())
-				return progress;
-
-			Debug.LogError("GlobalProgress is null");
-			return null;
+			IsCallbackReceived = false;
+			return await SaveLoaderImplementation.Load(() => IsCallbackReceived = true);
 		}
 
 		public void SaveToJson(string fileName, object data) =>
@@ -74,7 +78,10 @@ namespace Sources.Infrastructure.Services
 		public T LoadFromJson<T>(string fileName) =>
 			_jsonDataLoader.Load<T>(fileName);
 
-		private async UniTask Save(IGlobalProgress provider) =>
-			await SaveLoaderImplementation.Save(provider);
+		private async UniTask Save(IGlobalProgress provider)
+		{
+			IsCallbackReceived = false;
+			await SaveLoaderImplementation.Save(provider, () => IsCallbackReceived = true);
+		}
 	}
 }

@@ -27,16 +27,17 @@ namespace Sources.Services.DomainServices
 				= unityCloudSaveLoader ?? throw new ArgumentNullException(nameof(unityCloudSaveLoader));
 		}
 
-		public async UniTask Save(IGlobalProgress @object)
+		public async UniTask Save(IGlobalProgress @object, Action succeededCallback)
 		{
 			string json = JsonUtility.ToJson(@object);
 
 			await _unityCloudSaveLoader.Save(json);
 		}
 
-		public async UniTask<IGlobalProgress> Load()
+		public async UniTask<IGlobalProgress> Load(Action callback)
 		{
 			var json = await _unityCloudSaveLoader.Load();
+			callback.Invoke();
 			return DeserializeJson(json);
 		}
 

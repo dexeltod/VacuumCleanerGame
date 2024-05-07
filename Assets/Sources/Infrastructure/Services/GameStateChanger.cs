@@ -7,15 +7,15 @@ namespace Sources.Infrastructure.Services
 {
 	public sealed class GameStateChanger : IGameStateChanger
 	{
-		private readonly IGameStateCash _gameStateCash;
+		private readonly IGameStateContainer _gameStateContainer;
 		private readonly IGameStateMachineRepository _gameStateMachineRepository;
 
 		public GameStateChanger(
-			IGameStateCash gameStateCash,
+			IGameStateContainer gameStateContainer,
 			IGameStateMachineRepository gameStateMachineRepository
 		)
 		{
-			_gameStateCash = gameStateCash ?? throw new ArgumentNullException(nameof(gameStateCash));
+			_gameStateContainer = gameStateContainer ?? throw new ArgumentNullException(nameof(gameStateContainer));
 			_gameStateMachineRepository = gameStateMachineRepository ??
 				throw new ArgumentNullException(nameof(gameStateMachineRepository));
 		}
@@ -39,10 +39,10 @@ namespace Sources.Infrastructure.Services
 
 		private TState ChangeState<TState>() where TState : class, IExitState
 		{
-			_gameStateCash.ActiveState?.Exit();
+			_gameStateContainer.ActiveState?.Exit();
 
 			IExitState state = _gameStateMachineRepository.Get<TState>();
-			_gameStateCash.Set(state);
+			_gameStateContainer.Set(state);
 
 			return (TState)state;
 		}
