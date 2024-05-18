@@ -1,11 +1,11 @@
 namespace Sources.InfrastructureInterfaces.States.StateMachineInterfaces
 {
-	public interface IGameState : IExitState
+	public interface IGameState : IExitableState
 	{
 		void Enter();
 	}
 
-	public interface IGameState<in T> : IExitState
+	public interface IGameState<in T> : IExitableState
 	{
 		void Enter(T payload);
 	}

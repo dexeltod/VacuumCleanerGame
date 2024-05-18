@@ -13,6 +13,7 @@ using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.InfrastructureInterfaces.States;
 using Sources.ServicesInterfaces.Advertisement;
+using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
@@ -67,20 +68,28 @@ namespace Sources.Application.Bootstrapp
 
 		public async UniTask StartAsync(CancellationToken cancellation)
 		{
+			Debug.Log("Initialize");
 			await Initialize();
+			Debug.Log("Initialized");
 			DOTween.Init();
+			Debug.Log("GameStateChanger.Enter<IMenuState>();}");
 			GameStateChanger.Enter<IMenuState>();
 		}
 
 		private async UniTask Initialize()
 		{
+			Debug.Log("Start Building");
 			_saveLoaderProvider.Register<ISaveLoader>(_saveLoaderFactory.GetSaveLoader());
 
 			await _saveLoader.Initialize();
 			await _progressFactory.Create();
+			Debug.Log("Progress created");
 
+			Debug.Log("register _advertisementHandlerProvider");
 			_advertisementHandlerProvider.Register(new AdvertisementHandler(_advertisement));
+			Debug.Log("register _pathNameConfigProvider");
 			_pathNameConfigProvider.Register(_resourcePathConfigServiceFactory.Create());
+			Debug.Log("register _gameStateChangerFactory");
 			_gameStateChangerProvider.Register(_gameStateChangerFactory.Create());
 		}
 	}

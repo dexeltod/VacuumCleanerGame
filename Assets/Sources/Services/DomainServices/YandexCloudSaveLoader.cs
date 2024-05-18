@@ -1,7 +1,5 @@
-using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
-using Sources.Domain;
 using Sources.DomainInterfaces;
 using UnityEngine;
 using PlayerAccount = Agava.YandexGames.PlayerAccount;

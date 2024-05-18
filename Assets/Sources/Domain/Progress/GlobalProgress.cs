@@ -23,6 +23,13 @@ namespace Sources.Domain.Progress
 		public IShopModel ShopModel => _shopModel;
 		public IPlayerModel PlayerModel => _playerModel;
 
+		public bool Validate() =>
+			_resource != null &&
+			_levelProgress != null &&
+			_shopModel != null &&
+			_playerModel != null &&
+			_shopModel.ProgressEntities != null;
+
 		public GlobalProgress(
 			ResourceModel resourceModel,
 			LevelProgress levelProgress,
@@ -34,7 +41,12 @@ namespace Sources.Domain.Progress
 				throw new ArgumentNullException(nameof(resourceModel));
 
 			_levelProgress = levelProgress ?? throw new ArgumentNullException(nameof(levelProgress));
+
 			_shopModel = shopModel ?? throw new ArgumentNullException(nameof(shopModel));
+
+			if (shopModel.ProgressEntities == null)
+				throw new ArgumentNullException(nameof(shopModel.ProgressEntities));
+
 			_playerModel = playerModel ?? throw new ArgumentNullException(nameof(playerModel));
 		}
 	}

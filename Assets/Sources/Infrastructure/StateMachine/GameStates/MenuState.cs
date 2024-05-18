@@ -19,6 +19,7 @@ using Sources.Services.Localization;
 using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
 using Sources.Utils.ConstantNames;
+using UnityEngine;
 using VContainer;
 
 namespace Sources.Infrastructure.StateMachine.GameStates
@@ -83,12 +84,18 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 		public async void Enter()
 		{
+			Debug.Log("MenuState Enter");
+			Debug.Log("_sceneLoader.Load");
 			await _sceneLoader.Load(ConstantNames.MenuScene);
 
+			Debug.Log("CreateMainMenuPresenter");
 			await CreateMainMenuPresenter();
 
+			Debug.Log("_mainMenuPresenter.Enable");
 			_mainMenuPresenter.Enable();
+			Debug.Log("_authorizationPresenter.Enable");
 			_authorizationPresenter.Enable();
+
 			_loadingCurtain.HideSlowly();
 		}
 

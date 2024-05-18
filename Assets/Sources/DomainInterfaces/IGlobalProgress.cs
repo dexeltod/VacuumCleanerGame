@@ -9,5 +9,6 @@ namespace Sources.DomainInterfaces
 		IResourceModelReadOnly ResourceModelReadOnly { get; }
 		IShopModel ShopModel { get; }
 		IPlayerModel PlayerModel { get; }
+		bool Validate();
 	}
 }

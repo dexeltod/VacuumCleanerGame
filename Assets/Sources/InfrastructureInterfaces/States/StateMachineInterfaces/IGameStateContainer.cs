@@ -2,8 +2,8 @@ namespace Sources.InfrastructureInterfaces.States.StateMachineInterfaces
 {
 	public interface IGameStateContainer
 	{
-		IExitState ActiveState { get; }
+		IExitableState ActiveState { get; }
 
-		public void Set<TState>(TState payload) where TState : class, IExitState;
+		public void Set<TState>(TState payload) where TState : class, IExitableState;
 	}
 }

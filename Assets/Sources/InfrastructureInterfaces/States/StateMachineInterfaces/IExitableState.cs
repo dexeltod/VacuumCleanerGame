@@ -1,6 +1,6 @@
 namespace Sources.InfrastructureInterfaces.States.StateMachineInterfaces
 {
-	public interface IExitState
+	public interface IExitableState
 	{
 		void Exit();
 	}

@@ -7,9 +7,9 @@ namespace Sources.Infrastructure.Repository
 {
 	public sealed class GameStateMachineRepository : IGameStateMachineRepository
 	{
-		private readonly Dictionary<Type, IExitState> _states = new();
+		private readonly Dictionary<Type, IExitableState> _states = new();
 
-		public IExitState Get<TState>() where TState : class, IExitState
+		public IExitableState Get<TState>() where TState : IExitableState
 		{
 			if (_states.ContainsKey(typeof(TState)))
 				return _states[typeof(TState)];
@@ -17,7 +17,7 @@ namespace Sources.Infrastructure.Repository
 			throw new ArgumentNullException($"State of type {typeof(TState)} not found");
 		}
 
-		public void Set<TState>(TState state) where TState : class, IExitState
+		public void Set<TState>(TState state) where TState : IExitableState
 		{
 			if (state == null)
 				throw new ArgumentNullException(nameof(state));

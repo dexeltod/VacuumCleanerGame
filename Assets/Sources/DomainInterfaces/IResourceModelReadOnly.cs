@@ -2,7 +2,7 @@ using Sources.DomainInterfaces.DomainServicesInterfaces;
 
 namespace Sources.DomainInterfaces
 {
-	public interface IResourceModelReadOnly : IResourceModel
+	public interface IResourceModelReadOnly
 	{
 		IReadOnlyProgressValue<int> SoftCurrency { get; }
 		IReadOnlyProgressValue<int> TotalAmount { get; }

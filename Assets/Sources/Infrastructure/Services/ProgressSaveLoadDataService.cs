@@ -7,6 +7,7 @@ using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.Services.DomainServices;
+using UnityEngine;
 using VContainer;
 
 namespace Sources.Infrastructure.Services
@@ -65,6 +66,7 @@ namespace Sources.Infrastructure.Services
 
 		public async UniTask<IGlobalProgress> LoadFromCloud()
 		{
+			Debug.Log("LoadFromCloud");
 			IsCallbackReceived = false;
 			return await SaveLoaderImplementation.Load(() => IsCallbackReceived = true);
 		}

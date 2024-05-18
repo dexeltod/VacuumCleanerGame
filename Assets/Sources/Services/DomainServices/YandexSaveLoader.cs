@@ -1,7 +1,9 @@
 #if YANDEX_CODE
 using System;
+using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
+using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using UnityEngine;
@@ -17,7 +19,7 @@ namespace Sources.Services.DomainServices
 
 		public async UniTask Save(IGlobalProgress @object, Action succeededCallback = null)
 		{
-			await _yandexController.Save(JsonUtility.ToJson(@object));
+			await _yandexController.Save(JsonUtility.ToJson((GlobalProgress)@object));
 
 			succeededCallback?.Invoke();
 		}
@@ -37,7 +39,7 @@ namespace Sources.Services.DomainServices
 			try
 			{
 				Debug.Log("" + json);
-				IGlobalProgress convertedJson = JsonUtility.FromJson<IGlobalProgress>(json);
+				IGlobalProgress convertedJson = JsonUtility.FromJson<GlobalProgress>(json);
 				succeededCallback.Invoke();
 				return convertedJson;
 			}
@@ -54,9 +56,10 @@ namespace Sources.Services.DomainServices
 			succeededCallback.Invoke();
 		}
 
-		public UniTask Initialize()
+		public async UniTask Initialize()
 		{
-			return UniTask.CompletedTask;
+			await YandexGamesSdk.Initialize();
+			YandexGamesSdk.GameReady();
 		}
 	}
 }

@@ -52,6 +52,7 @@ namespace Sources.Application.Bootstrapp
 		public void Register()
 		{
 			_builder.RegisterEntryPoint<GameBuilder>();
+			Debug.Log("Base services");
 
 #region BaseServices
 
@@ -68,11 +69,15 @@ namespace Sources.Application.Bootstrapp
 
 #endregion
 
+			Debug.Log("Constant names");
+
 #region ConstantNames
 
 			_builder.Register<ProgressConstantNames>(Lifetime.Singleton);
 
 #endregion
+
+			Debug.Log("Providers");
 
 #region Providers
 
@@ -108,6 +113,8 @@ namespace Sources.Application.Bootstrapp
 
 #endregion
 
+			Debug.Log("Factories");
+
 #region Factories
 
 			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Scoped);
@@ -138,13 +145,17 @@ namespace Sources.Application.Bootstrapp
 
 #endregion
 
+			Debug.Log("States");
+
 #region States
 
 			_builder.Register<MenuState>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 			_builder.Register<BuildSceneState>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<GameLoopState>(Lifetime.Singleton);
+			_builder.Register<GameLoopState>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
 #endregion
+
+			Debug.Log("InitializeServicesAndProgress");
 
 #region InitializeServicesAndProgress
 
@@ -170,6 +181,8 @@ namespace Sources.Application.Bootstrapp
 			CreateSceneLoadServices();
 
 #endregion
+
+			Debug.Log("InitializeProgressServices");
 
 #region InitializeProgressServices
 

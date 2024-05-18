@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Sources.Domain.Player;
+using Sources.Domain.Progress;
 using Sources.Domain.Progress.Entities.Values;
+using Sources.Domain.Progress.Player;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.DomainInterfaces.Models.Shop.Upgrades;
@@ -11,7 +14,6 @@ using Sources.Infrastructure.Factories.UpgradeEntitiesConfigs;
 using Sources.Infrastructure.Providers;
 using Sources.Infrastructure.Repository;
 using Sources.InfrastructureInterfaces.Configs;
-using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Repository;
 using Sources.InfrastructureInterfaces.Services;
@@ -23,7 +25,7 @@ using VContainer;
 
 namespace Sources.Infrastructure.Factories
 {
-	[Serializable] public class ProgressFactory : IProgressFactory
+	[Serializable] public class ProgressFactory
 	{
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
@@ -59,19 +61,11 @@ namespace Sources.Infrastructure.Factories
 				throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
 		}
 
-		public async UniTask<IGlobalProgress> Load() =>
-			await _progressSaveLoadDataService.LoadFromCloud();
-
-		public async UniTask Save(IGlobalProgress provider)
-		{
-			if (provider == null) throw new ArgumentNullException(nameof(provider));
-			await _progressSaveLoadDataService.SaveToCloud();
-		}
-
 		public async UniTask Create()
 		{
-			var cloudSaves = await _progressSaveLoadDataService.LoadFromCloud();
+			IGlobalProgress cloudSaves = await _progressSaveLoadDataService.LoadFromCloud();
 
+			Debug.Log("Loaded from cloud");
 			cloudSaves = await CreatNewIfNull(cloudSaves);
 
 			RegisterServices(cloudSaves);
@@ -79,10 +73,15 @@ namespace Sources.Infrastructure.Factories
 
 		private async UniTask<IGlobalProgress> CreatNewIfNull(IGlobalProgress loadedProgress)
 		{
-			if (loadedProgress != null)
-				return loadedProgress;
+			Debug.Log($"Loaded progress is {loadedProgress}");
 
-			Debug.Log("New progress model created");
+			if (loadedProgress != null && loadedProgress.Validate())
+			{
+				Debug.Log("Loaded progress is valid");
+				return loadedProgress;
+			}
+
+			Debug.Log("New progress creating");
 
 			loadedProgress = _progressCleaner.ClearAndSaveCloud();
 
@@ -92,6 +91,9 @@ namespace Sources.Infrastructure.Factories
 
 		private void RegisterServices(IGlobalProgress progress)
 		{
+			if (progress.PlayerModel == null)
+				throw new NullReferenceException(nameof(progress.PlayerModel));
+
 			_playerModelRepositoryProvider.Register(new PlayerModelRepository(progress.PlayerModel));
 
 			var configs = new Dictionary<int, IUpgradeEntityViewConfig>();
@@ -109,20 +111,28 @@ namespace Sources.Infrastructure.Factories
 				configs.Add(id, configList.ReadOnlyItems.ElementAt(i));
 			}
 
+			Debug.Log("register upgrade progress repository provider");
 			RegisterUpgradeProgressRepositoryProvider(entities, configs);
+			Debug.Log("register progress service provider");
 			RegisterProgressServiceProvider(new PersistentProgressService(progress));
+			Debug.Log("registering is done");
 		}
 
 		private void RegisterUpgradeProgressRepositoryProvider(
 			IEnumerable<IUpgradeEntityReadOnly> entities,
 			Dictionary<int, IUpgradeEntityViewConfig> configs
-		) =>
+		)
+		{
+			if (entities == null) throw new ArgumentNullException(nameof(entities));
+			if (configs == null) throw new ArgumentNullException(nameof(configs));
+
 			_upgradeProgressRepositoryProvider.Register(
 				new UpgradeProgressRepository(
 					entities.ToDictionary(entity => entity.ConfigId),
 					configs
 				)
 			);
+		}
 
 		private float GetProgressStatValue(
 			IGlobalProgress progress,

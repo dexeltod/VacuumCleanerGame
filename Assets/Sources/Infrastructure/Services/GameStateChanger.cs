@@ -37,11 +37,11 @@ namespace Sources.Infrastructure.Services
 			state.Enter(payload);
 		}
 
-		private TState ChangeState<TState>() where TState : class, IExitState
+		private TState ChangeState<TState>() where TState : class, IExitableState
 		{
 			_gameStateContainer.ActiveState?.Exit();
 
-			IExitState state = _gameStateMachineRepository.Get<TState>();
+			IExitableState state = _gameStateMachineRepository.Get<TState>();
 			_gameStateContainer.Set(state);
 
 			return (TState)state;
