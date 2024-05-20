@@ -6,7 +6,6 @@ using Sources.ApplicationServicesInterfaces;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Infrastructure;
 using Sources.Infrastructure.Configs.Scripts;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Domain;
@@ -118,11 +117,9 @@ namespace Sources.Application.Bootstrapp
 #region Factories
 
 			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Scoped);
-			_builder
-				.Register<IPresentableFactory<IUpgradeWindowPresentation, IUpgradeWindowPresenter>,
-					UpgradeWindowViewFactory>(
-					Lifetime.Scoped
-				).AsImplementedInterfaces();
+			_builder.Register<IPresentableFactory<IUpgradeWindowPresentation, IUpgradeWindowPresenter>,
+				UpgradeWindowViewFactory>(Lifetime.Scoped).AsImplementedInterfaces();
+
 			_builder.Register<ShopViewFactory>(Lifetime.Scoped);
 
 			_builder.Register<SaveLoaderFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
@@ -176,7 +173,6 @@ namespace Sources.Application.Bootstrapp
 				Lifetime.Singleton
 			).AsImplementedInterfaces().AsSelf();
 
-			RegisterSaveLoader();
 			CreateResourceService();
 			CreateSceneLoadServices();
 
@@ -204,8 +200,6 @@ namespace Sources.Application.Bootstrapp
 #endif
 			_builder.Register<IAdvertisement, EditorAdvertisement>(Lifetime.Singleton);
 		}
-
-		private void RegisterSaveLoader() { }
 
 		private void RegisterCloudSavers()
 		{
@@ -240,15 +234,11 @@ namespace Sources.Application.Bootstrapp
 		{
 			ResourceServiceFactory resourceServiceFactory = new ResourceServiceFactory();
 
-			Dictionary<CurrencyResourceType, IResource<int>> intResources = resourceServiceFactory.GetIntResources();
-			Dictionary<CurrencyResourceType, IResource<float>> floatResources
-				= resourceServiceFactory.GetFloatResources();
-
 			_builder.RegisterInstance<IResourceService>
 			(
 				new ResourcesService(
-					intResources,
-					floatResources
+					resourceServiceFactory.GetIntResources(),
+					resourceServiceFactory.GetFloatResources()
 				)
 			);
 		}

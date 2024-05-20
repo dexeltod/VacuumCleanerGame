@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1939e9f2dd4458481198dce99cb0f3e, type: 3}
+  m_Name: ResourcesPrefabs
+  m_EditorClassIdentifier: 
+  _sceneGameObjects:
+    _spawnPoint: {fileID: 2946206387874077462, guid: 0e369703af2f06c488c2197447624932, type: 3}
+    _sandContainer: {fileID: 0}
+    _virtualCamera: {fileID: 6213712166631354725, guid: eb6c0e82f45805d4594ecc31fd7acf89, type: 3}
+    _mainCamera: {fileID: 7106670647461824093, guid: 3ae2aba3fd61eb74482646b7a37e24dd, type: 3}
+    _upgradeTrigger: {fileID: 0}
+    _sandGround: {fileID: 0}
+    _cameraConfiner: {fileID: 6997036408901680827, guid: fcc8d746ec535ae448d28008e8b27c29, type: 3}
+  _servicesGameObjects:
+    _coroutineRunner: {fileID: 0}
+    _leanLocalization: {fileID: 0}
+  _triggers:
+    _sellTrigger: {fileID: 7684136800631526872, guid: 99a6c1a1ad6b10b4c92a7e5238e083d0, type: 3}

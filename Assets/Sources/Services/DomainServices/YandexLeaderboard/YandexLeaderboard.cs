@@ -34,7 +34,7 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 
 			await UniTask.WaitWhile(() => isResponseReceived == false);
 
-			LeaderboardEntryResponse[] entries = leaderboardResponse.entries;
+			var entries = leaderboardResponse.entries;
 
 			return entries.ToDictionary(
 				response => response.player.scopePermissions.public_name,

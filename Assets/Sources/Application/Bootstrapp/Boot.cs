@@ -18,10 +18,10 @@ namespace Sources.Application.Bootstrapp
 	{
 		protected override void Configure(IContainerBuilder builder)
 		{
-			Debug.Log("Start Boot");
-			base.Configure(builder);
 			Debug.Log("Create ServiceRegister");
+
 			new ServiceRegister(builder).Register();
+
 			Debug.Log("Finish Boot");
 		}
 	}

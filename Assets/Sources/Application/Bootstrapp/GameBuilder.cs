@@ -6,7 +6,6 @@ using Sources.Controllers;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Domain;
-using Sources.Infrastructure.Factories.Player;
 using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using Plugins.CW.LeanLocalization.Required.Scripts;
 using Sources.Services.Localization.Serializable;
 using Sources.ServicesInterfaces;
@@ -69,9 +70,9 @@ namespace Sources.Services.Localization
 						.LeanLocalization
 				);
 
-			string config = assetFactory.LoadFromResources<TextAsset>(ResourcesAssetPath.Configs.Localization).text;
+			var config = assetFactory.LoadFromResources<TextAsset>(ResourcesAssetPath.Configs.Localization);
 
-			localizationData = JsonUtility.FromJson<LocalizationRoot>(config);
+			localizationData = JsonUtility.FromJson<LocalizationRoot>(config.text);
 			return leanLocalization;
 		}
 

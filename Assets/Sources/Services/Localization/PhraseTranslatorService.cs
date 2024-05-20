@@ -22,8 +22,6 @@ namespace Sources.Services.Localization
 
 		public void GetLocalize(string[] phrases)
 		{
-			string[] result = new string[phrases.Length];
-
 			for (int i = 0; i < phrases.Length; i++)
 			{
 				if (string.IsNullOrWhiteSpace(phrases[i]))

@@ -14,7 +14,6 @@ using Sources.InfrastructureInterfaces.Repository;
 using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;
 using Sources.Services.Localization;
-using Sources.ServicesInterfaces;
 using Sources.Utils;
 using UnityEngine;
 using VContainer;
@@ -25,12 +24,10 @@ namespace Sources.Infrastructure.Factories
 	public class ShopViewFactory
 	{
 		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
-		private readonly IAssetFactory _assetFactory;
 		private readonly ITranslatorService _translatorService;
 		private readonly UpgradeWindowPresenterProvider _upgradeWindowPresenterProvider;
 		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfaceProvider;
-		private readonly UpgradeProgressRepositoryProvider _upgradeProgressRepositoryProvider;
 		private readonly IProgressService _progressService;
 		private readonly IPlayerModelRepositoryProvider _playerModelRepositoryProvider;
 		private readonly ISaveLoaderProvider _saveLoaderProvider;
@@ -38,7 +35,6 @@ namespace Sources.Infrastructure.Factories
 		[Inject]
 		public ShopViewFactory(
 			IPersistentProgressServiceProvider persistentProgressService,
-			IAssetFactory assetFactory,
 			ITranslatorService translatorService,
 			UpgradeWindowPresenterProvider upgradeWindowPresenterProvider,
 			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
@@ -55,23 +51,14 @@ namespace Sources.Infrastructure.Factories
 				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
 			_gameplayInterfaceProvider = gameplayInterfaceProvider ??
 				throw new ArgumentNullException(nameof(gameplayInterfaceProvider));
-			_upgradeProgressRepositoryProvider = upgradeProgressRepositoryProvider ??
-				throw new ArgumentNullException(nameof(upgradeProgressRepositoryProvider));
 			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
 			_playerModelRepositoryProvider = playerModelRepositoryProvider ??
 				throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
 			_saveLoaderProvider = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
 			_persistentProgressServiceProvider = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 		}
-
-		private string UIResourcesShopItems => ResourcesAssetPath.Scene.UIResources.ShopItems;
-
-		private IShopModel ShopProgress => _persistentProgressServiceProvider.Self.GlobalProgress.ShopModel;
-
-		private IUpgradeProgressRepository UpgradeProgressRepository => _upgradeProgressRepositoryProvider.Self;
 
 		public Dictionary<int, IUpgradeElementPrefabView> Create(Transform transform)
 		{
