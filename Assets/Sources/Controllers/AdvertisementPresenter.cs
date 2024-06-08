@@ -13,11 +13,28 @@ namespace Sources.Controllers
 		public AdvertisementHandler(IAdvertisement advertisement) =>
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 
-		public override void Enable() =>
+		public override void Enable()
+		{
+			_advertisement.Closed += OnClosed;
+			_advertisement.Rewarded += OnRewarded;
 			_advertisement.Opened += OnAdOpened;
+		}
 
-		public override void Disable() =>
+		public override void Disable()
+		{
+			_advertisement.Closed -= OnClosed;
+			_advertisement.Rewarded -= OnRewarded;
 			_advertisement.Opened -= OnAdOpened;
+		}
+
+		private void OnRewarded() =>
+			OnClosed();
+
+		private void OnClosed()
+		{
+			AudioListener.volume = 1;
+			Time.timeScale = 1;
+		}
 
 		private void OnAdOpened()
 		{

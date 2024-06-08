@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Sources.ServicesInterfaces
 {
-	public interface IAssetFactory
+	public interface IInjectabeAssetFactory
 	{
 		GameObject Instantiate(string path);
 		T LoadComponent<T>(string path);

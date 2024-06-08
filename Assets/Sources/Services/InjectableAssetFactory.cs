@@ -1,12 +1,16 @@
 using System;
 using Sources.ServicesInterfaces;
 using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 using Object = UnityEngine.Object;
 
 namespace Sources.Services
 {
 	public sealed class AssetFactory : IAssetFactory
 	{
+		[Inject] private IObjectResolver _objectResolver;
+
 		public GameObject Instantiate(string path)
 		{
 			GameObject @object = Resources.Load<GameObject>(path) ?? throw new ArgumentNullException(path);
@@ -15,12 +19,16 @@ namespace Sources.Services
 
 			GameObject gameObject = Object.Instantiate(@object);
 
+			_objectResolver.Inject(gameObject);
+
 			return gameObject;
 		}
 
 		public GameObject Instantiate(GameObject gameObject)
 		{
 			GameObject instantiated = Object.Instantiate(gameObject);
+
+			_objectResolver.InjectGameObject(instantiated);
 
 			return instantiated;
 		}
@@ -29,7 +37,7 @@ namespace Sources.Services
 		{
 			GameObject @object = Resources.Load<GameObject>(path) ?? throw new ArgumentNullException(path);
 			CheckPathException(path, @object);
-
+			_objectResolver.Inject(@object);
 			return @object.GetComponent<T>();
 		}
 
@@ -38,6 +46,7 @@ namespace Sources.Services
 			T resource = Resources.Load<T>(path) ?? throw new ArgumentNullException(path);
 			T @object = Object.Instantiate(resource);
 
+			_objectResolver.InjectGameObject(@object.gameObject);
 			CheckPathException(path, @object);
 			return @object;
 		}
@@ -46,6 +55,7 @@ namespace Sources.Services
 		{
 			T component = Object.Instantiate(gameObject).GetComponent<T>();
 
+			_objectResolver.InjectGameObject(component.gameObject);
 			return component;
 		}
 
@@ -57,6 +67,8 @@ namespace Sources.Services
 				Quaternion.identity
 			) ?? throw new ArgumentNullException(path);
 
+			_objectResolver.InjectGameObject(@object.gameObject);
+
 			CheckPathException(path, @object);
 			return @object;
 		}
@@ -65,7 +77,7 @@ namespace Sources.Services
 		{
 			T @object = Resources.Load<T>(path) ?? throw new ArgumentNullException(path);
 			CheckPathException(path, @object);
-
+			_objectResolver.Inject(@object);
 			return @object;
 		}
 
@@ -81,6 +93,8 @@ namespace Sources.Services
 				Quaternion.identity
 			);
 
+			_objectResolver.Inject(@object);
+
 			return gameObject;
 		}
 
@@ -91,6 +105,8 @@ namespace Sources.Services
 				position,
 				Quaternion.identity
 			);
+
+			_objectResolver.Inject(gameObject);
 
 			return gameObject;
 		}

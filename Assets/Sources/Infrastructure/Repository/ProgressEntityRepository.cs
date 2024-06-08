@@ -22,8 +22,7 @@ namespace Sources.Infrastructure.Repository
 		}
 
 		public IUpgradeEntityReadOnly GetEntity(int id) =>
-			_entities[id] ??
-			throw new ArgumentNullException($"{id} not found");
+			_entities[id] ?? throw new ArgumentNullException($"{id} not found");
 
 		public IReadOnlyList<IUpgradeEntityReadOnly> GetEntities() =>
 			_entities.Values.ToList();
@@ -32,24 +31,26 @@ namespace Sources.Infrastructure.Repository
 			_configs.Values.ToList();
 
 		public IUpgradeEntityViewConfig GetConfig(int id) =>
-			_configs[id] ??
-			throw new ArgumentNullException($"{id} not found");
+			_configs[id] ?? throw new ArgumentNullException($"{id} not found");
 
 		public int GetPrice(int id)
 		{
+			if (id <= _configs.Count) throw new ArgumentOutOfRangeException(nameof(id));
+			
 			IUpgradeEntityViewConfig config = _configs[id];
 			IUpgradeEntityReadOnly entity = _entities[id];
 
-			return config.Prices[entity.Value];
+			if (entity.Value >= 0 && entity.Value < config.Prices.Count)
+				return config.Prices[entity.Value];
+
+			throw new ArgumentOutOfRangeException($"Value {entity.Value} out of range", nameof(id));
 		}
 
 		public float GetStatByProgress(int id)
 		{
 			IUpgradeEntityViewConfig config = _configs[id];
 
-			int currentLevel = _entities[id].Value;
-
-			return config.Stats[currentLevel];
+			return config.Stats[_entities[id].Value];
 		}
 
 		public void AddOneLevel(int id) =>
