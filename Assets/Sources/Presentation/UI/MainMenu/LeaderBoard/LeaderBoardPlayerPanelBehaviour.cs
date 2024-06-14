@@ -1,9 +1,10 @@
+using Sources.PresentationInterfaces;
 using TMPro;
 using UnityEngine;
 
 namespace Sources.Presentation.UI.MainMenu.LeaderBoard
 {
-	public class LeaderBoardPlayerPanelBehaviour : MonoBehaviour
+	public class LeaderBoardPlayerPanelBehaviour : MonoBehaviour, ILeaderBoardPlayerPanelBehaviour
 	{
 		[SerializeField] private TextMeshProUGUI _playerName;
 		[SerializeField] private TextMeshProUGUI _playerScore;
@@ -13,5 +14,7 @@ namespace Sources.Presentation.UI.MainMenu.LeaderBoard
 			_playerName.SetText(playerName);
 			_playerScore.SetText(playerScore.ToString());
 		}
+
+		public GameObject GameObject => this.gameObject;
 	}
 }

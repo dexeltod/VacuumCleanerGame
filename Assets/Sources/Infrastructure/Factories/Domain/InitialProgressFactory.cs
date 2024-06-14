@@ -1,16 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Sources.Domain.Progress;
-using Sources.Domain.Progress.Player;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Infrastructure.Factories.Player;
 using Sources.Infrastructure.Providers;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.ServicesInterfaces;
-using Sources.Utils;
 using Sources.Utils.AssetPaths;
 using Sources.Utils.ConstantNames;
 using VContainer;
@@ -27,12 +22,13 @@ namespace Sources.Infrastructure.Factories.Domain
 			IResourceService resourceService,
 			ProgressConstantNames progressConstantNames,
 			IPersistentProgressServiceProvider persistentProgressServiceProvider,
-			UpgradeProgressRepositoryProvider upgradeProgressRepositoryProvider,
+			ProgressEntityRepositoryProvider progressEntityRepositoryProvider,
 			IAssetFactory assetFactory
 		)
 		{
 			_resourceService = resourceService ?? throw new ArgumentNullException(nameof(resourceService));
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetFactory
+				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 		}
 
 		public IGlobalProgress Create()

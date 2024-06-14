@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace Sources.Controllers
 {
-	public sealed class AdvertisementHandler : Presenter, IAdvertisementHandler
+	public sealed class AdvertisementPresenter : Presenter, IAdvertisementPresenter
 	{
 		private readonly IAdvertisement _advertisement;
 
-		public AdvertisementHandler(IAdvertisement advertisement) =>
+		public AdvertisementPresenter(IAdvertisement advertisement) =>
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 
 		public override void Enable()
@@ -32,12 +32,14 @@ namespace Sources.Controllers
 
 		private void OnClosed()
 		{
+			Debug.Log("ad closed/rewarded");
 			AudioListener.volume = 1;
 			Time.timeScale = 1;
 		}
 
 		private void OnAdOpened()
 		{
+			Debug.Log("OnAdOpened");
 			AudioListener.volume = 0;
 			Time.timeScale = 0;
 		}

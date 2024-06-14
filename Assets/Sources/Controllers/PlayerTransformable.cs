@@ -38,8 +38,6 @@ namespace Sources.Controllers
 		{
 			Vector3 joystickDirection = new Vector3(_joystick.Direction.x, 0, _joystick.Direction.y);
 
-			Debug.Log(_speedProgressValue.Value);
-
 			Vector3 direction = joystickDirection * (_speedProgressValue.Value * deltaTime);
 			_offset = Transform.position + direction;
 

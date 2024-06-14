@@ -11,7 +11,8 @@ namespace Sources.Infrastructure.Services
 		private readonly LevelsConfig _levelConfigs;
 
 		public LevelConfigGetter(IAssetFactory assetFactory) =>
-			_levelConfigs = assetFactory.LoadFromResources<LevelsConfig>(ResourcesAssetPath.Configs.LevelsConfig);
+			_levelConfigs
+				= assetFactory.LoadFromResources<LevelsConfig>(ResourcesAssetPath.Configs.LevelsConfig);
 
 		public ILevelConfig GetOrDefault(int levelNumber) =>
 			_levelConfigs.GetOrDefault(levelNumber);

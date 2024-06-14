@@ -7,12 +7,12 @@ using Sources.InfrastructureInterfaces.Repository;
 
 namespace Sources.Infrastructure.Repository
 {
-	public sealed class UpgradeProgressRepository : IUpgradeProgressRepository
+	public sealed class ProgressEntityRepository : IProgressEntityRepository
 	{
 		private readonly Dictionary<int, IUpgradeEntityReadOnly> _entities;
 		private readonly Dictionary<int, IUpgradeEntityViewConfig> _configs;
 
-		public UpgradeProgressRepository(
+		public ProgressEntityRepository(
 			Dictionary<int, IUpgradeEntityReadOnly> entities,
 			Dictionary<int, IUpgradeEntityViewConfig> configs
 		)
@@ -35,13 +35,17 @@ namespace Sources.Infrastructure.Repository
 
 		public int GetPrice(int id)
 		{
-			if (id <= _configs.Count) throw new ArgumentOutOfRangeException(nameof(id));
-			
+			if (id >= _configs.Count || id < 0)
+				throw new ArgumentOutOfRangeException(nameof(id));
+
 			IUpgradeEntityViewConfig config = _configs[id];
 			IUpgradeEntityReadOnly entity = _entities[id];
 
 			if (entity.Value >= 0 && entity.Value < config.Prices.Count)
 				return config.Prices[entity.Value];
+
+			if (entity.Value - 1 >= 0 && entity.Value - 1 < config.Prices.Count)
+				return config.Prices[entity.Value - 1];
 
 			throw new ArgumentOutOfRangeException($"Value {entity.Value} out of range", nameof(id));
 		}

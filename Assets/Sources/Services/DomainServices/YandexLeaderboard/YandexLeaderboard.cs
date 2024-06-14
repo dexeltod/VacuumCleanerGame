@@ -37,7 +37,7 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 			var entries = leaderboardResponse.entries;
 
 			return entries.ToDictionary(
-				response => response.player.scopePermissions.public_name,
+				response => response.player.publicName,
 				response => response.score
 			);
 		}
@@ -45,7 +45,6 @@ namespace Sources.Services.DomainServices.YandexLeaderboard
 		public async UniTask AddScore(int newScore)
 		{
 			bool isResponseReceived = false;
-
 			LeaderboardEntryResponse player = await GetPlayerEntry();
 
 			Leaderboard.SetScore(BoardName, player.score + newScore, () => isResponseReceived = true);

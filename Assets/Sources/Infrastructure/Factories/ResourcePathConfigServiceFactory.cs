@@ -14,7 +14,8 @@ namespace Sources.Infrastructure.Factories
 		public ResourcePathConfigServiceFactory(
 			IAssetFactory assetFactory
 		) =>
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetFactory
+				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 
 		public override ResourcesPrefabs Create() =>
 			_assetFactory.LoadFromResources<ResourcesPrefabs>(ResourcePathConfigServicePath);

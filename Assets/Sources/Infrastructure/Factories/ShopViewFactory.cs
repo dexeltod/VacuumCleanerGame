@@ -14,6 +14,7 @@ using Sources.InfrastructureInterfaces.Repository;
 using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;
 using Sources.Services.Localization;
+using Sources.ServicesInterfaces;
 using Sources.Utils;
 using UnityEngine;
 using VContainer;
@@ -28,9 +29,10 @@ namespace Sources.Infrastructure.Factories
 		private readonly UpgradeWindowPresenterProvider _upgradeWindowPresenterProvider;
 		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfaceProvider;
-		private readonly IProgressService _progressService;
+		private readonly IProgressEntityRepositoryProvider _progressEntityRepository;
 		private readonly IPlayerModelRepositoryProvider _playerModelRepositoryProvider;
 		private readonly ISaveLoaderProvider _saveLoaderProvider;
+		private readonly IAssetFactory _assetFactory;
 
 		[Inject]
 		public ShopViewFactory(
@@ -39,10 +41,10 @@ namespace Sources.Infrastructure.Factories
 			UpgradeWindowPresenterProvider upgradeWindowPresenterProvider,
 			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
 			IGameplayInterfacePresenterProvider gameplayInterfaceProvider,
-			UpgradeProgressRepositoryProvider upgradeProgressRepositoryProvider,
-			IProgressService progressService,
+			IProgressEntityRepositoryProvider progressEntityRepository,
 			IPlayerModelRepositoryProvider playerModelRepositoryProvider,
-			ISaveLoaderProvider saveLoaderProvider
+			ISaveLoaderProvider saveLoaderProvider,
+			IAssetFactory assetFactory
 		)
 		{
 			_upgradeWindowPresenterProvider = upgradeWindowPresenterProvider ??
@@ -51,27 +53,32 @@ namespace Sources.Infrastructure.Factories
 				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
 			_gameplayInterfaceProvider = gameplayInterfaceProvider ??
 				throw new ArgumentNullException(nameof(gameplayInterfaceProvider));
-			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
+			_progressEntityRepository = progressEntityRepository ??
+				throw new ArgumentNullException(nameof(progressEntityRepository));
 			_playerModelRepositoryProvider = playerModelRepositoryProvider ??
 				throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
 			_saveLoaderProvider = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
+			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_persistentProgressServiceProvider = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 		}
 
-		public Dictionary<int, IUpgradeElementPrefabView> Create(Transform transform)
-		{
-			IReadOnlyList<IUpgradeEntityViewConfig> configs = _progressService.GetConfigs();
-			IReadOnlyList<IUpgradeEntityReadOnly> entities = _progressService.GetEntities();
+		private IProgressEntityRepository ProgressEntityRepository => _progressEntityRepository.Self;
 
-			return Instantiate(transform, configs, entities);
+		public Dictionary<int, IUpgradeElementPrefabView> Create(Transform transform, AudioSource audioSource)
+		{
+			IReadOnlyList<IUpgradeEntityViewConfig> configs = ProgressEntityRepository.GetConfigs();
+			IReadOnlyList<IUpgradeEntityReadOnly> entities = ProgressEntityRepository.GetEntities();
+
+			return Instantiate(transform, configs, entities, audioSource);
 		}
 
 		private Dictionary<int, IUpgradeElementPrefabView> Instantiate(
 			Component transform,
 			IReadOnlyList<IUpgradeEntityViewConfig> configs,
-			IReadOnlyList<IUpgradeEntityReadOnly> entities
+			IReadOnlyList<IUpgradeEntityReadOnly> entities,
+			AudioSource audioSource
 		)
 		{
 			Dictionary<int, IUpgradeElementPrefabView> views = new();
@@ -92,10 +99,13 @@ namespace Sources.Infrastructure.Factories
 				_persistentProgressServiceProvider,
 				_upgradeWindowPresenterProvider,
 				_gameplayInterfaceProvider,
-				_progressService,
+				ProgressEntityRepository,
 				_saveLoaderProvider.Self,
 				_resourcesProgressPresenterProvider,
-				_playerModelRepositoryProvider
+				_playerModelRepositoryProvider,
+				_assetFactory.LoadFromResources<AudioClip>(ResourcesAssetPath.SoundNames.SoundBuy),
+				_assetFactory.LoadFromResources<AudioClip>(ResourcesAssetPath.SoundNames.SoundClose),
+				audioSource
 			);
 
 			for (int i = 0; i < views.Count; i++)
@@ -115,7 +125,7 @@ namespace Sources.Infrastructure.Factories
 					translatedDescription,
 					configId,
 					upgrade.Value,
-					_progressService.GetPrice(configId),
+					ProgressEntityRepository.GetPrice(configId),
 					upgradeEntityViewConfig.MaxProgressCount
 				);
 			}

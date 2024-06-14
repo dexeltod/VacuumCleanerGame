@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Sources.ServicesInterfaces
 {
-	public interface IInjectabeAssetFactory
+	public interface IAssetFactory
 	{
 		GameObject Instantiate(string path);
 		T LoadComponent<T>(string path);
@@ -11,7 +11,9 @@ namespace Sources.ServicesInterfaces
 		GameObject Instantiate(GameObject instanceObject, Vector3 position);
 		T InstantiateAndGetComponent<T>(string path) where T : Behaviour;
 		T InstantiateAndGetComponent<T>(string path, Vector3 position) where T : Behaviour;
+		T InstantiateAndGetComponent<T>(string path, Transform transform) where T : Behaviour;
 		GameObject Instantiate(GameObject gameObject);
 		T InstantiateAndGetComponent<T>(GameObject gameObject) where T : Behaviour;
+		GameObject Instantiate(GameObject instanceObject, Transform transform);
 	}
 }

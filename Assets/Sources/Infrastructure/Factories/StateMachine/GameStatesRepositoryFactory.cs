@@ -32,14 +32,11 @@ namespace Sources.Infrastructure.Factories.StateMachine
 		public override GameStateMachineRepository Create()
 		{
 			var gameStatesRepository = new GameStateMachineRepository();
-			Debug.Log("gameStatesRepository.Set(_resolver.Resolve<MenuState>())");
 			gameStatesRepository.Set(_menuState as IMenuState);
 
-			Debug.Log("gameStatesRepository.Set(_resolver.Resolve<BuildSceneState>())");
 			gameStatesRepository.Set(_buildSceneState as IBuildSceneState);
 
-			Debug.Log("gameStatesRepository.Set(_resolver.Resolve<GameLoopState>())");
-			gameStatesRepository.Set(_gameLoopState as IGameState);
+			gameStatesRepository.Set(_gameLoopState);
 
 			return gameStatesRepository;
 		}

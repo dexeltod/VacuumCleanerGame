@@ -17,7 +17,7 @@ namespace Sources.Infrastructure.Repository
 			throw new ArgumentNullException($"State of type {typeof(TState)} not found");
 		}
 
-		public void Set<TState>(TState state) where TState : IExitableState
+		public void Set<TState>(TState state) where TState : class, IExitableState
 		{
 			if (state == null)
 				throw new ArgumentNullException(nameof(state));

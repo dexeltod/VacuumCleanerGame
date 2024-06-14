@@ -18,6 +18,10 @@ namespace Sources.Presentation.UI
 		[SerializeField] private Button _deleteSavesButton;
 		[SerializeField] private Button _addScoreButton;
 		[SerializeField] private Button _leaderboardButton;
+		[SerializeField] private Button _settingsButton;
+		[SerializeField] private Button _addButton;
+
+		[SerializeField] private GameObject _leaderBoardView;
 
 		[FormerlySerializedAs("_translatorBehaviour")] [SerializeField]
 		private TextPhrases _translator;
@@ -29,11 +33,12 @@ namespace Sources.Presentation.UI
 		public Button DeleteSavesButton => _deleteSavesButton;
 		public Button AddScoreButton => _addScoreButton;
 		public Button LeaderboardButton => _leaderboardButton;
+		public Button SettingsButton => _settingsButton;
+		public GameObject LeaderBoardView => _leaderBoardView;
+		public Button AddButton => _addButton;
 
-		public override void Enable()
-		{
+		public override void Enable() =>
 			_playButtonTween ??= CustomTweeners.StartPulseLocal(_playButton.transform);
-		}
 
 		public override void Disable() =>
 			_playButtonTween.Kill();

@@ -19,11 +19,13 @@ namespace Sources.Presentation.UI.Shop
 
 		[SerializeField] private Button _closeMenuButton;
 		[SerializeField] private GameObject _upgradeWindowMain;
+		[SerializeField] private AudioSource _audio;
 
 		private IUpgradeWindowActivator _activator;
 
 		public Button CloseMenuButton => _closeMenuButton;
 		public GameObject UpgradeWindowMain => _upgradeWindowMain;
+		public AudioSource AudioSource => _audio;
 
 		public Transform ContainerTransform => _content.transform;
 

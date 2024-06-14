@@ -3,9 +3,7 @@ using Sources.Controllers;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Configs.Scripts;
-using Sources.Infrastructure.Configs.Scripts.Level;
 using Sources.Infrastructure.Factories;
-using Sources.Infrastructure.Factories.Player;
 using Sources.Infrastructure.Factories.Presenters;
 using Sources.Infrastructure.Factories.Scene;
 using Sources.Infrastructure.Factories.UI;
@@ -38,6 +36,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IPersistentProgressServiceProvider _persistentProgress;
 		private readonly IAssetFactory _assetFactory;
+		private readonly IInjectableAssetFactory _injectableAssetFactory;
 		private readonly CoroutineRunnerFactory _coroutineRunnerFactory;
 		private readonly UpgradeWindowPresenterProvider _upgradeWindowPresenterProvider;
 		private readonly ResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
@@ -75,6 +74,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			IResourcesProgressPresenterProvider resourcesProgress,
 			IPersistentProgressServiceProvider persistentProgress,
 			IAssetFactory assetFactory,
+			IInjectableAssetFactory injectableAssetFactory,
 			CoroutineRunnerFactory coroutineRunnerFactory,
 			UpgradeWindowPresenterProvider upgradeWindowPresenterProvider,
 			ResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
@@ -116,6 +116,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				throw new ArgumentNullException(nameof(persistentProgress));
 			_assetFactory = assetFactory ??
 				throw new ArgumentNullException(nameof(assetFactory));
+			_injectableAssetFactory = injectableAssetFactory ??
+				throw new ArgumentNullException(nameof(injectableAssetFactory));
 			_coroutineRunnerFactory = coroutineRunnerFactory ??
 				throw new ArgumentNullException(nameof(coroutineRunnerFactory));
 			_sceneLoader = sceneLoader ??
@@ -152,7 +154,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 		private GameObject SpawnPoint => _resourcePathNameConfigProvider.Self.SceneGameObjects.SpawnPoint;
 		private ResourcesPrefabs ResourcesPrefabs => _resourcePathNameConfigProvider.Self;
-		private GameObject SellTrigger => ResourcesPrefabs.Triggers.SellTrigger;
+		private GameObject SellTrigger => ResourcesPrefabs.Triggers.SellTrigger.gameObject;
 
 		public async void Enter(ILevelConfig payload)
 		{
@@ -164,7 +166,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 		private void Build()
 		{
-			_assetFactory.Instantiate(SellTrigger);
+			_injectableAssetFactory.Instantiate(SellTrigger);
 			_coroutineRunnerProvider.Register(_coroutineRunnerFactory.Create());
 
 			_gameplayInterfacePresenterFactory.Create();

@@ -35,6 +35,9 @@ namespace Sources.Infrastructure.Adapters
 			_yandexServiceSdkFacade.Authorize();
 
 		public bool IsAuthorized => _yandexServiceSdkFacade.IsAuthorized;
+
+		public string GetPlayerLanguage() =>
+			_yandexServiceSdkFacade.GetPlayerLanguage();
 	}
 #endif
 }

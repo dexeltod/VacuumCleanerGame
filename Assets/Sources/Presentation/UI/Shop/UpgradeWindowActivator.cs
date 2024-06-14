@@ -14,6 +14,7 @@ namespace Sources.Presentation.UI.Shop
 		[SerializeField] private Button _yes;
 		[SerializeField] private Button _no;
 		[SerializeField] private GameObject _container;
+		[SerializeField] private AudioSource _audioSource;
 		private IUpgradeWindowPresenter _presenter;
 		private IUpgradeTriggerObserver _upgradeTrigger;
 
@@ -25,6 +26,7 @@ namespace Sources.Presentation.UI.Shop
 			_upgradeTrigger = upgradeTrigger ?? throw new ArgumentNullException(nameof(upgradeTrigger));
 			_presenter = upgradeWindowPresentation ??
 				throw new ArgumentNullException(nameof(upgradeWindowPresentation));
+
 			_yes.onClick.AddListener(OnYes);
 			_no.onClick.AddListener(OnNo);
 
@@ -41,11 +43,15 @@ namespace Sources.Presentation.UI.Shop
 		private void OnEnter(bool isActive) =>
 			_container.SetActive(isActive);
 
-		private void OnNo() =>
+		private void OnNo()
+		{
+			_audioSource.Play();
 			_container.SetActive(false);
+		}
 
 		private void OnYes()
 		{
+			_audioSource.Play();
 			_presenter.EnableWindow();
 			_container.SetActive(false);
 		}

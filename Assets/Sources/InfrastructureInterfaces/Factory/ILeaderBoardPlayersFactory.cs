@@ -5,3 +5,5 @@ namespace Sources.InfrastructureInterfaces.Factory
 	public interface ILeaderBoardPlayersFactory
 	{
 		UniTask Create();
+	}
+}

@@ -1,4 +1,5 @@
 using System;
+using Sources.Services.Triggers;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Services
@@ -15,9 +16,9 @@ namespace Sources.Infrastructure.Services
 
 	[Serializable] public class Triggers
 	{
-		[SerializeField] private GameObject _sellTrigger;
+		[SerializeField] private TriggerReloadController _sellTrigger;
 
-		public GameObject SellTrigger => _sellTrigger;
+		public TriggerReloadController SellTrigger => _sellTrigger;
 	}
 
 	[Serializable] public class SceneGameObjects
@@ -38,7 +39,4 @@ namespace Sources.Infrastructure.Services
 		public GameObject SandGround => _sandGround;
 		public GameObject CameraConfiner => _cameraConfiner;
 	}
-
-
-	
 }

@@ -2,6 +2,6 @@ namespace Sources.Utils.ConstantNames
 {
 	public class SoundMixerNames
 	{
-		public const string MasterVolume = "Master";
+		public readonly string MasterVolume = "Master";
 	}
 }

@@ -1,4 +1,9 @@
+using UnityEngine;
+
 namespace Sources.PresentationInterfaces
 {
-	public interface ILeaderBoardPlayerPanelBehaviour { }
+	public interface ILeaderBoardPlayerPanelBehaviour
+	{
+		GameObject GameObject { get; }
+	}
 }

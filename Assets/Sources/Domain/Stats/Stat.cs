@@ -53,7 +53,7 @@ namespace Sources.Domain.Stats
 			Changed?.Invoke();
 		}
 
-		public void Clear() =>
+		public void SetDefault() =>
 			_value = _startValue;
 
 		public void Set(float value)

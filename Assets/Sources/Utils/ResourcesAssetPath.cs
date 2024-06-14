@@ -8,5 +8,6 @@ namespace Sources.Utils
 		public static readonly GameObjects GameObjects = new();
 		public static readonly Materials Materials = new();
 		public static readonly Configs Configs = new();
+		public static readonly SoundNames SoundNames = new();
 	}
 }

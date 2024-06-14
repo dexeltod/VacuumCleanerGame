@@ -18,6 +18,15 @@ namespace Sources.Services
 			return gameObject;
 		}
 
+		public T InstantiateAndGetComponent<T>(string path, Transform transform) where T : Behaviour
+		{
+			T resource = Resources.Load<T>(path) ?? throw new ArgumentNullException(path);
+			T @object = Object.Instantiate(resource, transform);
+
+			CheckPathException(path, @object);
+			return @object;
+		}
+
 		public GameObject Instantiate(GameObject gameObject)
 		{
 			GameObject instantiated = Object.Instantiate(gameObject);
@@ -91,6 +100,13 @@ namespace Sources.Services
 				position,
 				Quaternion.identity
 			);
+
+			return gameObject;
+		}
+
+		public GameObject Instantiate(GameObject instanceObject, Transform transform)
+		{
+			GameObject gameObject = Object.Instantiate(instanceObject, transform);
 
 			return gameObject;
 		}

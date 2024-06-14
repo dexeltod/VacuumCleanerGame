@@ -2,6 +2,7 @@ using Sources.ControllersInterfaces;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Sources.Presentation
@@ -14,7 +15,11 @@ namespace Sources.Presentation
 
 		[SerializeField] private GameObject _menuWindow;
 
+		[FormerlySerializedAs("_audio")] [SerializeField]
+		private AudioSource _audioSource;
+
 		public Button OpenMenuButton => _openMenuButton;
+		public AudioSource AudioSourceSource => _audioSource;
 
 		public override void Enable()
 		{
@@ -32,11 +37,15 @@ namespace Sources.Presentation
 			_closeMenuButton.onClick.RemoveListener(() => OnSetActiveMenuWindow(false));
 		}
 
-		private void OnGoToMainMenu() =>
+		private void OnGoToMainMenu()
+		{
+			_audioSource.Play();
 			Presenter.GoToMainMenu();
+		}
 
 		private void OnSetActiveMenuWindow(bool isActive)
 		{
+			_audioSource.Play();
 			_openMenuButton.gameObject.SetActive(!isActive);
 			_menuWindow.gameObject.SetActive(isActive);
 		}

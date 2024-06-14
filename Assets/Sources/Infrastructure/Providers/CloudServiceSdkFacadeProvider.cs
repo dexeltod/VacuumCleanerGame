@@ -3,5 +3,5 @@ using Sources.InfrastructureInterfaces;
 
 namespace Sources.Infrastructure.Providers
 {
-	public class CloudServiceSdkFacadeProvider : Provider<ICloudPlayerDataService> { }
+	public class CloudServiceSdkFacadeProvider : Provider<ICloudServiceSdkFacade> { }
 }

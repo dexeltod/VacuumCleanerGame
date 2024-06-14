@@ -5,10 +5,10 @@ using Sources.Controllers.Shop;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.DomainInterfaces.Models.Shop.Upgrades;
-using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
+using Sources.InfrastructureInterfaces.Repository;
 using Sources.PresentationInterfaces;
-using Sources.ServicesInterfaces;
+using UnityEngine;
 
 namespace Sources.Controllers
 {
@@ -18,21 +18,26 @@ namespace Sources.Controllers
 		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
 		private readonly IUpgradeWindowPresenterProvider _upgradeWindowPresenter;
 		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
-		private readonly IProgressService _progressService;
+		private readonly IProgressEntityRepository _progressEntityRepository;
 		private readonly ISaveLoader _saveLoader;
+		private readonly AudioSource _audioSource;
 
 		private readonly ShopPurchaseController _shopPurchaseController;
 		private IReadOnlyList<IUpgradeEntityReadOnly> _entities;
+		private readonly GameplayInterfaceSoundPlayer _gameplayInterfaceSoundPlayer;
 
 		public UpgradeElementPresenter(
 			Dictionary<int, IUpgradeElementChangeableView> panel,
 			IPersistentProgressServiceProvider persistentProgressServiceProvider,
 			IUpgradeWindowPresenterProvider upgradeWindowPresenter,
 			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
-			IProgressService upgradeProgressRepository,
+			IProgressEntityRepository progressEntityRepository,
 			ISaveLoader saveLoader,
 			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
-			IPlayerModelRepositoryProvider playerModelRepositoryProvider
+			IPlayerModelRepositoryProvider playerModelRepositoryProvider,
+			AudioClip soundBuy,
+			AudioClip soundClose,
+			AudioSource audioSource
 		)
 		{
 			_upgradeElementChangeableViews = panel ?? throw new ArgumentNullException(nameof(panel));
@@ -42,15 +47,19 @@ namespace Sources.Controllers
 				throw new ArgumentNullException(nameof(upgradeWindowPresenter));
 			_gameplayInterfacePresenterProvider = gameplayInterfacePresenterProvider ??
 				throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
-			_progressService = upgradeProgressRepository ??
-				throw new ArgumentNullException(nameof(upgradeProgressRepository));
+			_progressEntityRepository = progressEntityRepository ??
+				throw new ArgumentNullException(nameof(progressEntityRepository));
 			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
+			_audioSource = audioSource ?? throw new ArgumentNullException(nameof(audioSource));
 
 			_shopPurchaseController = new ShopPurchaseController(
-				_progressService,
+				_progressEntityRepository,
 				resourcesProgressPresenterProvider.Self,
-				playerModelRepositoryProvider.Self
+				playerModelRepositoryProvider.Self,
+				_audioSource
 			);
+
+			_gameplayInterfaceSoundPlayer = new GameplayInterfaceSoundPlayer(soundBuy, soundClose, audioSource);
 		}
 
 		private IUpgradeWindowPresenter UpgradeWindowPresenter => _upgradeWindowPresenter.Self;
@@ -59,12 +68,14 @@ namespace Sources.Controllers
 			_persistentProgressServiceProvider.Self
 				.GlobalProgress.ResourceModelReadOnly.SoftCurrency.Value;
 
-		public void Upgrade(int id)
+		public async void Upgrade(int id)
 		{
 			if (_shopPurchaseController.TryAddOneProgressPoint(id) == false)
 				throw new InvalidOperationException("Failed to add progress point");
 
-			_saveLoader.Save(_persistentProgressServiceProvider.Self.GlobalProgress);
+			_gameplayInterfaceSoundPlayer.PlayBuySound();
+
+			await _saveLoader.Save(_persistentProgressServiceProvider.Self.GlobalProgress);
 			SetView(id);
 		}
 
@@ -73,7 +84,7 @@ namespace Sources.Controllers
 			IUpgradeElementChangeableView panel = _upgradeElementChangeableViews[id];
 
 			panel.AddProgressPointColor();
-			panel.SetPriceText(_progressService.GetPrice(id));
+			panel.SetPriceText(_progressEntityRepository.GetPrice(id));
 
 			UpgradeWindowPresenter.SetMoney(Money);
 			_gameplayInterfacePresenterProvider.Self.SetSoftCurrency(Money);
@@ -81,24 +92,20 @@ namespace Sources.Controllers
 
 		public override void Enable()
 		{
-			_entities = _progressService.GetEntities();
+			_entities = _progressEntityRepository.GetEntities();
 
 			foreach (IUpgradeEntityReadOnly entity in _entities)
-				entity.CurrentLevel.Changed += OnLevelChanged;
+				entity.LevelProgress.Changed += LevelProgressChanged;
 		}
 
 		public override void Disable()
 		{
-			_entities = _progressService.GetEntities();
+			_entities = _progressEntityRepository.GetEntities();
 
 			foreach (IUpgradeEntityReadOnly entity in _entities)
-				entity.CurrentLevel.Changed -= OnLevelChanged;
+				entity.LevelProgress.Changed -= LevelProgressChanged;
 		}
 
-		private void OnLevelChanged()
-		{
-			// TODO: ЗАБЫЛ ЧЕ Я ТУТ ХОТЕЛ СДЕЛАТЬ
-			throw new NotImplementedException();
-		}
+		private void LevelProgressChanged() { }
 	}
 }

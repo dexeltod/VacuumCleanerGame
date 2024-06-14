@@ -4,6 +4,7 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
+using UnityEngine.Events;
 
 namespace Sources.Controllers
 {
@@ -64,6 +65,7 @@ namespace Sources.Controllers
 
 		private async void OnClose()
 		{
+			_upgradeWindowPresentation.AudioSource.Play();
 			_upgradeWindowPresentation.UpgradeWindowMain.SetActive(false);
 
 			if (_isCanSave == false)

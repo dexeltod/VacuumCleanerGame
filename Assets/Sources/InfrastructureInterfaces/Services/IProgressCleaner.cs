@@ -4,6 +4,6 @@ namespace Sources.InfrastructureInterfaces.Services
 {
 	public interface IProgressCleaner
 	{
-		IGlobalProgress ClearAndSaveCloud();
+		IGlobalProgress Clear();
 	}
 }

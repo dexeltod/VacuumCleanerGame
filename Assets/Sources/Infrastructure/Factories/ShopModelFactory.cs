@@ -17,7 +17,8 @@ namespace Sources.Infrastructure.Factories
 		private Dictionary<int, UpgradeEntity> _entitiesByName;
 
 		public ShopModelFactory(IAssetFactory assetFactor) =>
-			_assetFactory = assetFactor ?? throw new ArgumentNullException(nameof(assetFactor));
+			_assetFactory
+				= assetFactor ?? throw new ArgumentNullException(nameof(assetFactor));
 
 		private string ShopItems => ResourcesAssetPath.Configs.ShopItems;
 

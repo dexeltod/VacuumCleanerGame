@@ -8,9 +8,7 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.Entities;
 using Sources.Infrastructure.Common.Factory.Decorators;
-using Sources.Infrastructure.Configs.Scripts;
 using Sources.Infrastructure.Services.Decorators;
-using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Repository;
 using Sources.InfrastructureInterfaces.Services;
@@ -53,13 +51,12 @@ namespace Sources.Infrastructure.Factories.UI
 			IGameStateChangerProvider gameStateChanger,
 			ICoroutineRunnerProvider coroutineRunnerProvider,
 			IAdvertisement advertisement,
-			ILevelProgressFacade levelProgressFacade,
-			IProgressService progressService,
 			IPlayerModelRepositoryProvider playerModelRepositoryProvider
 		)
 
 		{
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetFactory
+				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_persistentProgressServiceProvider = persistentProgressService ??
 				throw new ArgumentNullException(nameof(persistentProgressService));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));

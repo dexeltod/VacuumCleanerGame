@@ -1,6 +1,4 @@
-using Sources.Controllers;
 using Sources.ControllersInterfaces;
-using Sources.InfrastructureInterfaces;
 using Sources.Presentation;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
@@ -11,9 +9,6 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 	public class EditorAuthorizationView : PresentableCanvas<IAuthorizationPresenter>, IAuthorizationView
 	{
 		[SerializeField] private ChooseWindow _chooseWindow;
-
-		private ICloudPlayerDataService _cloudPlayerDataService;
-		private AuthorizationPresenter _authorizationPresenter;
 
 		public override void Enable()
 		{

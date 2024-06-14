@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Sources.Infrastructure.Factories.LeaderBoard
 {
-	public class LeaderBoardFactory : ILeaderBoardFactory
+	public class LeaderBoardPlayersFactory : ILeaderBoardPlayersFactory
 	{
 		private const int LeaderBoardPlayersCount = 5;
 		private const string AnonymousPlayerName = "Anonymous";
@@ -21,7 +21,7 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 		private readonly ITranslatorService _translatorService;
 		private readonly LeaderBoardView _leaderBoardView;
 
-		public LeaderBoardFactory(
+		public LeaderBoardPlayersFactory(
 			IAssetFactory assetFactory,
 			LeaderBoardView leaderBoardView,
 			ILeaderBoardService leaderBoardService,
@@ -39,12 +39,12 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 		public async UniTask Create()
 		{
 #if YANDEX_CODE
-		Dictionary<string, int> leaders = await _leaderBoardService.GetLeaders(LeaderBoardPlayersCount);
+			Dictionary<string, int> leaders = await _leaderBoardService.GetLeaders(LeaderBoardPlayersCount);
 #endif
-#if UNITY_EDITOR
+#if !YANDEX_CODE
 			Dictionary<string, int> leaders = GetTestLeads();
-
 #endif
+
 			if (leaders == null) throw new ArgumentNullException(nameof(leaders));
 
 			List<KeyValuePair<string, int>> sortedLeaders = leaders.ToList();
@@ -57,12 +57,12 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 				int score = player.Value;
 
 				Transform containerTransform = _leaderBoardView.Container;
-				GameObject playerPanelGameObject = _leaderBoardView.PlayerPanel.gameObject;
+				GameObject playerPanelGameObject = _leaderBoardView.PlayerPanel.GameObject;
 
-				LeaderBoardPlayerPanelBehaviour panel = _assetFactory.Instantiate(playerPanelGameObject)
-					.GetComponent<LeaderBoardPlayerPanelBehaviour>();
-
-				panel.transform.SetParent(containerTransform);
+				LeaderBoardPlayerPanelBehaviour panel = _assetFactory.Instantiate(
+					playerPanelGameObject,
+					containerTransform
+				).GetComponent<LeaderBoardPlayerPanelBehaviour>();
 
 				if (string.IsNullOrWhiteSpace(name))
 				{

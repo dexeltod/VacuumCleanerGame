@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace Sources.Services
 {
-	public sealed class AssetFactory : IAssetFactory
+	public sealed class InjectableAssetFactory : IInjectableAssetFactory
 	{
 		[Inject] private IObjectResolver _objectResolver;
 
@@ -59,12 +59,37 @@ namespace Sources.Services
 			return component;
 		}
 
+		public GameObject Instantiate(GameObject instanceObject, Transform transform)
+		{
+			GameObject gameObject = Object.Instantiate(
+				instanceObject,
+				transform
+			);
+
+			_objectResolver.Inject(gameObject);
+
+			return gameObject;
+		}
+
 		public T InstantiateAndGetComponent<T>(string path, Vector3 position) where T : Behaviour
 		{
 			T @object = Object.Instantiate(
 				Resources.Load<T>(path),
 				position,
 				Quaternion.identity
+			) ?? throw new ArgumentNullException(path);
+
+			_objectResolver.InjectGameObject(@object.gameObject);
+
+			CheckPathException(path, @object);
+			return @object;
+		}
+
+		public T InstantiateAndGetComponent<T>(string path, Transform position) where T : Behaviour
+		{
+			T @object = Object.Instantiate(
+				Resources.Load<T>(path),
+				position
 			) ?? throw new ArgumentNullException(path);
 
 			_objectResolver.InjectGameObject(@object.gameObject);

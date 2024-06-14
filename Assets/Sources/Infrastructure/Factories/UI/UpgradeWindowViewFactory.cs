@@ -33,7 +33,8 @@ namespace Sources.Infrastructure.Factories.UI
 			ShopViewFactory shopViewFactory
 		)
 		{
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetFactory
+				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 			_shopViewFactory = shopViewFactory ?? throw new ArgumentNullException(nameof(shopViewFactory));
 		}
@@ -46,7 +47,7 @@ namespace Sources.Infrastructure.Factories.UI
 			_upgradeWindowPresentation = GetPresentation();
 
 			Localize();
-			_shopViewFactory.Create(UpgradeWindowContainerTransform);
+			_shopViewFactory.Create(UpgradeWindowContainerTransform, _upgradeWindowPresentation.AudioSource);
 
 			return _upgradeWindowPresentation;
 		}

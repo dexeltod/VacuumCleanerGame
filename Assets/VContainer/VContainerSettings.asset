@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RootLifetimeScope: {fileID: 4196954941615519611, guid: 428fabd4cccdcea42be3a9c32d09b456, type: 3}
   EnableDiagnostics: 0
-  DisableScriptModifier: 1
+  DisableScriptModifier: 0
   RemoveClonePostfix: 0

@@ -5,7 +5,7 @@ namespace Sources.DomainInterfaces.Entities
 		void Set(float value);
 		void Increase(float value);
 		void Decrease(float value);
-		void Clear();
+		void SetDefault();
 		void Enable();
 		void Disable();
 	}

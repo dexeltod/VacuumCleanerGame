@@ -3,5 +3,5 @@ using Sources.InfrastructureInterfaces.Repository;
 
 namespace Sources.InfrastructureInterfaces.Providers
 {
-	public interface IProgressEntityRepositoryProvider : IProvider<IUpgradeProgressRepository> { }
+	public interface IProgressEntityRepositoryProvider : IProvider<IProgressEntityRepository> { }
 }

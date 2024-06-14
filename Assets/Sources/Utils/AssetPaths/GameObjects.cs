@@ -8,5 +8,7 @@ namespace Sources.Utils.AssetPaths
 		public readonly string ResourceSpawnPosition = "Game/Environment/ResourceSpawnPosition";
 		public readonly string LeanLocalization = "Localization/LeanLocalization";
 		public readonly string UpgradeTrigger = "Game/Environment/UpgradeTrigger";
+		public readonly string AudioMixer = "Game/Settings/AudioMixer";
+		public readonly string ApplicationQuitHandler = "Game/ApplicationQuitHandler";
 	}
 }

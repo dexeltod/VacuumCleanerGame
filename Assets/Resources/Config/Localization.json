@@ -1,23 +1,23 @@
 {
   "Languages": [
-    "Russian",
-    "English",
-    "Turkish"
+    "ru",
+    "en",
+    "tr"
   ],
   "Phrases": [
     {
       "Name": "UpgradeTitle",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Улучшение"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Upgrade"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Geliştirmek"
         }
       ]
@@ -26,15 +26,15 @@
       "Name": "SettingsMenu",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Настройки"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Settings"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Ayarlar"
         }
       ]
@@ -43,15 +43,15 @@
       "Name": "MainMenu",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Главное меню"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Main menu"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Ana menü"
         }
       ]
@@ -60,15 +60,15 @@
       "Name": "SoundVolumeSetting",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Звуки"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Sounds"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Sesler"
         }
       ]
@@ -77,15 +77,15 @@
       "Name": "CurrentLevel",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Уровень"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Level"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Seviye"
         }
       ]
@@ -94,15 +94,15 @@
       "Name": "PlayerNotAuthorizedInYandex",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Вы не авторизованы в Яндексе. Пожалуйста, авторизуйтесь."
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "You are not authorized in Yandex. Please log in."
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Yandex'de yetkiniz yok. Lütfen giriş yapın."
         }
       ]
@@ -111,15 +111,15 @@
       "Name": "DeleteSavesButton",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Удалить сохранения"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "DeleteSaves"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Kayıtları sil"
         }
       ]
@@ -128,15 +128,15 @@
       "Name": "LeaderBoardMenuWindow",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Лидеры"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Leader board"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Liderler"
         }
       ]
@@ -145,15 +145,15 @@
       "Name": "ExitButton",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Выход"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Exit"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "çıkış"
         }
       ]
@@ -162,15 +162,15 @@
       "Name": "GoToNextLevel",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Следующий уровень"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Next level"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Sonraki seviye"
         }
       ]
@@ -179,15 +179,15 @@
       "Name": "Yes",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Да"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Yes"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Evet"
         }
       ]
@@ -196,15 +196,15 @@
       "Name": "No",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Нет"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "No"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Yok"
         }
       ]
@@ -213,15 +213,15 @@
       "Name": "SpeedUpgradeDescription",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Увеличить скорость машины"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Increase car speed"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Araba hızını artırın"
         }
       ]
@@ -230,15 +230,15 @@
       "Name": "SpeedUpgrade",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Cкорость"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Speed"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Hız"
         }
       ]
@@ -247,15 +247,15 @@
       "Name": "PlayButton",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Играть"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Play"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Oynamak"
         }
       ]
@@ -264,15 +264,15 @@
       "Name": "VaccumRangeDescription",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Область сбора"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Collection area"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Toplama alanı"
         }
       ]
@@ -281,15 +281,15 @@
       "Name": "BuyButton",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Купить"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Buy"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Satın almak"
         }
       ]
@@ -298,15 +298,15 @@
       "Name": "VaccumRange",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Область"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Range"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Menzil"
         }
       ]
@@ -315,15 +315,15 @@
       "Name": "ImproveCarText",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Улучшить машину?"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Improve your car?"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Arabanızı geliştirmek mi istiyorsunuz?"
         }
       ]
@@ -332,16 +332,33 @@
       "Name": "ScoreCash",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Размер хранилища"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Storage size"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Depolama boyutu"
+        }
+      ]
+    },
+    {
+      "Name": "Anonymous",
+      "Translations": [
+        {
+          "Language": "ru",
+          "Text": "Аноним"
+        },
+        {
+          "Language": "en",
+          "Text": "Anonymous"
+        },
+        {
+          "Language": "tr",
+          "Text": "Anonim"
         }
       ]
     },
@@ -349,15 +366,15 @@
       "Name": "ScoreCashDescription",
       "Translations": [
         {
-          "Language": "Russian",
+          "Language": "ru",
           "Text": "Увеличить максимально количество собираемых ресурсов"
         },
         {
-          "Language": "English",
+          "Language": "en",
           "Text": "Increase the maximum amount of collected resources"
         },
         {
-          "Language": "Turkish",
+          "Language": "tr",
           "Text": "Toplanan kaynakların maksimum miktarını artırın"
         }
       ]

@@ -4,6 +4,6 @@ using Sources.InfrastructureInterfaces.Repository;
 
 namespace Sources.Infrastructure.Providers
 {
-	public sealed class UpgradeProgressRepositoryProvider : Provider<IUpgradeProgressRepository>,
+	public sealed class ProgressEntityRepositoryProvider : Provider<IProgressEntityRepository>,
 		IProgressEntityRepositoryProvider { }
 }

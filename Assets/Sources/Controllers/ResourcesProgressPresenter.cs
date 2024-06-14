@@ -106,7 +106,7 @@ namespace Sources.Controllers
 			SetView();
 		}
 
-		public bool DecreaseMoney(int count)
+		public bool TryDecreaseMoney(int count)
 		{
 			if (_resourceReadOnly.SoftCurrency.Value - count < 0)
 				throw new ArgumentOutOfRangeException($"{SoftCurrency} less than zero");

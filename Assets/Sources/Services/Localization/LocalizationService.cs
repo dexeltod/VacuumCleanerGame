@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Reflection;
 using Plugins.CW.LeanLocalization.Required.Scripts;
 using Sources.Services.Localization.Serializable;
 using Sources.ServicesInterfaces;
@@ -11,17 +10,17 @@ namespace Sources.Services.Localization
 {
 	public class LocalizationService : ILocalizationService
 	{
+		private const string StartLanguage = "ru";
+
 		private readonly IAssetFactory _factory;
-		private const string StartLanguage = "Russian";
 		private readonly string[] _phraseNames;
 		private readonly string[] _languages;
 
 		public LocalizationService(IAssetFactory factory)
 		{
-			_factory = factory;
-			IAssetFactory assetFactory = factory;
+			_factory = factory ?? throw new ArgumentNullException(nameof(factory));
 
-			LeanLocalization leanLocalization = LoadAssets(assetFactory, out var localizationData);
+			LeanLocalization leanLocalization = LoadAssets(factory, out var localizationData);
 
 			_languages = new string[localizationData.Languages.Count];
 			_phraseNames = new string[localizationData.Phrases.Count];
@@ -29,7 +28,9 @@ namespace Sources.Services.Localization
 			AddLanguages(localizationData, leanLocalization);
 			CreatePhrases(localizationData, leanLocalization);
 
-			//TODO: Need to create detection language
+#if YANDEX_CODE
+			return;
+#endif
 
 			LeanLocalization.SetCurrentLanguageAll(StartLanguage);
 			LeanLocalization.UpdateTranslations();
@@ -64,13 +65,11 @@ namespace Sources.Services.Localization
 		private LeanLocalization LoadAssets(IAssetFactory assetFactory, out LocalizationRoot localizationData)
 		{
 			LeanLocalization leanLocalization =
-				assetFactory.InstantiateAndGetComponent<LeanLocalization>
-				(
-					ResourcesAssetPath.GameObjects
-						.LeanLocalization
+				assetFactory.InstantiateAndGetComponent<LeanLocalization>(
+					ResourcesAssetPath.GameObjects.LeanLocalization
 				);
 
-			var config = assetFactory.LoadFromResources<TextAsset>(ResourcesAssetPath.Configs.Localization);
+			var config = Resources.Load<TextAsset>(ResourcesAssetPath.Configs.Localization);
 
 			localizationData = JsonUtility.FromJson<LocalizationRoot>(config.text);
 			return leanLocalization;

@@ -71,7 +71,7 @@ namespace Sources.Controllers
 			_gameplayInterfaceView.SetSoftCurrencyText(soft);
 
 		public void SetTotalResourceCount(int globalScore) =>
-			_gameplayInterfaceView.SetGlobalScore(globalScore);
+			_gameplayInterfaceView.SetTotalResourceScore(globalScore);
 
 		public void SetCashScore(int cashScore) =>
 			_gameplayInterfaceView.SetCashScore(cashScore);
@@ -91,7 +91,7 @@ namespace Sources.Controllers
 		{
 			_maxCashScore.Changed -= OnMaxCashScoreChanged;
 			_speedDecorator.Disable();
-			
+
 			IncreaseSpeedButton.onClick.RemoveListener(OnIncreaseSpeed);
 			GoToNextLevelButton.onClick.RemoveListener(OnGoToNextLevel);
 		}

@@ -7,6 +7,7 @@ namespace Sources.Presentation.UI.MainMenu
 	{
 		[SerializeField] private GameObject[] _disabledObject;
 		[SerializeField] private GameObject[] _enabledObject;
+		[SerializeField] private AudioSource _audioSource;
 
 		private Button _button;
 
@@ -21,6 +22,7 @@ namespace Sources.Presentation.UI.MainMenu
 
 		private void OnSwitchWindow()
 		{
+			_audioSource.Play();
 			foreach (GameObject target in _enabledObject)
 				target.SetActive(true);
 

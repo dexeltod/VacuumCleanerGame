@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Sources.ApplicationServicesInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
@@ -11,12 +12,12 @@ namespace Sources.Application.Services.Leaderboard
 		private readonly IAbstractLeaderBoard _leaderboard;
 
 		public LeaderBoard(IAbstractLeaderBoard leaderboard) =>
-			_leaderboard = leaderboard;
+			_leaderboard = leaderboard ?? throw new ArgumentNullException(nameof(leaderboard));
 
-		public UniTask<Tuple<string, int>> GetLeader()
+		public async UniTask<Tuple<string, int>> GetLeader()
 		{
-			//TODO: need implementation
-			return new UniTask<Tuple<string, int>>(null);
+			var player = await _leaderboard.GetPlayers(1);
+			return new Tuple<string, int>(player.Keys.First(), player.Values.First());
 		}
 
 		public async UniTask<Dictionary<string, int>> GetLeaders(int playerCount) =>

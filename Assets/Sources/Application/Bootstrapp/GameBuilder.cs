@@ -7,12 +7,16 @@ using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Domain;
 using Sources.Infrastructure.Providers;
+using Sources.Infrastructure.Services;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Services;
 using Sources.InfrastructureInterfaces.States;
+using Sources.Services;
+using Sources.ServicesInterfaces;
 using Sources.ServicesInterfaces.Advertisement;
-using UnityEngine;
+using Sources.Utils;
+using UnityEngine.Audio;
 using VContainer;
 using VContainer.Unity;
 
@@ -30,6 +34,8 @@ namespace Sources.Application.Bootstrapp
 		private readonly SaveLoaderFactory _saveLoaderFactory;
 		private readonly AdvertisementHandlerProvider _advertisementHandlerProvider;
 		private readonly IAdvertisement _advertisement;
+		private readonly GameFocusHandlerProvider _gameFocusHandlerProvider;
+		private readonly IAssetFactory _assetFactory;
 
 		[Inject]
 		public GameBuilder(
@@ -43,7 +49,9 @@ namespace Sources.Application.Bootstrapp
 			ISaveLoaderProvider saveLoaderProvider,
 			SaveLoaderFactory saveLoaderFactory,
 			AdvertisementHandlerProvider advertisementHandlerProvider,
-			IAdvertisement advertisement
+			IAdvertisement advertisement,
+			GameFocusHandlerProvider gameFocusHandlerProvider,
+			IAssetFactory assetFactory
 		)
 		{
 			_progressFactory = progressFactory ?? throw new ArgumentNullException(nameof(progressFactory));
@@ -61,34 +69,46 @@ namespace Sources.Application.Bootstrapp
 			_advertisementHandlerProvider = advertisementHandlerProvider ??
 				throw new ArgumentNullException(nameof(advertisementHandlerProvider));
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
+			_gameFocusHandlerProvider = gameFocusHandlerProvider ??
+				throw new ArgumentNullException(nameof(gameFocusHandlerProvider));
+			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 		}
 
 		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Self;
 
 		public async UniTask StartAsync(CancellationToken cancellation)
 		{
-			Debug.Log("Initialize");
 			await Initialize();
-			Debug.Log("Initialized");
+
 			DOTween.Init();
-			Debug.Log("GameStateChanger.Enter<IMenuState>();}");
+
 			GameStateChanger.Enter<IMenuState>();
 		}
 
 		private async UniTask Initialize()
 		{
-			Debug.Log("Start Building");
+			ApplicationQuitHandler applicationQuitHandler
+				= _assetFactory.InstantiateAndGetComponent<ApplicationQuitHandler>(
+					ResourcesAssetPath.GameObjects
+						.ApplicationQuitHandler
+				);
+
+			_gameFocusHandlerProvider.Register(
+				new GameFocusHandler(
+					_assetFactory.LoadFromResources<AudioMixer>(ResourcesAssetPath.GameObjects.AudioMixer),
+					applicationQuitHandler
+				)
+			);
+
 			_saveLoaderProvider.Register<ISaveLoader>(_saveLoaderFactory.GetSaveLoader());
 
 			await _saveLoader.Initialize();
 			await _progressFactory.Create();
-			Debug.Log("Progress created");
 
-			Debug.Log("register _advertisementHandlerProvider");
-			_advertisementHandlerProvider.Register(new AdvertisementHandler(_advertisement));
-			Debug.Log("register _pathNameConfigProvider");
+			_advertisementHandlerProvider.Register(new AdvertisementPresenter(_advertisement));
+
 			_pathNameConfigProvider.Register(_resourcePathConfigServiceFactory.Create());
-			Debug.Log("register _gameStateChangerFactory");
+
 			_gameStateChangerProvider.Register(_gameStateChangerFactory.Create());
 		}
 	}

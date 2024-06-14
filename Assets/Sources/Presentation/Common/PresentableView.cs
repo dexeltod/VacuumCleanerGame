@@ -17,7 +17,7 @@ namespace Sources.Presentation.Common
 				Presenter?.Enable();
 		}
 
-		public virtual void DestroySelf() =>
+		protected virtual void DestroySelf() =>
 			Destroy(gameObject);
 
 		private void OnDestroy() =>

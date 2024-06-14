@@ -13,6 +13,6 @@ namespace Sources.ControllersInterfaces
 		void Sell();
 		void AddMoney(int count);
 		int GetCalculatedDecreasedMoney(int count);
-		bool DecreaseMoney(int count);
+		bool TryDecreaseMoney(int count);
 	}
 }

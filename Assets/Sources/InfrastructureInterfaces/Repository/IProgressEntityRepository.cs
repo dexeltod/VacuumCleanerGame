@@ -4,7 +4,7 @@ using Sources.InfrastructureInterfaces.Configs;
 
 namespace Sources.InfrastructureInterfaces.Repository
 {
-	public interface IUpgradeProgressRepository
+	public interface IProgressEntityRepository
 	{
 		IUpgradeEntityViewConfig GetConfig(int id);
 		IUpgradeEntityReadOnly GetEntity(int id);

@@ -1,6 +1,4 @@
-using Sources.Controllers;
 using Sources.ControllersInterfaces;
-using Sources.InfrastructureInterfaces;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
 using UnityEngine;
@@ -13,9 +11,6 @@ namespace Sources.Presentation.UI.YandexAuthorization
 		[SerializeField] private GameObject _yesNoButtons;
 		[SerializeField] private Button _yesButton;
 		[SerializeField] private Button _noButton;
-
-		private ICloudPlayerDataService _cloudPlayerDataService;
-		private AuthorizationPresenter _authorizationPresenter;
 
 		public override void Enable()
 		{

@@ -43,7 +43,8 @@ namespace Sources.Infrastructure.Factories.Scene
 			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider
 		)
 		{
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetFactory
+				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
 			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ??
 				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));

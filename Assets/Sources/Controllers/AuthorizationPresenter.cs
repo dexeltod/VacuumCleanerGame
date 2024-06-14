@@ -8,21 +8,21 @@ namespace Sources.Controllers
 {
 	public class AuthorizationPresenter : Presenter, IAuthorizationPresenter
 	{
-		private readonly ICloudPlayerDataService _cloudPlayerDataService;
+		private readonly ICloudServiceSdkFacade _cloudServiceSdkFacade;
 		private readonly IAuthorizationView _authorizationView;
 
 		public AuthorizationPresenter(
-			ICloudPlayerDataService cloudPlayerDataService,
+			ICloudServiceSdkFacade cloudServiceSdkFacade,
 			IAuthorizationView authorizationView
 		)
 		{
-			_cloudPlayerDataService = cloudPlayerDataService ??
-				throw new ArgumentNullException(nameof(cloudPlayerDataService));
+			_cloudServiceSdkFacade = cloudServiceSdkFacade ??
+				throw new ArgumentNullException(nameof(cloudServiceSdkFacade));
 			_authorizationView = authorizationView ??
 				throw new ArgumentNullException(nameof(authorizationView));
 		}
 
-		public bool IsAuthorized => _cloudPlayerDataService.IsAuthorized;
+		public bool IsAuthorized => _cloudServiceSdkFacade.IsAuthorized;
 
 		public void Authorize() =>
 			_authorizationView.Enable();
@@ -30,7 +30,7 @@ namespace Sources.Controllers
 		public void SetChoice(bool isWants)
 		{
 			if (isWants == true)
-				_cloudPlayerDataService.Authorize();
+				_cloudServiceSdkFacade.Authorize();
 
 			_authorizationView.Disable();
 		}

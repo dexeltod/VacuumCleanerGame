@@ -1,7 +1,10 @@
+using Sources.ControllersInterfaces.Common;
+using UnityEngine.UI;
+
 namespace Sources.PresentationInterfaces
 {
-	public interface ISettingsView
+	public interface ISettingsView : IPresenter
 	{
-		float SoundVolume { get; }
+		Slider MasterVolumeSlider { get; }
 	}
 }

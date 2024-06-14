@@ -22,7 +22,8 @@ namespace Sources.Infrastructure.Factories.Domain
 
 		public PlayerModelFactory(IAssetFactory assetFactory, ShopModel shopModelFactory)
 		{
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetFactory
+				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_shopModelFactory = shopModelFactory ?? throw new ArgumentNullException(nameof(shopModelFactory));
 		}
 
@@ -67,8 +68,8 @@ namespace Sources.Infrastructure.Factories.Domain
 			startConfigs.ElementAt(configIndex).Stat;
 
 		private IReadOnlyProgressValue<int> GetProgress(int i) =>
-			_shopModelFactory.ProgressEntities.ElementAt(i).CurrentLevel ??
-			throw new ArgumentNullException($"shopModelFactory.ProgressEntities.ElementAt({i}).CurrentLevel is null");
+			_shopModelFactory.ProgressEntities.ElementAt(i).LevelProgress ??
+			throw new ArgumentNullException($"shopModelFactory.ProgressEntities.ElementAt({i}).LevelProgress is null");
 
 		private UpgradeEntityViewConfig GetConfigElement(IEnumerable<UpgradeEntityViewConfig> items, int i) =>
 			items.ElementAt(i) ??

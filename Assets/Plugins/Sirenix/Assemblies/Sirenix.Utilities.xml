@@ -2913,7 +2913,7 @@
             </summary>
             <param name="item">Item.</param>
         </member>
-        <member name="M:Sirenix.Utilities.ImmutableList.System#Collections#Generic#ICollection{System#Object}#Clear">
+        <member name="M:Sirenix.Utilities.ImmutableList.System#Collections#Generic#ICollection{System#Object}#SetDefault">
             <summary>
                 Immutable list cannot be edited.
             </summary>

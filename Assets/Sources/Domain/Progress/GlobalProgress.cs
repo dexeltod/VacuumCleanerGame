@@ -5,7 +5,6 @@ using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.Models;
 using Sources.DomainInterfaces.Models.Shop;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Sources.Domain.Progress
 {

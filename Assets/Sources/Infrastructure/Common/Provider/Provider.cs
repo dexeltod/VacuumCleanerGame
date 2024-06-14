@@ -48,6 +48,7 @@ namespace Sources.Infrastructure.Common.Provider
 
 		public virtual TImplementation Register<TI>(TImplementation instance)
 		{
+			Unregister();
 			_implementation = instance;
 
 			var a = instance.GetType().GetInterfaces();

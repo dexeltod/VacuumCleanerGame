@@ -1,7 +1,7 @@
 namespace Sources.Utils
 {
-	public class SettingsPlayerPrefsNames
+	public static class SettingsPlayerPrefsNames
 	{
-		
+		public const string MasterVolumeName = "MasterVolume";
 	}
 }

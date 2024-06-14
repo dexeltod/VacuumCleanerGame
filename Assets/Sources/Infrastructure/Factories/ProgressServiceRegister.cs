@@ -11,6 +11,7 @@ using Sources.Services.DomainServices;
 using Sources.ServicesInterfaces;
 using Sources.Utils;
 using UnityEngine;
+using VContainer;
 
 namespace Sources.Infrastructure.Factories
 {
@@ -21,6 +22,7 @@ namespace Sources.Infrastructure.Factories
 		private readonly IAssetFactory _assetFactory;
 		private readonly IPlayerModelRepositoryProvider _playerModelRepositoryProvider;
 
+		[Inject]
 		public ProgressServiceRegister(
 			IPersistentProgressServiceProvider persistentProgressServiceProvider,
 			IProgressEntityRepositoryProvider progressEntityRepositoryProvider,

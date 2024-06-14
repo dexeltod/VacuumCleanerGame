@@ -31,7 +31,8 @@ namespace Sources.Infrastructure.Factories.Player
 			IPlayerModelRepositoryProvider playerModelRepository
 		)
 		{
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetFactory
+				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_objectResolver = objectResolver ?? throw new ArgumentNullException(nameof(objectResolver));
 
 			_gameplayInterfaceProvider = gameplayInterfaceProvider ??

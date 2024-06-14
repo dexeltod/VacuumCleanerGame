@@ -37,7 +37,8 @@ namespace Sources.Infrastructure.Factories
 		{
 			_upgradeWindowViewFactory
 				= upgradeWindowViewFactory ?? throw new ArgumentNullException(nameof(upgradeWindowViewFactory));
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetFactory
+				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_progressSaveLoadDataService = progressSaveLoadDataService ??
 				throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 			_persistentProgressService = persistentProgressService ??

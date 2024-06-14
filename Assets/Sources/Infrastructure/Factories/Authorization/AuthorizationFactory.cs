@@ -26,7 +26,8 @@ namespace Sources.Infrastructure.Factories.Authorization
 			ITranslatorService localizationService
 		)
 		{
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetFactory
+				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_cloudServiceSdkFacadeProvider = cloudServiceSdkFacadeProvider;
 			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 			_mainMenuView = mainMenuView ? mainMenuView : throw new ArgumentNullException(nameof(mainMenuView));
@@ -34,30 +35,29 @@ namespace Sources.Infrastructure.Factories.Authorization
 
 		public IAuthorizationPresenter Create()
 		{
-			
-				IAuthorizationView authorizationView = new AuthorizationViewFactory(_assetFactory, _localizationService).Create();
+			IAuthorizationView authorizationView
+				= new AuthorizationViewFactory(_assetFactory, _localizationService, _mainMenuView).Create();
 
-				ICloudPlayerDataService сloudPlayerDataService = new CloudPlayerDataServiceFactory().Create();
+			ICloudServiceSdkFacade сloudServiceSdkFacade = new CloudPlayerDataServiceFactory().Create();
 
-				IAuthorizationPresenter authorizationPresenter =
-					new AuthorizationPresenter(
-						сloudPlayerDataService,
-						authorizationView
-					);
+			IAuthorizationPresenter authorizationPresenter =
+				new AuthorizationPresenter(
+					сloudServiceSdkFacade,
+					authorizationView
+				);
 
-				Construct(authorizationView, authorizationPresenter);
+			Construct(authorizationView, authorizationPresenter);
 
-				сloudPlayerDataService.SetStatusInitialized();
+			сloudServiceSdkFacade.SetStatusInitialized();
 
-				_cloudServiceSdkFacadeProvider.Register(сloudPlayerDataService);
+			_cloudServiceSdkFacadeProvider.Register(сloudServiceSdkFacade);
 
-				return authorizationPresenter;
+			return authorizationPresenter;
 		}
 
 		private void Construct(IAuthorizationView authorizationView, IAuthorizationPresenter authorizationPresenter)
 		{
 			authorizationView.Construct(authorizationPresenter);
-			authorizationView.SetParent(_mainMenuView.transform);
 			authorizationView.RectTransform.localPosition = Vector2.zero;
 			authorizationView.Disable();
 		}

@@ -13,22 +13,24 @@ MonoBehaviour:
   m_Name: ShopItems
   m_EditorClassIdentifier: 
   _items:
-  - _prices: 2c0100009001000020030000b004000040060000d007000060090000
+  - _prices: 2c0100009001000020030000b004000040060000d007000060090000b80b0000a00f0000
     _stats:
     - 300
+    - 350
     - 400
+    - 450
     - 500
+    - 550
     - 600
-    - 700
-    - 800
-    - 900
+    - 620
+    - 650
     _title: ScoreCash
     _description: ScoreCashDescription
     _type: 1
     _isModifiable: 0
     _upgradeElementPrefabView: {fileID: 2812017279742480912, guid: 7853f2ed101517b408328c84fcbaa5f4, type: 3}
     _icon: {fileID: 21300000, guid: 6b62d05057d633044b3dc427188695a5, type: 3}
-  - _prices: 2c01000090010000f401000058020000bc0200002003000084030000e80300004c040000
+  - _prices: 2c01000090010000f401000058020000bc0200002003000084030000e80300004c040000d0070000b80b0000a00f0000
     _stats:
     - 4.2
     - 4.87
@@ -39,6 +41,9 @@ MonoBehaviour:
     - 7.5
     - 7.77
     - 8.8
+    - 9.1
+    - 9.5
+    - 9.8
     _title: Speed
     _description: SpeedDescription
     _type: 0

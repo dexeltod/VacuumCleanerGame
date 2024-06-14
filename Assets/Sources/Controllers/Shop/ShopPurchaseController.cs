@@ -1,40 +1,59 @@
 using System;
 using Sources.ControllersInterfaces;
-using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Repository;
 using Sources.Utils.Enums;
+using UnityEngine;
 
 namespace Sources.Controllers.Shop
 {
 	public class ShopPurchaseController
 	{
-		private readonly IProgressService _progressService;
+		private readonly IProgressEntityRepository _progressRepository;
 		private readonly IResourcesProgressPresenter _resourcesProgressPresenter;
 		private readonly IPlayerModelRepository _playerModelRepository;
 
 		public ShopPurchaseController(
-			IProgressService progressService,
+			IProgressEntityRepository progressRepository,
 			IResourcesProgressPresenter resourcesProgressPresenter,
-			IPlayerModelRepository playerModelRepository
+			IPlayerModelRepository playerModelRepository,
+			AudioSource audioSource
 		)
 		{
-			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
-			_resourcesProgressPresenter = resourcesProgressPresenter;
+			_progressRepository = progressRepository ?? throw new ArgumentNullException(nameof(progressRepository));
+			_resourcesProgressPresenter = resourcesProgressPresenter ??
+				throw new ArgumentNullException(nameof(resourcesProgressPresenter));
 			_playerModelRepository
 				= playerModelRepository ?? throw new ArgumentNullException(nameof(playerModelRepository));
 		}
 
 		public bool TryAddOneProgressPoint(int id)
 		{
-			var price = _progressService.GetPrice(id);
+			int price = _progressRepository.GetPrice(id);
 
-			if (_resourcesProgressPresenter.DecreaseMoney(price) == false)
+			if (_resourcesProgressPresenter.TryDecreaseMoney(price) == false)
 				return false;
 
-			_progressService.AddProgressPoint(id);
+			float statByProgress = _progressRepository.GetStatByProgress(id);
 
-			_playerModelRepository.Set((ProgressType)id, _progressService.GetProgressStatValue(id));
+			_playerModelRepository.Set((ProgressType)id, statByProgress);
+
+			if (!CanAddOneProgressPoint(id))
+				return false;
+
+			_progressRepository.AddOneLevel(id);
+
 			return true;
+		}
+
+		private bool CanAddOneProgressPoint(int id)
+		{
+			int count = _progressRepository.GetConfig(id).Stats.Count;
+			int value = _progressRepository.GetEntity(id).Value;
+
+			Debug.Log(_progressRepository.GetEntity(id).LevelProgress.Value);
+
+			Debug.Log($"value <= count: {value < count}");
+			return value < count;
 		}
 	}
 }

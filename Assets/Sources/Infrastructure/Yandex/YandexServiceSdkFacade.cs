@@ -13,16 +13,20 @@ namespace Sources.Infrastructure.Yandex
 		private PlayerAccountProfileDataResponse _playerAccount;
 		private IGlobalProgress _gameProgress;
 
-		private bool _isAuthorized;
+		public bool IsAuthorized => PlayerAccount.IsAuthorized;
 
 		public void SetStatusInitialized() =>
 			YandexGamesSdk.GameReady();
+
+		public string GetPlayerLanguage() =>
+			YandexGamesSdk.Environment.i18n.lang;
 
 		public async void Authorize()
 		{
 			bool isProcessCompleted = false;
 
 			PlayerAccount.Authorize();
+
 			PlayerAccount.StartAuthorizationPolling(
 				Delay,
 				() => isProcessCompleted = true

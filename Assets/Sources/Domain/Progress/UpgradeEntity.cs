@@ -20,7 +20,7 @@ namespace Sources.Domain.Progress
 		}
 
 		public int ConfigId => _configId;
-		public IReadOnlyProgressValue<int> CurrentLevel => _currentLevel;
+		public IReadOnlyProgressValue<int> LevelProgress => _currentLevel;
 		public int Value => _currentLevel.Value;
 
 		public void AddOneLevel() =>

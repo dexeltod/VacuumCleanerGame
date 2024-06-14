@@ -12,7 +12,8 @@ namespace Sources.Infrastructure.Factories
 
 		[Inject]
 		public CoroutineRunnerFactory(IAssetFactory assetFactory) =>
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetFactory
+				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 
 		private string CoroutineRunnerPath => ResourcesAssetPath.GameObjects.CoroutineRunner;
 

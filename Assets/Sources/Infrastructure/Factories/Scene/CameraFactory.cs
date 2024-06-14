@@ -21,7 +21,8 @@ namespace Sources.Infrastructure.Factories.Scene
 			ResourcePathNameConfigProvider assetPathNameConfigProvider
 		)
 		{
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetFactory
+				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_player = playerFactory ? playerFactory : throw new ArgumentNullException(nameof(playerFactory));
 			_assetPathNameConfigProvider = assetPathNameConfigProvider ??
 				throw new ArgumentNullException(nameof(assetPathNameConfigProvider));

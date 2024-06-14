@@ -1,10 +1,14 @@
 using System;
 using Sources.ControllersInterfaces;
+using Sources.DomainInterfaces;
+using Sources.Infrastructure.Adapters;
 using Sources.Infrastructure.Providers;
+using Sources.Infrastructure.Yandex;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.States.StateMachineInterfaces;
 using Sources.Presentation.SceneEntity;
 using Sources.ServicesInterfaces;
+using UnityEngine;
 using VContainer;
 
 namespace Sources.Infrastructure.StateMachine.GameStates
@@ -19,6 +23,11 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 		private readonly IGameMenuPresenterProvider _gameMenuPresenterProvider;
 		private readonly AdvertisementHandlerProvider _advertisementHandlerProvider;
+		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
+#if YANDEX_CODE
+
+#endif
+
 		private readonly LoadingCurtain _loadingCurtain;
 
 		[Inject]
@@ -30,7 +39,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider,
 			DissolveShaderViewControllerProvider dissolveShaderViewControllerProvider,
 			IGameMenuPresenterProvider gameMenuPresenterProvider,
-			AdvertisementHandlerProvider advertisementHandlerProvider
+			AdvertisementHandlerProvider advertisementHandlerProvider,
+			IPersistentProgressServiceProvider persistentProgressServiceProvider
 		)
 		{
 			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
@@ -48,6 +58,9 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 				throw new ArgumentNullException(nameof(gameMenuPresenterProvider));
 			_advertisementHandlerProvider = advertisementHandlerProvider ??
 				throw new ArgumentNullException(nameof(advertisementHandlerProvider));
+			_persistentProgressServiceProvider = persistentProgressServiceProvider ??
+				throw new ArgumentNullException(nameof(persistentProgressServiceProvider));
+
 			_loadingCurtain = loadingCurtain ? loadingCurtain : throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
@@ -58,6 +71,8 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 		public void Enter()
 		{
+			SetMoreMoney();
+
 			_localizationService.UpdateTranslations();
 
 			_upgradeWindowPresenterProvider.Self.Enable();
@@ -78,6 +93,14 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 			_gameMenuPresenterProvider.Self.Disable();
 			_loadingCurtain.Show();
 			_advertisementHandlerProvider.Self.Disable();
+		}
+
+		private void SetMoreMoney()
+		{
+#if DEV
+			(_persistentProgressServiceProvider.Self.GlobalProgress.ResourceModelReadOnly as IResourceModel)!
+				.AddMoney(999999);
+#endif
 		}
 	}
 }

@@ -95,7 +95,7 @@ namespace Sources.Presentation.UI
 			_maxCashScore = maxCashScore;
 			_maxGlobalScore = maxGlobalScore;
 
-			SetGlobalScore(globalScore);
+			SetTotalResourceScore(globalScore);
 			SetCashScore(cashScore);
 
 			SetMaxGlobalScore(maxGlobalScore);
@@ -112,7 +112,7 @@ namespace Sources.Presentation.UI
 			SetActiveGlobalScores();
 		}
 
-		public override void DestroySelf()
+		protected override void DestroySelf()
 		{
 			_goToNextLevelButtonTween!.Kill(true);
 			_increaseSpeedButtonTween!.Kill(true);
@@ -135,7 +135,7 @@ namespace Sources.Presentation.UI
 			SetCashScoreText(newScore);
 		}
 
-		public void SetGlobalScore(int newScore)
+		public void SetTotalResourceScore(int newScore)
 		{
 			if (newScore < 0) throw new ArgumentOutOfRangeException(nameof(newScore));
 			_globalScore = newScore;

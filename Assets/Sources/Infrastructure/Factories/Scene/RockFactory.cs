@@ -30,7 +30,8 @@ namespace Sources.Infrastructure.Factories.Scene
 			ILevelConfigGetter levelConfigGetter
 		)
 		{
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetFactory
+				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
 			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ??
 				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
@@ -45,7 +46,9 @@ namespace Sources.Infrastructure.Factories.Scene
 
 			ILevelConfig levelConfig = _levelConfigGetter.GetOrDefault(_levelProgressFacade.CurrentLevel);
 
-			GameObject rocksObject = new GameObject("Rocks");
+			Debug.Log("rocks" + _levelProgressFacade.MaxTotalResourceCount);
+
+			GameObject rocksObject = new GameObject("RockResource");
 			int hardCurrencySpawnIndex = Random.Range(0, _levelProgressFacade.MaxTotalResourceCount);
 			int areaSize = Mathf.CeilToInt(Mathf.Sqrt(_levelProgressFacade.MaxTotalResourceCount));
 

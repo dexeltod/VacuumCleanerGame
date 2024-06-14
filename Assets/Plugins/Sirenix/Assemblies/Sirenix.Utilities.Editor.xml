@@ -1085,7 +1085,7 @@
                 Not yet documented.
             </summary>
         </member>
-        <member name="M:Sirenix.Utilities.Editor.AsyncProgressBar.Clear">
+        <member name="M:Sirenix.Utilities.Editor.AsyncProgressBar.SetDefault">
             <summary>
                 Not yet documented.
             </summary>
@@ -10377,7 +10377,7 @@
                 Copies the specified object.
             </summary>
         </member>
-        <member name="M:Sirenix.Utilities.Editor.Clipboard.Clear">
+        <member name="M:Sirenix.Utilities.Editor.Clipboard.SetDefault">
             <summary>
                 Clears this instance.
             </summary>

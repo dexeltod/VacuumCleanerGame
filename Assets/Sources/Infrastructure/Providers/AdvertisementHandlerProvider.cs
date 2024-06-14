@@ -5,5 +5,5 @@ using Sources.InfrastructureInterfaces.Providers;
 namespace Sources.Infrastructure.Providers
 {
 	public sealed class
-		AdvertisementHandlerProvider : Provider<IAdvertisementHandler>, IAdvertisementHandlerProvider { }
+		AdvertisementHandlerProvider : Provider<IAdvertisementPresenter>, IAdvertisementHandlerProvider { }
 }

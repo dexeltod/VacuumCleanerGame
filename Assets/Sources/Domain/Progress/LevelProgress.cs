@@ -23,7 +23,7 @@ namespace Sources.Domain.Progress
 		public void AddLevel(int maxPointDelta, int level)
 		{
 			_currentLevel += level;
-			Debug.Log("CurrentLevel: " + _currentLevel);
+			Debug.Log("LevelProgress: " + _currentLevel);
 			_maxTotalResourceCount += maxPointDelta;
 		}
 	}

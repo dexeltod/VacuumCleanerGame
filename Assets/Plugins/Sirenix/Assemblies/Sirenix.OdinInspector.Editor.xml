@@ -3102,7 +3102,7 @@
                 The change is removing a value at an index from the collection. Index and SelectionIndex will be set.
             </summary>
         </member>
-        <member name="F:Sirenix.OdinInspector.Editor.CollectionChangeType.Clear">
+        <member name="F:Sirenix.OdinInspector.Editor.CollectionChangeType.SetDefault">
             <summary>
                 The change is clearing the collection. SelectionIndex will be set.
             </summary>
@@ -10861,7 +10861,7 @@
             </summary>
             <param name="item">The item.</param>
         </member>
-        <member name="M:Sirenix.OdinInspector.Editor.OdinMenuTreeSelection.Clear">
+        <member name="M:Sirenix.OdinInspector.Editor.OdinMenuTreeSelection.SetDefault">
             <summary>
                 Clears the selection and triggers<see
                     cref="E:Sirenix.OdinInspector.Editor.OdinMenuTreeSelection.OnSelectionChanged"/>.

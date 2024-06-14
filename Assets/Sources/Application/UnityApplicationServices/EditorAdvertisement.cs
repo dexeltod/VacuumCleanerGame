@@ -7,14 +7,40 @@ namespace Sources.Application.UnityApplicationServices
 {
 	public sealed class EditorAdvertisement : IAdvertisement
 	{
-		public event Action Opened;
-
-		public UniTask ShowAd(Action onRewardsCallback, Action onCloseCallback)
+		public UniTask ShowVideoAd()
 		{
-			Debug.Log("ShowAd");
-			
-			onRewardsCallback.Invoke();
+			Debug.Log("ShowVideoAd");
+
 			return UniTask.CompletedTask;
 		}
+
+		public UniTask ShowVideoAd(Action onClosed, Action onRewarded, Action onOpened, Action onError = null)
+		{
+			onRewarded.Invoke();
+
+			return UniTask.CompletedTask;
+		}
+
+		public UniTask ShowInterstitialAd(
+			Action onClosed,
+			Action onRewarded,
+			Action onOpened,
+			Action onError =
+				null
+		)
+		{
+			onRewarded.Invoke();
+			return UniTask.CompletedTask;
+		}
+
+		public UniTask ShowStickAd(Action onClosed, Action onRewarded, Action onOpened, Action onError = null)
+		{
+			onRewarded.Invoke();
+			return UniTask.CompletedTask;
+		}
+
+		public event Action Closed;
+		public event Action Rewarded;
+		public event Action Opened;
 	}
 }

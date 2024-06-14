@@ -42,11 +42,23 @@ namespace Sources.Infrastructure.Services.Decorators
 
 		public bool IsDecorated { get; private set; }
 
-		public override void Disable() =>
-			_speed.Clear();
+		public override void Enable()
+		{
+			_advertisement.Rewarded += OnRewarded;
+			_speed.SetDefault();
+		}
+
+		public override void Disable()
+		{
+			_advertisement.Rewarded -= OnRewarded;
+			_speed.SetDefault();
+		}
 
 		public void Increase() =>
-			_advertisement.ShowAd(OnRewarded);
+			_advertisement.ShowInterstitialAd(OnClosed, OnRewarded);
+
+		private void OnClosed() =>
+			_speed.SetDefault();
 
 		private void OnRewarded() =>
 			CoroutineRunner.Run(StartSpeedRoutine());
@@ -58,7 +70,7 @@ namespace Sources.Infrastructure.Services.Decorators
 
 			yield return _waitForSeconds;
 
-			_speed.Clear();
+			_speed.SetDefault();
 
 			IsDecorated = false;
 		}

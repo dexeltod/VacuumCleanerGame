@@ -28,12 +28,12 @@ namespace Sources.Infrastructure.Services
 			ISaveLoaderProvider saveLoader,
 			IPersistentProgressServiceProvider progressService,
 			IInitialProgressFactory initialProgressFactory,
-			IProgressCleaner progressCleaner
+			IProgressCleaner progressFactory
 		)
 		{
 			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
 			_progressServiceProvider = progressService ?? throw new ArgumentNullException(nameof(progressService));
-			_progressCleaner = progressCleaner ?? throw new ArgumentNullException(nameof(progressCleaner));
+			_progressCleaner = progressFactory ?? throw new ArgumentNullException(nameof(progressFactory));
 
 			_jsonDataLoader = new JsonDataSaveLoader();
 		}
@@ -44,25 +44,14 @@ namespace Sources.Infrastructure.Services
 
 		private IPersistentProgressService PersistentProgressService => _progressServiceProvider.Self;
 
-		public async UniTask SaveToCloud(IGlobalProgress progress, Action succeededCallback = null)
-		{
-			if (progress != null)
-				await Save(progress);
-
-			succeededCallback?.Invoke();
-		}
-
 		public async UniTask SaveToCloud(Action succeededCallback = null)
 		{
 			await Save(PersistentProgressService.GlobalProgress);
 			succeededCallback?.Invoke();
 		}
 
-		public async UniTask ClearSaves()
-		{
-			IGlobalProgress progress = _progressCleaner.ClearAndSaveCloud();
-			await _saveLoader.Self.Save(progress);
-		}
+		public async UniTask ClearSaves() =>
+			await _saveLoader.Self.Save(_progressCleaner.Clear());
 
 		public async UniTask<IGlobalProgress> LoadFromCloud()
 		{

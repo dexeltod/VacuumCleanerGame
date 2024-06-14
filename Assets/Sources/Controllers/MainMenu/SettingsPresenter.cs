@@ -1,5 +1,7 @@
 using System;
 using Sources.Domain.Settings;
+using Sources.Utils;
+using UnityEngine;
 using UnityEngine.Audio;
 
 namespace Sources.Controllers.MainMenu
@@ -21,6 +23,7 @@ namespace Sources.Controllers.MainMenu
 		{
 			_soundSettings.SetMasterVolume(value);
 			_audioMixer.SetFloat(MasterVolumeName, _soundSettings.MasterVolume);
+			PlayerPrefs.SetFloat(SettingsPlayerPrefsNames.MasterVolumeName, value);
 		}
 	}
 }
