@@ -8,11 +8,11 @@ using Sources.InfrastructureInterfaces;
 namespace Sources.Infrastructure.Adapters
 {
 #if YANDEX_CODE
-	public class YandexCloudPlayerDataAdapter : ICloudPlayerDataService
+	public class YandexCloudAdapter : ICloudServiceSdkFacade
 	{
 		private readonly YandexServiceSdkFacade _yandexServiceSdkFacade;
 
-		public YandexCloudPlayerDataAdapter(YandexServiceSdkFacade yandexServiceSdkFacade) =>
+		public YandexCloudAdapter(YandexServiceSdkFacade yandexServiceSdkFacade) =>
 			_yandexServiceSdkFacade = yandexServiceSdkFacade ??
 				throw new ArgumentNullException(nameof(yandexServiceSdkFacade));
 
@@ -34,7 +34,7 @@ namespace Sources.Infrastructure.Adapters
 		public void Authorize() =>
 			_yandexServiceSdkFacade.Authorize();
 
-		public bool IsAuthorized { get; }
+		public bool IsAuthorized => _yandexServiceSdkFacade.IsAuthorized;
 	}
 #endif
 }

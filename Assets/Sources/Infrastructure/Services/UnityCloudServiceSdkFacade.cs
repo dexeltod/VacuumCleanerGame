@@ -4,7 +4,7 @@ using Sources.InfrastructureInterfaces;
 
 namespace Sources.Infrastructure.Services
 {
-	public class UnityCloudPlayerDataService : ICloudPlayerDataService
+	public class UnityCloudServiceSdkFacade : ICloudServiceSdkFacade
 	{
 		public UniTask<IPlayerAccount> GetPlayerAccount() =>
 			new(null);
