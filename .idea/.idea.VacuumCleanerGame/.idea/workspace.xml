@@ -9,24 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e72b9b77-a85b-4195-b3c2-5f5bad8d4534" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VacuumCleanerGame/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Game/ApplicationQuitHandler.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Game/ApplicationQuitHandler.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Game/Coroutine/CoroutineRunner.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Game/Coroutine/CoroutineRunner.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Game/Player/Player.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Game/Player/Player.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Game/Ui/MainMenu/MainMenuCanvas.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Game/Ui/MainMenu/MainMenuCanvas.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/Bootstrapp/Boot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/Bootstrapp/Boot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Application/InputSystems/InputSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Application/InputSystems/InputSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Controllers/MainMenu/MainMenuPresenter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Controllers/MainMenu/MainMenuPresenter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/Authorization/AuthorizationFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/Factories/Authorization/AuthorizationFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Infrastructure/StateMachine/GameStates/MenuState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Infrastructure/StateMachine/GameStates/MenuState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Services/DomainServices/YandexSaveLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/DomainServices/YandexSaveLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sources/Services/GameFocusHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Services/GameFocusHandler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/VContainer/Boot.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/VContainer/Boot.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/Packages/com.unity.probuilder/Settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/Packages/com.unity.probuilder/Settings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/boot.config" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
