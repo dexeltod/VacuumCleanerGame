@@ -20,7 +20,6 @@ namespace Sources.Application.Bootstrapp
 		{
 			new ServiceRegister(builder).Register();
 
-			Debug.Log("Finish Boot");
 		}
 	}
 }

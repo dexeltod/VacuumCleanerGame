@@ -81,7 +81,7 @@ namespace Sources.Controllers.MainMenu
 			_mainMenuView.LeaderboardButton.onClick.AddListener(OnShowLeaderBoard);
 			_mainMenuView.AddScoreButton.onClick.AddListener(OnAddLeader);
 			_mainMenuView.SettingsButton.onClick.AddListener(OnSettings);
-			_mainMenuView.AddButton.onClick.AddListener(OnAddPanel);
+			// _mainMenuView.AddButton.onClick.AddListener(OnAddPanel);
 
 			_mainMenuView.Enable();
 			_settingsView.MasterVolumeSlider.onValueChanged.AddListener(OnSoundChanged);
@@ -94,6 +94,7 @@ namespace Sources.Controllers.MainMenu
 
 		public override void Disable()
 		{
+			Debug.Log("Disable MainMenuPresenter");
 			_settingsView.MasterVolumeSlider.onValueChanged.RemoveListener(OnSoundChanged);
 
 			_mainMenuView.PlayButton.onClick.RemoveListener(OnPlay);
@@ -101,7 +102,7 @@ namespace Sources.Controllers.MainMenu
 			_mainMenuView.LeaderboardButton.onClick.RemoveListener(OnShowLeaderBoard);
 			_mainMenuView.AddScoreButton.onClick.RemoveListener(OnAddLeader);
 			_mainMenuView.SettingsButton.onClick.RemoveListener(OnSettings);
-			_mainMenuView.AddButton.onClick.RemoveListener(OnAddPanel);
+			// _mainMenuView.AddButton.onClick.RemoveListener(OnAddPanel);
 			_mainMenuView.Disable();
 		}
 
@@ -126,7 +127,7 @@ namespace Sources.Controllers.MainMenu
 
 			if (_leaderboardInitialized == false)
 			{
-				_leaderBoardPlayersFactory.Create();
+				// _leaderBoardPlayersFactory.Create();
 				_leaderboardInitialized = true;
 			}
 

@@ -96,7 +96,7 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 		public async void Enter()
 		{
-			_gameFocusHandlerProvider.Self.Enable();
+			// _gameFocusHandlerProvider.Self.Enable();
 
 			await _sceneLoader.Load(ConstantNames.MenuScene);
 

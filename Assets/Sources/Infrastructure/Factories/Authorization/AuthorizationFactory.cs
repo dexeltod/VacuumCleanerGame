@@ -48,7 +48,7 @@ namespace Sources.Infrastructure.Factories.Authorization
 
 			Construct(authorizationView, authorizationPresenter);
 
-			сloudServiceSdkFacade.SetStatusInitialized();
+			// сloudServiceSdkFacade.SetStatusInitialized();
 
 			_cloudServiceSdkFacadeProvider.Register(сloudServiceSdkFacade);
 
