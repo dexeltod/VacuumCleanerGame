@@ -1,4 +1,5 @@
 using System;
+using Agava.WebUtility;
 using Sources.Infrastructure.Services;
 using Sources.Utils.ConstantNames;
 using UnityEngine;
@@ -20,19 +21,19 @@ namespace Sources.Services
 
 		private string MasterVolume => ConstantNames.Sound.SoundMixerNames.MasterVolume;
 
-		// public void Enable()
-		// {
-		// 	_applicationQuitHandler.ApplicationClosed += Disable;
-		// 	Application.focusChanged += OnFocusChanged;
-		// 	WebApplication.InBackgroundChangeEvent += OnInBackgroundChanged;
-		// }
-		//
-		// private void Disable()
-		// {
-		// 	_applicationQuitHandler.ApplicationClosed -= Disable;
-		// 	Application.focusChanged -= OnFocusChanged;
-		// 	WebApplication.InBackgroundChangeEvent -= OnInBackgroundChanged;
-		// }
+		public void Enable()
+		{
+			_applicationQuitHandler.ApplicationClosed += Disable;
+			Application.focusChanged += OnFocusChanged;
+			WebApplication.InBackgroundChangeEvent += OnInBackgroundChanged;
+		}
+
+		private void Disable()
+		{
+			_applicationQuitHandler.ApplicationClosed -= Disable;
+			Application.focusChanged -= OnFocusChanged;
+			WebApplication.InBackgroundChangeEvent -= OnInBackgroundChanged;
+		}
 
 		private void OnInBackgroundChanged(bool isBackground)
 		{

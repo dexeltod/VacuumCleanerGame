@@ -564,7 +564,7 @@ GameObject:
   - component: {fileID: 58144685747667222}
   - component: {fileID: 5275572608578037429}
   m_Layer: 5
-  m_Name: YesNoButtonsCanvas
+  m_Name: UpgradeYesNoButtonsCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -18,10 +18,16 @@ namespace Sources.Infrastructure.Yandex
 		public void SetStatusInitialized() =>
 			YandexGamesSdk.GameReady();
 
-		public string GetPlayerLanguage() =>
-			YandexGamesSdk.Environment.i18n.lang;
+		public async UniTask<string> GetPlayerLanguage()
+		{
+			string language = YandexGamesSdk.Environment.i18n.lang;
 
-		public async void Authorize()
+			await UniTask.WaitWhile(() => string.IsNullOrEmpty(language));
+
+			return language;
+		}
+
+		public async UniTask Authorize()
 		{
 			bool isProcessCompleted = false;
 

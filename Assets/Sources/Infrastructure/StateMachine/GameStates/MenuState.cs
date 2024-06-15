@@ -96,14 +96,14 @@ namespace Sources.Infrastructure.StateMachine.GameStates
 
 		public async void Enter()
 		{
-			// _gameFocusHandlerProvider.Self.Enable();
+			_gameFocusHandlerProvider.Self.Enable();
 
 			await _sceneLoader.Load(ConstantNames.MenuScene);
 
 			CreateMainMenuPresenter();
 
 #if YANDEX_CODE
-			var language = _cloudServiceSdkFacadeProvider.Self.GetPlayerLanguage();
+			var language = await _cloudServiceSdkFacadeProvider.Self.GetPlayerLanguage();
 			Debug.Log("Language: " + language);
 			_localizationService.SetLocalLanguage(language);
 #endif

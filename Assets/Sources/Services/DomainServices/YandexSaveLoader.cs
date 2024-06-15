@@ -58,8 +58,8 @@ namespace Sources.Services.DomainServices
 
 		public async UniTask Initialize()
 		{
-			// await YandexGamesSdk.Initialize();
-			// YandexGamesSdk.GameReady();
+			await YandexGamesSdk.Initialize();
+			YandexGamesSdk.GameReady();
 		}
 	}
 }

@@ -37,8 +37,10 @@ namespace Sources.Presentation.UI
 		public GameObject LeaderBoardView => _leaderBoardView;
 		public Button AddButton => _addButton;
 
-		public override void Enable() =>
-			_playButtonTween ??= CustomTweeners.StartPulseLocal(_playButton.transform);
+		public override void Enable()
+		{
+			// _playButtonTween ??= CustomTweeners.StartPulseLocal(_playButton.transform);
+		}
 
 		public override void Disable() =>
 			_playButtonTween.Kill();

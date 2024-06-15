@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Sources.DomainInterfaces;
 
@@ -7,8 +8,8 @@ namespace Sources.InfrastructureInterfaces
 	{
 		UniTask<IPlayerAccount> GetPlayerAccount();
 		void SetStatusInitialized();
-		void Authorize();
+		UniTask Authorize();
 		bool IsAuthorized { get; }
-		string GetPlayerLanguage();
+		UniTask<string> GetPlayerLanguage();
 	}
 }

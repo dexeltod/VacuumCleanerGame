@@ -1,9 +1,12 @@
 using System;
+using System.Threading.Tasks;
+using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
-using Sources.Domain;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Yandex;
 using Sources.InfrastructureInterfaces;
+using UnityEngine;
+using PlayerAccount = Sources.Domain.PlayerAccount;
 
 namespace Sources.Infrastructure.Adapters
 {
@@ -11,6 +14,8 @@ namespace Sources.Infrastructure.Adapters
 	public class YandexCloudAdapter : ICloudServiceSdkFacade
 	{
 		private readonly YandexServiceSdkFacade _yandexServiceSdkFacade;
+		private PlayerAccount _playerAccount;
+		private string _playerLanguage;
 
 		public YandexCloudAdapter(YandexServiceSdkFacade yandexServiceSdkFacade) =>
 			_yandexServiceSdkFacade = yandexServiceSdkFacade ??
@@ -18,26 +23,37 @@ namespace Sources.Infrastructure.Adapters
 
 		public async UniTask<IPlayerAccount> GetPlayerAccount()
 		{
-			var account = await _yandexServiceSdkFacade.GetPlayerAccount();
+			if (_playerAccount != null)
+				return _playerAccount;
 
-			return new PlayerAccount(
+			PlayerAccountProfileDataResponse account = await _yandexServiceSdkFacade.GetPlayerAccount();
+
+			_playerAccount = new PlayerAccount(
 				account.publicName,
 				account.uniqueID,
 				account.lang,
 				account.profilePicture
 			);
+
+			return _playerAccount;
 		}
 
 		public void SetStatusInitialized() =>
 			_yandexServiceSdkFacade.SetStatusInitialized();
 
-		public void Authorize() =>
-			_yandexServiceSdkFacade.Authorize();
+		public async UniTask Authorize() =>
+			await _yandexServiceSdkFacade.Authorize();
 
 		public bool IsAuthorized => _yandexServiceSdkFacade.IsAuthorized;
 
-		public string GetPlayerLanguage() =>
-			_yandexServiceSdkFacade.GetPlayerLanguage();
+		public async UniTask<string> GetPlayerLanguage()
+		{
+			Debug.Log($"PlayerLanguage is {_playerAccount.Language}");
+
+			_playerLanguage ??= await _yandexServiceSdkFacade.GetPlayerLanguage();
+
+			return _playerLanguage;
+		}
 	}
 #endif
 }

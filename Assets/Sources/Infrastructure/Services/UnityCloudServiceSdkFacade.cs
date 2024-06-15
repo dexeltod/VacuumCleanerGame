@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces;
@@ -15,11 +16,14 @@ namespace Sources.Infrastructure.Services
 
 		public bool IsAuthorized => CheckAuthorization();
 
-		public string GetPlayerLanguage() =>
-			"ru";
+		public UniTask<string> GetPlayerLanguage() =>
+			new("ru");
 
-		public void Authorize() =>
+		public UniTask Authorize()
+		{
 			_isAuthorized = true;
+			return UniTask.CompletedTask;
+		}
 
 		private bool CheckAuthorization() =>
 			_isAuthorized;
