@@ -1,42 +1,65 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class DebugHuy : MonoBehaviour
 {
-	[SerializeField] private GraphicRaycaster _graphicRaycaster;
-	private EventSystem _eventSystem;
+    [SerializeField] private GraphicRaycaster _graphicRaycaster;
+    private EventSystem _eventSystem;
+    private Coroutine _coroutine;
+    private WaitForSeconds _waitForSeconds = new WaitForSeconds(1);
 
-	void Update()
-	{
-		_eventSystem = EventSystem.current;
-		// Проверяем указатель мыши
-		CheckUGUIElementUnderPointer();
+    private void OnEnable()
+    {
+        _eventSystem = EventSystem.current;
+        _coroutine = StartCoroutine(StartDebug());
+    }
 
-		// Можно также сделать проверку каждый Update:
-		// CheckUGUIElementUnderPointer();
-	}
+    private void OnDestroy()
+    {
+        _eventSystem = EventSystem.current;
 
-	private void CheckUGUIElementUnderPointer()
-	{
-		// Создаем PointerEventData с текущим положением мыши
-		PointerEventData pointerEventData = new PointerEventData(_eventSystem)
-		{
-			position = Input.mousePosition
-		};
+        StopCoroutine(_coroutine);
+    }
 
-		// Создаем список для сохранения результатов
-		List<RaycastResult> results = new List<RaycastResult>();
+    private void Update()
+    {
+    }
 
-		// Делаем raycast
-		_graphicRaycaster.Raycast(pointerEventData, results);
+    private IEnumerator StartDebug()
+    {
+        while (true)
+        {
+            var context = new InputAction();
 
-		// Если есть результаты, выводим название первого элемента в лог
-		foreach (RaycastResult result in results)
-		{
-			Debug.Log("UI Element: " + result.gameObject.name);
-			// Можно добавить процедуру обработки этого элемента здесь
-		}
-	}
+
+            // Создаем PointerEventData с текущим положением мыши
+            List<RaycastResult> results = new List<RaycastResult>();
+
+
+            PointerEventData pointerEventData = new PointerEventData(_eventSystem)
+            {
+                position = Input.mousePosition
+            };
+
+
+            // Создаем список для сохранения результатов
+
+            // Делаем raycast
+            _graphicRaycaster.Raycast(pointerEventData, results);
+
+            if (results != null && results.Count > 0)
+            {
+                Debug.Log("UI Element: " + results[0].gameObject.name);
+
+                results.Clear();
+            }
+
+            yield return _waitForSeconds;
+        }
+    }
 }
