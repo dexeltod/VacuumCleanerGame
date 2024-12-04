@@ -1,9 +1,8 @@
-﻿using Plugins.CW.Shared.Common.Required.Scripts;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using CW.Common;
 
-namespace Plugins.CW.Shared.Common.Examples.Scripts
+namespace CW.Common
 {
 	/// <summary>This component allows you to quickly build a UI button to activate only this GameObject when clicked.</summary>
 	[HelpURL(CwShared.HelpUrlPrefix + "CwDemoButtonBuilder")]
@@ -86,15 +85,21 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			return Instantiate(buttonPrefab, buttonRoot, false);
 		}
 	}
+}
 
 #if UNITY_EDITOR
+namespace PaintIn3D
+{
+	using UnityEditor;
+	using TARGET = CwDemoButtonBuilder;
+
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(CwDemoButtonBuilder))]
+	[CustomEditor(typeof(TARGET))]
 	public class CwDemoButtonBuilder_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			CwDemoButtonBuilder tgt; CwDemoButtonBuilder[] tgts; GetTargets(out tgt, out tgts);
+			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
 
 			Draw("buttonPrefab", "The built button will be based on this prefab.");
 			Draw("buttonRoot", "The built button will be placed under this transform.");
@@ -115,6 +120,5 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			}
 		}
 	}
-
-#endif
 }
+#endif

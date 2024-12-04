@@ -1,43 +1,23 @@
-using Plugins.CW.Shared.Common.Required.Scripts;
-using UnityEditor;
 using UnityEngine;
+using CW.Common;
 
-namespace Plugins.CW.LeanCommon.Extras.Scripts
+namespace Lean.Common
 {
 	/// <summary>This component allows you to change the color of the SpriteRenderer attached to the current GameObject when selected.</summary>
 	[ExecuteInEditMode]
 	[RequireComponent(typeof(SpriteRenderer))]
-	[HelpURL(Required.Scripts.LeanCommon.HelpUrlPrefix + "LeanSelectableSpriteRendererColor")]
-	[AddComponentMenu(Required.Scripts.LeanCommon.ComponentPathPrefix + "Selectable SpriteRenderer Color")]
+	[HelpURL(LeanCommon.HelpUrlPrefix + "LeanSelectableSpriteRendererColor")]
+	[AddComponentMenu(LeanCommon.ComponentPathPrefix + "Selectable SpriteRenderer Color")]
 	public class LeanSelectableSpriteRendererColor : LeanSelectableBehaviour
 	{
 		/// <summary>The default color given to the SpriteRenderer.</summary>
-		public Color DefaultColor
-		{
-			set
-			{
-				defaultColor = value;
-				UpdateColor();
-			}
-			get { return defaultColor; }
-		}
-
-		[SerializeField] private Color defaultColor = Color.white;
+		public Color DefaultColor { set { defaultColor = value; UpdateColor(); } get { return defaultColor; } } [SerializeField] private Color defaultColor = Color.white;
 
 		/// <summary>The color given to the SpriteRenderer when selected.</summary>
-		public Color SelectedColor
-		{
-			set
-			{
-				selectedColor = value;
-				UpdateColor();
-			}
-			get { return selectedColor; }
-		}
+		public Color SelectedColor { set { selectedColor = value; UpdateColor(); } get { return selectedColor; } } [SerializeField] private Color selectedColor = Color.green;
 
-		[SerializeField] private Color selectedColor = Color.green;
-
-		[System.NonSerialized] private SpriteRenderer cachedSpriteRenderer;
+		[System.NonSerialized]
+		private SpriteRenderer cachedSpriteRenderer;
 
 		protected override void OnSelected(LeanSelect select)
 		{
@@ -58,16 +38,21 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			cachedSpriteRenderer.color = color;
 		}
 	}
+}
 
 #if UNITY_EDITOR
-	[CanEditMultipleObjects] [CustomEditor(typeof(LeanSelectableSpriteRendererColor))]
+namespace Lean.Common.Editor
+{
+	using UnityEditor;
+	using TARGET = LeanSelectableSpriteRendererColor;
+
+	[CanEditMultipleObjects]
+	[CustomEditor(typeof(TARGET))]
 	public class LeanSelectableSpriteRendererColor_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			LeanSelectableSpriteRendererColor tgt;
-			LeanSelectableSpriteRendererColor[] tgts;
-			GetTargets(out tgt, out tgts);
+			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
 
 			var updateColor = false;
 
@@ -82,6 +67,5 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			}
 		}
 	}
-
-#endif
 }
+#endif

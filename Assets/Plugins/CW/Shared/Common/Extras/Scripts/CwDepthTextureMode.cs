@@ -1,15 +1,13 @@
-﻿using Plugins.CW.Shared.Common.Required.Scripts;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
+using CW.Common;
 
-namespace Plugins.CW.Shared.Common.Extras.Scripts
+namespace CW.Common
 {
 	/// <summary>This component allows you to control a Camera component's depthTextureMode setting.</summary>
 	[ExecuteInEditMode]
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Camera))]
-	[HelpURL(CwShared.HelpUrlPrefix + "CwDepthTextureMode")]
-	[AddComponentMenu(CwShared.ComponentMenuPrefix + "Depth Texture Mode")]
+	[AddComponentMenu("CW/Common/CW Depth Texture Mode")]
 	public class CwDepthTextureMode : MonoBehaviour
 	{
 		/// <summary>The depth mode that will be applied to the camera.</summary>
@@ -30,15 +28,21 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 			UpdateDepthMode();
 		}
 	}
+}
 
 #if UNITY_EDITOR
+namespace CW.Common
+{
+	using UnityEditor;
+	using TARGET = CwDepthTextureMode;
+
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(CwDepthTextureMode))]
+	[CustomEditor(typeof(TARGET))]
 	public class CwDepthTextureMode_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			CwDepthTextureMode tgt; CwDepthTextureMode[] tgts; GetTargets(out tgt, out tgts);
+			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
 
 			Draw("depthMode", "The depth mode that will be applied to the camera.");
 		}
@@ -95,6 +99,5 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 			return camera != null && camera.depthTextureMode == DepthTextureMode.DepthNormals || ((int)camera.depthTextureMode & 1) != 0;
 		}
 	}
-
-#endif
 }
+#endif

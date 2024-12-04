@@ -156,7 +156,8 @@ PlayerSettings:
   resetResolutionOnWindowResize: 0
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
-  applicationIdentifier: {}
+  applicationIdentifier:
+    Standalone: com.Dexeltod.VacuumCleanerGame
   buildNumber:
     Standalone: 0
     VisionOS: 0
@@ -847,8 +848,8 @@ PlayerSettings:
     PS4: DOTWEEN
     PS5: DOTWEEN
     Stadia: DOTWEEN
-    Standalone: CROSS_PLATFORM_INPUT;DOTWEEN
-    WebGL: YANDEX_CODE;DOTWEEN;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;ODIN_VALIDATOR;ODIN_VALIDATOR_3_1;ODIN_VALIDATOR_3_2;ODIN_VALIDATOR_3_3;ODIN_INSPECTOR_EDITOR_ONLY;!DEV
+    Standalone: CROSS_PLATFORM_INPUT;DOTWEEN;YANDEX_CODE;!DEV
+    WebGL: '!YANDEX_CODE;DOTWEEN;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;ODIN_VALIDATOR;ODIN_VALIDATOR_3_1;ODIN_VALIDATOR_3_2;ODIN_VALIDATOR_3_3;ODIN_INSPECTOR_EDITOR_ONLY;!DEV'
     Windows Store Apps: DOTWEEN
     XboxOne: DOTWEEN
     iPhone: CROSS_PLATFORM_INPUT;MOBILE_INPUT;DOTWEEN
@@ -965,7 +966,7 @@ PlayerSettings:
   hmiLogStartupTiming: 0
   hmiCpuConfiguration: 
   apiCompatibilityLevel: 6
-  activeInputHandler: 0
+  activeInputHandler: 1
   windowsGamepadBackendHint: 0
   cloudProjectId: 63b02ce3-6ea2-4348-a1f8-df7925356244
   framebufferDepthMemorylessMode: 0

@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-using Plugins.CW.Shared.Common.Required.Scripts;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
-namespace Plugins.CW.Shared.Common.Extras.Scripts
+namespace CW.Common
 {
 	/// <summary>This component combines finger and mouse and keyboard inputs into a single interface.</summary>
 	[HelpURL(CwShared.HelpUrlPrefix + "CwInputManager")]
@@ -468,7 +467,7 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 		/// <summary>If your component uses this component, then make sure you call this method at least once before you use it (e.g. from <b>Awake</b>).</summary>
 		public static void EnsureThisComponentExists()
 		{
-			if (Application.isPlaying == true && FindObjectOfType<CwInputManager>() == null)
+			if (Application.isPlaying == true && CwHelper.FindAnyObjectByType<CwInputManager>() == null)
 			{
 				new GameObject(typeof(CwInputManager).Name).AddComponent<CwInputManager>();
 			}

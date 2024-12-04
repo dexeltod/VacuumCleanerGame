@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Plugins.CW.LeanCommon.Extras.Scripts
+namespace Lean.Common
 {
 	/// <summary>This is the base class for all components that need to implement some kind of special logic when selected. You can do this manually without this class, but this makes it much easier.
 	/// NOTE: This component will register and unregister the associated LeanSelectable in OnEnable and OnDisable.</summary>

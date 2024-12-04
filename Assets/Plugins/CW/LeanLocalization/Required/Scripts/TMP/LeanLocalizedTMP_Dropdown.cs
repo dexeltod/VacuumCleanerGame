@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using UnityEngine;
+using System.Collections.Generic;
 using TMPro;
-using UnityEngine;
 
-namespace Plugins.CW.LeanLocalization.Required.Scripts.TMP
+namespace Lean.Localization
 {
 	/// <summary>This component will update a <b>TMP_Dropdown</b> component with localized text, or use a fallback if none is found.</summary>
 	[ExecuteInEditMode]

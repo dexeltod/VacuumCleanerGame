@@ -1,7 +1,6 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Plugins.CW.Shared.Common.Required.Scripts
+namespace CW.Common
 {
 	/// <summary>This class defines documentation data that can be viewed in the inspector.</summary>
 	public class CwGuide : ScriptableObject
@@ -53,9 +52,15 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			}
 		}
 	}
+}
 
 #if UNITY_EDITOR
-	[CustomEditor(typeof(CwGuide))]
+namespace CW.Common
+{
+	using UnityEditor;
+	using TARGET = CwGuide;
+
+	[CustomEditor(typeof(TARGET))]
 	public class CwGuide_Inspector : Editor
 	{
 		private static GUIStyle titleStyle;
@@ -183,6 +188,5 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			GUILayout.EndHorizontal();
 		}
 	}
-
-#endif
 }
+#endif

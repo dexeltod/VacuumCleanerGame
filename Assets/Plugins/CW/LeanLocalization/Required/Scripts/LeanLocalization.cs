@@ -1,19 +1,16 @@
-using System.Collections.Generic;
-using Plugins.CW.Shared.Common.Required.Scripts;
-using UnityEditor;
 using UnityEngine;
+using System.Collections.Generic;
+using Lean.Common;
+using CW.Common;
+using System.Linq;
 
-namespace Plugins.CW.LeanLocalization.Required.Scripts
+namespace Lean.Localization
 {
-	public class LocalisationFactory
-	{
-	}
-
 	/// <summary>This component manages a global list of translations for easy access.
 	/// Translations are gathered from the <b>prefabs</b> list, as well as from any active and enabled <b>LeanSource</b> components in the scene.</summary>
 	[ExecuteInEditMode]
-	[HelpURL(LeanLocalization.HelpUrlPrefix + "LeanLocalization")]
-	[AddComponentMenu(LeanLocalization.ComponentPathPrefix + "Localization")]
+	[HelpURL(HelpUrlPrefix + "LeanLocalization")]
+	[AddComponentMenu(ComponentPathPrefix + "Localization")]
 	public class LeanLocalization : MonoBehaviour
 	{
 		public enum DetectType
@@ -31,7 +28,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			WhenChangedAlt
 		}
 
-		public const string HelpUrlPrefix = LeanCommon.Required.Scripts.LeanCommon.HelpUrlPrefix + "LeanLocalization#";
+		public const string HelpUrlPrefix = LeanCommon.HelpUrlPrefix + "LeanLocalization#";
 
 		public const string ComponentPathPrefix = "Lean/Localization/Lean ";
 
@@ -427,7 +424,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			// Go through all enabled phrases
 			for (var i = 0; i < Instances.Count; i++)
 			{
-				//	UnityEditor.EditorUtility.SetDirty(Instances[i].gameObject);
+			//	UnityEditor.EditorUtility.SetDirty(Instances[i].gameObject);
 			}
 #endif
 		}
@@ -522,7 +519,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 					{
 						CurrentAliases.TryGetValue(Application.systemLanguage.ToString(), out currentLanguage);
 					}
-						break;
+					break;
 
 					case DetectType.CurrentCulture:
 					{
@@ -533,7 +530,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 							CurrentAliases.TryGetValue(cultureInfo.Name, out currentLanguage);
 						}
 					}
-						break;
+					break;
 
 					case DetectType.CurrentUICulture:
 					{
@@ -544,7 +541,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 							CurrentAliases.TryGetValue(cultureInfo.Name, out currentLanguage);
 						}
 					}
-						break;
+					break;
 				}
 			}
 
@@ -630,10 +627,16 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		}
 #endif
 	}
+}
 
 #if UNITY_EDITOR
+namespace Lean.Localization.Editor
+{
+	using UnityEditor;
+	using TARGET = LeanLocalization;
+
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(LeanLocalization))]
+	[CustomEditor(typeof(TARGET))]
 	public class LeanLocalization_Editor : CwEditor
 	{
 		class PresetLanguage
@@ -646,7 +649,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 		protected override void OnInspector()
 		{
-			LeanLocalization tgt; LeanLocalization[] tgts; GetTargets(out tgt, out tgts);
+			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
 
 			LeanLocalization.UpdateTranslations();
 
@@ -660,20 +663,20 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 			Draw("detectLanguage", "How should the cultures be used to detect the user's device language?");
 			BeginDisabled(true);
-			BeginIndent();
-			switch (tgt.DetectLanguage)
-			{
-				case LeanLocalization.DetectType.SystemLanguage:
-					EditorGUILayout.TextField("SystemLanguage", Application.systemLanguage.ToString());
-					break;
-				case LeanLocalization.DetectType.CurrentCulture:
-					EditorGUILayout.TextField("CurrentCulture", System.Globalization.CultureInfo.CurrentCulture.ToString());
-					break;
-				case LeanLocalization.DetectType.CurrentUICulture:
-					EditorGUILayout.TextField("CurrentUICulture", System.Globalization.CultureInfo.CurrentUICulture.ToString());
-					break;
-			}
-			EndIndent();
+				BeginIndent();
+					switch (tgt.DetectLanguage)
+					{
+						case LeanLocalization.DetectType.SystemLanguage:
+							EditorGUILayout.TextField("SystemLanguage", Application.systemLanguage.ToString());
+						break;
+						case LeanLocalization.DetectType.CurrentCulture:
+							EditorGUILayout.TextField("CurrentCulture", System.Globalization.CultureInfo.CurrentCulture.ToString());
+						break;
+						case LeanLocalization.DetectType.CurrentUICulture:
+							EditorGUILayout.TextField("CurrentUICulture", System.Globalization.CultureInfo.CurrentUICulture.ToString());
+						break;
+					}
+				EndIndent();
 			EndDisabled();
 			Draw("defaultLanguage", "If the application is started and no language has been loaded or auto detected, this language will be used.");
 
@@ -694,7 +697,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			DrawTranslations();
 		}
 
-		private void DrawPrefabs(LeanLocalization tgt)
+		private void DrawPrefabs(TARGET tgt)
 		{
 			var rectA = Reserve();
 			var rectB = rectA; rectB.xMin += EditorGUIUtility.labelWidth;
@@ -710,16 +713,16 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			}
 
 			BeginIndent();
-			for (var i = 0; i < tgt.Prefabs.Count; i++)
-			{
-				DrawPrefabs(tgt, i);
-			}
+				for (var i = 0; i < tgt.Prefabs.Count; i++)
+				{
+					DrawPrefabs(tgt, i);
+				}
 			EndIndent();
 		}
 
 		private int expandPrefab = -1;
 
-		private void DrawPrefabs(LeanLocalization tgt, int index)
+		private void DrawPrefabs(TARGET tgt, int index)
 		{
 			var rectA   = Reserve();
 			var rectB   = rectA; rectB.xMax -= 22.0f;
@@ -738,27 +741,27 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			}
 
 			BeginDisabled(true);
-			BeginError(prefab.Root == null);
-			EditorGUI.ObjectField(rectB, prefab.Root, typeof(Object), false);
-			EndError();
-			if (prefab.Root != null)
-			{
-				Undo.RecordObject(tgt, "Rebuild Sources");
-
-				rebuilt |= prefab.RebuildSources();
-
-				if (expand == true)
+				BeginError(prefab.Root == null);
+					EditorGUI.ObjectField(rectB, prefab.Root, typeof(Object), false);
+				EndError();
+				if (prefab.Root != null)
 				{
-					var sources = prefab.Sources;
+					Undo.RecordObject(tgt, "Rebuild Sources");
 
-					BeginIndent();
-					foreach (var source in sources)
+					rebuilt |= prefab.RebuildSources();
+
+					if (expand == true)
 					{
-						EditorGUI.ObjectField(Reserve(), source, typeof(LeanSource), false);
+						var sources = prefab.Sources;
+
+						BeginIndent();
+							foreach (var source in sources)
+							{
+								EditorGUI.ObjectField(Reserve(), source, typeof(LeanSource), false);
+							}
+						EndIndent();
 					}
-					EndIndent();
 				}
-			}
 			EndDisabled();
 			if (rebuilt == true)
 			{
@@ -791,16 +794,16 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			EditorGUI.LabelField(rectA, "Translations", EditorStyles.boldLabel);
 			translationFilter = EditorGUI.TextField(rectB, "", translationFilter);
 			BeginDisabled(string.IsNullOrEmpty(translationFilter) == true || LeanLocalization.CurrentTranslations.ContainsKey(translationFilter) == true);
-			if (GUI.Button(rectC, "Add", EditorStyles.miniButton) == true)
-			{
-				var phrase = LeanLocalization.AddPhraseToFirst(translationFilter);
+				if (GUI.Button(rectC, "Add", EditorStyles.miniButton) == true)
+				{
+					var phrase = LeanLocalization.AddPhraseToFirst(translationFilter);
 
-				LeanLocalization.UpdateTranslations();
+					LeanLocalization.UpdateTranslations();
 
-				Selection.activeObject = phrase;
+					Selection.activeObject = phrase;
 
-				EditorGUIUtility.PingObject(phrase);
-			}
+					EditorGUIUtility.PingObject(phrase);
+				}
 			EndDisabled();
 
 			if (LeanLocalization.CurrentTranslations.Count == 0 && string.IsNullOrEmpty(translationFilter) == true)
@@ -812,70 +815,70 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				var total = 0;
 
 				BeginIndent();
-				foreach (var pair in LeanLocalization.CurrentTranslations)
-				{
-					var name = pair.Key;
-
-					if (string.IsNullOrEmpty(translationFilter) == true || name.IndexOf(translationFilter, System.StringComparison.InvariantCultureIgnoreCase) >= 0)
+					foreach (var pair in LeanLocalization.CurrentTranslations)
 					{
-						var translation = pair.Value;
-						var rectT       = Reserve();
-						var expand      = EditorGUI.Foldout(new Rect(rectT.x, rectT.y, 20, rectT.height), expandTranslation == translation, "");
+						var name = pair.Key;
 
-						if (expand == true)
+						if (string.IsNullOrEmpty(translationFilter) == true || name.IndexOf(translationFilter, System.StringComparison.InvariantCultureIgnoreCase) >= 0)
 						{
-							expandTranslation = translation;
-						}
-						else if (expandTranslation == translation)
-						{
-							expandTranslation = null;
-						}
+							var translation = pair.Value;
+							var rectT       = Reserve();
+							var expand      = EditorGUI.Foldout(new Rect(rectT.x, rectT.y, 20, rectT.height), expandTranslation == translation, "");
 
-						CalculateTranslation(pair.Value);
-
-						var data = translation.Data;
-
-						total++;
-
-						BeginDisabled(true);
-						BeginError(missing.Count > 0 || clashes.Count > 0);
-						if (data is Object)
-						{
-							EditorGUI.ObjectField(rectT, name, (Object)data, typeof(Object), true);
-						}
-						else
-						{
-							EditorGUI.TextField(rectT, name, data != null ? data.ToString() : "");
-						}
-						EndError();
-
-						if (expand == true)
-						{
-							BeginIndent();
-							foreach (var entry in translation.Entries)
+							if (expand == true)
 							{
-								BeginError(clashes.Contains(entry.Language) == true);
-								EditorGUILayout.ObjectField(entry.Language, entry.Owner, typeof(Object), true);
+								expandTranslation = translation;
+							}
+							else if (expandTranslation == translation)
+							{
+								expandTranslation = null;
+							}
+
+							CalculateTranslation(pair.Value);
+
+							var data = translation.Data;
+
+							total++;
+
+							BeginDisabled(true);
+								BeginError(missing.Count > 0 || clashes.Count > 0);
+									if (data is Object)
+									{
+										EditorGUI.ObjectField(rectT, name, (Object)data, typeof(Object), true);
+									}
+									else
+									{
+										EditorGUI.TextField(rectT, name, data != null ? data.ToString() : "");
+									}
 								EndError();
-							}
-							EndIndent();
-						}
-						EndDisabled();
 
-						if (expand == true)
-						{
-							foreach (var language in missing)
-							{
-								Warning("This translation isn't defined for the " + language + " language.");
-							}
+								if (expand == true)
+								{
+									BeginIndent();
+										foreach (var entry in translation.Entries)
+										{
+											BeginError(clashes.Contains(entry.Language) == true);
+												EditorGUILayout.ObjectField(entry.Language, entry.Owner, typeof(Object), true);
+											EndError();
+										}
+									EndIndent();
+								}
+							EndDisabled();
 
-							foreach (var language in clashes)
+							if (expand == true)
 							{
-								Warning("This translation is defined multiple times for the " + language + " language.");
+								foreach (var language in missing)
+								{
+									Warning("This translation isn't defined for the " + language + " language.");
+								}
+
+								foreach (var language in clashes)
+								{
+									Warning("This translation is defined multiple times for the " + language + " language.");
+								}
 							}
 						}
 					}
-				}
 				EndIndent();
 
 				if (total == 0)
@@ -925,33 +928,70 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			var rectC = rectA; rectC.xMin = rectC.xMax - 35.0f;
 			EditorGUI.LabelField(rectA, "Languages", EditorStyles.boldLabel);
 			languagesFilter = EditorGUI.TextField(rectB, "", languagesFilter);
-			BeginDisabled(string.IsNullOrEmpty(languagesFilter) == true || LeanLocalization.CurrentLanguages.ContainsKey(languagesFilter) == true);
-			if (GUI.Button(rectC, "Add", EditorStyles.miniButton) == true)
-			{
-				var language = LeanLocalization.AddLanguageToFirst(languagesFilter);
+			//BeginDisabled(string.IsNullOrEmpty(languagesFilter) == true || LeanLocalization.CurrentLanguages.ContainsKey(languagesFilter) == true);
+				if (GUI.Button(rectC, "Add", EditorStyles.miniButton) == true)
+				{
+					if (string.IsNullOrEmpty(languagesFilter) == true)
+					{
+						var menu = new GenericMenu();
 
-				LeanLocalization.UpdateTranslations();
+						var languagePrefabs = AssetDatabase.FindAssets("t:GameObject").
+							Select((guid) => AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid))).
+							Where((prefab) => prefab.GetComponent<LeanLanguage>() != null);
+						
+						foreach (var languagePrefab in languagePrefabs)
+						{
+							if (LeanLocalization.CurrentLanguages.ContainsKey(languagePrefab.name) == true)
+							{
+								menu.AddItem(new GUIContent(languagePrefab.name), true, () => {});
+							}
+							else
+							{
+								menu.AddItem(new GUIContent(languagePrefab.name), false, () =>
+									{
+										if (LeanLocalization.Instances.Count > 0)
+										{
+											var language = UnityEditor.PrefabUtility.InstantiatePrefab(languagePrefab, LeanLocalization.Instances[0].transform);
 
-				Selection.activeObject = language;
+											LeanLocalization.UpdateTranslations();
 
-				EditorGUIUtility.PingObject(language);
-			}
-			EndDisabled();
+											Selection.activeObject = language;
+
+											EditorGUIUtility.PingObject(language);
+										}
+									});
+							}
+						}
+
+						menu.ShowAsContext();
+					}
+					else
+					{
+						var language = LeanLocalization.AddLanguageToFirst(languagesFilter);
+
+						LeanLocalization.UpdateTranslations();
+
+						Selection.activeObject = language;
+
+						EditorGUIUtility.PingObject(language);
+					}
+				}
+			//EndDisabled();
 
 			if (LeanLocalization.CurrentLanguages.Count > 0 || string.IsNullOrEmpty(languagesFilter) == false)
 			{
 				var total = 0;
 
 				BeginIndent();
-				BeginDisabled(true);
-				foreach (var pair in LeanLocalization.CurrentLanguages)
-				{
-					if (string.IsNullOrEmpty(languagesFilter) == true || pair.Key.IndexOf(languagesFilter, System.StringComparison.InvariantCultureIgnoreCase) >= 0)
-					{
-						EditorGUILayout.ObjectField(pair.Key, pair.Value, typeof(Object), true); total++;
-					}
-				}
-				EndDisabled();
+					BeginDisabled(true);
+						foreach (var pair in LeanLocalization.CurrentLanguages)
+						{
+							if (string.IsNullOrEmpty(languagesFilter) == true || pair.Key.IndexOf(languagesFilter, System.StringComparison.InvariantCultureIgnoreCase) >= 0)
+							{
+								EditorGUILayout.ObjectField(pair.Key, pair.Value, typeof(Object), true); total++;
+							}
+						}
+					EndDisabled();
 				EndIndent();
 
 				if (total == 0)
@@ -971,16 +1011,16 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			EditorGUI.LabelField(rectA, "Tokens", EditorStyles.boldLabel);
 			tokensFilter = EditorGUI.TextField(rectB, "", tokensFilter);
 			BeginDisabled(string.IsNullOrEmpty(tokensFilter) == true || LeanLocalization.CurrentTokens.ContainsKey(tokensFilter) == true);
-			if (GUI.Button(rectC, "Add", EditorStyles.miniButton) == true)
-			{
-				var token = LeanLocalization.AddTokenToFirst(tokensFilter);
+				if (GUI.Button(rectC, "Add", EditorStyles.miniButton) == true)
+				{
+					var token = LeanLocalization.AddTokenToFirst(tokensFilter);
 
-				LeanLocalization.UpdateTranslations();
+					LeanLocalization.UpdateTranslations();
 
-				Selection.activeObject = token;
+					Selection.activeObject = token;
 
-				EditorGUIUtility.PingObject(token);
-			}
+					EditorGUIUtility.PingObject(token);
+				}
 			EndDisabled();
 
 			if (LeanLocalization.CurrentTokens.Count > 0 || string.IsNullOrEmpty(tokensFilter) == false)
@@ -988,15 +1028,15 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				var total = 0;
 
 				BeginIndent();
-				BeginDisabled(true);
-				foreach (var pair in LeanLocalization.CurrentTokens)
-				{
-					if (string.IsNullOrEmpty(tokensFilter) == true || pair.Key.IndexOf(tokensFilter, System.StringComparison.InvariantCultureIgnoreCase) >= 0)
-					{
-						EditorGUILayout.ObjectField(pair.Key, pair.Value, typeof(Object), true); total++;
-					}
-				}
-				EndDisabled();
+					BeginDisabled(true);
+						foreach (var pair in LeanLocalization.CurrentTokens)
+						{
+							if (string.IsNullOrEmpty(tokensFilter) == true || pair.Key.IndexOf(tokensFilter, System.StringComparison.InvariantCultureIgnoreCase) >= 0)
+							{
+								EditorGUILayout.ObjectField(pair.Key, pair.Value, typeof(Object), true); total++;
+							}
+						}
+					EndDisabled();
 				EndIndent();
 
 				if (total == 0)
@@ -1006,7 +1046,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			}
 		}
 
-		private void AddLanguage(LeanLocalization tgt, PresetLanguage presetLanguage)
+		private void AddLanguage(TARGET tgt, PresetLanguage presetLanguage)
 		{
 			Undo.RecordObject(tgt, "Add Language");
 
@@ -1037,6 +1077,5 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			Selection.activeGameObject = gameObject;
 		}
 	}
-
-#endif
 }
+#endif

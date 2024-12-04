@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
-namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
+namespace Lean.Localization
 {
 	/// <summary>This component will update a <b>UI.Dropdown</b> component with localized text, or use a fallback if none is found.</summary>
 	[ExecuteInEditMode]

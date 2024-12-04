@@ -1,8 +1,6 @@
-using Plugins.CW.Shared.Common.Required.Scripts;
-using UnityEditor;
 using UnityEngine;
 
-namespace Plugins.CW.Shared.Common.Extras.Scripts
+namespace CW.Common
 {
 	/// <summary>This makes the current <b>Transform</b> follow the <b>Target</b> Transform as if it were a child.</summary>
 	[ExecuteInEditMode]
@@ -101,23 +99,29 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 			}
 		}
 	}
+}
 
 #if UNITY_EDITOR
+namespace CW.Common
+{
+	using UnityEditor;
+	using TARGET = CwFollow;
+
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(CwFollow))]
+	[CustomEditor(typeof(TARGET))]
 	public class CwFollow_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			CwFollow tgt; CwFollow[] tgts; GetTargets(out tgt, out tgts);
+			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
 
 			Draw("follow", "What should this component follow?");
 			if (Any(tgts, t => t.Follow == CwFollow.FollowType.TargetTransform))
 			{
 				BeginIndent();
-				BeginError(Any(tgts, t => t.Target == null));
-				Draw("target", "The transform that will be followed.");
-				EndError();
+					BeginError(Any(tgts, t => t.Target == null));
+						Draw("target", "The transform that will be followed.");
+					EndError();
 				EndIndent();
 			}
 			Draw("damping", "How quickly this Transform follows the target.\n\n-1 = instant.");
@@ -131,6 +135,5 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 			Draw("localRotation", "This allows you to specify a rotational offset relative to the Target transform.");
 		}
 	}
-
-#endif
 }
+#endif

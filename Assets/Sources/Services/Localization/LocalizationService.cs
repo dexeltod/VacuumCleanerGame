@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using Plugins.CW.LeanLocalization.Required.Scripts;
+using Lean.Localization;
 using Sources.Services.Localization.Serializable;
 using Sources.ServicesInterfaces;
 using Sources.Utils;

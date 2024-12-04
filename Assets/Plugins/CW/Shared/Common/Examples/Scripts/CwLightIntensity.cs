@@ -1,58 +1,34 @@
-﻿using Plugins.CW.Shared.Common.Required.Scripts;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
+using CW.Common;
 
-namespace Plugins.CW.Shared.Common.Examples.Scripts
+namespace CW.Common
 {
 	/// <summary>This component will change the light intensity based on the current render pipeline.</summary>
 	[ExecuteInEditMode]
 	[RequireComponent(typeof(Light))]
-	[HelpURL(CwShared.HelpUrlPrefix + "CwLightIntensity")]
-	[AddComponentMenu(CwShared.ComponentMenuPrefix + "Light Intensity")]
+	[AddComponentMenu("CW/Common/CW Light Intensity")]
 	public class CwLightIntensity : MonoBehaviour
 	{
 		/// <summary>All light values will be multiplied by this before use.</summary>
-		public float Multiplier
-		{
-			set { multiplier = value; }
-			get { return multiplier; }
-		}
-
-		[SerializeField] private float multiplier = 1.0f;
+		public float Multiplier { set { multiplier = value; } get { return multiplier; } } [SerializeField] private float multiplier = 1.0f;
 
 		/// <summary>This allows you to control the intensity of the attached light when using the <b>Standard</b> rendering pipeline.
 		/// -1 = The attached light intensity will not be modified.</summary>
-		public float IntensityInStandard
-		{
-			set { intensityInStandard = value; }
-			get { return intensityInStandard; }
-		}
-
-		[SerializeField] private float intensityInStandard = 1.0f;
+		public float IntensityInStandard { set  { intensityInStandard = value; } get { return intensityInStandard; } } [SerializeField] private float intensityInStandard = 1.0f;
 
 		/// <summary>This allows you to control the intensity of the attached light when using the <b>URP</b> rendering pipeline.
 		/// -1 = The attached light intensity will not be modified.</summary>
-		public float IntensityInURP
-		{
-			set { intensityInURP = value; }
-			get { return intensityInURP; }
-		}
-
-		[SerializeField] private float intensityInURP = 1.0f;
+		public float IntensityInURP { set  { intensityInURP = value; } get { return intensityInURP; } } [SerializeField] private float intensityInURP = 1.0f;
 
 		/// <summary>This allows you to control the intensity of the attached light when using the <b>HDRP</b> rendering pipeline.
 		/// -1 = The attached light intensity will not be modified.</summary>
-		public float IntensityInHDRP
-		{
-			set { intensityInHDRP = value; }
-			get { return intensityInHDRP; }
-		}
+		public float IntensityInHDRP { set  { intensityInHDRP = value; } get { return intensityInHDRP; } } [SerializeField] private float intensityInHDRP = 120000.0f;
 
-		[SerializeField] private float intensityInHDRP = 120000.0f;
+		[System.NonSerialized]
+		private Light cachedLight;
 
-		[System.NonSerialized] private Light cachedLight;
-
-		[System.NonSerialized] private bool cachedLightSet;
+		[System.NonSerialized]
+		private bool cachedLightSet;
 
 #if __HDRP__
 		[System.NonSerialized]
@@ -65,7 +41,7 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			{
 				if (cachedLightSet == false)
 				{
-					cachedLight = GetComponent<Light>();
+					cachedLight    = GetComponent<Light>();
 					cachedLightSet = true;
 				}
 
@@ -75,17 +51,15 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 
 		protected virtual void Update()
 		{
-			var pipe = CwShaderBundle.DetectProjectPipeline();
-
-			if (CwShaderBundle.IsStandard(pipe) == true)
+			if (CwHelper.IsBIRP == true)
 			{
 				ApplyIntensity(intensityInStandard);
 			}
-			else if (CwShaderBundle.IsURP(pipe) == true)
+			else if (CwHelper.IsURP == true)
 			{
 				ApplyIntensity(intensityInURP);
 			}
-			else if (CwShaderBundle.IsHDRP(pipe) == true)
+			else if (CwHelper.IsHDRP == true)
 			{
 				ApplyIntensity(intensityInHDRP);
 			}
@@ -97,11 +71,11 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			{
 				if (cachedLightSet == false)
 				{
-					cachedLight = GetComponent<Light>();
+					cachedLight    = GetComponent<Light>();
 					cachedLightSet = true;
 				}
 
-#if __HDRP__
+				#if __HDRP__
 					if (cachedLightData == null)
 					{
 						cachedLightData = GetComponent<UnityEngine.Rendering.HighDefinition.HDAdditionalLightData>();
@@ -111,34 +85,31 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 					{
 						cachedLightData.SetIntensity(intensity * multiplier, UnityEngine.Rendering.HighDefinition.LightUnit.Lux);
 					}
-#else
-				cachedLight.intensity = intensity * multiplier;
-#endif
+				#else
+					cachedLight.intensity = intensity * multiplier;
+				#endif
 			}
 		}
 	}
+}
 
 #if UNITY_EDITOR
-	[CanEditMultipleObjects] [CustomEditor(typeof(CwLightIntensity))]
+namespace CW.Common
+{
+	using UnityEditor;
+	using TARGET = CwLightIntensity;
+
+	[CanEditMultipleObjects]
+	[CustomEditor(typeof(TARGET))]
 	public class P3dLight_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
 			Draw("multiplier", "All light values will be multiplied by this before use.");
-			Draw(
-				"intensityInStandard",
-				"This allows you to control the intensity of the attached light when using the Standard rendering pipeline.\n\n-1 = The attached light intensity will not be modified."
-			);
-			Draw(
-				"intensityInURP",
-				"This allows you to control the intensity of the attached light when using the URP rendering pipeline.\n\n-1 = The attached light intensity will not be modified."
-			);
-			Draw(
-				"intensityInHDRP",
-				"This allows you to control the intensity of the attached light when using the HDRP rendering pipeline.\n\n-1 = The attached light intensity will not be modified."
-			);
+			Draw("intensityInStandard", "This allows you to control the intensity of the attached light when using the Standard rendering pipeline.\n\n-1 = The attached light intensity will not be modified.");
+			Draw("intensityInURP", "This allows you to control the intensity of the attached light when using the URP rendering pipeline.\n\n-1 = The attached light intensity will not be modified.");
+			Draw("intensityInHDRP", "This allows you to control the intensity of the attached light when using the HDRP rendering pipeline.\n\n-1 = The attached light intensity will not be modified.");
 		}
 	}
-
-#endif
 }
+#endif

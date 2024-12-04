@@ -1,14 +1,13 @@
-using Plugins.CW.Shared.Common.Required.Scripts;
-using UnityEditor;
 using UnityEngine;
+using CW.Common;
 
-namespace Plugins.CW.LeanCommon.Extras.Scripts
+namespace Lean.Common
 {
 	/// <summary>This component rotates the current GameObject based on the current Angle value.
 	/// NOTE: This component overrides and takes over the rotation of this GameObject, so you can no longer externally influence it.</summary>
 	[ExecuteInEditMode]
-	[HelpURL(Required.Scripts.LeanCommon.HelpUrlPrefix + "LeanRoll")]
-	[AddComponentMenu(Required.Scripts.LeanCommon.ComponentPathPrefix + "Roll")]
+	[HelpURL(LeanCommon.HelpUrlPrefix + "LeanRoll")]
+	[AddComponentMenu(LeanCommon.ComponentPathPrefix + "Roll")]
 	public class LeanRoll : MonoBehaviour
 	{
 		/// <summary>The current angle in degrees.</summary>
@@ -82,15 +81,21 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			transform.rotation = Quaternion.Euler(0.0f, 0.0f, -currentAngle);
 		}
 	}
+}
 
 #if UNITY_EDITOR
+namespace Lean.Common.Editor
+{
+	using UnityEditor;
+	using TARGET = LeanRoll;
+
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(LeanRoll))]
+	[CustomEditor(typeof(TARGET))]
 	public class LeanRoll_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			LeanRoll tgt; LeanRoll[] tgts; GetTargets(out tgt, out tgts);
+			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
 
 			Draw("angle", "The current angle in degrees.");
 			Draw("clamp", "Should the Angle value be clamped?");
@@ -98,8 +103,8 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			if (Any(tgts, t => t.Clamp == true))
 			{
 				BeginIndent();
-				Draw("clampMin", "The minimum Angle value.", "Min");
-				Draw("clampMax", "The maximum Angle value.", "Max");
+					Draw("clampMin", "The minimum Angle value.", "Min");
+					Draw("clampMax", "The maximum Angle value.", "Max");
 				EndIndent();
 
 				Separator();
@@ -108,6 +113,5 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			Draw("damping", "If you want this component to change smoothly over time, then this allows you to control how quick the changes reach their target value.\n\n-1 = Instantly change.\n\n1 = Slowly change.\n\n10 = Quickly change.");
 		}
 	}
-
-#endif
 }
+#endif

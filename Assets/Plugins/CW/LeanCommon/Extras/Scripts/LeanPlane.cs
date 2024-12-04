@@ -1,12 +1,11 @@
-using Plugins.CW.Shared.Common.Required.Scripts;
-using UnityEditor;
 using UnityEngine;
+using CW.Common;
 
-namespace Plugins.CW.LeanCommon.Extras.Scripts
+namespace Lean.Common
 {
 	/// <summary>This component stores information about a 3D plane. By default this plane lays on the XY axis, or faces the Z axis.</summary>
-	[HelpURL(Required.Scripts.LeanCommon.HelpUrlPrefix + "LeanPlane")]
-	[AddComponentMenu(Required.Scripts.LeanCommon.ComponentPathPrefix + "Plane")]
+	[HelpURL(LeanCommon.HelpUrlPrefix + "LeanPlane")]
+	[AddComponentMenu(LeanCommon.ComponentPathPrefix + "Plane")]
 	public class LeanPlane : MonoBehaviour
 	{
 		/// <summary>Should the plane be clamped on the x axis?</summary>
@@ -153,23 +152,29 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			return distance > 0.0f;
 		}
 	}
+}
 
 #if UNITY_EDITOR
+namespace Lean.Common.Editor
+{
+	using UnityEditor;
+	using TARGET = LeanPlane;
+
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(LeanPlane))]
+	[CustomEditor(typeof(TARGET))]
 	public class LeanPlane_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			LeanPlane tgt; LeanPlane[] tgts; GetTargets(out tgt, out tgts);
+			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
 
 			Draw("ClampX", "Should the plane be clamped on the x axis?");
 
 			if (Any(tgts, t => t.ClampX == true))
 			{
 				BeginIndent();
-				Draw("MinX", "", "Min");
-				Draw("MaxX", "", "Max");
+					Draw("MinX", "", "Min");
+					Draw("MaxX", "", "Max");
 				EndIndent();
 
 				Separator();
@@ -180,8 +185,8 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			if (Any(tgts, t => t.ClampX == true))
 			{
 				BeginIndent();
-				Draw("MinY", "", "Min");
-				Draw("MaxY", "", "Max");
+					Draw("MinY", "", "Min");
+					Draw("MaxY", "", "Max");
 				EndIndent();
 
 				Separator();
@@ -191,6 +196,5 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			Draw("SnapY", "The distance between each position snap on the y axis.");
 		}
 	}
-
-#endif
 }
+#endif

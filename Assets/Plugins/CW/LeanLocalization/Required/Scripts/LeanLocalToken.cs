@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Plugins.CW.LeanLocalization.Required.Scripts
+namespace Lean.Localization
 {
 	/// <summary>The component works like <b>LeanToken</b>, but must be added to the child GameObject of the one that will be translated.</summary>
 	[ExecuteInEditMode]

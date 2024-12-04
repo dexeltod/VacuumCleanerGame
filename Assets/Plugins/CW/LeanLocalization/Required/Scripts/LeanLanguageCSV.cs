@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-using Plugins.CW.Shared.Common.Required.Scripts;
-using UnityEditor;
 using UnityEngine;
+using System.Collections.Generic;
+using CW.Common;
 
-namespace Plugins.CW.LeanLocalization.Required.Scripts
+namespace Lean.Localization
 {
 	/// <summary>This component will load localizations from a CSV file. By default they should be in the format:
 	/// Phrase Name Here = Translation Here // Optional Comment Here
@@ -13,7 +12,8 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 	[AddComponentMenu(LeanLocalization.ComponentPathPrefix + "Language CSV")]
 	public class LeanLanguageCSV : LeanSource
 	{
-		[System.Serializable] public class Entry
+		[System.Serializable]
+		public class Entry
 		{
 			public string Name;
 			public string Text;
@@ -42,7 +42,8 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		public FormatType Format = FormatType.Comma;
 
 		/// <summary>The language of the translations in the source file.</summary>
-		[LeanLanguageName] public string Language;
+		[LeanLanguageName]
+		public string Language;
 
 		/// <summary>This allows you to control when the CSV file is loaded or unloaded. The lower down you set this, the lower your app's memory usage will be. However, setting it too low means you can miss translations if you haven't translated absolutely every phrase in every language, so I recommend you use <b>LoadImmediately</b> unless you have LOTS of translations.
 		/// LoadImmediately = Regardless of the language, the CSV will load when this component activates, and then it will be kept in memory until this component is destroyed.
@@ -52,16 +53,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		public CacheType Cache;
 
 		/// <summary>This stores all currently loaded translations from this CSV file.</summary>
-		public List<Entry> Entries
-		{
-			get
-			{
-				if (entries == null) entries = new List<Entry>();
-				return entries;
-			}
-		}
-
-		[SerializeField] private List<Entry> entries;
+		public List<Entry> Entries { get { if (entries == null) entries = new List<Entry>(); return entries; } } [SerializeField] private List<Entry> entries;
 
 		/// <summary>The characters used to separate each translation.</summary>
 		private static readonly char[] newlineCharacters = new char[] { '\r', '\n' };
@@ -80,7 +72,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 						return;
 					}
 				}
-					break;
+				break;
 
 				case CacheType.LazyLoadAndUnload:
 				{
@@ -91,7 +83,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 						return;
 					}
 				}
-					break;
+				break;
 
 				case CacheType.LazyLoadAndUnloadPrimaryOnly:
 				{
@@ -102,7 +94,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 						return;
 					}
 				}
-					break;
+				break;
 			}
 
 			if (entries == null || entries.Count == 0)
@@ -117,14 +109,14 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			{
 				for (var i = entries.Count - 1; i >= 0; i--)
 				{
-					var entry = entries[i];
+					var entry       = entries[i];
 					var translation = LeanLocalization.RegisterTranslation(entry.Name);
 
 					translation.Register(Language, this);
 
 					if (Language == primaryLanguage)
 					{
-						translation.Data = entry.Text;
+						translation.Data    = entry.Text;
 						translation.Primary = true;
 					}
 					else if (Language == defaultLanguage && translation.Primary == false)
@@ -198,15 +190,9 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 				switch (Format)
 				{
-					case FormatType.Legacy:
-						LoadLegacy();
-						break;
-					case FormatType.Comma:
-						LoadSeparated(",");
-						break;
-					case FormatType.Semicolon:
-						LoadSeparated(";");
-						break;
+					case FormatType.Legacy: LoadLegacy(); break;
+					case FormatType.Comma: LoadSeparated(","); break;
+					case FormatType.Semicolon: LoadSeparated(";"); break;
 				}
 			}
 		}
@@ -218,7 +204,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 			for (var i = 0; i < lines.Length; i++)
 			{
-				var line = lines[i];
+				var line        = lines[i];
 				var equalsIndex = line.IndexOf(" = ");
 
 				// Only consider lines with the Separator character
@@ -276,9 +262,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 					if (delimIndex == -1)
 					{
-						throw new System.InvalidOperationException(
-							"The specified CSV file contained an invalid entry on line " + i
-						);
+						throw new System.InvalidOperationException("The specified CSV file contained an invalid entry on line " + i);
 					}
 
 					entry = entryPool.Count > 0 ? entryPool.Pop() : new Entry();
@@ -311,9 +295,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 						}
 						else
 						{
-							throw new System.InvalidOperationException(
-								"The specified CSV file contained an invalid entry on line " + i
-							);
+							throw new System.InvalidOperationException("The specified CSV file contained an invalid entry on line " + i);
 						}
 					}
 				}
@@ -335,69 +317,56 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			return count;
 		}
 	}
+}
 
 #if UNITY_EDITOR
-	[CanEditMultipleObjects] [CustomEditor(typeof(LeanLanguageCSV), true)]
+namespace Lean.Localization.Editor
+{
+	using UnityEditor;
+	using TARGET = LeanLanguageCSV;
+
+	[CanEditMultipleObjects]
+	[CustomEditor(typeof(LeanLanguageCSV), true)]
 	public class LeanLanguageCSV_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			LeanLanguageCSV tgt;
-			LeanLanguageCSV[] tgts;
-			GetTargets(out tgt, out tgts);
+			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
 
 			Draw("Source", "The text asset that contains all the translations.");
-			Draw(
-				"Format",
-				"The format of the CSV data.\n\nSee the inspector for examples of what the different formats look like."
-			);
+			Draw("Format", "The format of the CSV data.\n\nSee the inspector for examples of what the different formats look like.");
 			Draw("Language", "The language of the translations in the source file.");
-			Draw(
-				"Cache",
-				"This allows you to control when the CSV file is loaded or unloaded. The lower down you set this, the lower your app's memory usage will be. However, setting it too low means you can miss translations if you haven't translated absolutely every phrase in every language, so I recommend you use <b>LoadImmediately</b> unless you have LOTS of translations.\n\nLoadImmediately = Regardless of the language, the CSV will load when this component activates, and then it will be kept in memory until this component is destroyed.\n\nLazyLoad = The CSV file will only load when the <b>CurrentLanguage</b> or <b>DefaultLanguage</b> matches the CSV language, and then it will be kept in memory until this component is destroyed.\n\nLazyLoadAndUnload = Like <b>LazyLoad</b>, but translations will be unloaded if the <b>CurrentLanguage</b> or <b>DefaultLanguage</b> differs from the CSV language.\n\nLazyLoadAndUnloadPrimaryOnly = Like <b>LazyLoadAndUnload</b>, but only the <b>CurrentLanguage</b> will be used, the <b>DefaultLanguage</b> will be ignored."
-			);
+			Draw("Cache", "This allows you to control when the CSV file is loaded or unloaded. The lower down you set this, the lower your app's memory usage will be. However, setting it too low means you can miss translations if you haven't translated absolutely every phrase in every language, so I recommend you use <b>LoadImmediately</b> unless you have LOTS of translations.\n\nLoadImmediately = Regardless of the language, the CSV will load when this component activates, and then it will be kept in memory until this component is destroyed.\n\nLazyLoad = The CSV file will only load when the <b>CurrentLanguage</b> or <b>DefaultLanguage</b> matches the CSV language, and then it will be kept in memory until this component is destroyed.\n\nLazyLoadAndUnload = Like <b>LazyLoad</b>, but translations will be unloaded if the <b>CurrentLanguage</b> or <b>DefaultLanguage</b> differs from the CSV language.\n\nLazyLoadAndUnloadPrimaryOnly = Like <b>LazyLoadAndUnload</b>, but only the <b>CurrentLanguage</b> will be used, the <b>DefaultLanguage</b> will be ignored.");
 
 			Separator();
 
 			BeginDisabled(true);
-			switch (tgt.Format)
-			{
-				case LeanLanguageCSV.FormatType.Legacy:
-					UnityEditor.EditorGUILayout.TextArea(
-						"Hello = こんにちは // Comment\nCollectItem = アイテム \\n 集めました // Comment here",
-						GUILayout.Height(50)
-					);
-					break;
-				case LeanLanguageCSV.FormatType.Comma:
-					UnityEditor.EditorGUILayout.TextArea("Hello,こんにちは\nCollectItem,\"アイテム\n集めました\"");
-					break;
-				case LeanLanguageCSV.FormatType.Semicolon:
-					UnityEditor.EditorGUILayout.TextArea("Hello;こんにちは\nCollectItem;\"アイテム\n集めました\"");
-					break;
-			}
-
+				switch (tgt.Format)
+				{
+					case LeanLanguageCSV.FormatType.Legacy: UnityEditor.EditorGUILayout.TextArea("Hello = こんにちは // Comment\nCollectItem = アイテム \\n 集めました // Comment here", GUILayout.Height(50)); break;
+					case LeanLanguageCSV.FormatType.Comma: UnityEditor.EditorGUILayout.TextArea("Hello,こんにちは\nCollectItem,\"アイテム\n集めました\""); break;
+					case LeanLanguageCSV.FormatType.Semicolon: UnityEditor.EditorGUILayout.TextArea("Hello;こんにちは\nCollectItem;\"アイテム\n集めました\""); break;
+				}
 			EndDisabled();
 
 			Separator();
 
 			UnityEditor.EditorGUILayout.BeginHorizontal();
-			if (Any(tgts, t => t.Entries.Count > 0))
-			{
-				if (GUILayout.Button("Clear") == true)
+				if (Any(tgts, t => t.Entries.Count > 0))
 				{
-					Each(tgts, t => t.Clear(), true);
+					if (GUILayout.Button("Clear") == true)
+					{
+						Each(tgts, t => t.Clear(), true);
+					}
 				}
-			}
-
-			if (GUILayout.Button("Load Now") == true)
-			{
-				Each(tgts, t => t.LoadFromSource(), true);
-			}
-
-			//if (GUILayout.Button("Export") == true)
-			//{
-			//	Each(tgts, t => t.ExportTextAsset());
-			//}
+				if (GUILayout.Button("Load Now") == true)
+				{
+					Each(tgts, t => t.LoadFromSource(), true);
+				}
+				//if (GUILayout.Button("Export") == true)
+				//{
+				//	Each(tgts, t => t.ExportTextAsset());
+				//}
 			UnityEditor.EditorGUILayout.EndHorizontal();
 
 			if (tgts.Length == 1)
@@ -409,16 +378,14 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 					Separator();
 
 					BeginDisabled(true);
-					foreach (var entry in entries)
-					{
-						UnityEditor.EditorGUILayout.TextField(entry.Name, entry.Text);
-					}
-
+						foreach (var entry in entries)
+						{
+							UnityEditor.EditorGUILayout.TextField(entry.Name, entry.Text);
+						}
 					EndDisabled();
 				}
 			}
 		}
 	}
-
-#endif
 }
+#endif

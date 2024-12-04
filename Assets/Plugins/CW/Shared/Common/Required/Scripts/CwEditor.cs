@@ -1,9 +1,9 @@
 #if UNITY_EDITOR
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+using UnityEditor;
+using System.Collections.Generic;
 
-namespace Plugins.CW.Shared.Common.Required.Scripts
+namespace CW.Common
 {
 	/// <summary>This is the base class for all inspectors.</summary>
 	public abstract class CwEditor : UnityEditor.Editor
@@ -390,7 +390,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 
 			EditorGUI.BeginChangeCheck();
 
-			EditorGUILayout.Vector4Field(customContent, value);
+			value = EditorGUILayout.Vector4Field(customContent, value);
 
 			if (EditorGUI.EndChangeCheck() == true)
 			{

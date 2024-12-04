@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
+namespace Lean.Localization
 {
 	/// <summary>This component will update a UI.Text component with localized text, or use a fallback if none is found.</summary>
 	[ExecuteInEditMode]

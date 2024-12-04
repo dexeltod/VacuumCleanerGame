@@ -1,11 +1,17 @@
-﻿using System.Collections.Generic;
-using Plugins.CW.Shared.Common.Extras.Scripts;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
+﻿#if UNITY_2021_3 && !(UNITY_2021_3_0 || UNITY_2021_3_1 || UNITY_2021_3_2 || UNITY_2021_3_3 || UNITY_2021_3_4 || UNITY_2021_3_5 || UNITY_2021_3_6 || UNITY_2021_3_7 || UNITY_2021_3_8 || UNITY_2021_3_9 || UNITY_2021_3_10 || UNITY_2021_3_11 || UNITY_2021_3_12 || UNITY_2021_3_13 || UNITY_2021_3_14 || UNITY_2021_3_15 || UNITY_2021_3_16 || UNITY_2021_3_17)
+	#define CW_HAS_NEW_FIND
+#elif UNITY_2022_2 && !(UNITY_2022_2_0 || UNITY_2022_2_1 || UNITY_2022_2_2 || UNITY_2022_2_3 || UNITY_2022_2_4)
+	#define CW_HAS_NEW_FIND
+#elif UNITY_2023_1_OR_NEWER
+	#define CW_HAS_NEW_FIND
+#endif
 
-namespace Plugins.CW.Shared.Common.Required.Scripts
+using UnityEngine;
+using UnityEngine.UI;
+using System.Collections.Generic;
+using EventSystem = UnityEngine.EventSystems.EventSystem;
+
+namespace CW.Common
 {
 	public static partial class CwHelper
 	{
@@ -29,24 +35,100 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 		static CwHelper()
 		{
 			Camera.onPreRender += (camera) =>
-			{
-				if (OnCameraPreRender != null) OnCameraPreRender(camera);
-			};
+				{
+					if (OnCameraPreRender != null) OnCameraPreRender(camera);
+				};
 
 			Camera.onPostRender += (camera) =>
-			{
-				if (OnCameraPostRender != null) OnCameraPostRender(camera);
-			};
+				{
+					if (OnCameraPostRender != null) OnCameraPostRender(camera);
+				};
 
 			UnityEngine.Rendering.RenderPipelineManager.beginCameraRendering += (context, camera) =>
-			{
-				if (OnCameraPreRender != null) OnCameraPreRender(camera);
-			};
+				{
+					if (OnCameraPreRender != null) OnCameraPreRender(camera);
+				};
 
 			UnityEngine.Rendering.RenderPipelineManager.endCameraRendering += (context, camera) =>
+				{
+					if (OnCameraPostRender != null) OnCameraPostRender(camera);
+				};
+		}
+
+		public static bool IsSRP
+		{
+			get
 			{
-				if (OnCameraPostRender != null) OnCameraPostRender(camera);
-			};
+				return UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline != null;
+			}
+		}
+
+		public static bool IsBIRP
+		{
+			get
+			{
+				return UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline == null;
+			}
+		}
+
+		public static bool IsURP
+		{
+			get
+			{
+				var crp = UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline;
+
+				if (crp != null)
+				{
+					var title = crp.GetType().ToString();
+
+					if (title.Contains("Universal") == true)
+					{
+						return true;
+					}
+				}
+
+				return false;
+			}
+		}
+
+		public static bool IsHDRP
+		{
+			get
+			{
+				var crp = UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline;
+
+				if (crp != null)
+				{
+					var title = crp.GetType().ToString();
+
+					if (title.Contains("HighDefinition") == true)
+					{
+						return true;
+					}
+				}
+
+				return false;
+			}
+		}
+
+		public static T FindAnyObjectByType<T>(bool includeInactive = false)
+			where T : Object
+		{
+#if CW_HAS_NEW_FIND
+			return Object.FindAnyObjectByType<T>(includeInactive == true ? FindObjectsInactive.Include : FindObjectsInactive.Exclude);
+#else
+			return Object.FindObjectOfType<T>(includeInactive);
+#endif
+		}
+
+		public static T[] FindObjectsByType<T>()
+			where T : Object
+		{
+#if CW_HAS_NEW_FIND
+			return Object.FindObjectsByType<T>(FindObjectsSortMode.None);
+#else
+			return Object.FindObjectsOfType<T>();
+#endif
 		}
 
 		public static Mesh GetQuadMesh()
@@ -85,21 +167,21 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			if (gameObject != null)
 			{
 #if UNITY_EDITOR
-				if (Application.isPlaying == true)
-				{
-					return gameObject.AddComponent<T>();
-				}
-				else
-				{
-					if (recordUndo == true)
-					{
-						return UnityEditor.Undo.AddComponent<T>(gameObject);
-					}
-					else
+					if (Application.isPlaying == true)
 					{
 						return gameObject.AddComponent<T>();
 					}
-				}
+					else
+					{
+						if (recordUndo == true)
+						{
+							return UnityEditor.Undo.AddComponent<T>(gameObject);
+						}
+						else
+						{
+							return gameObject.AddComponent<T>();
+						}
+					}
 #else
 					return gameObject.AddComponent<T>();
 #endif
@@ -469,7 +551,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 		{
 			if (o != null)
 			{
-#if UNITY_EDITOR
+	#if UNITY_EDITOR
 				if (Application.isPlaying == true)
 				{
 					Object.Destroy(o);
@@ -478,9 +560,9 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 				{
 					Object.DestroyImmediate(o);
 				}
-#else
+	#else
 				Object.Destroy(o);
-#endif
+	#endif
 			}
 
 			return null;
@@ -528,7 +610,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			// Auto attach to canvas?
 			if (parent == null || parent.GetComponentInParent<Canvas>() == null)
 			{
-				var canvas = Object.FindObjectOfType<Canvas>();
+				var canvas = FindAnyObjectByType<Canvas>();
 
 				if (canvas == null)
 				{
@@ -541,7 +623,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 					// Make event system?
 					if (EventSystem.current == null)
 					{
-#if ENABLE_INPUT_SYSTEM
+#if ENABLE_INPUT_SYSTEM && __INPUTSYSTEM__
 						new GameObject("EventSystem", typeof(EventSystem), typeof(UnityEngine.InputSystem.UI.InputSystemUIInputModule));
 #else
 						new GameObject("EventSystem", typeof(EventSystem), typeof(UnityEngine.EventSystems.StandaloneInputModule));
@@ -674,9 +756,9 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 				newTexture = new Texture2D(width, height, format, mipMaps, false);
 
 				BeginActive(renderTexture);
-				Graphics.Blit(texture, renderTexture);
+					Graphics.Blit(texture, renderTexture);
 
-				newTexture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+					newTexture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
 				EndActive();
 
 				CwRenderTextureManager.ReleaseTemporary(renderTexture);
@@ -687,8 +769,13 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			return newTexture;
 		}
 	}
+}
 
 #if UNITY_EDITOR
+namespace CW.Common
+{
+	using UnityEditor;
+
 	public static partial class CwHelper
 	{
 		private static Material cachedShapeOutline;
@@ -918,6 +1005,5 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			return prefab;
 		}
 	}
-
-#endif
 }
+#endif

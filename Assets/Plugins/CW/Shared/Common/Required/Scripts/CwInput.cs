@@ -1,18 +1,16 @@
-﻿using UnityEngine;
-#if ENABLE_INPUT_SYSTEM && __INPUTSYSTEM__
+﻿#if ENABLE_INPUT_SYSTEM && __INPUTSYSTEM__
 	#define USE_NEW_INPUT_SYSTEM
-using UnityEngine;
-using NewCode = UnityEngine.InputSystem.Key;
+	using NewCode = UnityEngine.InputSystem.Key;
 #endif
+using UnityEngine;
 
-namespace Plugins.CW.Shared.Common.Required.Scripts
+namespace CW.Common
 {
     /// <summary>This class wraps <b>UnityEngine.Input</b> and <b>UnityEngine.InputSystem</b> so they can both be used from the same interface.</summary>
     public static class CwInput
     {
 #if USE_NEW_INPUT_SYSTEM
-		private static System.Collections.Generic.Dictionary<KeyCode, NewCode> keyMapping =
- new System.Collections.Generic.Dictionary<KeyCode, NewCode>()
+		private static System.Collections.Generic.Dictionary<KeyCode, NewCode> keyMapping = new System.Collections.Generic.Dictionary<KeyCode, NewCode>()
 		{
 			//{ KeyCode.None, NewCode.None },
 			{ KeyCode.Backspace, NewCode.Backspace },
@@ -205,9 +203,9 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			return null;
 		}
 #endif
-
-        public static int GetTouchCount()
-        {
+		
+		public static int GetTouchCount()
+		{
 #if USE_NEW_INPUT_SYSTEM
 			if (UnityEngine.InputSystem.EnhancedTouch.EnhancedTouchSupport.enabled == false)
 			{
@@ -216,130 +214,123 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 
 			return UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches.Count;
 #else
-            return UnityEngine.Input.touchCount;
+			return UnityEngine.Input.touchCount;
 #endif
-        }
+		}
 
-        public static void GetTouch(int index, out int id, out UnityEngine.Vector2 position, out float pressure,
-            out bool set)
-        {
+		public static void GetTouch(int index, out int id, out UnityEngine.Vector2 position, out float pressure, out bool set)
+		{
 #if USE_NEW_INPUT_SYSTEM
 			var touch = UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches[index];
 
-			id = touch.finger.index;
+			id       = touch.finger.index;
 			position = touch.screenPosition;
 			pressure = touch.pressure;
-			set =
+			set      =
 				touch.phase == UnityEngine.InputSystem.TouchPhase.Began ||
 				touch.phase == UnityEngine.InputSystem.TouchPhase.Stationary ||
 				touch.phase == UnityEngine.InputSystem.TouchPhase.Moved;
 #else
-            var touch = UnityEngine.Input.GetTouch(index);
+			var touch = UnityEngine.Input.GetTouch(index);
 
-            id = touch.fingerId;
-            position = touch.position;
-            pressure = touch.pressure;
-            set =
-                touch.phase == UnityEngine.TouchPhase.Began ||
-                touch.phase == UnityEngine.TouchPhase.Stationary ||
-                touch.phase == UnityEngine.TouchPhase.Moved;
+			id       = touch.fingerId;
+			position = touch.position;
+			pressure = touch.pressure;
+			set      =
+				touch.phase == UnityEngine.TouchPhase.Began ||
+				touch.phase == UnityEngine.TouchPhase.Stationary ||
+				touch.phase == UnityEngine.TouchPhase.Moved;
 #endif
-        }
+		}
 
-        public static UnityEngine.Vector2 GetMousePosition()
-        {
+		public static UnityEngine.Vector2 GetMousePosition()
+		{
 #if USE_NEW_INPUT_SYSTEM
 			return UnityEngine.InputSystem.Mouse.current != null ? UnityEngine.InputSystem.Mouse.current.position.ReadValue() : default(UnityEngine.Vector2);
 #else
-            return UnityEngine.Input.mousePosition;
+			return UnityEngine.Input.mousePosition;
 #endif
-        }
+		}
 
-        public static bool GetKeyWentDown(KeyCode oldKey)
-        {
+		public static bool GetKeyWentDown(KeyCode oldKey)
+		{
 #if USE_NEW_INPUT_SYSTEM
-			var buttonControl =
- GetButtonControl(oldKey); return buttonControl != null ? buttonControl.wasPressedThisFrame : false;
+			var buttonControl = GetButtonControl(oldKey); return buttonControl != null ? buttonControl.wasPressedThisFrame : false;
 #else
-            return UnityEngine.Input.GetKeyDown(oldKey);
+			return UnityEngine.Input.GetKeyDown(oldKey);
 #endif
-        }
+		}
 
-        public static bool GetKeyIsHeld(KeyCode oldKey)
-        {
+		public static bool GetKeyIsHeld(KeyCode oldKey)
+		{
 #if USE_NEW_INPUT_SYSTEM
-			var buttonControl =
- GetButtonControl(oldKey); return buttonControl != null ? buttonControl.isPressed : false;
+			var buttonControl = GetButtonControl(oldKey); return buttonControl != null ? buttonControl.isPressed : false;
 #else
-            return UnityEngine.Input.GetKey(oldKey);
+			return UnityEngine.Input.GetKey(oldKey);
 #endif
-        }
+		}
 
-        public static bool GetKeyWentUp(KeyCode oldKey)
-        {
+		public static bool GetKeyWentUp(KeyCode oldKey)
+		{
 #if USE_NEW_INPUT_SYSTEM
-			var buttonControl =
- GetButtonControl(oldKey); return buttonControl != null ? buttonControl.wasReleasedThisFrame : false;
+			var buttonControl = GetButtonControl(oldKey); return buttonControl != null ? buttonControl.wasReleasedThisFrame : false;
 #else
-            return UnityEngine.Input.GetKeyUp(oldKey);
+			return UnityEngine.Input.GetKeyUp(oldKey);
 #endif
-        }
+		}
 
-        public static bool GetMouseWentDown(int index)
-        {
+		public static bool GetMouseWentDown(int index)
+		{
 #if USE_NEW_INPUT_SYSTEM
-			var buttonControl =
- GetMouseButtonControl(index); return buttonControl != null ? buttonControl.wasPressedThisFrame : false;
+			var buttonControl = GetMouseButtonControl(index); return buttonControl != null ? buttonControl.wasPressedThisFrame : false;
 #else
-            return UnityEngine.Input.GetMouseButtonDown(index);
+			return UnityEngine.Input.GetMouseButtonDown(index);
 #endif
-        }
+		}
 
-        public static bool GetMouseIsHeld(int index)
-        {
+		public static bool GetMouseIsHeld(int index)
+		{
 #if USE_NEW_INPUT_SYSTEM
-			var buttonControl =
- GetMouseButtonControl(index); return buttonControl != null ? buttonControl.isPressed : false;
+			var buttonControl = GetMouseButtonControl(index); return buttonControl != null ? buttonControl.isPressed : false;
 #else
-            return UnityEngine.Input.GetMouseButton(index);
+			return UnityEngine.Input.GetMouseButton(index);
 #endif
-        }
+		}
 
-        public static bool GetMouseWentUp(int index)
-        {
+		public static bool GetMouseWentUp(int index)
+		{
 #if USE_NEW_INPUT_SYSTEM
-			var buttonControl =
- GetMouseButtonControl(index); return buttonControl != null ? buttonControl.wasReleasedThisFrame : false;
+			var buttonControl = GetMouseButtonControl(index); return buttonControl != null ? buttonControl.wasReleasedThisFrame : false;
 #else
-            return UnityEngine.Input.GetMouseButtonUp(index);
+			return UnityEngine.Input.GetMouseButtonUp(index);
 #endif
-        }
+		}
 
-        public static float GetMouseWheelDelta()
-        {
+		public static float GetMouseWheelDelta()
+		{
 #if USE_NEW_INPUT_SYSTEM
 			return UnityEngine.InputSystem.Mouse.current.scroll != null ? UnityEngine.InputSystem.Mouse.current.scroll.ReadValue().y : 0.0f;
 #else
-            return UnityEngine.Input.mouseScrollDelta.y;
+			return UnityEngine.Input.mouseScrollDelta.y;
 #endif
-        }
+		}
 
-        public static bool GetMouseExists()
-        {
+		public static bool GetMouseExists()
+		{
 #if USE_NEW_INPUT_SYSTEM
 			return UnityEngine.InputSystem.Mouse.current != null;
 #else
-            return UnityEngine.Input.mousePresent;
+			return UnityEngine.Input.mousePresent;
 #endif
-        }
+		}
 
-        public static bool GetKeyboardExists()
-        {
+		public static bool GetKeyboardExists()
+		{
 #if USE_NEW_INPUT_SYSTEM
 			return UnityEngine.InputSystem.Keyboard.current != null;
 #else
-            return true;
+			return true;
 #endif
-        }
+		}
     }
 }

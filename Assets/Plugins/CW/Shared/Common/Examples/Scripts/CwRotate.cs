@@ -1,8 +1,6 @@
-using Plugins.CW.Shared.Common.Required.Scripts;
-using UnityEditor;
 using UnityEngine;
 
-namespace Plugins.CW.Shared.Common.Examples.Scripts
+namespace CW.Common
 {
 	/// <summary>This component rotates the current <b>Transform</b>.</summary>
 	[HelpURL(CwShared.HelpUrlPrefix + "CwRotate")]
@@ -20,22 +18,27 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			transform.Rotate(angularVelocity * Time.deltaTime, relativeTo);
 		}
 	}
+}
 
 #if UNITY_EDITOR
+namespace CW.Common
+{
+	using UnityEditor;
+	using TARGET = CwRotate;
+
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(CwRotate))]
+	[CustomEditor(typeof(TARGET))]
 	public class CwRotate_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			CwRotate tgt; CwRotate[] tgts; GetTargets(out tgt, out tgts);
+			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
 
 			BeginError(Any(tgts, t => t.AngularVelocity.magnitude == 0.0f));
-			Draw("angularVelocity", "The speed of the rotation in degrees per second.");
+				Draw("angularVelocity", "The speed of the rotation in degrees per second.");
 			EndError();
 			Draw("relativeTo", "The rotation space.");
 		}
 	}
-
-#endif
 }
+#endif

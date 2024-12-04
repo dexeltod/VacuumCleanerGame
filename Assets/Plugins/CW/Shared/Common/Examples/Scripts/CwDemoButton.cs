@@ -1,9 +1,7 @@
-﻿using Plugins.CW.Shared.Common.Required.Scripts;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Plugins.CW.Shared.Common.Examples.Scripts
+namespace CW.Common
 {
 	/// <summary>This component turns the current UI element into a button that links to the specified action.</summary>
 	[ExecuteInEditMode]
@@ -65,7 +63,7 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 					{
 						alpha = GetCurrentLevel() >= 0 && GetLevelCount() > 1 ? 1.0f : 0.0f;
 					}
-						break;
+					break;
 					case LinkType.Isolate:
 					{
 						if (isolateTarget != null)
@@ -73,7 +71,7 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 							alpha = isolateTarget.gameObject.activeInHierarchy == true ? 1.0f : 0.5f;
 						}
 					}
-						break;
+					break;
 				}
 
 				group.alpha          = alpha;
@@ -100,7 +98,7 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 						LoadLevel(index);
 					}
 				}
-					break;
+				break;
 
 				case LinkType.NextScene:
 				{
@@ -116,13 +114,13 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 						LoadLevel(index);
 					}
 				}
-					break;
+				break;
 
 				case LinkType.Publisher:
 				{
 					Application.OpenURL("https://carloswilkes.com");
 				}
-					break;
+				break;
 
 				case LinkType.URL:
 				{
@@ -131,7 +129,7 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 						Application.OpenURL(urlTarget);
 					}
 				}
-					break;
+				break;
 
 				case LinkType.Isolate:
 				{
@@ -159,13 +157,13 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 							{
 								isolateTarget.gameObject.SetActive(true);
 							}
-								break;
+							break;
 
 							case ToggleType.ToggleSelection:
 							{
 								isolateTarget.gameObject.SetActive(active == false);
 							}
-								break;
+							break;
 
 							case ToggleType.SelectPrevious:
 							{
@@ -178,11 +176,11 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 									isolateTarget.gameObject.SetActive(true);
 								}
 							}
-								break;
+							break;
 						}
 					}
 				}
-					break;
+				break;
 			}
 		}
 
@@ -212,31 +210,36 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			UnityEngine.SceneManagement.SceneManager.LoadScene(index);
 		}
 	}
+}
 
 #if UNITY_EDITOR
+namespace CW.Common
+{
+	using UnityEditor;
+	using TARGET = CwDemoButton;
+
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(CwDemoButton))]
+	[CustomEditor(typeof(TARGET))]
 	public class CwDemoButton_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			CwDemoButton tgt; CwDemoButton[] tgts; GetTargets(out tgt, out tgts);
+			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
 
 			Draw("link", "The action that will be performed when this UI element is clicked.");
 
 			BeginIndent();
-			if (Any(tgts, t => t.Link == CwDemoButton.LinkType.URL))
-			{
-				Draw("urlTarget", "The URL that will be opened.", "Target");
-			}
-			if (Any(tgts, t => t.Link == CwDemoButton.LinkType.Isolate))
-			{
-				Draw("isolateTarget", "If this GameObject is active, then the button will be faded in.", "Target");
-				Draw("isolateToggle", "If this button is already selected and you click/tap it again, what should happen?", "Toggle");
-			}
+				if (Any(tgts, t => t.Link == CwDemoButton.LinkType.URL))
+				{
+					Draw("urlTarget", "The URL that will be opened.", "Target");
+				}
+				if (Any(tgts, t => t.Link == CwDemoButton.LinkType.Isolate))
+				{
+					Draw("isolateTarget", "If this GameObject is active, then the button will be faded in.", "Target");
+					Draw("isolateToggle", "If this button is already selected and you click/tap it again, what should happen?", "Toggle");
+				}
 			EndIndent();
 		}
 	}
-
-#endif
 }
+#endif

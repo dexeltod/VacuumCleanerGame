@@ -1,8 +1,7 @@
-using Plugins.CW.Shared.Common.Required.Scripts;
-using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
-namespace Plugins.CW.Shared.Common.Examples.Scripts
+namespace CW.Common
 {
 	/// <summary>This component is used by all the demo scenes to perform common tasks. Including modifying the current scene to make it look consistent between different rendering pipelines.</summary>
 	[ExecuteInEditMode]
@@ -33,21 +32,21 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 		/// <summary>If you enable this setting and your project is running with HDRP then any cameras missing the <b>HDAdditionalCameraData</b> component will have it added.</summary>
 		public bool UpgradeCamerasInHDRP { set { upgradeCamerasInHDRP = value; } get { return upgradeCamerasInHDRP; } } [SerializeField] private bool upgradeCamerasInHDRP = true;
 
+
+
 		protected virtual void OnEnable()
 		{
-			var pipeline = CwShaderBundle.DetectProjectPipeline();
-
 			if (upgradeInputModule == true)
 			{
 				TryUpgradeEventSystem();
 			}
 
-			if (CwShaderBundle.IsURP(pipeline) == true)
+			if (CwHelper.IsURP == true)
 			{
 				TryApplyURP();
 			}
 
-			if (CwShaderBundle.IsHDRP(pipeline) == true)
+			if (CwHelper.IsHDRP == true)
 			{
 				TryApplyHDRP();
 			}
@@ -143,7 +142,7 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 		private void TryUpgradeLights()
 		{
 #if __HDRP__
-			foreach (var light in FindObjectsOfType<Light>())
+			foreach (var light in CwHelper.FindObjectsByType<Light>())
 			{
 				if (light.GetComponent<UnityEngine.Rendering.HighDefinition.HDAdditionalLightData>() == null)
 				{
@@ -156,7 +155,7 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 		private void TryUpgradeCameras()
 		{
 #if __HDRP__
-			foreach (var camera in FindObjectsOfType<Camera>())
+			foreach (var camera in CwHelper.FindObjectsByType<Camera>())
 			{
 				if (camera.GetComponent<UnityEngine.Rendering.HighDefinition.HDAdditionalCameraData>() == null)
 				{
@@ -171,7 +170,7 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 		private void TryUpgradeEventSystem()
 		{
 #if UNITY_EDITOR && ENABLE_INPUT_SYSTEM && __INPUTSYSTEM__
-			var module = FindObjectOfType<UnityEngine.EventSystems.StandaloneInputModule>();
+			var module = CwHelper.FindAnyObjectByType<UnityEngine.EventSystems.StandaloneInputModule>();
 
 			if (module != null)
 			{
@@ -182,14 +181,20 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 #endif
 		}
 	}
+}
 
 #if UNITY_EDITOR
-	[CustomEditor(typeof(CwDemo))]
+namespace CW.Common
+{
+	using UnityEditor;
+	using TARGET = CwDemo;
+
+	[CustomEditor(typeof(TARGET))]
 	public class CwDemo_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			CwDemo tgt; CwDemo[] tgts; GetTargets(out tgt, out tgts);
+			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
 
 			Draw("upgradeInputModule", "If you enable this setting and your project is running with the new InputSystem then the EventSystem's InputModule component will be upgraded.");
 
@@ -204,6 +209,5 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			Draw("upgradeCamerasInHDRP", "If you enable this setting and your project is running with HDRP then any cameras missing the HDAdditionalCameraData component will have it added.");
 		}
 	}
-
-#endif
 }
+#endif

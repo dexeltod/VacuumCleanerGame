@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using Plugins.CW.Shared.Common.Required.Scripts;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections.Generic;
+using Lean.Common;
+using CW.Common;
 
-namespace Plugins.CW.LeanLocalization.Required.Scripts
+namespace Lean.Localization
 {
 	/// <summary>This contains information about a language, and any of its optional cultures.</summary>
 	[System.Serializable]
@@ -46,15 +46,21 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			}
 		}
 	}
+}
 
 #if UNITY_EDITOR
+namespace Lean.Localization.Editor
+{
+	using UnityEditor;
+	using TARGET = LeanLanguage;
+
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(LeanLanguage))]
+	[CustomEditor(typeof(TARGET))]
 	public class LeanLanguage_Editor : CwEditor
 	{
 		protected override void OnInspector()
 		{
-			LeanLanguage tgt; LeanLanguage[] tgts; GetTargets(out tgt, out tgts);
+			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
 
 			Draw("translationCode", "The language code used for auto translation.");
 
@@ -69,6 +75,5 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			CwHelper.CreatePrefabAsset("New Language").AddComponent<LeanLanguage>();
 		}
 	}
-
-#endif
 }
+#endif

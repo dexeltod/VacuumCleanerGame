@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections.Generic;
 
-namespace Plugins.CW.LeanLocalization.Required.Scripts
+namespace Lean.Localization
 {
 	/// <summary>This contains the translated value for the current language, and other associated data.</summary>
 	public class LeanTranslation

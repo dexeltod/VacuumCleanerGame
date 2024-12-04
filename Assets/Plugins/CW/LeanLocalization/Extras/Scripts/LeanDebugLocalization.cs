@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-namespace Plugins.CW.LeanLocalization.Extras.Scripts
+namespace Lean.Localization
 {
 	[DefaultExecutionOrder(-100)]
-	[HelpURL(Required.Scripts.LeanLocalization.HelpUrlPrefix + "LeanLocalization")]
+	[HelpURL(LeanLocalization.HelpUrlPrefix + "LeanLocalization")]
 	[AddComponentMenu("")]
 	public class LeanDebugLocalization : MonoBehaviour
 	{
@@ -24,29 +24,29 @@ namespace Plugins.CW.LeanLocalization.Extras.Scripts
 
 		protected virtual void OnEnable()
 		{
-			Required.Scripts.LeanLocalization.OnLocalizationChanged += HandleLocalizationChanged;
+			LeanLocalization.OnLocalizationChanged += HandleLocalizationChanged;
 		}
 
 		protected virtual void OnDisable()
 		{
-			Required.Scripts.LeanLocalization.OnLocalizationChanged -= HandleLocalizationChanged;
+			LeanLocalization.OnLocalizationChanged -= HandleLocalizationChanged;
 		}
 
 		private void HandleLocalizationChanged()
 		{
 			var text = "";
 
-			if (Required.Scripts.LeanLocalization.Instances.Count > 0)
+			if (LeanLocalization.Instances.Count > 0)
 			{
-				var first = Required.Scripts.LeanLocalization.Instances[0];
+				var first = LeanLocalization.Instances[0];
 
 				text += "LOOKING FOR: ";
 
-				if (first.DetectLanguage == Required.Scripts.LeanLocalization.DetectType.SystemLanguage)
+				if (first.DetectLanguage == LeanLocalization.DetectType.SystemLanguage)
 				{
 					text += Application.systemLanguage.ToString();
 				}
-				else if (first.DetectLanguage == Required.Scripts.LeanLocalization.DetectType.CurrentCulture)
+				else if (first.DetectLanguage == LeanLocalization.DetectType.CurrentCulture)
 				{
 					var cultureInfo = System.Globalization.CultureInfo.CurrentCulture;
 
@@ -55,7 +55,7 @@ namespace Plugins.CW.LeanLocalization.Extras.Scripts
 						text += cultureInfo.Name;
 					}
 				}
-				else if (first.DetectLanguage == Required.Scripts.LeanLocalization.DetectType.CurrentCulture)
+				else if (first.DetectLanguage == LeanLocalization.DetectType.CurrentCulture)
 				{
 					var cultureInfo = System.Globalization.CultureInfo.CurrentUICulture;
 
@@ -69,11 +69,11 @@ namespace Plugins.CW.LeanLocalization.Extras.Scripts
 
 				var load = "";
 
-				if (first.SaveLoad == Required.Scripts.LeanLocalization.SaveLoadType.WhenChanged)
+				if (first.SaveLoad == LeanLocalization.SaveLoadType.WhenChanged)
 				{
 					load = PlayerPrefs.GetString("LeanLocalization.CurrentLanguage");
 				}
-				else if (first.SaveLoad == Required.Scripts.LeanLocalization.SaveLoadType.WhenChanged)
+				else if (first.SaveLoad == LeanLocalization.SaveLoadType.WhenChanged)
 				{
 					load = PlayerPrefs.GetString("LeanLocalization.CurrentLanguageAlt");
 				}
@@ -85,7 +85,7 @@ namespace Plugins.CW.LeanLocalization.Extras.Scripts
 
 				text += "\n\nALIASES:\n";
 
-				foreach (var alias in Required.Scripts.LeanLocalization.CurrentAliases)
+				foreach (var alias in LeanLocalization.CurrentAliases)
 				{
 					text += alias.Key + " = " + alias.Value + "\n";
 				}
