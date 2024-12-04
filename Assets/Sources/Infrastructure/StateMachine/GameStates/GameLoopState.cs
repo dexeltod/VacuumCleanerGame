@@ -1,14 +1,10 @@
 using System;
 using Sources.ControllersInterfaces;
-using Sources.DomainInterfaces;
-using Sources.Infrastructure.Adapters;
 using Sources.Infrastructure.Providers;
-using Sources.Infrastructure.Yandex;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.States.StateMachineInterfaces;
 using Sources.Presentation.SceneEntity;
 using Sources.ServicesInterfaces;
-using UnityEngine;
 using VContainer;
 
 namespace Sources.Infrastructure.StateMachine.GameStates

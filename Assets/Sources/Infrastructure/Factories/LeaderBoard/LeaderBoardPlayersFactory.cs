@@ -31,9 +31,7 @@ namespace Sources.Infrastructure.Factories.LeaderBoard
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
 			_translatorService = translatorService;
-			_leaderBoardView = leaderBoardView
-				? leaderBoardView
-				: throw new ArgumentNullException(nameof(leaderBoardView));
+			_leaderBoardView = leaderBoardView ? leaderBoardView : throw new ArgumentNullException(nameof(leaderBoardView));
 		}
 
 		public async UniTask Create()

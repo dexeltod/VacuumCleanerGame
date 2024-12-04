@@ -9,6 +9,6 @@ namespace Sources.Utils
 		public readonly string UI = "Game/UI/GameplayInterface";
 		public readonly string UpgradeWindow = "Game/UI/Shop/ShopItemList/UpgradeCanvas";
 		public readonly string MainMenuCanvas = "Game/UI/MainMenu/MainMenuCanvas";
-		public readonly string YesNoButtonsCanvas = "Game/UI/Shop/YesNoButtonsCanvas";
+		public readonly string UpgradeYesNoButtonsCanvas = "Game/UI/Shop/UpgradeYesNoButtonsCanvas";
 	}
 }

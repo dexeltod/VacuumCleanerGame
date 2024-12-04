@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Sources.Domain.Progress;
-using Sources.Infrastructure.Common.Factory;
-using Sources.ServicesInterfaces.Upgrade;
-
 namespace Sources.Infrastructure.Factories.Domain
 {
 	// public class ProgressUpgradeDataFactory : Factory<List<ProgressUpgradeData>>

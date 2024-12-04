@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Sources.Utils.ParticleColorChanger.Scripts
@@ -87,7 +88,7 @@ namespace Sources.Utils.ParticleColorChanger.Scripts
 					gradient.colorKeys[i].time
 				);
 
-			System.Array.Copy(gradient.alphaKeys, alphaKeys, alphaKeys.Length);
+			Array.Copy(gradient.alphaKeys, alphaKeys, alphaKeys.Length);
 
 			g.SetKeys(colorKeys, alphaKeys);
 			return g;

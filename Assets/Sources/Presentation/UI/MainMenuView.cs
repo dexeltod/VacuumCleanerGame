@@ -4,7 +4,6 @@ using DG.Tweening.Plugins.Options;
 using Sources.ControllersInterfaces;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
-using Sources.Utils.Tweeners;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;

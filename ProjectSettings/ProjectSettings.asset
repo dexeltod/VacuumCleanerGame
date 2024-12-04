@@ -848,7 +848,7 @@ PlayerSettings:
     PS5: DOTWEEN
     Stadia: DOTWEEN
     Standalone: CROSS_PLATFORM_INPUT;DOTWEEN
-    WebGL: YANDEX_CODE;DOTWEEN;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;ODIN_VALIDATOR;ODIN_VALIDATOR_3_1;ODIN_VALIDATOR_3_2;ODIN_VALIDATOR_3_3;ODIN_INSPECTOR_EDITOR_ONLY;DEV
+    WebGL: YANDEX_CODE;DOTWEEN;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;ODIN_VALIDATOR;ODIN_VALIDATOR_3_1;ODIN_VALIDATOR_3_2;ODIN_VALIDATOR_3_3;ODIN_INSPECTOR_EDITOR_ONLY;!DEV
     Windows Store Apps: DOTWEEN
     XboxOne: DOTWEEN
     iPhone: CROSS_PLATFORM_INPUT;MOBILE_INPUT;DOTWEEN
@@ -965,12 +965,12 @@ PlayerSettings:
   hmiLogStartupTiming: 0
   hmiCpuConfiguration: 
   apiCompatibilityLevel: 6
-  activeInputHandler: 2
+  activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 5d8adcf3-b612-429f-8c79-df8abdd0de58
+  cloudProjectId: 63b02ce3-6ea2-4348-a1f8-df7925356244
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: VacuumCleaner
+  projectName: VacuumCleanerGame
   organizationId: dexeltod
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0

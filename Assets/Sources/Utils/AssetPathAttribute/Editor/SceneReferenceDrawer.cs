@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEditor;
 using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 namespace Sources.Utils.AssetPathAttribute.Editor
 {
@@ -24,7 +25,7 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 			return typeof(SceneAsset);
 		}
 
-		protected override void OnSelectionMade(UnityEngine.Object newSelection, SerializedProperty property)
+		protected override void OnSelectionMade(Object newSelection, SerializedProperty property)
 		{
 			if (newSelection == null)
 			{

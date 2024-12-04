@@ -1,7 +1,6 @@
 using System;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Sources.Domain.Progress.ResourcesData
 {

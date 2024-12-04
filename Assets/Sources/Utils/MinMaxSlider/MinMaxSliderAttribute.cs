@@ -1,7 +1,7 @@
-﻿namespace GD.MinMaxSlider
-{
-    using UnityEngine;
+﻿using UnityEngine;
 
+namespace Sources.Utils.MinMaxSlider
+{
     public class MinMaxSliderAttribute : PropertyAttribute{
 
         public float min;

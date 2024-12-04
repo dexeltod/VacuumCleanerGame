@@ -1,6 +1,6 @@
 using System;
 using Agava.WebUtility;
-using Sources.Infrastructure.Services;
+using Sources.UseCases.Scene;
 using Sources.Utils.ConstantNames;
 using UnityEngine;
 using UnityEngine.Audio;

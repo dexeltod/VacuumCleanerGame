@@ -4,7 +4,6 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
-using UnityEngine.Events;
 
 namespace Sources.Controllers
 {

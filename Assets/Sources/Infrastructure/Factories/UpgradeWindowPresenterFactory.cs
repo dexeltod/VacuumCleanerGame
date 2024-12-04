@@ -56,7 +56,7 @@ namespace Sources.Infrastructure.Factories
 		private int SoftCurrencyCount => GameProgressResourceModelReadOnly.SoftCurrency.Value;
 
 		private string GameObjectsUpgradeTrigger => ResourcesAssetPath.GameObjects.UpgradeTrigger;
-		private string YesNoButtonsCanvas => ResourcesAssetPath.Scene.UIResources.YesNoButtonsCanvas;
+		private string UpgradeYesNoButtonsCanvas => ResourcesAssetPath.Scene.UIResources.UpgradeYesNoButtonsCanvas;
 
 		public override UpgradeWindowPresenter Create()
 		{
@@ -72,7 +72,7 @@ namespace Sources.Infrastructure.Factories
 				_resourcesProgressPresenterProvider
 			);
 
-			var enabler = _assetFactory.InstantiateAndGetComponent<UpgradeWindowActivator>(YesNoButtonsCanvas);
+			var enabler = _assetFactory.InstantiateAndGetComponent<UpgradeWindowActivator>(UpgradeYesNoButtonsCanvas);
 
 			enabler.Phrases.Phrases = _translatorService.GetLocalize(enabler.Phrases.Phrases);
 

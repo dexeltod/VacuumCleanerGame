@@ -1,6 +1,5 @@
 using System;
 using Sources.Controllers.Mesh;
-using Sources.Infrastructure.Configs.Scripts;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.Presentation;
 using Sources.Presentation.SceneEntity;

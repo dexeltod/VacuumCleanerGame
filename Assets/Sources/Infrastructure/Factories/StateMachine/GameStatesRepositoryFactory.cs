@@ -2,10 +2,7 @@ using System;
 using Sources.Infrastructure.Common.Factory;
 using Sources.Infrastructure.Repository;
 using Sources.Infrastructure.StateMachine.GameStates;
-using Sources.InfrastructureInterfaces.Configs;
 using Sources.InfrastructureInterfaces.States;
-using Sources.InfrastructureInterfaces.States.StateMachineInterfaces;
-using UnityEngine;
 using VContainer;
 
 namespace Sources.Infrastructure.Factories.StateMachine

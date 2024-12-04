@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Sources.Infrastructure.Services
+namespace Sources.UseCases.Scene
 {
 	public class ApplicationQuitHandler : MonoBehaviour
 	{

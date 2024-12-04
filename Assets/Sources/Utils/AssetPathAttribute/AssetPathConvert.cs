@@ -1,4 +1,4 @@
-﻿using System;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace Sources.Utils.AssetPathAttribute
@@ -50,14 +50,14 @@ namespace Sources.Utils.AssetPathAttribute
         /// <summary>
         /// Loads the asset at the following path. If the asset is contained within a resources folder
         /// this uses <see cref="UnityEngine.Resources.Load(string)"/>. If we are in the Editor this will
-        /// use <see cref="UnityEditor.AssetDatabase.LoadAssetAtPath(string, Type)"/> instead. This will
+        /// use <see cref="UnityEditor.AssetDatabase.LoadAssetAtPath(string, System.Type)"/> instead. This will
         /// allow you to load any type at any path. Keep in mind at Runtime the asset can only be loaded
         /// if it is inside a resources folder.
         /// </summary>
         /// <typeparam name="T">The type of object you want to load</typeparam>
         /// <param name="projectPath">The full project path of the object you are trying to load.</param>
         /// <returns>The loaded asset or null if it could not be found.</returns>
-        public static T Load<T>(string projectPath) where T : UnityEngine.Object
+        public static T Load<T>(string projectPath) where T : Object
         {
             // Make sure our path is not null 
             if(string.IsNullOrEmpty(projectPath))
@@ -76,7 +76,7 @@ namespace Sources.Utils.AssetPathAttribute
 
 #if UNITY_EDITOR
             // We could not find it in resources so we just try the AssetDatabase. 
-            return UnityEditor.AssetDatabase.LoadAssetAtPath<T>(projectPath);
+            return AssetDatabase.LoadAssetAtPath<T>(projectPath);
 #else
         return null;
 #endif

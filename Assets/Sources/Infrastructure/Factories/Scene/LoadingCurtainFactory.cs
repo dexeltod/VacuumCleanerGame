@@ -1,5 +1,4 @@
 using System;
-using Sources.Infrastructure.Configs.Scripts;
 using Sources.Presentation.SceneEntity;
 using Sources.ServicesInterfaces;
 using Sources.Utils;

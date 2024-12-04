@@ -1,11 +1,9 @@
 using System;
-using System.Threading.Tasks;
 using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Yandex;
 using Sources.InfrastructureInterfaces;
-using UnityEngine;
 using PlayerAccount = Sources.Domain.PlayerAccount;
 
 namespace Sources.Infrastructure.Adapters
@@ -48,8 +46,6 @@ namespace Sources.Infrastructure.Adapters
 
 		public async UniTask<string> GetPlayerLanguage()
 		{
-			Debug.Log($"PlayerLanguage is {_playerAccount.Language}");
-
 			_playerLanguage ??= await _yandexServiceSdkFacade.GetPlayerLanguage();
 
 			return _playerLanguage;

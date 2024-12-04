@@ -3,8 +3,6 @@ using System.Collections;
 using Graphic.Joystick_Pack.Scripts.Base;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
-using Sources.DomainInterfaces;
-using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.DomainInterfaces.Entities;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;

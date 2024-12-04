@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using Sources.Infrastructure.Configs.Scripts.Level.LevelResource;
 using Sources.InfrastructureInterfaces;
 using Sources.InfrastructureInterfaces.Configs;

@@ -2,7 +2,6 @@ using System;
 using Sources.Domain.Progress.ResourcesData;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Utils;
 using Sources.Utils.AssetPaths;
 using UnityEngine;
 using UnityEngine.Serialization;

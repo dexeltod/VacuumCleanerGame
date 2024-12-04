@@ -8,8 +8,6 @@ using Sources.Domain.Stats;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Configs;
 using Sources.Infrastructure.Factories.UpgradeEntitiesConfigs;
-using Sources.InfrastructureInterfaces.Providers;
-using Sources.InfrastructureInterfaces.Repository;
 using Sources.ServicesInterfaces;
 using Sources.Utils;
 

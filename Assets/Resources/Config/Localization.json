@@ -108,6 +108,23 @@
       ]
     },
     {
+      "Name": "Speed yourself",
+      "Translations": [
+        {
+          "Language": "ru",
+          "Text": "Ускориться"
+        },
+        {
+          "Language": "en",
+          "Text": "Speed yourself"
+        },
+        {
+          "Language": "tr",
+          "Text": "Hızlandırın"
+        }
+      ]
+    },
+    {
       "Name": "DeleteSavesButton",
       "Translations": [
         {

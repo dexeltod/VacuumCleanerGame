@@ -1,9 +1,6 @@
 using System;
 using Graphic.Joystick_Pack.Scripts.Base;
 using Sources.Controllers;
-using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.DomainInterfaces.Models;
-using Sources.Infrastructure.Configs.Scripts;
 using Sources.InfrastructureInterfaces.Factory;
 using Sources.InfrastructureInterfaces.Providers;
 using Sources.InfrastructureInterfaces.Repository;
