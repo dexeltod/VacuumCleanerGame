@@ -10,60 +10,65 @@ using UnityEngine;
 
 namespace Sources.Infrastructure.Factories.Authorization
 {
-	public class AuthorizationViewFactory
-	{
-		private readonly IAssetFactory _assetFactory;
-		private readonly ITranslatorService _localizationService;
-		private readonly MainMenuView _mainMenuView;
+    public class AuthorizationViewFactory
+    {
+        private readonly IAssetFactory _assetFactory;
+        private readonly ITranslatorService _localizationService;
+        private readonly MainMenuView _mainMenuView;
 
-		public AuthorizationViewFactory(
-			IAssetFactory assetFactory,
-			ITranslatorService localizationService,
-			MainMenuView mainMenuView
-		)
-		{
-			_assetFactory
-				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
-			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
-			_mainMenuView = mainMenuView ?? throw new ArgumentNullException(nameof(mainMenuView));
-		}
+        public AuthorizationViewFactory(
+            IAssetFactory assetFactory,
+            ITranslatorService localizationService,
+            MainMenuView mainMenuView
+        )
+        {
+            _assetFactory
+                = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+            _localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
+            _mainMenuView = mainMenuView ?? throw new ArgumentNullException(nameof(mainMenuView));
+        }
 
-		private string EditorAuthorizationView => ResourcesAssetPath.Scene.UIResources.Editor.AuthorizationView;
-		private string ViewPath => ResourcesAssetPath.Scene.UIResources.Yandex.YandexAuthorizationView;
+        private string EditorAuthorizationView => ResourcesAssetPath.Scene.UIResources.Editor.AuthorizationView;
+        private string ViewPath => ResourcesAssetPath.Scene.UIResources.Yandex.YandexAuthorizationView;
 
-		public IAuthorizationView Create()
-		{
+        public IAuthorizationView Create(bool isDebug)
+        {
 #if YANDEX_CODE
-			return CreateYandexAuthorizationHandler();
+            return CreateYandexAuthorizationWindow(isDebug);
 #endif
-			return CreateEditorAuthorizationView();
-		}
 
-		private IAuthorizationView CreateYandexAuthorizationHandler()
-		{
-			var view = _assetFactory.InstantiateAndGetComponent<YandexAuthorizationView>(
-				ViewPath,
-				_mainMenuView.transform
-			);
+            return CreateYandexAuthorizationWindow(isDebug);
+            //return CreateEditorAuthorizationView();
+        }
 
-			TextPhrases phrases = view.GetComponent<TextPhrases>();
-			view.Construct(view.GetComponent<RectTransform>(), null, phrases);
-			view.TextPhrases.Phrases = _localizationService.GetLocalize(phrases.Phrases);
+        private IAuthorizationView CreateYandexAuthorizationWindow(bool isEnabled = false)
+        {
+            YandexAuthorizationView view = _assetFactory.InstantiateAndGetComponent<YandexAuthorizationView>(
+                ViewPath,
+                _mainMenuView.transform
+            );
 
-			return view;
-		}
+            view.gameObject.SetActive(isEnabled);
 
-		private IAuthorizationView CreateEditorAuthorizationView()
-		{
-			var view = _assetFactory.InstantiateAndGetComponent<EditorAuthorizationView>(
-				EditorAuthorizationView,
-				_mainMenuView.transform
-			);
+            TextPhrases phrases = view.GetComponent<TextPhrases>();
+            view.Construct(view.GetComponent<RectTransform>(), null, phrases);
+            view.TextPhrases.Phrases = _localizationService.GetLocalize(phrases.Phrases);
 
-			var phrases = view.GetComponent<TextPhrases>();
-			view.Construct(view.GetComponent<RectTransform>(), null, phrases);
-			view.TextPhrases.Phrases = _localizationService.GetLocalize(phrases.Phrases);
-			return view;
-		}
-	}
+
+            return view;
+        }
+
+        private IAuthorizationView CreateEditorAuthorizationView()
+        {
+            var view = _assetFactory.InstantiateAndGetComponent<EditorAuthorizationView>(
+                EditorAuthorizationView,
+                _mainMenuView.transform
+            );
+
+            var phrases = view.GetComponent<TextPhrases>();
+            view.Construct(view.GetComponent<RectTransform>(), null, phrases);
+            view.TextPhrases.Phrases = _localizationService.GetLocalize(phrases.Phrases);
+            return view;
+        }
+    }
 }

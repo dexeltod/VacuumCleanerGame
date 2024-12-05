@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class DebugHuy : MonoBehaviour
+public class CanvasPanelsDebugger : MonoBehaviour
 {
     [SerializeField] private GraphicRaycaster _graphicRaycaster;
     private EventSystem _eventSystem;
@@ -26,9 +26,6 @@ public class DebugHuy : MonoBehaviour
         StopCoroutine(_coroutine);
     }
 
-    private void Update()
-    {
-    }
 
     private IEnumerator StartDebug()
     {

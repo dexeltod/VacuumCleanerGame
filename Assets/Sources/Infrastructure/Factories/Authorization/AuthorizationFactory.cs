@@ -12,54 +12,57 @@ using UnityEngine;
 
 namespace Sources.Infrastructure.Factories.Authorization
 {
-	public sealed class AuthorizationFactory
-	{
-		private readonly IAssetFactory _assetFactory;
-		private readonly CloudServiceSdkFacadeProvider _cloudServiceSdkFacadeProvider;
-		private readonly ITranslatorService _localizationService;
-		private readonly MainMenuView _mainMenuView;
+    public sealed class AuthorizationFactory
+    {
+        private const bool IsDebug = false;
 
-		public AuthorizationFactory(
-			IAssetFactory assetFactory,
-			CloudServiceSdkFacadeProvider cloudServiceSdkFacadeProvider,
-			MainMenuView mainMenuView,
-			ITranslatorService localizationService
-		)
-		{
-			_assetFactory
-				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
-			_cloudServiceSdkFacadeProvider = cloudServiceSdkFacadeProvider;
-			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
-			_mainMenuView = mainMenuView ? mainMenuView : throw new ArgumentNullException(nameof(mainMenuView));
-		}
+        private readonly IAssetFactory _assetFactory;
+        private readonly CloudServiceSdkFacadeProvider _cloudServiceSdkFacadeProvider;
+        private readonly ITranslatorService _localizationService;
+        private readonly MainMenuView _mainMenuView;
 
-		public IAuthorizationPresenter Create()
-		{
-			IAuthorizationView authorizationView
-				= new AuthorizationViewFactory(_assetFactory, _localizationService, _mainMenuView).Create();
 
-			ICloudServiceSdkFacade сloudServiceSdkFacade = new CloudPlayerDataServiceFactory().Create();
+        public AuthorizationFactory(
+            IAssetFactory assetFactory,
+            CloudServiceSdkFacadeProvider cloudServiceSdkFacadeProvider,
+            MainMenuView mainMenuView,
+            ITranslatorService localizationService
+        )
+        {
+            _assetFactory
+                = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+            _cloudServiceSdkFacadeProvider = cloudServiceSdkFacadeProvider;
+            _localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
+            _mainMenuView = mainMenuView ? mainMenuView : throw new ArgumentNullException(nameof(mainMenuView));
+        }
 
-			IAuthorizationPresenter authorizationPresenter =
-				new AuthorizationPresenter(
-					сloudServiceSdkFacade,
-					authorizationView
-				);
+        public IAuthorizationPresenter Create()
+        {
+            IAuthorizationView authorizationView
+                = new AuthorizationViewFactory(_assetFactory, _localizationService, _mainMenuView).Create(IsDebug);
 
-			Construct(authorizationView, authorizationPresenter);
+            ICloudServiceSdkFacade сloudServiceSdkFacade = new CloudPlayerDataServiceFactory().Create();
 
-			// сloudServiceSdkFacade.SetStatusInitialized();
+            IAuthorizationPresenter authorizationPresenter =
+                new AuthorizationPresenter(
+                    сloudServiceSdkFacade,
+                    authorizationView
+                );
 
-			_cloudServiceSdkFacadeProvider.Register(сloudServiceSdkFacade);
+            Construct(authorizationView, authorizationPresenter);
 
-			return authorizationPresenter;
-		}
+            // сloudServiceSdkFacade.SetStatusInitialized();
 
-		private void Construct(IAuthorizationView authorizationView, IAuthorizationPresenter authorizationPresenter)
-		{
-			authorizationView.Construct(authorizationPresenter);
-			authorizationView.RectTransform.localPosition = Vector2.zero;
-			authorizationView.Disable();
-		}
-	}
+            _cloudServiceSdkFacadeProvider.Register(сloudServiceSdkFacade);
+
+            return authorizationPresenter;
+        }
+
+        private void Construct(IAuthorizationView authorizationView, IAuthorizationPresenter authorizationPresenter)
+        {
+            authorizationView.Construct(authorizationPresenter);
+            authorizationView.RectTransform.localPosition = Vector2.zero;
+            authorizationView.Disable();
+        }
+    }
 }
