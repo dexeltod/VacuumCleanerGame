@@ -1,124 +1,155 @@
-﻿using UnityEngine;
+﻿using CW.Common;
+using UnityEditor;
+using UnityEngine;
 using UnityEngine.UI;
-using CW.Common;
 
 namespace CW.Common
 {
-	/// <summary>This component allows you to quickly build a UI button to activate only this GameObject when clicked.</summary>
-	[HelpURL(CwShared.HelpUrlPrefix + "CwDemoButtonBuilder")]
-	[AddComponentMenu(CwShared.ComponentMenuPrefix + "Demo Button Builder")]
-	public class CwDemoButtonBuilder : MonoBehaviour
-	{
-		/// <summary>The built button will be based on this prefab.</summary>
-		public GameObject ButtonPrefab { set { buttonPrefab = value; } get { return buttonPrefab; } } [SerializeField] private GameObject buttonPrefab;
+    /// <summary>This component allows you to quickly build a UI button to activate only this GameObject when clicked.</summary>
+    [HelpURL(CwShared.HelpUrlPrefix + "CwDemoButtonBuilder")]
+    [AddComponentMenu(CwShared.ComponentMenuPrefix + "Demo Button Builder")]
+    public class CwDemoButtonBuilder : MonoBehaviour
+    {
+        /// <summary>The built button will be based on this prefab.</summary>
+        public GameObject ButtonPrefab
+        {
+            set { buttonPrefab = value; }
+            get { return buttonPrefab; }
+        }
 
-		/// <summary>The built button will be placed under this transform.</summary>
-		public RectTransform ButtonRoot { set { buttonRoot = value; } get { return buttonRoot; } } [SerializeField] private RectTransform buttonRoot;
+        [SerializeField] private GameObject buttonPrefab;
 
-		/// <summary>The icon given to this button.</summary>
-		public Sprite Icon { set { icon = value; } get { return icon; } } [SerializeField] private Sprite icon;
+        /// <summary>The built button will be placed under this transform.</summary>
+        public RectTransform ButtonRoot
+        {
+            set { buttonRoot = value; }
+            get { return buttonRoot; }
+        }
 
-		/// <summary>The icon will be tinted by this.</summary>
-		public Color Color { set { color = value; } get { return color; } } [SerializeField] private Color color = Color.white;
+        [SerializeField] private RectTransform buttonRoot;
 
-		/// <summary>Use a different name for the button text?</summary>
-		public string OverrideName { set { overrideName = value; } get { return overrideName; } } [SerializeField] [Multiline(3)] private string overrideName;
+        /// <summary>The icon given to this button.</summary>
+        public Sprite Icon
+        {
+            set { icon = value; }
+            get { return icon; }
+        }
 
-		[SerializeField]
-		private GameObject clone;
+        [SerializeField] private Sprite icon;
 
-		[ContextMenu("Build")]
-		public void Build()
-		{
-			if (clone != null)
-			{
-				DestroyImmediate(clone);
-			}
+        /// <summary>The icon will be tinted by this.</summary>
+        public Color Color
+        {
+            set { color = value; }
+            get { return color; }
+        }
 
-			if (buttonPrefab != null)
-			{
-				clone = DoInstantiate();
+        [SerializeField] private Color color = Color.white;
 
-				clone.name = name;
+        /// <summary>Use a different name for the button text?</summary>
+        public string OverrideName
+        {
+            set { overrideName = value; }
+            get { return overrideName; }
+        }
 
-				var image = clone.GetComponent<Image>();
+        [SerializeField] [Multiline(3)] private string overrideName;
 
-				if (image != null)
-				{
-					image.sprite = icon;
-					image.color  = color;
-				}
+        [SerializeField] private GameObject clone;
 
-				var title = clone.GetComponentInChildren<Text>();
+        [ContextMenu("Build")]
+        public void Build()
+        {
+            if (clone != null)
+            {
+                DestroyImmediate(clone);
+            }
 
-				if (title != null)
-				{
-					title.text = string.IsNullOrEmpty(overrideName) == false ? overrideName : name;
-				}
+            if (buttonPrefab != null)
+            {
+                clone = DoInstantiate();
 
-				var isolate = clone.GetComponent<CwDemoButton>();
+                clone.name = name;
 
-				if (isolate != null)
-				{
-					isolate.IsolateTarget = transform;
-				}
-			}
-		}
+                var image = clone.GetComponent<Image>();
 
-		[ContextMenu("Build All")]
-		public void BuildAll()
-		{
-			foreach (var builder in transform.parent.GetComponentsInChildren<CwDemoButtonBuilder>(true))
-			{
-				builder.Build();
-			}
-		}
+                if (image != null)
+                {
+                    image.sprite = icon;
+                    image.color = color;
+                }
 
-		private GameObject DoInstantiate()
-		{
+                var title = clone.GetComponentInChildren<Text>();
+
+                if (title != null)
+                {
+                    title.text = string.IsNullOrEmpty(overrideName) == false ? overrideName : name;
+                }
+
+                var isolate = clone.GetComponent<CwDemoButton>();
+
+                if (isolate != null)
+                {
+                    isolate.IsolateTarget = transform;
+                }
+            }
+        }
+
+        [ContextMenu("Build All")]
+        public void BuildAll()
+        {
+            foreach (var builder in transform.parent.GetComponentsInChildren<CwDemoButtonBuilder>(true))
+            {
+                builder.Build();
+            }
+        }
+
+        private GameObject DoInstantiate()
+        {
 #if UNITY_EDITOR
-			if (Application.isPlaying == false)
-			{
-				return (GameObject)UnityEditor.PrefabUtility.InstantiatePrefab(buttonPrefab, buttonRoot);
-			}
+            if (Application.isPlaying == false)
+            {
+                return (GameObject)PrefabUtility.InstantiatePrefab(buttonPrefab, buttonRoot);
+            }
 #endif
-			return Instantiate(buttonPrefab, buttonRoot, false);
-		}
-	}
+            return Instantiate(buttonPrefab, buttonRoot, false);
+        }
+    }
 }
 
 #if UNITY_EDITOR
 namespace PaintIn3D
 {
-	using UnityEditor;
-	using TARGET = CwDemoButtonBuilder;
+    using TARGET = CwDemoButtonBuilder;
 
-	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
-	public class CwDemoButtonBuilder_Editor : CwEditor
-	{
-		protected override void OnInspector()
-		{
-			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
+    [CanEditMultipleObjects]
+    [CustomEditor(typeof(TARGET))]
+    public class CwDemoButtonBuilder_Editor : CwEditor
+    {
+        protected override void OnInspector()
+        {
+            TARGET tgt;
+            TARGET[] tgts;
+            GetTargets(out tgt, out tgts);
 
-			Draw("buttonPrefab", "The built button will be based on this prefab.");
-			Draw("buttonRoot", "The built button will be placed under this transform.");
+            Draw("buttonPrefab", "The built button will be based on this prefab.");
+            Draw("buttonRoot", "The built button will be placed under this transform.");
 
-			Separator();
+            Separator();
 
-			Draw("icon", "The icon given to this button.");
-			Draw("color", "The icon will be tinted by this.");
-			Draw("overrideName", "Use a different name for the button text?");
+            Draw("icon", "The icon given to this button.");
+            Draw("color", "The icon will be tinted by this.");
+            Draw("overrideName", "Use a different name for the button text?");
 
-			Separator();
+            Separator();
 
-			if (Button("Build All") == true)
-			{
-				Undo.RecordObjects(tgts, "Build All");
+            if (Button("Build All") == true)
+            {
+                Undo.RecordObjects(tgts, "Build All");
 
-				tgt.BuildAll();
-			}
-		}
-	}
+                tgt.BuildAll();
+            }
+        }
+    }
 }
 #endif

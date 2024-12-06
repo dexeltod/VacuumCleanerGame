@@ -14,14 +14,14 @@ namespace Sources.Presentation.UI.YandexAuthorization
 
         public override void Enable()
         {
-            this.enabled = true;
+            enabled = true;
             _yesButton.onClick.AddListener(OnYesButtonClicked);
             _noButton.onClick.AddListener(OnNoButtonClicked);
         }
 
         public override void Disable()
         {
-            this.enabled = false;
+            enabled = false;
             _yesButton.onClick.RemoveListener(OnYesButtonClicked);
             _noButton.onClick.RemoveListener(OnNoButtonClicked);
         }

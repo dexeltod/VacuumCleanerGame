@@ -12,71 +12,80 @@ using VContainer;
 
 namespace Sources.Infrastructure.Factories.Player
 {
-	public class PlayerFactory : IPlayerFactory
-	{
-		private readonly AnimationHasher _hasher;
-		private readonly IAssetFactory _assetFactory;
-		private readonly IObjectResolver _objectResolver;
-		private readonly IGameplayInterfacePresenterProvider _gameplayInterfaceProvider;
-		private readonly IPlayerModelRepositoryProvider _playerModelRepository;
+    public class PlayerFactory : IPlayerFactory
+    {
+        private readonly AnimationHasher _hasher;
+        private readonly IAssetFactory _assetFactory;
+        private readonly IObjectResolver _objectResolver;
+        private readonly IGameplayInterfacePresenterProvider _interfaceProvider;
+        private readonly IPlayerModelRepositoryProvider _modelRepository;
+        private GameObject _character;
+        private Rigidbody _body;
+        private Animator _animator;
 
-		[Inject]
-		public PlayerFactory(
-			IAssetFactory assetFactory,
-			IObjectResolver objectResolver,
-			IGameplayInterfacePresenterProvider gameplayInterfaceProvider,
-			IPlayerModelRepositoryProvider playerModelRepository
-		)
-		{
-			_assetFactory
-				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
-			_objectResolver = objectResolver ?? throw new ArgumentNullException(nameof(objectResolver));
+        [Inject]
+        public PlayerFactory(
+            IAssetFactory assetFactory,
+            IObjectResolver objectResolver,
+            IGameplayInterfacePresenterProvider interfaceProvider,
+            IPlayerModelRepositoryProvider modelRepository
+        )
+        {
+            _assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+            _objectResolver = objectResolver ?? throw new ArgumentNullException(nameof(objectResolver));
 
-			_gameplayInterfaceProvider = gameplayInterfaceProvider ??
-				throw new ArgumentNullException(nameof(gameplayInterfaceProvider));
-			_playerModelRepository = playerModelRepository ??
-				throw new ArgumentNullException(nameof(playerModelRepository));
-		}
+            _interfaceProvider = interfaceProvider ?? throw new ArgumentNullException(nameof(interfaceProvider));
+            _modelRepository = modelRepository ?? throw new ArgumentNullException(nameof(modelRepository));
+        }
 
-		private IPlayerModelRepository PlayerModelRepository => _playerModelRepository.Self;
+        private IPlayerModelRepository PlayerModelRepository => _modelRepository.Self;
 
-		private Joystick ImplementationJoystick => _gameplayInterfaceProvider.Self.Joystick;
+        private Joystick ImplementationJoystick => _interfaceProvider.Self.Joystick;
 
-		public GameObject Create(GameObject spawnPoint)
-		{
-			if (spawnPoint == null) throw new ArgumentNullException(nameof(spawnPoint));
+        public GameObject Create(GameObject spawnPoint)
+        {
+            if (spawnPoint == null) throw new ArgumentNullException(nameof(spawnPoint));
 
-			var joystick = ImplementationJoystick
-				? ImplementationJoystick
-				: throw new ArgumentNullException(nameof(ImplementationJoystick));
+            var joystick = ImplementationJoystick
+                ? ImplementationJoystick
+                : throw new ArgumentNullException(nameof(ImplementationJoystick));
 
-			AnimationHasher animationHasher = new AnimationHasher();
+            AnimationHasher animationHasher = new AnimationHasher();
 
-			PlayerBody playerBodyComponentPresenter = GetPlayerBodyComponent(spawnPoint);
+            PlayerBody playerBodyComponentPresenter = GetPlayerBodyComponent(spawnPoint);
 
-			_objectResolver.Inject(playerBodyComponentPresenter);
+            _objectResolver.Inject(playerBodyComponentPresenter);
 
-			GameObject character = playerBodyComponentPresenter.gameObject;
-			Rigidbody body = character.GetComponent<Rigidbody>();
+            _character = playerBodyComponentPresenter.gameObject;
+            _body = _character.GetComponent<Rigidbody>();
+            _animator = _character.GetComponentInChildren<Animator>();
 
-			Animator animator = character.GetComponentInChildren<Animator>();
 
-			PlayerTransformable playerTransformable = new(
-				character.transform,
-				joystick,
-				PlayerModelRepository.Get((int)ProgressType.Speed)
-			);
+            PlayerTransformable playerTransformable = new(
+                _character.transform,
+                joystick,
+                PlayerModelRepository.Get((int)ProgressType.Speed),
+                _body
+            );
 
-			playerBodyComponentPresenter.Initialize(playerTransformable, body, animator, animationHasher);
-			playerBodyComponentPresenter.gameObject.SetActive(true);
+            SetPresenter(playerBodyComponentPresenter, playerTransformable, animationHasher);
 
-			return character;
-		}
 
-		private PlayerBody GetPlayerBodyComponent(GameObject spawnPoint) =>
-			_assetFactory.InstantiateAndGetComponent<PlayerBody>(
-				ResourcesAssetPath.Scene.Player,
-				spawnPoint.transform.position
-			);
-	}
+            return _character;
+        }
+
+        private void SetPresenter(PlayerBody playerBodyComponentPresenter, PlayerTransformable playerTransformable,
+            AnimationHasher animationHasher)
+        {
+            playerBodyComponentPresenter.Initialize(playerTransformable, _animator, animationHasher);
+            playerBodyComponentPresenter.gameObject.SetActive(true);
+        }
+
+
+        private PlayerBody GetPlayerBodyComponent(GameObject spawnPoint) =>
+            _assetFactory.InstantiateAndGetComponent<PlayerBody>(
+                ResourcesAssetPath.Scene.Player,
+                spawnPoint.transform.position
+            );
+    }
 }

@@ -4163,7 +4163,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 2
   m_Constraints: 112
   m_CollisionDetection: 3
 --- !u!114 &8360181722883721508
@@ -10118,7 +10118,7 @@ PrefabInstance:
     - target: {fileID: 8025799494378797903, guid: 502ff1680bdac7c4b8f74dbfd5403b62, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 43ac6238438b34784b2c658e59e96fce, type: 2}
+      objectReference: {fileID: 2100000, guid: f7c2deb7be33c61418c105b4da4da2d8, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

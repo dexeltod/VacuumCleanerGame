@@ -1,11 +1,3 @@
-using System;
-using Agava.YandexGames;
-using Cysharp.Threading.Tasks;
-using Sources.DomainInterfaces;
-using Sources.Infrastructure.Yandex;
-using Sources.InfrastructureInterfaces;
-using PlayerAccount = Sources.Domain.PlayerAccount;
-
 namespace Sources.Infrastructure.Adapters
 {
 #if YANDEX_CODE

@@ -1,17 +1,24 @@
 ﻿//#define USE_CUSTOM_TEMPORARY
+
+using UnityEditor;
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace CW.Common
 {
-	[ExecuteInEditMode]
-	[DefaultExecutionOrder(1000)]
-	[HelpURL(CwShared.HelpUrlPrefix + "CwRenderTextureManager")]
-	[AddComponentMenu(CwShared.ComponentMenuPrefix + "Render Texture Manager")]
-	public class CwRenderTextureManager : MonoBehaviour
-	{
-		/// <summary>This allows you to set how many frames an unused RenderTexture will remaining in memory before it's released.</summary>
-		public int Lifetime { set { lifetime = value; } get { return lifetime; } } [SerializeField] private int lifetime = 3;
+    [ExecuteInEditMode]
+    [DefaultExecutionOrder(1000)]
+    [HelpURL(CwShared.HelpUrlPrefix + "CwRenderTextureManager")]
+    [AddComponentMenu(CwShared.ComponentMenuPrefix + "Render Texture Manager")]
+    public class CwRenderTextureManager : MonoBehaviour
+    {
+        /// <summary>This allows you to set how many frames an unused RenderTexture will remaining in memory before it's released.</summary>
+        public int Lifetime
+        {
+            set { lifetime = value; }
+            get { return lifetime; }
+        }
+
+        [SerializeField] private int lifetime = 3;
 
 #if USE_CUSTOM_TEMPORARY
 		private class Entry
@@ -85,9 +92,9 @@ namespace CW.Common
 				{
 					var entry = Entry.Pool.Count > 0 ? Entry.Pool.Pop() : new Entry();
 
-					entry.RT    = rt;
-					entry.Desc  = rt.descriptor;
-					entry.Life  = Mathf.Max(1, instances.First.Value.lifetime);
+					entry.RT = rt;
+					entry.Desc = rt.descriptor;
+					entry.Life = Mathf.Max(1, instances.First.Value.lifetime);
 
 					entries.Add(entry);
 
@@ -185,54 +192,56 @@ namespace CW.Common
 			return true;
 		}
 #else
-		public static RenderTexture GetTemporary(RenderTextureDescriptor desc, string title)
-		{
-			var renderTexture = RenderTexture.GetTemporary(desc);
+        public static RenderTexture GetTemporary(RenderTextureDescriptor desc, string title)
+        {
+            var renderTexture = RenderTexture.GetTemporary(desc);
 
-			// TODO: For some reason RenderTexture.GetTemporary ignores the useMipMap flag?!
-			if (renderTexture.useMipMap != desc.useMipMap)
-			{
-				renderTexture.Release();
+            // TODO: For some reason RenderTexture.GetTemporary ignores the useMipMap flag?!
+            if (renderTexture.useMipMap != desc.useMipMap)
+            {
+                renderTexture.Release();
 
-				renderTexture.descriptor = desc;
+                renderTexture.descriptor = desc;
 
-				renderTexture.Create();
-			}
+                renderTexture.Create();
+            }
 
-			return renderTexture;
-		}
+            return renderTexture;
+        }
 
-		public static RenderTexture ReleaseTemporary(RenderTexture renderTexture)
-		{
-			if (renderTexture != null)
-			{
-				renderTexture.DiscardContents();
+        public static RenderTexture ReleaseTemporary(RenderTexture renderTexture)
+        {
+            if (renderTexture != null)
+            {
+                renderTexture.DiscardContents();
 
-				RenderTexture.ReleaseTemporary(renderTexture);
-			}
+                RenderTexture.ReleaseTemporary(renderTexture);
+            }
 
-			return null;
-		}
+            return null;
+        }
 #endif
-	}
+    }
 }
 
 #if UNITY_EDITOR
 namespace CW.Common
 {
-	using UnityEditor;
-	using TARGET = CwRenderTextureManager;
+    using TARGET = CwRenderTextureManager;
 
-	[CanEditMultipleObjects]
-	[CustomEditor(typeof(TARGET))]
-	public class CwRenderTextureManager_Editor : CwEditor
-	{
-		protected override void OnInspector()
-		{
-			TARGET tgt; TARGET[] tgts; GetTargets(out tgt, out tgts);
+    [CanEditMultipleObjects]
+    [CustomEditor(typeof(TARGET))]
+    public class CwRenderTextureManager_Editor : CwEditor
+    {
+        protected override void OnInspector()
+        {
+            TARGET tgt;
+            TARGET[] tgts;
+            GetTargets(out tgt, out tgts);
 
-			Draw("lifetime", "This allows you to set how many frames an unused RenderTexture will remaining in memory before it's released.");
-		}
-	}
+            Draw("lifetime",
+                "This allows you to set how many frames an unused RenderTexture will remaining in memory before it's released.");
+        }
+    }
 }
 #endif

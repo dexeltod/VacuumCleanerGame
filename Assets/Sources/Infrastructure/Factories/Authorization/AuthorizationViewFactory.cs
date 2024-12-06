@@ -29,30 +29,32 @@ namespace Sources.Infrastructure.Factories.Authorization
         }
 
         private string EditorAuthorizationView => ResourcesAssetPath.Scene.UIResources.Editor.AuthorizationView;
-        private string ViewPath => ResourcesAssetPath.Scene.UIResources.Yandex.YandexAuthorizationView;
+        private string YandexPath => ResourcesAssetPath.Scene.UIResources.Yandex.YandexAuthorizationView;
 
-        public IAuthorizationView Create(bool isDebug)
+        public IAuthorizationView Create()
         {
 #if YANDEX_CODE
-            return CreateYandexAuthorizationWindow(isDebug);
+            return CreateYandexAuthorizationWindow();
 #endif
+#if DEBUG
 
-            return CreateYandexAuthorizationWindow(isDebug);
+            return CreateYandexAuthorizationWindow();
+#endif
             //return CreateEditorAuthorizationView();
         }
 
         private IAuthorizationView CreateYandexAuthorizationWindow(bool isEnabled = false)
         {
             YandexAuthorizationView view = _assetFactory.InstantiateAndGetComponent<YandexAuthorizationView>(
-                ViewPath,
+                YandexPath,
                 _mainMenuView.transform
             );
 
             view.gameObject.SetActive(isEnabled);
 
-            TextPhrases phrases = view.GetComponent<TextPhrases>();
-            view.Construct(view.GetComponent<RectTransform>(), null, phrases);
-            view.TextPhrases.Phrases = _localizationService.GetLocalize(phrases.Phrases);
+            TextPhrasesList phrasesList = view.GetComponent<TextPhrasesList>();
+            view.Construct(view.GetComponent<RectTransform>(), null, phrasesList);
+            view.TextPhrases.Phrases = _localizationService.GetLocalize(phrasesList.Phrases);
 
 
             return view;
@@ -65,7 +67,7 @@ namespace Sources.Infrastructure.Factories.Authorization
                 _mainMenuView.transform
             );
 
-            var phrases = view.GetComponent<TextPhrases>();
+            var phrases = view.GetComponent<TextPhrasesList>();
             view.Construct(view.GetComponent<RectTransform>(), null, phrases);
             view.TextPhrases.Phrases = _localizationService.GetLocalize(phrases.Phrases);
             return view;

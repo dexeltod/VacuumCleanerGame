@@ -1,7 +1,7 @@
 namespace Sources.Utils
 {
-	public class Yandex
-	{
-		public readonly string YandexAuthorizationView = "Game/Yandex/YandexAuthorizationView";
-	}
+    public class Yandex
+    {
+        public readonly string YandexAuthorizationView = "Game/Ui/YandexAuthorizationView";
+    }
 }

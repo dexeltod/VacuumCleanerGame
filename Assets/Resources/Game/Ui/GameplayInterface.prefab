@@ -392,7 +392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23d11ae2e2f77fe42aa2a938b73e7e2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _phrases: {fileID: 1521777855279534507}
+  _phrasesList: {fileID: 1521777855279534507}
   _scoreCash: {fileID: 8778986452386420974}
   _globalScoreText: {fileID: 6827389632814850691}
   _maxGlobalScoreText: {fileID: 5280714058190142866}
@@ -681,7 +681,7 @@ GameObject:
   - component: {fileID: 7462375731431727754}
   - component: {fileID: 8778986452386420974}
   m_Layer: 5
-  m_Name: ScoreCash
+  m_Name: ScoreCashText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2293,8 +2293,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Speed yourself
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2b9004823d736ba47bca04fd2ece4c7a, type: 2}
+  m_sharedMaterial: {fileID: -2096455649916167305, guid: 2b9004823d736ba47bca04fd2ece4c7a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2318,7 +2318,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 9.85
+  m_fontSize: 8.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

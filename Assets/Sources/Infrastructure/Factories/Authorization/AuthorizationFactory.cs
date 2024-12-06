@@ -14,8 +14,6 @@ namespace Sources.Infrastructure.Factories.Authorization
 {
     public sealed class AuthorizationFactory
     {
-        private const bool IsDebug = false;
-
         private readonly IAssetFactory _assetFactory;
         private readonly CloudServiceSdkFacadeProvider _cloudServiceSdkFacadeProvider;
         private readonly ITranslatorService _localizationService;
@@ -29,8 +27,7 @@ namespace Sources.Infrastructure.Factories.Authorization
             ITranslatorService localizationService
         )
         {
-            _assetFactory
-                = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+            _assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
             _cloudServiceSdkFacadeProvider = cloudServiceSdkFacadeProvider;
             _localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
             _mainMenuView = mainMenuView ? mainMenuView : throw new ArgumentNullException(nameof(mainMenuView));
@@ -38,8 +35,11 @@ namespace Sources.Infrastructure.Factories.Authorization
 
         public IAuthorizationPresenter Create()
         {
-            IAuthorizationView authorizationView
-                = new AuthorizationViewFactory(_assetFactory, _localizationService, _mainMenuView).Create(IsDebug);
+            IAuthorizationView authorizationView = new AuthorizationViewFactory(
+                _assetFactory,
+                _localizationService,
+                _mainMenuView
+            ).Create();
 
             ICloudServiceSdkFacade сloudServiceSdkFacade = new CloudPlayerDataServiceFactory().Create();
 

@@ -39,213 +39,213 @@ using Sources.Services.DomainServices.YandexLeaderboard;
 
 namespace Sources.Application.Bootstrapp
 {
-	public class ServiceRegister
-	{
-		private readonly IContainerBuilder _builder;
+    public class ServiceRegister
+    {
+        private readonly IContainerBuilder _builder;
 
-		public ServiceRegister(IContainerBuilder builder) =>
-			_builder = builder ?? throw new ArgumentNullException(nameof(builder));
+        public ServiceRegister(IContainerBuilder builder) =>
+            _builder = builder ?? throw new ArgumentNullException(nameof(builder));
 
-		public void Register()
-		{
-			_builder.RegisterEntryPoint<GameBuilder>();
+        public void Register()
+        {
+            _builder.RegisterEntryPoint<GameBuilder>();
 
-#region BaseServices
+            #region BaseServices
 
-			_builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
-			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
-			_builder.Register<ITranslatorService, PhraseTranslatorService>(Lifetime.Singleton);
+            _builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
+            _builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
+            _builder.Register<ITranslatorService, PhraseTranslatorService>(Lifetime.Singleton);
 
-			_builder.Register<ProgressionConfig>(Lifetime.Singleton);
-			_builder.Register<ProgressServiceRegister>(Lifetime.Singleton);
+            _builder.Register<ProgressionConfig>(Lifetime.Singleton);
+            _builder.Register<ProgressServiceRegister>(Lifetime.Singleton);
 
-			_builder.Register<ProgressCleaner>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<ProgressCleaner>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
-			RegisterLoadingCurtain();
+            RegisterLoadingCurtain();
 
-#endregion
+            #endregion
 
-#region ConstantNames
+            #region ConstantNames
 
-			_builder.Register<ProgressConstantNames>(Lifetime.Singleton);
+            _builder.Register<ProgressConstantNames>(Lifetime.Singleton);
 
-#endregion
+            #endregion
 
-#region Providers
+            #region Providers
 
-#region Repositories
+            #region Repositories
 
-			_builder.Register<ProgressEntityRepositoryProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<ProgressEntityRepositoryProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
-#endregion
+            #endregion
 
-			_builder.Register<SandCarContainerViewProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<GameStateChangerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<FillMeshShaderControllerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<PlayerModelRepositoryProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<GameFocusHandlerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<SandCarContainerViewProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<GameStateChangerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<FillMeshShaderControllerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<PlayerModelRepositoryProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<GameFocusHandlerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
-			_builder.Register<SandParticleSystemProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<CloudServiceSdkFacadeProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<AdvertisementHandlerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<SandParticleSystemProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<CloudServiceSdkFacadeProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<AdvertisementHandlerProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
-			_builder.Register<GameMenuPresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<SaveLoaderProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<GameMenuPresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<SaveLoaderProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
-			_builder.Register<GameplayInterfacePresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces()
-				.AsSelf();
-			_builder.Register<PersistentProgressServiceProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<GameplayInterfacePresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces()
+                .AsSelf();
+            _builder.Register<PersistentProgressServiceProvider>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
-			_builder.Register<UpgradeWindowPresenterProvider>(Lifetime.Singleton);
-			_builder.Register<ICoroutineRunnerProvider, CoroutineRunnerProvider>(Lifetime.Singleton).AsSelf();
-			_builder.Register<ResourcesProgressPresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces()
-				.AsSelf();
+            _builder.Register<UpgradeWindowPresenterProvider>(Lifetime.Singleton);
+            _builder.Register<ICoroutineRunnerProvider, CoroutineRunnerProvider>(Lifetime.Singleton).AsSelf();
+            _builder.Register<ResourcesProgressPresenterProvider>(Lifetime.Singleton).AsImplementedInterfaces()
+                .AsSelf();
 
-			_builder.Register<DissolveShaderViewControllerProvider>(Lifetime.Singleton);
-			_builder.Register<ResourcePathNameConfigProvider>(Lifetime.Singleton);
+            _builder.Register<DissolveShaderViewControllerProvider>(Lifetime.Singleton);
+            _builder.Register<ResourcePathNameConfigProvider>(Lifetime.Singleton);
 
-#endregion
+            #endregion
 
-#region Factories
+            #region Factories
 
-			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Scoped);
-			_builder.Register<IPresentableFactory<IUpgradeWindowPresentation, IUpgradeWindowPresenter>,
-				UpgradeWindowViewFactory>(Lifetime.Scoped).AsImplementedInterfaces();
+            _builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Scoped);
+            _builder.Register<IPresentableFactory<IUpgradeWindowPresentation, IUpgradeWindowPresenter>,
+                UpgradeWindowViewFactory>(Lifetime.Scoped).AsImplementedInterfaces();
 
-			_builder.Register<ShopViewFactory>(Lifetime.Scoped);
+            _builder.Register<ShopViewFactory>(Lifetime.Scoped);
 
-			_builder.Register<SaveLoaderFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
-			_builder.Register<InitialProgressFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
-			_builder.Register<CoroutineRunnerFactory>(Lifetime.Scoped);
-			_builder.Register<LoadingCurtainFactory>(Lifetime.Scoped);
+            _builder.Register<SaveLoaderFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
+            _builder.Register<InitialProgressFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
+            _builder.Register<CoroutineRunnerFactory>(Lifetime.Scoped);
+            _builder.Register<LoadingCurtainFactory>(Lifetime.Scoped);
 
-			_builder.Register<GameplayInterfacePresenterFactory>(Lifetime.Scoped);
-			_builder.Register<GameStatesRepositoryFactory>(Lifetime.Scoped);
+            _builder.Register<GameplayInterfacePresenterFactory>(Lifetime.Scoped);
+            _builder.Register<GameStatesRepositoryFactory>(Lifetime.Scoped);
 
-			_builder.Register<GameStateChangerFactory>(Lifetime.Scoped).AsImplementedInterfaces();
-			_builder.Register<ProgressFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
+            _builder.Register<GameStateChangerFactory>(Lifetime.Scoped).AsImplementedInterfaces();
+            _builder.Register<ProgressFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
 
-			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Singleton);
+            _builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Singleton);
 
-			_builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Singleton);
+            _builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Singleton);
 
-			_builder.Register<IInjectableAssetFactory, InjectableAssetFactory>(Lifetime.Singleton)
-				.As<IInjectableAssetFactory>().AsSelf();
+            _builder.Register<IInjectableAssetFactory, InjectableAssetFactory>(Lifetime.Singleton)
+                .As<IInjectableAssetFactory>().AsSelf();
 
-			_builder.Register<IAssetFactory, AssetFactory>(Lifetime.Singleton).As<IAssetFactory>().AsSelf();
+            _builder.Register<IAssetFactory, AssetFactory>(Lifetime.Singleton).As<IAssetFactory>().AsSelf();
 
-			_builder.Register<ResourcesProgressPresenterFactory>(Lifetime.Singleton);
+            _builder.Register<ResourcesProgressPresenterFactory>(Lifetime.Singleton);
 
-#endregion
+            #endregion
 
-#region States
+            #region States
 
-			_builder.Register<MenuState>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<BuildSceneState>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
-			_builder.Register<GameLoopState>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<MenuState>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<BuildSceneState>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+            _builder.Register<GameLoopState>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
-#endregion
+            #endregion
 
-#region InitializeServicesAndProgress
+            #region InitializeServicesAndProgress
 
-			InitializeLeaderBoardService(_builder);
+            InitializeLeaderBoardService(_builder);
 
-			_builder.Register<ILevelChangerService, LevelChangerService>(Lifetime.Singleton);
+            _builder.Register<ILevelChangerService, LevelChangerService>(Lifetime.Singleton);
 
-			_builder.Register<IProgressSaveLoadDataService, ProgressSaveLoadDataService>(Lifetime.Singleton);
+            _builder.Register<IProgressSaveLoadDataService, ProgressSaveLoadDataService>(Lifetime.Singleton);
 
-			RegisterCloudSavers();
+            RegisterCloudSavers();
 
-			_builder.Register(
-				container =>
-				{
-					SaveLoaderFactory saveLoaderFactory = container.Resolve<SaveLoaderFactory>();
-					return saveLoaderFactory.GetSaveLoader();
-				},
-				Lifetime.Singleton
-			).AsImplementedInterfaces().AsSelf();
+            _builder.Register(
+                container =>
+                {
+                    SaveLoaderFactory saveLoaderFactory = container.Resolve<SaveLoaderFactory>();
+                    return saveLoaderFactory.GetSaveLoader();
+                },
+                Lifetime.Singleton
+            ).AsImplementedInterfaces().AsSelf();
 
-			CreateResourceService();
-			CreateSceneLoadServices();
+            CreateResourceService();
+            CreateSceneLoadServices();
 
-#endregion
+            #endregion
 
-#region InitializeProgressServices
+            #region InitializeProgressServices
 
-			_builder.Register<ILevelConfigGetter, LevelConfigGetter>(Lifetime.Singleton);
+            _builder.Register<ILevelConfigGetter, LevelConfigGetter>(Lifetime.Singleton);
 
-			_builder.Register<ILevelProgressFacade, LevelProgressFacade>(Lifetime.Singleton);
-			RegisterAdvertisement();
+            _builder.Register<ILevelProgressFacade, LevelProgressFacade>(Lifetime.Singleton);
+            RegisterAdvertisement();
 
-#endregion
+            #endregion
 
-			_builder.RegisterEntryPointExceptionHandler(exception => Debug.LogError(exception.Message));
-		}
+            _builder.RegisterEntryPointExceptionHandler(exception => Debug.LogError(exception.Message));
+        }
 
-		private void RegisterAdvertisement()
-		{
+        private void RegisterAdvertisement()
+        {
 #if YANDEX_CODE
-			_builder.Register<IAdvertisement, YandexAdvertisement>(Lifetime.Singleton);
-			return;
+            _builder.Register<IAdvertisement, YandexAdvertisement>(Lifetime.Singleton);
+            return;
 #endif
-			_builder.Register<IAdvertisement, EditorAdvertisement>(Lifetime.Singleton);
-		}
+            _builder.Register<IAdvertisement, EditorAdvertisement>(Lifetime.Singleton);
+        }
 
-		private void RegisterCloudSavers()
-		{
+        private void RegisterCloudSavers()
+        {
 #if YANDEX_CODE
-			_builder.Register<ICloudSave, YandexCloudSaveLoader>(Lifetime.Singleton);
+            _builder.Register<ICloudSave, YandexCloudSaveLoader>(Lifetime.Singleton);
 #endif
 #if !YANDEX_CODE
 			_builder.Register<ICloudSave, UnityCloudSaveLoader>(Lifetime.Singleton);
 #endif
-		}
+        }
 
-		private void RegisterLoadingCurtain() =>
-			_builder.Register(
-				container =>
-				{
-					LoadingCurtain loadingCurtain = container.Resolve<LoadingCurtainFactory>().Create();
-					loadingCurtain.gameObject.SetActive(true);
-					return loadingCurtain;
-				},
-				Lifetime.Singleton
-			).AsImplementedInterfaces().AsSelf();
+        private void RegisterLoadingCurtain() =>
+            _builder.Register(
+                container =>
+                {
+                    LoadingCurtain loadingCurtain = container.Resolve<LoadingCurtainFactory>().Create();
+                    loadingCurtain.gameObject.SetActive(true);
+                    return loadingCurtain;
+                },
+                Lifetime.Singleton
+            ).AsImplementedInterfaces().AsSelf();
 
-		private void CreateSceneLoadServices()
-		{
-			ServicesLoadInvokerInformer servicesLoadInvokerInformer = new ServicesLoadInvokerInformer();
+        private void CreateSceneLoadServices()
+        {
+            ServicesLoadInvokerInformer servicesLoadInvokerInformer = new ServicesLoadInvokerInformer();
 
-			_builder.RegisterInstance<ISceneLoadInformer>(servicesLoadInvokerInformer);
-			_builder.RegisterInstance<ISceneLoadInvoker>(servicesLoadInvokerInformer);
-		}
+            _builder.RegisterInstance<ISceneLoadInformer>(servicesLoadInvokerInformer);
+            _builder.RegisterInstance<ISceneLoadInvoker>(servicesLoadInvokerInformer);
+        }
 
-		private void CreateResourceService()
-		{
-			ResourceServiceFactory resourceServiceFactory = new ResourceServiceFactory();
+        private void CreateResourceService()
+        {
+            ResourceServiceFactory resourceServiceFactory = new ResourceServiceFactory();
 
-			_builder.RegisterInstance<IResourceService>
-			(
-				new ResourcesService(
-					resourceServiceFactory.GetIntResources(),
-					resourceServiceFactory.GetFloatResources()
-				)
-			);
-		}
+            _builder.RegisterInstance<IResourceService>
+            (
+                new ResourcesService(
+                    resourceServiceFactory.GetIntResources(),
+                    resourceServiceFactory.GetFloatResources()
+                )
+            );
+        }
 
-		private void InitializeLeaderBoardService(IContainerBuilder builder)
-		{
-			LeaderBoard leaderBoardService = new LeaderBoard(GetLeaderboard());
+        private void InitializeLeaderBoardService(IContainerBuilder builder)
+        {
+            LeaderBoardRepository leaderBoardRepositoryService = new LeaderBoardRepository(GetLeaderboard());
 
-			builder.RegisterInstance<ILeaderBoardService>(leaderBoardService);
-		}
+            builder.RegisterInstance<ILeaderBoardService>(leaderBoardRepositoryService);
+        }
 
-		private IAbstractLeaderBoard GetLeaderboard()
-		{
+        private IAbstractLeaderBoard GetLeaderboard()
+        {
 #if YANDEX_CODE
-			return new YandexLeaderboard();
+            return new YandexLeaderboard();
 #endif
-			return new TestLeaderBoardService();
-		}
-	}
+            return new TestLeaderBoardService();
+        }
+    }
 }

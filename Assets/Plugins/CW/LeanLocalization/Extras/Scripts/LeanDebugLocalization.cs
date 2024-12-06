@@ -1,102 +1,116 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Globalization;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace Lean.Localization
 {
-	[DefaultExecutionOrder(-100)]
-	[HelpURL(LeanLocalization.HelpUrlPrefix + "LeanLocalization")]
-	[AddComponentMenu("")]
-	public class LeanDebugLocalization : MonoBehaviour
-	{
-		[System.Serializable] public class StringEvent : UnityEvent<string> {}
+    [DefaultExecutionOrder(-100)]
+    [HelpURL(LeanLocalization.HelpUrlPrefix + "LeanLocalization")]
+    [AddComponentMenu("")]
+    public class LeanDebugLocalization : MonoBehaviour
+    {
+        [Serializable]
+        public class StringEvent : UnityEvent<string>
+        {
+        }
 
-		public StringEvent OnString { get { if (onString == null) onString = new StringEvent(); return onString; } } [SerializeField] private StringEvent onString;
+        public StringEvent OnString
+        {
+            get
+            {
+                if (onString == null) onString = new StringEvent();
+                return onString;
+            }
+        }
 
-		public void ClearSave()
-		{
-			PlayerPrefs.DeleteKey("LeanLocalization.CurrentLanguage");
-		}
+        [SerializeField] private StringEvent onString;
 
-		public void ClearSaveAlt()
-		{
-			PlayerPrefs.DeleteKey("LeanLocalization.CurrentLanguageAlt");
-		}
+        public void ClearSave()
+        {
+            PlayerPrefs.DeleteKey("LeanLocalization.CurrentLanguage");
+        }
 
-		protected virtual void OnEnable()
-		{
-			LeanLocalization.OnLocalizationChanged += HandleLocalizationChanged;
-		}
+        public void ClearSaveAlt()
+        {
+            PlayerPrefs.DeleteKey("LeanLocalization.CurrentLanguageAlt");
+        }
 
-		protected virtual void OnDisable()
-		{
-			LeanLocalization.OnLocalizationChanged -= HandleLocalizationChanged;
-		}
+        protected virtual void OnEnable()
+        {
+            LeanLocalization.OnLocalizationChanged += HandleLocalizationChanged;
+        }
 
-		private void HandleLocalizationChanged()
-		{
-			var text = "";
+        protected virtual void OnDisable()
+        {
+            LeanLocalization.OnLocalizationChanged -= HandleLocalizationChanged;
+        }
 
-			if (LeanLocalization.Instances.Count > 0)
-			{
-				var first = LeanLocalization.Instances[0];
+        private void HandleLocalizationChanged()
+        {
+            var text = "";
 
-				text += "LOOKING FOR: ";
+            if (LeanLocalization.Instances.Count > 0)
+            {
+                var first = LeanLocalization.Instances[0];
 
-				if (first.DetectLanguage == LeanLocalization.DetectType.SystemLanguage)
-				{
-					text += Application.systemLanguage.ToString();
-				}
-				else if (first.DetectLanguage == LeanLocalization.DetectType.CurrentCulture)
-				{
-					var cultureInfo = System.Globalization.CultureInfo.CurrentCulture;
+                text += "LOOKING FOR: ";
 
-					if (cultureInfo != null)
-					{
-						text += cultureInfo.Name;
-					}
-				}
-				else if (first.DetectLanguage == LeanLocalization.DetectType.CurrentCulture)
-				{
-					var cultureInfo = System.Globalization.CultureInfo.CurrentUICulture;
+                if (first.DetectLanguage == LeanLocalization.DetectType.SystemLanguage)
+                {
+                    text += Application.systemLanguage.ToString();
+                }
+                else if (first.DetectLanguage == LeanLocalization.DetectType.CurrentCulture)
+                {
+                    var cultureInfo = CultureInfo.CurrentCulture;
 
-					if (cultureInfo != null)
-					{
-						text += cultureInfo.Name;
-					}
-				}
+                    if (cultureInfo != null)
+                    {
+                        text += cultureInfo.Name;
+                    }
+                }
+                else if (first.DetectLanguage == LeanLocalization.DetectType.CurrentCulture)
+                {
+                    var cultureInfo = CultureInfo.CurrentUICulture;
 
-				text += "\n\n";
+                    if (cultureInfo != null)
+                    {
+                        text += cultureInfo.Name;
+                    }
+                }
 
-				var load = "";
+                text += "\n\n";
 
-				if (first.SaveLoad == LeanLocalization.SaveLoadType.WhenChanged)
-				{
-					load = PlayerPrefs.GetString("LeanLocalization.CurrentLanguage");
-				}
-				else if (first.SaveLoad == LeanLocalization.SaveLoadType.WhenChanged)
-				{
-					load = PlayerPrefs.GetString("LeanLocalization.CurrentLanguageAlt");
-				}
+                var load = "";
 
-				if (string.IsNullOrEmpty(load) == false)
-				{
-					text += "LOADING PREVIOUSLY SAVED: " + load;
-				}
+                if (first.SaveLoad == LeanLocalization.SaveLoadType.WhenChanged)
+                {
+                    load = PlayerPrefs.GetString("LeanLocalization.CurrentLanguage");
+                }
+                else if (first.SaveLoad == LeanLocalization.SaveLoadType.WhenChanged)
+                {
+                    load = PlayerPrefs.GetString("LeanLocalization.CurrentLanguageAlt");
+                }
 
-				text += "\n\nALIASES:\n";
+                if (string.IsNullOrEmpty(load) == false)
+                {
+                    text += "LOADING PREVIOUSLY SAVED: " + load;
+                }
 
-				foreach (var alias in LeanLocalization.CurrentAliases)
-				{
-					text += alias.Key + " = " + alias.Value + "\n";
-				}
+                text += "\n\nALIASES:\n";
 
-				text += "\n\nDETECTED: " + first.CurrentLanguage;
-			}
+                foreach (var alias in LeanLocalization.CurrentAliases)
+                {
+                    text += alias.Key + " = " + alias.Value + "\n";
+                }
 
-			if (onString != null)
-			{
-				onString.Invoke(text);
-			}
-		}
-	}
+                text += "\n\nDETECTED: " + first.CurrentLanguage;
+            }
+
+            if (onString != null)
+            {
+                onString.Invoke(text);
+            }
+        }
+    }
 }
