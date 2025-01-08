@@ -3,7 +3,7 @@ using Sources.DomainInterfaces;
 
 namespace Sources.InfrastructureInterfaces
 {
-	public interface ICloudServiceSdkFacade
+	public interface ICloudServiceSdk
 	{
 		UniTask<IPlayerAccount> GetPlayerAccount();
 		void SetStatusInitialized();

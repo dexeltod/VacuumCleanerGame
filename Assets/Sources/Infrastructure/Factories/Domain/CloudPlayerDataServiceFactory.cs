@@ -9,12 +9,12 @@ namespace Sources.Infrastructure.Factories.Domain
 {
 	public class CloudPlayerDataServiceFactory
 	{
-		public ICloudServiceSdkFacade Create()
+		public ICloudServiceSdk Create()
 		{
 #if YANDEX_CODE
 			return new YandexCloudAdapter(new YandexServiceSdkFacade());
 #endif
-			return new UnityCloudServiceSdkFacade();
+			return new UnityCloudServiceSdk();
 		}
 	}
 }

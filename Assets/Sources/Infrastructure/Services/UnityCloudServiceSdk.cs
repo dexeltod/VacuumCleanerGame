@@ -4,7 +4,7 @@ using Sources.InfrastructureInterfaces;
 
 namespace Sources.Infrastructure.Services
 {
-	public class UnityCloudServiceSdkFacade : ICloudServiceSdkFacade
+	public class UnityCloudServiceSdk : ICloudServiceSdk
 	{
 		private bool _isAuthorized = false;
 

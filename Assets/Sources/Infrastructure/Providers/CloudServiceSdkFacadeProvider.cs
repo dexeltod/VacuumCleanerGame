@@ -3,5 +3,7 @@ using Sources.InfrastructureInterfaces;
 
 namespace Sources.Infrastructure.Providers
 {
-	public class CloudServiceSdkFacadeProvider : Provider<ICloudServiceSdkFacade> { }
+	public class CloudServiceSdkFacadeProvider : Provider<ICloudServiceSdk>
+	{
+	}
 }
