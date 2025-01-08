@@ -1,16 +1,24 @@
 ﻿using UnityEngine;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 {
 	/// <summary>This component will update an AudioSource component with localized text, or use a fallback if none is found.</summary>
 	[ExecuteInEditMode]
 	[DisallowMultipleComponent]
-	[RequireComponent(typeof(AudioSource))]
-	[HelpURL(LeanLocalization.HelpUrlPrefix + "LeanLocalizedAudioSource")]
-	[AddComponentMenu(LeanLocalization.ComponentPathPrefix + "Localized AudioSource")]
+	[RequireComponent(
+		typeof(AudioSource)
+	)]
+	[HelpURL(
+		LeanLocalization.HelpUrlPrefix + "LeanLocalizedAudioSource"
+	)]
+	[AddComponentMenu(
+		LeanLocalization.ComponentPathPrefix + "Localized AudioSource"
+	)]
 	public class LeanLocalizedAudioSource : LeanLocalizedBehaviour
 	{
-		[Tooltip("If PhraseName couldn't be found, this clip will be used")]
+		[Tooltip(
+			"If PhraseName couldn't be found, this clip will be used"
+		)]
 		public AudioClip FallbackAudioClip;
 
 		// This gets called every time the translation needs updating

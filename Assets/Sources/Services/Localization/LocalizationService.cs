@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using Lean.Localization;
+using Plugins.CW.LeanLocalization.Required.Scripts;
 using Sources.Services.Localization.Serializable;
 using Sources.ServicesInterfaces;
 using Sources.Utils;
@@ -18,21 +18,35 @@ namespace Sources.Services.Localization
 
 		public LocalizationService(IAssetFactory factory)
 		{
-			_factory = factory ?? throw new ArgumentNullException(nameof(factory));
+			_factory = factory ??
+			           throw new ArgumentNullException(
+				           nameof(factory)
+			           );
 
-			LeanLocalization leanLocalization = LoadAssets(factory, out var localizationData);
+			LeanLocalization leanLocalization = LoadAssets(
+				factory,
+				out var localizationData
+			);
 
 			_languages = new string[localizationData.Languages.Count];
 			_phraseNames = new string[localizationData.Phrases.Count];
 
-			AddLanguages(localizationData, leanLocalization);
-			CreatePhrases(localizationData, leanLocalization);
+			AddLanguages(
+				localizationData,
+				leanLocalization
+			);
+			CreatePhrases(
+				localizationData,
+				leanLocalization
+			);
 
 #if YANDEX_CODE
 			return;
 #endif
 
-			LeanLocalization.SetCurrentLanguageAll(StartLanguage);
+			LeanLocalization.SetCurrentLanguageAll(
+				StartLanguage
+			);
 			LeanLocalization.UpdateTranslations();
 		}
 
@@ -44,22 +58,36 @@ namespace Sources.Services.Localization
 			string parsedPhrase = _phraseNames.FirstOrDefault(
 				elem =>
 				{
-					if (string.IsNullOrWhiteSpace(elem))
-						throw new ArgumentException("Value cannot be null or whitespace.", (elem));
+					if (string.IsNullOrWhiteSpace(
+						    elem
+					    ))
+						throw new ArgumentException(
+							"Value cannot be null or whitespace.",
+							(elem)
+						);
 
 					return elem == phrase;
 				}
 			);
 
-			return LeanLocalization.GetTranslationText(parsedPhrase);
+			return LeanLocalization.GetTranslationText(
+				parsedPhrase
+			);
 		}
 
 		public void SetLocalLanguage(string language)
 		{
-			if (_languages.Contains(language) == false)
-				throw new InvalidOperationException($"Language {language} is not existing");
+			if (_languages.Contains(
+				    language
+			    ) ==
+			    false)
+				throw new InvalidOperationException(
+					$"Language {language} is not existing"
+				);
 
-			LeanLocalization.SetCurrentLanguageAll(language);
+			LeanLocalization.SetCurrentLanguageAll(
+				language
+			);
 		}
 
 		private LeanLocalization LoadAssets(IAssetFactory assetFactory, out LocalizationRoot localizationData)
@@ -69,9 +97,13 @@ namespace Sources.Services.Localization
 					ResourcesAssetPath.GameObjects.LeanLocalization
 				);
 
-			var config = Resources.Load<TextAsset>(ResourcesAssetPath.Configs.Localization);
+			var config = Resources.Load<TextAsset>(
+				ResourcesAssetPath.Configs.Localization
+			);
 
-			localizationData = JsonUtility.FromJson<LocalizationRoot>(config.text);
+			localizationData = JsonUtility.FromJson<LocalizationRoot>(
+				config.text
+			);
 			return leanLocalization;
 		}
 
@@ -81,7 +113,9 @@ namespace Sources.Services.Localization
 			{
 				string language = localizationData.Languages[i];
 				_languages[i] = language;
-				leanLocalization.AddLanguage(language);
+				leanLocalization.AddLanguage(
+					language
+				);
 			}
 		}
 
@@ -89,7 +123,9 @@ namespace Sources.Services.Localization
 		{
 			for (var x = 0; x < localizationData.Phrases.Count; x++)
 			{
-				LeanPhrase phrase = leanLocalization.AddPhrase(localizationData.Phrases[x].Name);
+				LeanPhrase phrase = leanLocalization.AddPhrase(
+					localizationData.Phrases[x].Name
+				);
 
 				for (int i = 0; i < _languages.Length; i++)
 				{
@@ -102,7 +138,9 @@ namespace Sources.Services.Localization
 				}
 			}
 
-			InitPhraseNames(localizationData);
+			InitPhraseNames(
+				localizationData
+			);
 		}
 
 		private void InitPhraseNames(LocalizationRoot localizationData)

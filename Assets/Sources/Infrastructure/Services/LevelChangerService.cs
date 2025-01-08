@@ -14,73 +14,109 @@ using VContainer;
 
 namespace Sources.Infrastructure.Services
 {
-	public sealed class LevelChangerService : ILevelChangerService
-	{
-		private readonly ILevelProgressFacade _levelProgressFacade;
-		private readonly IGameStateChangerProvider _gameStateChangerProvider;
-		private readonly ILevelConfigGetter _levelConfigGetter;
-		private readonly IResourcesProgressPresenterProvider _resourcePorgressPresenterProvider;
-		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
-		private readonly IAdvertisement _rewardService;
-		private readonly ILeaderBoardService _leaderBoardService;
-		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
+    public sealed class LevelChangerService : ILevelChangerService
+    {
+        private readonly ILevelProgressFacade _levelProgressFacade;
+        private readonly IGameStateChangerProvider _gameStateChangerProvider;
+        private readonly ILevelConfigGetter _levelConfigGetter;
+        private readonly IResourcesProgressPresenterProvider _resourcePorgressPresenterProvider;
+        private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
+        private readonly IAdvertisement _rewardService;
+        private readonly ILeaderBoardService _leaderBoardService;
+        private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
 
-		[Inject]
-		public LevelChangerService(
-			ILevelProgressFacade levelProgressFacade,
-			IGameStateChangerProvider gameStateMachine,
-			ILevelConfigGetter levelConfigGetter,
-			IResourcesProgressPresenterProvider progressPresenter,
-			IProgressSaveLoadDataService progressSaveLoadDataService,
-			IAdvertisement advertisement,
-			ILeaderBoardService leaderBoardService,
-			IPersistentProgressServiceProvider persistentProgressServiceProvider
-		)
-		{
-			if (leaderBoardService == null) throw new ArgumentNullException(nameof(leaderBoardService));
-			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
-			_gameStateChangerProvider = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
-			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
-			_resourcePorgressPresenterProvider
-				= progressPresenter ?? throw new ArgumentNullException(nameof(progressPresenter));
-			_progressSaveLoadDataService = progressSaveLoadDataService ??
-				throw new ArgumentNullException(nameof(progressSaveLoadDataService));
+        [Inject]
+        public LevelChangerService(
+            ILevelProgressFacade levelProgressFacade,
+            IGameStateChangerProvider gameStateMachine,
+            ILevelConfigGetter levelConfigGetter,
+            IResourcesProgressPresenterProvider progressPresenter,
+            IProgressSaveLoadDataService progressSaveLoadDataService,
+            IAdvertisement advertisement,
+            ILeaderBoardService leaderBoardService,
+            IPersistentProgressServiceProvider persistentProgressServiceProvider
+        )
+        {
+            if (leaderBoardService == null)
+                throw new ArgumentNullException(
+                    nameof(leaderBoardService)
+                );
 
-			_rewardService = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
-			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
-			_persistentProgressServiceProvider = persistentProgressServiceProvider ??
-				throw new ArgumentNullException(nameof(persistentProgressServiceProvider));
-		}
+            _levelProgressFacade = levelProgressFacade ??
+                                   throw new ArgumentNullException(
+                                       nameof(levelProgressFacade)
+                                   );
+            _gameStateChangerProvider = gameStateMachine ??
+                                        throw new ArgumentNullException(
+                                            nameof(gameStateMachine)
+                                        );
+            _levelConfigGetter = levelConfigGetter ??
+                                 throw new ArgumentNullException(
+                                     nameof(levelConfigGetter)
+                                 );
+            _resourcePorgressPresenterProvider
+                = progressPresenter ??
+                  throw new ArgumentNullException(
+                      nameof(progressPresenter)
+                  );
+            _progressSaveLoadDataService = progressSaveLoadDataService ??
+                                           throw new ArgumentNullException(
+                                               nameof(progressSaveLoadDataService)
+                                           );
 
-		private int LevelProgressMaxTotalResourceCount =>
-			_persistentProgressServiceProvider.Self.GlobalProgress
-				.LevelProgress.MaxTotalResourceCount;
+            _rewardService = advertisement ??
+                             throw new ArgumentNullException(
+                                 nameof(advertisement)
+                             );
+            _leaderBoardService = leaderBoardService ??
+                                  throw new ArgumentNullException(
+                                      nameof(leaderBoardService)
+                                  );
+            _persistentProgressServiceProvider = persistentProgressServiceProvider ??
+                                                 throw new ArgumentNullException(
+                                                     nameof(persistentProgressServiceProvider)
+                                                 );
+        }
 
-		private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Self;
-		private int LevelNumber => _levelProgressFacade.CurrentLevel;
+        private int LevelProgressMaxTotalResourceCount =>
+            _persistentProgressServiceProvider.Self.GlobalProgress
+                .LevelProgress.MaxTotalResourceCount;
 
-		public void GoNextLevelWithReward() =>
-			_rewardService.ShowInterstitialAd(OnRewarded, OnRewarded, OnRewarded);
+        private IGameStateChanger GameStateChanger => _gameStateChangerProvider.Self;
+        private int LevelNumber => _levelProgressFacade.CurrentLevel;
 
-		private async void OnRewarded()
-		{
-			_leaderBoardService.AddScore(LevelProgressMaxTotalResourceCount);
-			_levelProgressFacade.SetNextLevel();
-			_resourcePorgressPresenterProvider.Self.ClearTotalResources();
+        public void GoNextLevelWithReward() =>
+            _rewardService.ShowInterstitialAd(
+                OnRewarded,
+                OnRewarded,
+                OnRewarded
+            );
 
-			await _progressSaveLoadDataService.SaveToCloud();
+        private async void OnRewarded()
+        {
+            _leaderBoardService.AddScore(
+                LevelProgressMaxTotalResourceCount
+            );
+            _levelProgressFacade.SetNextLevel();
+            _resourcePorgressPresenterProvider.Self.ClearTotalResources();
 
-			ILevelConfig levelConfig = _levelConfigGetter.GetOrDefault(LevelNumber);
+            await _progressSaveLoadDataService.SaveToCloud();
 
-			OnProcessEnded();
+            ILevelConfig levelConfig = _levelConfigGetter.GetOrDefault(
+                LevelNumber
+            );
 
-			GameStateChanger.Enter<IBuildSceneState, ILevelConfig>(levelConfig);
-		}
+            OnProcessEnded();
 
-		private void OnProcessEnded()
-		{
-			AudioListener.volume = 1;
-			Time.timeScale = 1;
-		}
-	}
+            GameStateChanger.Enter<IBuildSceneState, ILevelConfig>(
+                levelConfig
+            );
+        }
+
+        private void OnProcessEnded()
+        {
+            AudioListener.volume = 1;
+            Time.timeScale = 1;
+        }
+    }
 }

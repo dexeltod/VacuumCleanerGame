@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
 	/// <summary>The component works like <b>LeanToken</b>, but must be added to the child GameObject of the one that will be translated.</summary>
 	[ExecuteInEditMode]
-	[HelpURL(LeanLocalization.HelpUrlPrefix + "LeanLocalToken")]
-	[AddComponentMenu(LeanLocalization.ComponentPathPrefix + "Local Token")]
+	[HelpURL(
+		LeanLocalization.HelpUrlPrefix + "LeanLocalToken"
+	)]
+	[AddComponentMenu(
+		LeanLocalization.ComponentPathPrefix + "Local Token"
+	)]
 	public class LeanLocalToken : LeanToken
 	{
 		private static List<LeanLocalToken> tempLocalTokens = new List<LeanLocalToken>();
@@ -15,7 +19,9 @@ namespace Lean.Localization
 		{
 			if (root != null)
 			{
-				root.GetComponentsInChildren(tempLocalTokens);
+				root.GetComponentsInChildren(
+					tempLocalTokens
+				);
 
 				foreach (var localToken in tempLocalTokens)
 				{

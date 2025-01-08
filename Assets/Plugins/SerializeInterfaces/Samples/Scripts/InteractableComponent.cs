@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SerializeInterfaces.Samples.Scripts
+namespace Plugins.SerializeInterfaces.Samples.Scripts
 {
 	public class InteractableComponent : MonoBehaviour, IInteractable
 	{
@@ -8,7 +8,9 @@ namespace SerializeInterfaces.Samples.Scripts
 
 		public void Interact()
 		{
-			Debug.Log($"Interacted with component: {this.name}");
+			Debug.Log(
+				$"Interacted with component: {this.name}"
+			);
 		}
 	}
 }

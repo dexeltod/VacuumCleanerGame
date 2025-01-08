@@ -1,144 +1,171 @@
 using System;
 using System.Collections.Generic;
-using CW.Common;
+using Plugins.CW.Shared.Common.Required.Scripts;
 using UnityEditor;
 using UnityEngine;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
-    /// <summary>The class stores a token name (e.g. "AGE"), allowing it to be replaced with the token value (e.g. "20").
-    /// To use the token in your text, simply include the token name surrounded by braces (e.g. "I am {AGE} years old!")</summary>
-    [ExecuteInEditMode]
-    [HelpURL(LeanLocalization.HelpUrlPrefix + "LeanToken")]
-    [AddComponentMenu(LeanLocalization.ComponentPathPrefix + "Token")]
-    public class LeanToken : LeanSource
-    {
-        [SerializeField] private string value;
+	/// <summary>The class stores a token name (e.g. "AGE"), allowing it to be replaced with the token value (e.g. "20").
+	/// To use the token in your text, simply include the token name surrounded by braces (e.g. "I am {AGE} years old!")</summary>
+	[ExecuteInEditMode]
+	[HelpURL(
+		LeanLocalization.HelpUrlPrefix + "LeanToken"
+	)]
+	[AddComponentMenu(
+		LeanLocalization.ComponentPathPrefix + "Token"
+	)]
+	public class LeanToken : LeanSource
+	{
+		[SerializeField] private string value;
 
-        [NonSerialized] private HashSet<ILocalizationHandler> handlers;
+		[NonSerialized] private HashSet<ILocalizationHandler> handlers;
 
-        [NonSerialized] private static HashSet<ILocalizationHandler> tempHandlers = new HashSet<ILocalizationHandler>();
+		[NonSerialized] private static HashSet<ILocalizationHandler> tempHandlers = new HashSet<ILocalizationHandler>();
 
-        /// <summary>This is the current value/text for this token. When this changes, it will automatically update all localizations that use this token.</summary>
-        public string Value
-        {
-            set
-            {
-                if (this.value != value)
-                {
-                    this.value = value;
+		/// <summary>This is the current value/text for this token. When this changes, it will automatically update all localizations that use this token.</summary>
+		public string Value
+		{
+			set
+			{
+				if (this.value != value)
+				{
+					this.value = value;
 
-                    if (handlers != null)
-                    {
-                        tempHandlers.Clear();
+					if (handlers != null)
+					{
+						tempHandlers.Clear();
 
-                        tempHandlers.UnionWith(handlers);
+						tempHandlers.UnionWith(
+							handlers
+						);
 
-                        foreach (var handler in tempHandlers)
-                        {
-                            handler.UpdateLocalization();
-                        }
-                    }
-                }
-            }
+						foreach (var handler in tempHandlers)
+						{
+							handler.UpdateLocalization();
+						}
+					}
+				}
+			}
 
-            get { return value; }
-        }
+			get { return value; }
+		}
 
-        /// <summary>This method allows you to set <b>Value</b> from an inspector event using a <b>float</b> value.</summary>
-        public void SetValue(float value)
-        {
-            Value = value.ToString();
-        }
+		/// <summary>This method allows you to set <b>Value</b> from an inspector event using a <b>float</b> value.</summary>
+		public void SetValue(float value)
+		{
+			Value = value.ToString();
+		}
 
-        /// <summary>This method allows you to set <b>Value</b> from an inspector event using a <b>string</b> value.</summary>
-        public void SetValue(string value)
-        {
-            Value = value;
-        }
+		/// <summary>This method allows you to set <b>Value</b> from an inspector event using a <b>string</b> value.</summary>
+		public void SetValue(string value)
+		{
+			Value = value;
+		}
 
-        /// <summary>This method allows you to set <b>Value</b> from an inspector event using an <b>int</b> value.</summary>
-        public void SetValue(int value)
-        {
-            Value = value.ToString();
-        }
+		/// <summary>This method allows you to set <b>Value</b> from an inspector event using an <b>int</b> value.</summary>
+		public void SetValue(int value)
+		{
+			Value = value.ToString();
+		}
 
-        public void Register(ILocalizationHandler handler)
-        {
-            if (handler != null)
-            {
-                if (handlers == null)
-                {
-                    handlers = new HashSet<ILocalizationHandler>();
-                }
+		public void Register(ILocalizationHandler handler)
+		{
+			if (handler != null)
+			{
+				if (handlers == null)
+				{
+					handlers = new HashSet<ILocalizationHandler>();
+				}
 
-                handlers.Add(handler);
-            }
-        }
+				handlers.Add(
+					handler
+				);
+			}
+		}
 
-        public void Unregister(ILocalizationHandler handler)
-        {
-            if (handlers != null)
-            {
-                handlers.Remove(handler);
-            }
-        }
+		public void Unregister(ILocalizationHandler handler)
+		{
+			if (handlers != null)
+			{
+				handlers.Remove(
+					handler
+				);
+			}
+		}
 
-        public void UnregisterAll()
-        {
-            if (handlers != null)
-            {
-                foreach (var handler in handlers)
-                {
-                    handler.Unregister(this);
-                }
+		public void UnregisterAll()
+		{
+			if (handlers != null)
+			{
+				foreach (var handler in handlers)
+				{
+					handler.Unregister(
+						this
+					);
+				}
 
-                handlers.Clear();
-            }
-        }
+				handlers.Clear();
+			}
+		}
 
-        public override void Register()
-        {
-            LeanLocalization.RegisterToken(name, this);
-        }
+		public override void Register()
+		{
+			LeanLocalization.RegisterToken(
+				name,
+				this
+			);
+		}
 
-        protected override void OnDisable()
-        {
-            base.OnDisable();
+		protected override void OnDisable()
+		{
+			base.OnDisable();
 
-            UnregisterAll();
-        }
-    }
-}
+			UnregisterAll();
+		}
+	}
 
 #if UNITY_EDITOR
-namespace Lean.Localization.Editor
-{
-    using TARGET = LeanToken;
+	[CanEditMultipleObjects]
+	[CustomEditor(
+		typeof(LeanToken)
+	)]
+	public class LeanToken_Editor : CwEditor
+	{
+		protected override void OnInspector()
+		{
+			LeanToken tgt;
+			LeanToken[] tgts;
+			GetTargets(
+				out tgt,
+				out tgts
+			);
 
-    [CanEditMultipleObjects]
-    [CustomEditor(typeof(TARGET))]
-    public class LeanToken_Editor : CwEditor
-    {
-        protected override void OnInspector()
-        {
-            TARGET tgt;
-            TARGET[] tgts;
-            GetTargets(out tgt, out tgts);
+			if (Draw(
+				    "value",
+				    "This is the current value/text for this token. When this changes, it will automatically update all localizations that use this token."
+			    ) ==
+			    true)
+			{
+				Each(
+					tgts,
+					t => t.Value = serializedObject.FindProperty(
+						"value"
+					).stringValue
+				);
+			}
+		}
 
-            if (Draw("value",
-                    "This is the current value/text for this token. When this changes, it will automatically update all localizations that use this token.") ==
-                true)
-            {
-                Each(tgts, t => t.Value = serializedObject.FindProperty("value").stringValue);
-            }
-        }
+		[MenuItem(
+			"Assets/Create/Lean/Localization/Lean Token"
+		)]
+		private static void CreateToken()
+		{
+			CwHelper.CreatePrefabAsset(
+				"New Token"
+			).AddComponent<LeanToken>();
+		}
+	}
 
-        [MenuItem("Assets/Create/Lean/Localization/Lean Token")]
-        private static void CreateToken()
-        {
-            CwHelper.CreatePrefabAsset("New Token").AddComponent<LeanToken>();
-        }
-    }
-}
 #endif
+}

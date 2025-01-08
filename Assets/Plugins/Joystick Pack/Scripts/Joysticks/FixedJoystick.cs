@@ -1,9 +1,8 @@
-﻿using Graphic.Joystick_Pack.Scripts.Base;
+﻿using Plugins.Joystick_Pack.Scripts.Base;
 
-namespace Graphic.Joystick_Pack.Scripts.Joysticks
+namespace Plugins.Joystick_Pack.Scripts.Joysticks
 {
 	public class FixedJoystick : Joystick
 	{
-
 	}
 }

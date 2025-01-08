@@ -3,114 +3,133 @@ using System.Globalization;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Extras.Scripts
 {
-    [DefaultExecutionOrder(-100)]
-    [HelpURL(LeanLocalization.HelpUrlPrefix + "LeanLocalization")]
-    [AddComponentMenu("")]
-    public class LeanDebugLocalization : MonoBehaviour
-    {
-        [Serializable]
-        public class StringEvent : UnityEvent<string>
-        {
-        }
+	[DefaultExecutionOrder(
+		-100
+	)]
+	[HelpURL(
+		Required.Scripts.LeanLocalization.HelpUrlPrefix + "LeanLocalization"
+	)]
+	[AddComponentMenu(
+		""
+	)]
+	public class LeanDebugLocalization : MonoBehaviour
+	{
+		[Serializable]
+		public class StringEvent : UnityEvent<string>
+		{
+		}
 
-        public StringEvent OnString
-        {
-            get
-            {
-                if (onString == null) onString = new StringEvent();
-                return onString;
-            }
-        }
+		public StringEvent OnString
+		{
+			get
+			{
+				if (onString == null) onString = new StringEvent();
+				return onString;
+			}
+		}
 
-        [SerializeField] private StringEvent onString;
+		[SerializeField] private StringEvent onString;
 
-        public void ClearSave()
-        {
-            PlayerPrefs.DeleteKey("LeanLocalization.CurrentLanguage");
-        }
+		public void ClearSave()
+		{
+			PlayerPrefs.DeleteKey(
+				"LeanLocalization.CurrentLanguage"
+			);
+		}
 
-        public void ClearSaveAlt()
-        {
-            PlayerPrefs.DeleteKey("LeanLocalization.CurrentLanguageAlt");
-        }
+		public void ClearSaveAlt()
+		{
+			PlayerPrefs.DeleteKey(
+				"LeanLocalization.CurrentLanguageAlt"
+			);
+		}
 
-        protected virtual void OnEnable()
-        {
-            LeanLocalization.OnLocalizationChanged += HandleLocalizationChanged;
-        }
+		protected virtual void OnEnable()
+		{
+			Required.Scripts.LeanLocalization.OnLocalizationChanged += HandleLocalizationChanged;
+		}
 
-        protected virtual void OnDisable()
-        {
-            LeanLocalization.OnLocalizationChanged -= HandleLocalizationChanged;
-        }
+		protected virtual void OnDisable()
+		{
+			Required.Scripts.LeanLocalization.OnLocalizationChanged -= HandleLocalizationChanged;
+		}
 
-        private void HandleLocalizationChanged()
-        {
-            var text = "";
+		private void HandleLocalizationChanged()
+		{
+			var text = "";
 
-            if (LeanLocalization.Instances.Count > 0)
-            {
-                var first = LeanLocalization.Instances[0];
+			if (Required.Scripts.LeanLocalization.Instances.Count > 0)
+			{
+				var first = Required.Scripts.LeanLocalization.Instances[0];
 
-                text += "LOOKING FOR: ";
+				text += "LOOKING FOR: ";
 
-                if (first.DetectLanguage == LeanLocalization.DetectType.SystemLanguage)
-                {
-                    text += Application.systemLanguage.ToString();
-                }
-                else if (first.DetectLanguage == LeanLocalization.DetectType.CurrentCulture)
-                {
-                    var cultureInfo = CultureInfo.CurrentCulture;
+				if (first.DetectLanguage == Required.Scripts.LeanLocalization.DetectType.SystemLanguage)
+				{
+					text += Application.systemLanguage.ToString();
+				}
+				else if (first.DetectLanguage == Required.Scripts.LeanLocalization.DetectType.CurrentCulture)
+				{
+					var cultureInfo = CultureInfo.CurrentCulture;
 
-                    if (cultureInfo != null)
-                    {
-                        text += cultureInfo.Name;
-                    }
-                }
-                else if (first.DetectLanguage == LeanLocalization.DetectType.CurrentCulture)
-                {
-                    var cultureInfo = CultureInfo.CurrentUICulture;
+					if (cultureInfo != null)
+					{
+						text += cultureInfo.Name;
+					}
+				}
+				else if (first.DetectLanguage == Required.Scripts.LeanLocalization.DetectType.CurrentCulture)
+				{
+					var cultureInfo = CultureInfo.CurrentUICulture;
 
-                    if (cultureInfo != null)
-                    {
-                        text += cultureInfo.Name;
-                    }
-                }
+					if (cultureInfo != null)
+					{
+						text += cultureInfo.Name;
+					}
+				}
 
-                text += "\n\n";
+				text += "\n\n";
 
-                var load = "";
+				var load = "";
 
-                if (first.SaveLoad == LeanLocalization.SaveLoadType.WhenChanged)
-                {
-                    load = PlayerPrefs.GetString("LeanLocalization.CurrentLanguage");
-                }
-                else if (first.SaveLoad == LeanLocalization.SaveLoadType.WhenChanged)
-                {
-                    load = PlayerPrefs.GetString("LeanLocalization.CurrentLanguageAlt");
-                }
+				if (first.SaveLoad == Required.Scripts.LeanLocalization.SaveLoadType.WhenChanged)
+				{
+					load = PlayerPrefs.GetString(
+						"LeanLocalization.CurrentLanguage"
+					);
+				}
+				else if (first.SaveLoad == Required.Scripts.LeanLocalization.SaveLoadType.WhenChanged)
+				{
+					load = PlayerPrefs.GetString(
+						"LeanLocalization.CurrentLanguageAlt"
+					);
+				}
 
-                if (string.IsNullOrEmpty(load) == false)
-                {
-                    text += "LOADING PREVIOUSLY SAVED: " + load;
-                }
+				if (string.IsNullOrEmpty(
+					    load
+				    ) ==
+				    false)
+				{
+					text += "LOADING PREVIOUSLY SAVED: " + load;
+				}
 
-                text += "\n\nALIASES:\n";
+				text += "\n\nALIASES:\n";
 
-                foreach (var alias in LeanLocalization.CurrentAliases)
-                {
-                    text += alias.Key + " = " + alias.Value + "\n";
-                }
+				foreach (var alias in Required.Scripts.LeanLocalization.CurrentAliases)
+				{
+					text += alias.Key + " = " + alias.Value + "\n";
+				}
 
-                text += "\n\nDETECTED: " + first.CurrentLanguage;
-            }
+				text += "\n\nDETECTED: " + first.CurrentLanguage;
+			}
 
-            if (onString != null)
-            {
-                onString.Invoke(text);
-            }
-        }
-    }
+			if (onString != null)
+			{
+				onString.Invoke(
+					text
+				);
+			}
+		}
+	}
 }

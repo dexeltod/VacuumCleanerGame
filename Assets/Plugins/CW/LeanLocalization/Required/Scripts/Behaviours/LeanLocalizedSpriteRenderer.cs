@@ -1,16 +1,24 @@
 ﻿using UnityEngine;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 {
 	/// <summary>This component will update a SpriteRenderer component with a localized sprite, or use a fallback if none is found</summary>
 	[ExecuteInEditMode]
 	[DisallowMultipleComponent]
-	[RequireComponent(typeof(SpriteRenderer))]
-	[HelpURL(LeanLocalization.HelpUrlPrefix + "LeanLocalizedSpriteRenderer")]
-	[AddComponentMenu(LeanLocalization.ComponentPathPrefix + "Localized SpriteRenderer")]
+	[RequireComponent(
+		typeof(SpriteRenderer)
+	)]
+	[HelpURL(
+		LeanLocalization.HelpUrlPrefix + "LeanLocalizedSpriteRenderer"
+	)]
+	[AddComponentMenu(
+		LeanLocalization.ComponentPathPrefix + "Localized SpriteRenderer"
+	)]
 	public class LeanLocalizedSpriteRenderer : LeanLocalizedBehaviour
 	{
-		[Tooltip("If PhraseName couldn't be found, this sprite will be used")]
+		[Tooltip(
+			"If PhraseName couldn't be found, this sprite will be used"
+		)]
 		public Sprite FallbackSprite;
 
 		// This gets called every time the translation needs updating

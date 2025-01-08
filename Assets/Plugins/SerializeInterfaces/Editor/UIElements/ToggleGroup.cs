@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 
-namespace SerializeInterfaces.Editor.UIElements
+namespace Plugins.SerializeInterfaces.Editor.UIElements
 {
 	internal class ToggleGroup
 	{
@@ -16,17 +16,28 @@ namespace SerializeInterfaces.Editor.UIElements
 
 		public void RegisterToggle(Toggle toggle)
 		{
-			if (toggle == null || _toggles.Contains(toggle)) return;
+			if (toggle == null ||
+			    _toggles.Contains(
+				    toggle
+			    )) return;
 
-			_toggles.Add(toggle);
-			toggle.RegisterValueChangedCallback(ToggleValueChanged);
+			_toggles.Add(
+				toggle
+			);
+			toggle.RegisterValueChangedCallback(
+				ToggleValueChanged
+			);
 		}
 
 		public void UnregisterToggle(Toggle toggle)
 		{
-			if (!_toggles.Remove(toggle)) return;
+			if (!_toggles.Remove(
+				    toggle
+			    )) return;
 
-			toggle.UnregisterValueChangedCallback(ToggleValueChanged);
+			toggle.UnregisterValueChangedCallback(
+				ToggleValueChanged
+			);
 		}
 
 		public void Validate()
@@ -34,21 +45,27 @@ namespace SerializeInterfaces.Editor.UIElements
 			if (_toggles.Count == 0) return;
 
 			var activeToggle = GetFirstActiveToggle();
+
 			if (activeToggle == null)
 			{
 				activeToggle = _toggles[0];
 				activeToggle.value = true;
 			}
+
 			foreach (var toggle in _toggles)
 			{
 				if (toggle.value)
-					toggle.SetValueWithoutNotify(false);
+					toggle.SetValueWithoutNotify(
+						false
+					);
 			}
 		}
 
 		public Toggle GetFirstActiveToggle()
 		{
-			return _toggles.Find(x => x.value == true);
+			return _toggles.Find(
+				x => x.value == true
+			);
 		}
 
 		public bool IsAnyOn()
@@ -58,30 +75,52 @@ namespace SerializeInterfaces.Editor.UIElements
 
 		private void ToggleValueChanged(ChangeEvent<bool> evt)
 		{
-			HandleToggleChanged(evt.target as Toggle);
+			HandleToggleChanged(
+				evt.target as Toggle
+			);
 		}
 
 		private void HandleToggleChanged(Toggle targetToggle)
 		{
-			ValidateToggleIsInGroup(targetToggle);
+			ValidateToggleIsInGroup(
+				targetToggle
+			);
 
 			foreach (var toggle in _toggles)
 			{
 				if (toggle == targetToggle)
 					continue;
-				toggle.SetValueWithoutNotify(false);
+
+				toggle.SetValueWithoutNotify(
+					false
+				);
 			}
 
 			if (targetToggle.value == true)
-				OnToggleChanged?.Invoke(this, targetToggle);
+				OnToggleChanged?.Invoke(
+					this,
+					targetToggle
+				);
 			else
 				targetToggle.value = true;
 		}
 
 		private void ValidateToggleIsInGroup(Toggle toggle)
 		{
-			if (toggle == null || !_toggles.Contains(toggle))
-				throw new ArgumentException(string.Format("Toggle {0} is not part of ToggleGroup {1}", new object[] { toggle, this }));
+			if (toggle == null ||
+			    !_toggles.Contains(
+				    toggle
+			    ))
+				throw new ArgumentException(
+					string.Format(
+						"Toggle {0} is not part of ToggleGroup {1}",
+						new object[]
+						{
+							toggle,
+							this
+						}
+					)
+				);
 		}
 	}
 }

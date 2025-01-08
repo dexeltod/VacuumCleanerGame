@@ -1,3 +1,5 @@
+using Sources.Utils.ConstantNames;
+
 namespace Sources.Utils
 {
 	public class SceneResources

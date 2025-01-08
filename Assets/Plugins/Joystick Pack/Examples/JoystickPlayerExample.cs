@@ -1,18 +1,21 @@
-﻿using Graphic.Joystick_Pack.Scripts.Joysticks;
+﻿using Plugins.Joystick_Pack.Scripts.Joysticks;
 using UnityEngine;
 
-namespace Graphic.Joystick_Pack.Examples
+namespace Plugins.Joystick_Pack.Examples
 {
-    public class JoystickPlayerExample : MonoBehaviour
-    {
-        public float speed;
-        public VariableJoystick variableJoystick;
-        public Rigidbody rb;
+	public class JoystickPlayerExample : MonoBehaviour
+	{
+		public float speed;
+		public VariableJoystick variableJoystick;
+		public Rigidbody rb;
 
-        public void FixedUpdate()
-        {
-            Vector3 direction = Vector3.forward * variableJoystick.Vertical + Vector3.right * variableJoystick.Horizontal;
-            rb.AddForce(direction * speed * Time.fixedDeltaTime, ForceMode.VelocityChange);
-        }
-    }
+		public void FixedUpdate()
+		{
+			Vector3 direction = Vector3.forward * variableJoystick.Vertical + Vector3.right * variableJoystick.Horizontal;
+			rb.AddForce(
+				direction * speed * Time.fixedDeltaTime,
+				ForceMode.VelocityChange
+			);
+		}
+	}
 }

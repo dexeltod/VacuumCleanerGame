@@ -1,14 +1,18 @@
 ﻿using UnityEngine.UIElements;
 
-namespace SerializeInterfaces.Editor.UIElements
+namespace Plugins.SerializeInterfaces.Editor.UIElements
 {
-    internal class Tab : Toggle
-    {
-        public Tab(string text) : base()
-        {
-            base.text = text;
-            RemoveFromClassList(ussClassName);
-            AddToClassList(ussClassName);
-        }
-    }
+	internal class Tab : Toggle
+	{
+		public Tab(string text) : base()
+		{
+			base.text = text;
+			RemoveFromClassList(
+				ussClassName
+			);
+			AddToClassList(
+				ussClassName
+			);
+		}
+	}
 }

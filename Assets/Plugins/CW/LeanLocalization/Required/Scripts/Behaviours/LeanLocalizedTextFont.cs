@@ -1,17 +1,25 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 {
 	/// <summary>This component will update a Text component's Font with a localized font, or use a fallback if none is found.</summary>
 	[ExecuteInEditMode]
 	[DisallowMultipleComponent]
-	[RequireComponent(typeof(Text))]
-	[HelpURL(LeanLocalization.HelpUrlPrefix + "LeanLocalizedTextFont")]
-	[AddComponentMenu(LeanLocalization.ComponentPathPrefix + "Localized TextFont")]
+	[RequireComponent(
+		typeof(Text)
+	)]
+	[HelpURL(
+		LeanLocalization.HelpUrlPrefix + "LeanLocalizedTextFont"
+	)]
+	[AddComponentMenu(
+		LeanLocalization.ComponentPathPrefix + "Localized TextFont"
+	)]
 	public class LeanLocalizedTextFont : LeanLocalizedBehaviour
 	{
-		[Tooltip("If PhraseName couldn't be found, this font will be used")]
+		[Tooltip(
+			"If PhraseName couldn't be found, this font will be used"
+		)]
 		public Font FallbackFont;
 
 		// This gets called every time the translation needs updating

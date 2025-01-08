@@ -1,12 +1,14 @@
-﻿using Graphic.Joystick_Pack.Scripts.Joysticks;
+﻿using Plugins.Joystick_Pack.Scripts.Joysticks;
 using UnityEditor;
 using UnityEngine;
 
 #if UNITY_EDITOR
 
-namespace Graphic.Joystick_Pack.Scripts.Editor
+namespace Plugins.Joystick_Pack.Scripts.Editor
 {
-	[CustomEditor(typeof(FloatingJoystick))]
+	[CustomEditor(
+		typeof(FloatingJoystick)
+	)]
 	public class FloatingJoystickEditor : JoystickEditor
 	{
 		public override void OnInspectorGUI()

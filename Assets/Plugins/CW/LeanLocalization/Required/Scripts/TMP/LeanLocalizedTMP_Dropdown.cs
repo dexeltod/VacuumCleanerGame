@@ -3,164 +3,197 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts.TMP
 {
-    /// <summary>This component will update a <b>TMP_Dropdown</b> component with localized text, or use a fallback if none is found.</summary>
-    [ExecuteInEditMode]
-    [DisallowMultipleComponent]
-    [RequireComponent(typeof(TMP_Dropdown))]
-    [HelpURL(LeanLocalization.HelpUrlPrefix + "LeanLocalizedDropdown")]
-    [AddComponentMenu(LeanLocalization.ComponentPathPrefix + "Localized Dropdown")]
-    public class LeanLocalizedTMP_Dropdown : MonoBehaviour, ILocalizationHandler
-    {
-        [Serializable]
-        public class Option
-        {
-            [LeanTranslationName] public string StringTranslationName;
+	/// <summary>This component will update a <b>TMP_Dropdown</b> component with localized text, or use a fallback if none is found.</summary>
+	[ExecuteInEditMode]
+	[DisallowMultipleComponent]
+	[RequireComponent(
+		typeof(TMP_Dropdown)
+	)]
+	[HelpURL(
+		LeanLocalization.HelpUrlPrefix + "LeanLocalizedDropdown"
+	)]
+	[AddComponentMenu(
+		LeanLocalization.ComponentPathPrefix + "Localized Dropdown"
+	)]
+	public class LeanLocalizedTMP_Dropdown : MonoBehaviour, ILocalizationHandler
+	{
+		[Serializable]
+		public class Option
+		{
+			[LeanTranslationName] public string StringTranslationName;
 
-            [LeanTranslationName] public string SpriteTranslationName;
+			[LeanTranslationName] public string SpriteTranslationName;
 
-            [Tooltip("If StringTranslationName couldn't be found, this text will be used")]
-            public string FallbackText;
+			[Tooltip(
+				"If StringTranslationName couldn't be found, this text will be used"
+			)]
+			public string FallbackText;
 
-            [Tooltip("If SpriteTranslationName couldn't be found, this sprite will be used")]
-            public Sprite FallbackSprite;
-        }
+			[Tooltip(
+				"If SpriteTranslationName couldn't be found, this sprite will be used"
+			)]
+			public Sprite FallbackSprite;
+		}
 
-        [SerializeField] private List<Option> options;
+		[SerializeField] private List<Option> options;
 
-        [NonSerialized] private HashSet<LeanToken> tokens;
+		[NonSerialized] private HashSet<LeanToken> tokens;
 
-        public List<Option> Options
-        {
-            get
-            {
-                if (options == null)
-                {
-                    options = new List<Option>();
-                }
+		public List<Option> Options
+		{
+			get
+			{
+				if (options == null)
+				{
+					options = new List<Option>();
+				}
 
-                return options;
-            }
-        }
+				return options;
+			}
+		}
 
-        public void Register(LeanToken token)
-        {
-            if (token != null)
-            {
-                if (tokens == null)
-                {
-                    tokens = new HashSet<LeanToken>();
-                }
+		public void Register(LeanToken token)
+		{
+			if (token != null)
+			{
+				if (tokens == null)
+				{
+					tokens = new HashSet<LeanToken>();
+				}
 
-                tokens.Add(token);
-            }
-        }
+				tokens.Add(
+					token
+				);
+			}
+		}
 
-        public void Unregister(LeanToken token)
-        {
-            if (tokens != null)
-            {
-                tokens.Remove(token);
-            }
-        }
+		public void Unregister(LeanToken token)
+		{
+			if (tokens != null)
+			{
+				tokens.Remove(
+					token
+				);
+			}
+		}
 
-        public void UnregisterAll()
-        {
-            if (tokens != null)
-            {
-                foreach (var token in tokens)
-                {
-                    token.Unregister(this);
-                }
+		public void UnregisterAll()
+		{
+			if (tokens != null)
+			{
+				foreach (var token in tokens)
+				{
+					token.Unregister(
+						this
+					);
+				}
 
-                tokens.Clear();
-            }
-        }
+				tokens.Clear();
+			}
+		}
 
-        /// <summary>If you call this then this component will update using the translation for the specified phrase.</summary>
-        [ContextMenu("Update Localization")]
-        public void UpdateLocalization()
-        {
-            var dropdown = GetComponent<TMP_Dropdown>();
-            var dOptions = dropdown.options;
+		/// <summary>If you call this then this component will update using the translation for the specified phrase.</summary>
+		[ContextMenu(
+			"Update Localization"
+		)]
+		public void UpdateLocalization()
+		{
+			var dropdown = GetComponent<TMP_Dropdown>();
+			var dOptions = dropdown.options;
 
-            if (options != null)
-            {
-                for (var i = 0; i < options.Count; i++)
-                {
-                    var option = options[i];
-                    var dOption = default(TMP_Dropdown.OptionData);
+			if (options != null)
+			{
+				for (var i = 0; i < options.Count; i++)
+				{
+					var option = options[i];
+					var dOption = default(TMP_Dropdown.OptionData);
 
-                    if (dOptions.Count == i)
-                    {
-                        dOption = new TMP_Dropdown.OptionData();
+					if (dOptions.Count == i)
+					{
+						dOption = new TMP_Dropdown.OptionData();
 
-                        dOptions.Add(dOption);
-                    }
-                    else
-                    {
-                        dOption = dOptions[i];
-                    }
+						dOptions.Add(
+							dOption
+						);
+					}
+					else
+					{
+						dOption = dOptions[i];
+					}
 
-                    var stringTranslation = LeanLocalization.GetTranslation(option.StringTranslationName);
+					var stringTranslation = LeanLocalization.GetTranslation(
+						option.StringTranslationName
+					);
 
-                    // Use translation?
-                    if (stringTranslation != null && stringTranslation.Data is string)
-                    {
-                        dOption.text = LeanTranslation.FormatText((string)stringTranslation.Data, dOption.text, this,
-                            gameObject);
-                    }
-                    // Use fallback?
-                    else
-                    {
-                        dOption.text = LeanTranslation.FormatText(option.FallbackText, dOption.text, this, gameObject);
-                    }
+					// Use translation?
+					if (stringTranslation != null && stringTranslation.Data is string)
+					{
+						dOption.text = LeanTranslation.FormatText(
+							(string)stringTranslation.Data,
+							dOption.text,
+							this,
+							gameObject
+						);
+					}
+					// Use fallback?
+					else
+					{
+						dOption.text = LeanTranslation.FormatText(
+							option.FallbackText,
+							dOption.text,
+							this,
+							gameObject
+						);
+					}
 
-                    var spriteTranslation = LeanLocalization.GetTranslation(option.StringTranslationName);
+					var spriteTranslation = LeanLocalization.GetTranslation(
+						option.StringTranslationName
+					);
 
-                    // Use translation?
-                    if (spriteTranslation != null && spriteTranslation.Data is Sprite)
-                    {
-                        dOption.image = (Sprite)spriteTranslation.Data;
-                    }
-                    // Use fallback?
-                    else
-                    {
-                        dOption.image = option.FallbackSprite;
-                    }
-                }
-            }
-            else
-            {
-                dOptions.Clear();
-            }
+					// Use translation?
+					if (spriteTranslation != null && spriteTranslation.Data is Sprite)
+					{
+						dOption.image = (Sprite)spriteTranslation.Data;
+					}
+					// Use fallback?
+					else
+					{
+						dOption.image = option.FallbackSprite;
+					}
+				}
+			}
+			else
+			{
+				dOptions.Clear();
+			}
 
-            dropdown.options = dOptions;
-        }
+			dropdown.options = dOptions;
+		}
 
-        protected virtual void OnEnable()
-        {
-            LeanLocalization.OnLocalizationChanged += UpdateLocalization;
+		protected virtual void OnEnable()
+		{
+			LeanLocalization.OnLocalizationChanged += UpdateLocalization;
 
-            UpdateLocalization();
-        }
+			UpdateLocalization();
+		}
 
-        protected virtual void OnDisable()
-        {
-            LeanLocalization.OnLocalizationChanged -= UpdateLocalization;
+		protected virtual void OnDisable()
+		{
+			LeanLocalization.OnLocalizationChanged -= UpdateLocalization;
 
-            UnregisterAll();
-        }
+			UnregisterAll();
+		}
 
 #if UNITY_EDITOR
-        protected virtual void OnValidate()
-        {
-            if (isActiveAndEnabled == true)
-            {
-                UpdateLocalization();
-            }
-        }
+		protected virtual void OnValidate()
+		{
+			if (isActiveAndEnabled == true)
+			{
+				UpdateLocalization();
+			}
+		}
 #endif
-    }
+	}
 }

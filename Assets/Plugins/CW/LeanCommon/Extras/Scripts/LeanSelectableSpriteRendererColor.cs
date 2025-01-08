@@ -1,93 +1,112 @@
 using System;
-using CW.Common;
+using Plugins.CW.Shared.Common.Required.Scripts;
 using UnityEditor;
 using UnityEngine;
 
-namespace Lean.Common
+namespace Plugins.CW.LeanCommon.Extras.Scripts
 {
-    /// <summary>This component allows you to change the color of the SpriteRenderer attached to the current GameObject when selected.</summary>
-    [ExecuteInEditMode]
-    [RequireComponent(typeof(SpriteRenderer))]
-    [HelpURL(LeanCommon.HelpUrlPrefix + "LeanSelectableSpriteRendererColor")]
-    [AddComponentMenu(LeanCommon.ComponentPathPrefix + "Selectable SpriteRenderer Color")]
-    public class LeanSelectableSpriteRendererColor : LeanSelectableBehaviour
-    {
-        /// <summary>The default color given to the SpriteRenderer.</summary>
-        public Color DefaultColor
-        {
-            set
-            {
-                defaultColor = value;
-                UpdateColor();
-            }
-            get { return defaultColor; }
-        }
+	/// <summary>This component allows you to change the color of the SpriteRenderer attached to the current GameObject when selected.</summary>
+	[ExecuteInEditMode]
+	[RequireComponent(
+		typeof(SpriteRenderer)
+	)]
+	[HelpURL(
+		Required.Scripts.LeanCommon.HelpUrlPrefix + "LeanSelectableSpriteRendererColor"
+	)]
+	[AddComponentMenu(
+		Required.Scripts.LeanCommon.ComponentPathPrefix + "Selectable SpriteRenderer Color"
+	)]
+	public class LeanSelectableSpriteRendererColor : LeanSelectableBehaviour
+	{
+		/// <summary>The default color given to the SpriteRenderer.</summary>
+		public Color DefaultColor
+		{
+			set
+			{
+				defaultColor = value;
+				UpdateColor();
+			}
+			get { return defaultColor; }
+		}
 
-        [SerializeField] private Color defaultColor = Color.white;
+		[SerializeField] private Color defaultColor = Color.white;
 
-        /// <summary>The color given to the SpriteRenderer when selected.</summary>
-        public Color SelectedColor
-        {
-            set
-            {
-                selectedColor = value;
-                UpdateColor();
-            }
-            get { return selectedColor; }
-        }
+		/// <summary>The color given to the SpriteRenderer when selected.</summary>
+		public Color SelectedColor
+		{
+			set
+			{
+				selectedColor = value;
+				UpdateColor();
+			}
+			get { return selectedColor; }
+		}
 
-        [SerializeField] private Color selectedColor = Color.green;
+		[SerializeField] private Color selectedColor = Color.green;
 
-        [NonSerialized] private SpriteRenderer cachedSpriteRenderer;
+		[NonSerialized] private SpriteRenderer cachedSpriteRenderer;
 
-        protected override void OnSelected(LeanSelect select)
-        {
-            UpdateColor();
-        }
+		protected override void OnSelected(LeanSelect select)
+		{
+			UpdateColor();
+		}
 
-        protected override void OnDeselected(LeanSelect select)
-        {
-            UpdateColor();
-        }
+		protected override void OnDeselected(LeanSelect select)
+		{
+			UpdateColor();
+		}
 
-        public void UpdateColor()
-        {
-            if (cachedSpriteRenderer == null) cachedSpriteRenderer = GetComponent<SpriteRenderer>();
+		public void UpdateColor()
+		{
+			if (cachedSpriteRenderer == null) cachedSpriteRenderer = GetComponent<SpriteRenderer>();
 
-            var color = Selectable != null && Selectable.IsSelected == true ? selectedColor : defaultColor;
+			var color = Selectable != null && Selectable.IsSelected == true ? selectedColor : defaultColor;
 
-            cachedSpriteRenderer.color = color;
-        }
-    }
-}
+			cachedSpriteRenderer.color = color;
+		}
+	}
 
 #if UNITY_EDITOR
-namespace Lean.Common.Editor
-{
-    using TARGET = LeanSelectableSpriteRendererColor;
+	[CanEditMultipleObjects]
+	[CustomEditor(
+		typeof(LeanSelectableSpriteRendererColor)
+	)]
+	public class LeanSelectableSpriteRendererColor_Editor : CwEditor
+	{
+		protected override void OnInspector()
+		{
+			LeanSelectableSpriteRendererColor tgt;
+			LeanSelectableSpriteRendererColor[] tgts;
+			GetTargets(
+				out tgt,
+				out tgts
+			);
 
-    [CanEditMultipleObjects]
-    [CustomEditor(typeof(TARGET))]
-    public class LeanSelectableSpriteRendererColor_Editor : CwEditor
-    {
-        protected override void OnInspector()
-        {
-            TARGET tgt;
-            TARGET[] tgts;
-            GetTargets(out tgt, out tgts);
+			var updateColor = false;
 
-            var updateColor = false;
+			Draw(
+				"defaultColor",
+				ref updateColor,
+				"The default color given to the SpriteRenderer."
+			);
+			Draw(
+				"selectedColor",
+				ref updateColor,
+				"The color given to the SpriteRenderer when selected."
+			);
 
-            Draw("defaultColor", ref updateColor, "The default color given to the SpriteRenderer.");
-            Draw("selectedColor", ref updateColor, "The color given to the SpriteRenderer when selected.");
+			if (updateColor == true)
+			{
+				serializedObject.ApplyModifiedProperties();
 
-            if (updateColor == true)
-            {
-                serializedObject.ApplyModifiedProperties();
+				Each(
+					tgts,
+					t => t.UpdateColor(),
+					true
+				);
+			}
+		}
+	}
 
-                Each(tgts, t => t.UpdateColor(), true);
-            }
-        }
-    }
-}
 #endif
+}

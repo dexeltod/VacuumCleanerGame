@@ -1,25 +1,46 @@
 ﻿using System;
-using SerializeInterfaces.Runtime;
+using Plugins.SerializeInterfaces.Runtime;
 using UnityEditor;
 using UnityEngine;
 
-namespace SerializeInterfaces.Editor
+namespace Plugins.SerializeInterfaces.Editor
 {
-	[CustomPropertyDrawer(typeof(RequireInterfaceAttribute))]
+	[CustomPropertyDrawer(
+		typeof(RequireInterfaceAttribute)
+	)]
 	public class RequireInterfaceAttributeDrawer : PropertyDrawer
 	{
 		private RequireInterfaceAttribute _requireInterfaceAttribute => (RequireInterfaceAttribute)attribute;
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
-			InterfaceObjectArguments args = new InterfaceObjectArguments(GetTypeOrElementType(fieldInfo.FieldType), _requireInterfaceAttribute.InterfaceType);
-			InterfaceReferenceUtility.OnGUI(position, property, label, args);
+			InterfaceObjectArguments args = new InterfaceObjectArguments(
+				GetTypeOrElementType(
+					fieldInfo.FieldType
+				),
+				_requireInterfaceAttribute.InterfaceType
+			);
+			InterfaceReferenceUtility.OnGUI(
+				position,
+				property,
+				label,
+				args
+			);
 		}
 
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 		{
-			InterfaceObjectArguments args = new InterfaceObjectArguments(GetTypeOrElementType(fieldInfo.FieldType), _requireInterfaceAttribute.InterfaceType);
-			return InterfaceReferenceUtility.GetPropertyHeight(property, label, args);
+			InterfaceObjectArguments args = new InterfaceObjectArguments(
+				GetTypeOrElementType(
+					fieldInfo.FieldType
+				),
+				_requireInterfaceAttribute.InterfaceType
+			);
+			return InterfaceReferenceUtility.GetPropertyHeight(
+				property,
+				label,
+				args
+			);
 		}
 
 		/// <summary>
@@ -29,7 +50,8 @@ namespace SerializeInterfaces.Editor
 		{
 			if (type.IsArray)
 				return type.GetElementType();
-			else if (type.IsGenericType) // this assumes it's a list or any other container type with a generic parameter (it's for future proofing)
+			else if
+				(type.IsGenericType) // this assumes it's a list or any other container type with a generic parameter (it's for future proofing)
 				return type.GetGenericArguments()[0];
 
 			return type;

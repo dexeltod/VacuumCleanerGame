@@ -1,6 +1,5 @@
 using System;
 using Sources.Controllers.Common;
-using Sources.Controllers.Mesh;
 using Sources.PresentationInterfaces;
 using Sources.Utils;
 using UnityEngine;
@@ -10,14 +9,13 @@ namespace Sources.Infrastructure.Factories.Player
     [RequireComponent(typeof(Rigidbody))]
     public abstract class Presenter : MonoBehaviour
     {
-        private Transformable _model;
+        private Transformable _transformable;
         private Animator _animator;
 
         private IUpdatable _updatable = null;
         private bool _isMove = true;
         private AnimationHasher _animationHasher;
         private ParticleSystem _particleSystem;
-        private MeshDeformationPresenter _meshDeformationPresenter;
 
         public void Initialize(
             Transformable model,
@@ -26,10 +24,10 @@ namespace Sources.Infrastructure.Factories.Player
         )
         {
             _animationHasher = animationHasher ?? throw new ArgumentNullException(nameof(animationHasher));
-            _model = model ?? throw new ArgumentNullException(nameof(model));
+            _transformable = model ?? throw new ArgumentNullException(nameof(model));
             _animator = animator ? animator : throw new ArgumentNullException(nameof(animator));
 
-            if (_model is IUpdatable updatable)
+            if (_transformable is IUpdatable updatable)
                 _updatable = updatable;
 
             enabled = true;
@@ -39,19 +37,19 @@ namespace Sources.Infrastructure.Factories.Player
 
         private void OnEnable()
         {
-            _model.Looked += OnLookAt;
-            _model.Moved += OnMoved;
-            _model.Destroying += OnDestroying;
+            _transformable.Looked += OnLookAt;
+            _transformable.Moved += OnMoved;
+            _transformable.Destroying += OnDestroying;
         }
 
         protected void DestroyCompose() =>
-            _model.Destroy();
+            _transformable.Destroy();
 
         private void OnDisable()
         {
-            _model.Looked -= OnLookAt;
-            _model.Moved -= OnMoved;
-            _model.Destroying -= OnDestroying;
+            _transformable.Looked -= OnLookAt;
+            _transformable.Moved -= OnMoved;
+            _transformable.Destroying -= OnDestroying;
         }
 
         private void Update()

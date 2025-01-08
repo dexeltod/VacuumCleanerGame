@@ -1,17 +1,25 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 {
 	/// <summary>This component will update an Image component with a localized sprite, or use a fallback if none is found</summary>
 	[ExecuteInEditMode]
 	[DisallowMultipleComponent]
-	[RequireComponent(typeof(Image))]
-	[HelpURL(LeanLocalization.HelpUrlPrefix + "LeanLocalizedImage")]
-	[AddComponentMenu(LeanLocalization.ComponentPathPrefix + "Localized Image")]
+	[RequireComponent(
+		typeof(Image)
+	)]
+	[HelpURL(
+		LeanLocalization.HelpUrlPrefix + "LeanLocalizedImage"
+	)]
+	[AddComponentMenu(
+		LeanLocalization.ComponentPathPrefix + "Localized Image"
+	)]
 	public class LeanLocalizedImage : LeanLocalizedBehaviour
 	{
-		[Tooltip("If PhraseName couldn't be found, this sprite will be used")]
+		[Tooltip(
+			"If PhraseName couldn't be found, this sprite will be used"
+		)]
 		public Sprite FallbackSprite;
 
 		// This gets called every time the translation needs updating

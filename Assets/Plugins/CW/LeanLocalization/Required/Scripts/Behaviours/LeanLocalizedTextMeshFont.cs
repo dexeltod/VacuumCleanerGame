@@ -1,15 +1,21 @@
 ﻿using UnityEngine;
 
-namespace Lean.Localization
+namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 {
 	/// <summary>This component will update a TextMesh component's Font with a localized font, or use a fallback if none is found.</summary>
 	[ExecuteInEditMode]
 	[DisallowMultipleComponent]
-	[RequireComponent(typeof(TextMesh))]
-	[AddComponentMenu(LeanLocalization.ComponentPathPrefix + "Localized TextMesh Font")]
+	[RequireComponent(
+		typeof(TextMesh)
+	)]
+	[AddComponentMenu(
+		LeanLocalization.ComponentPathPrefix + "Localized TextMesh Font"
+	)]
 	public class LeanLocalizedTextMeshFont : LeanLocalizedBehaviour
 	{
-		[Tooltip("If PhraseName couldn't be found, this font asset will be used")]
+		[Tooltip(
+			"If PhraseName couldn't be found, this font asset will be used"
+		)]
 		public Font FallbackFont;
 
 		// This gets called every time the translation needs updating

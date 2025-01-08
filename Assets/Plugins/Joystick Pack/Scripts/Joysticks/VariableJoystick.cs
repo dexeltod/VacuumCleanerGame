@@ -1,15 +1,20 @@
-﻿using Graphic.Joystick_Pack.Scripts.Base;
+﻿using Plugins.Joystick_Pack.Scripts.Base;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Graphic.Joystick_Pack.Scripts.Joysticks
+namespace Plugins.Joystick_Pack.Scripts.Joysticks
 {
 	public class VariableJoystick : Joystick
 	{
 		public float MoveThreshold
 		{
 			get { return moveThreshold; }
-			set { moveThreshold = Mathf.Abs(value); }
+			set
+			{
+				moveThreshold = Mathf.Abs(
+					value
+				);
+			}
 		}
 
 		[SerializeField] private float moveThreshold = 1;
@@ -20,39 +25,56 @@ namespace Graphic.Joystick_Pack.Scripts.Joysticks
 		public void SetMode(JoystickType joystickType)
 		{
 			this.joystickType = joystickType;
+
 			if (joystickType == JoystickType.Fixed)
 			{
 				background.anchoredPosition = fixedPosition;
-				background.gameObject.SetActive(true);
+				background.gameObject.SetActive(
+					true
+				);
 			}
 			else
-				background.gameObject.SetActive(false);
+				background.gameObject.SetActive(
+					false
+				);
 		}
 
 		protected override void Start()
 		{
 			base.Start();
 			fixedPosition = background.anchoredPosition;
-			SetMode(joystickType);
+			SetMode(
+				joystickType
+			);
 		}
 
 		public override void OnPointerDown(PointerEventData eventData)
 		{
 			if (joystickType != JoystickType.Fixed)
 			{
-				background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);
-				background.gameObject.SetActive(true);
+				background.anchoredPosition = ScreenPointToAnchoredPosition(
+					eventData.position
+				);
+				background.gameObject.SetActive(
+					true
+				);
 			}
 
-			base.OnPointerDown(eventData);
+			base.OnPointerDown(
+				eventData
+			);
 		}
 
 		public override void OnPointerUp(PointerEventData eventData)
 		{
 			if (joystickType != JoystickType.Fixed)
-				background.gameObject.SetActive(false);
+				background.gameObject.SetActive(
+					false
+				);
 
-			base.OnPointerUp(eventData);
+			base.OnPointerUp(
+				eventData
+			);
 		}
 
 		protected override void HandleInput(float magnitude, Vector2 normalised, Vector2 radius, Camera cam)
@@ -63,7 +85,12 @@ namespace Graphic.Joystick_Pack.Scripts.Joysticks
 				background.anchoredPosition += difference;
 			}
 
-			base.HandleInput(magnitude, normalised, radius, cam);
+			base.HandleInput(
+				magnitude,
+				normalised,
+				radius,
+				cam
+			);
 		}
 	}
 

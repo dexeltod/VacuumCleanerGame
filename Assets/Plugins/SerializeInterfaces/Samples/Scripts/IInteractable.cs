@@ -1,4 +1,4 @@
-﻿namespace SerializeInterfaces.Samples.Scripts
+﻿namespace Plugins.SerializeInterfaces.Samples.Scripts
 {
 	public interface IInteractable
 	{

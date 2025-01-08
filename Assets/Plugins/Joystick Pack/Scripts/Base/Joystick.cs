@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Graphic.Joystick_Pack.Scripts.Base
+namespace Plugins.Joystick_Pack.Scripts.Base
 {
 	public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 	{
@@ -20,22 +20,45 @@ namespace Graphic.Joystick_Pack.Scripts.Base
 
 		private Vector2 input = Vector2.zero;
 
-		public float Horizontal => (snapX) ? SnapFloat(input.x, AxisOptions.Horizontal) : input.x;
+		public float Horizontal => (snapX)
+			? SnapFloat(
+				input.x,
+				AxisOptions.Horizontal
+			)
+			: input.x;
 
-		public float Vertical => (snapY) ? SnapFloat(input.y, AxisOptions.Vertical) : input.y;
+		public float Vertical => (snapY)
+			? SnapFloat(
+				input.y,
+				AxisOptions.Vertical
+			)
+			: input.y;
 
-		public Vector2 Direction => new Vector2(Horizontal, Vertical);
+		public Vector2 Direction => new Vector2(
+			Horizontal,
+			Vertical
+		);
 
 		public float HandleRange
 		{
 			get { return handleRange; }
-			set { handleRange = Mathf.Abs(value); }
+			set
+			{
+				handleRange = Mathf.Abs(
+					value
+				);
+			}
 		}
 
 		public float DeadZone
 		{
 			get { return deadZone; }
-			set { deadZone = Mathf.Abs(value); }
+			set
+			{
+				deadZone = Mathf.Abs(
+					value
+				);
+			}
 		}
 
 		public AxisOptions AxisOptions
@@ -63,9 +86,14 @@ namespace Graphic.Joystick_Pack.Scripts.Base
 			baseRect = GetComponent<RectTransform>();
 			canvas = GetComponentInParent<Canvas>();
 			if (canvas == null)
-				Debug.LogError("The Joystick is not placed inside a canvas");
+				Debug.LogError(
+					"The Joystick is not placed inside a canvas"
+				);
 
-			Vector2 center = new Vector2(0.5f, 0.5f);
+			Vector2 center = new Vector2(
+				0.5f,
+				0.5f
+			);
 			background.pivot = center;
 			handle.anchorMin = center;
 			handle.anchorMax = center;
@@ -76,7 +104,10 @@ namespace Graphic.Joystick_Pack.Scripts.Base
 		private void OnDisable()
 		{
 			input = Vector2.zero;
-			Vector2 center = new Vector2(0.5f, 0.5f);
+			Vector2 center = new Vector2(
+				0.5f,
+				0.5f
+			);
 			handle.anchorMin = center;
 			handle.anchorMax = center;
 			handle.pivot = center;
@@ -85,7 +116,9 @@ namespace Graphic.Joystick_Pack.Scripts.Base
 
 		public virtual void OnPointerDown(PointerEventData eventData)
 		{
-			OnDrag(eventData);
+			OnDrag(
+				eventData
+			);
 		}
 
 		public void OnDrag(PointerEventData eventData)
@@ -94,11 +127,19 @@ namespace Graphic.Joystick_Pack.Scripts.Base
 			if (canvas.renderMode == RenderMode.ScreenSpaceCamera)
 				cam = canvas.worldCamera;
 
-			Vector2 position = RectTransformUtility.WorldToScreenPoint(cam, background.position);
+			Vector2 position = RectTransformUtility.WorldToScreenPoint(
+				cam,
+				background.position
+			);
 			Vector2 radius = background.sizeDelta / 2;
 			input = (eventData.position - position) / (radius * canvas.scaleFactor);
 			FormatInput();
-			HandleInput(input.magnitude, input.normalized, radius, cam);
+			HandleInput(
+				input.magnitude,
+				input.normalized,
+				radius,
+				cam
+			);
 			handle.anchoredPosition = input * radius * handleRange;
 		}
 
@@ -116,9 +157,15 @@ namespace Graphic.Joystick_Pack.Scripts.Base
 		private void FormatInput()
 		{
 			if (axisOptions == AxisOptions.Horizontal)
-				input = new Vector2(input.x, 0f);
+				input = new Vector2(
+					input.x,
+					0f
+				);
 			else if (axisOptions == AxisOptions.Vertical)
-				input = new Vector2(0f, input.y);
+				input = new Vector2(
+					0f,
+					input.y
+				);
 		}
 
 		private float SnapFloat(float value, AxisOptions snapAxis)
@@ -128,7 +175,11 @@ namespace Graphic.Joystick_Pack.Scripts.Base
 
 			if (axisOptions == AxisOptions.Both)
 			{
-				float angle = Vector2.Angle(input, Vector2.up);
+				float angle = Vector2.Angle(
+					input,
+					Vector2.up
+				);
+
 				if (snapAxis == AxisOptions.Horizontal)
 				{
 					if (angle < 22.5f || angle > 157.5f)
@@ -166,7 +217,13 @@ namespace Graphic.Joystick_Pack.Scripts.Base
 		protected Vector2 ScreenPointToAnchoredPosition(Vector2 screenPosition)
 		{
 			Vector2 localPoint = Vector2.zero;
-			if (RectTransformUtility.ScreenPointToLocalPointInRectangle(baseRect, screenPosition, cam, out localPoint))
+
+			if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+				    baseRect,
+				    screenPosition,
+				    cam,
+				    out localPoint
+			    ))
 			{
 				Vector2 pivotOffset = baseRect.pivot * baseRect.sizeDelta;
 				return localPoint - (background.anchorMax * baseRect.sizeDelta) + pivotOffset;

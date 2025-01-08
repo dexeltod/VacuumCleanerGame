@@ -1,9 +1,9 @@
-﻿using Graphic.Joystick_Pack.Scripts.Base;
-using Graphic.Joystick_Pack.Scripts.Joysticks;
+﻿using Plugins.Joystick_Pack.Scripts.Base;
+using Plugins.Joystick_Pack.Scripts.Joysticks;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Graphic.Joystick_Pack.Examples
+namespace Plugins.Joystick_Pack.Examples
 {
 	public class JoystickSetterExample : MonoBehaviour
 	{
@@ -17,13 +17,19 @@ namespace Graphic.Joystick_Pack.Examples
 			switch (index)
 			{
 				case 0:
-					variableJoystick.SetMode(JoystickType.Fixed);
+					variableJoystick.SetMode(
+						JoystickType.Fixed
+					);
 					break;
 				case 1:
-					variableJoystick.SetMode(JoystickType.Floating);
+					variableJoystick.SetMode(
+						JoystickType.Floating
+					);
 					break;
 				case 2:
-					variableJoystick.SetMode(JoystickType.Dynamic);
+					variableJoystick.SetMode(
+						JoystickType.Dynamic
+					);
 					break;
 				default:
 					break;

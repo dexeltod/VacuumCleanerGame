@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Graphic.GUI.UI_pack.Scripts
+namespace UI.UI.GUI.UI_pack.Scripts
 {
 	public class FillValueNumber : MonoBehaviour
 	{
@@ -11,7 +11,9 @@ namespace Graphic.GUI.UI_pack.Scripts
 		void Update()
 		{
 			float amount = TargetImage.fillAmount * 100;
-			gameObject.GetComponent<Text>().text = amount.ToString("F0");
+			gameObject.GetComponent<Text>().text = amount.ToString(
+				"F0"
+			);
 		}
 	}
 }
