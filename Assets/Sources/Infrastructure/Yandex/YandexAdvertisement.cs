@@ -2,8 +2,7 @@ using System;
 using System.Collections;
 using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
-using Sources.InfrastructureInterfaces.Providers;
-using Sources.ServicesInterfaces.Advertisement;
+using Sources.BuisenessLogic.ServicesInterfaces.Advertisement;
 using Sources.Utils;
 using UnityEngine;
 
@@ -11,7 +10,7 @@ namespace Sources.Infrastructure.Yandex
 {
 	public sealed class YandexAdvertisement : IAdvertisement
 	{
-		private readonly ICoroutineRunnerProvider _coroutineRunner;
+		private readonly ICoroutineRunner _coroutineRunner;
 
 		private bool _isClosed;
 		private bool _isRewarded;
@@ -21,19 +20,19 @@ namespace Sources.Infrastructure.Yandex
 		private Coroutine _interstitialAdCooldown;
 
 		private const int Cooldown = 60;
-		private WaitForSeconds _waitForSeconds = new WaitForSeconds(Cooldown);
+		private readonly WaitForSeconds _waitForSeconds = new WaitForSeconds(Cooldown);
 
 		public event Action Closed;
 		public event Action Opened;
 		public event Action Rewarded;
 
-		public YandexAdvertisement(ICoroutineRunnerProvider coroutineRunner)
+		public YandexAdvertisement(ICoroutineRunner coroutineRunner)
 		{
 			_canSeeReward = true;
 			_coroutineRunner = coroutineRunner ?? throw new ArgumentNullException(nameof(coroutineRunner));
 		}
 
-		private ICoroutineRunner CoroutineRunner => _coroutineRunner.Self;
+		private ICoroutineRunner CoroutineRunner => _coroutineRunner;
 
 		public async UniTask ShowVideoAd(Action onClosed, Action onRewarded, Action onOpened, Action onError = null)
 		{

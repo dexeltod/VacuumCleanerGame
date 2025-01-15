@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Sources.Boot.MainMenu;
+using Sources.BuisenessLogic.Interfaces;
+using Sources.BuisenessLogic.ServicesInterfaces;
+using Sources.Infrastructure.Services;
 using Sources.Infrastructure.UI;
-using Sources.InfrastructureInterfaces;
-using Sources.Services;
-using Sources.ServicesInterfaces;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UIElements;

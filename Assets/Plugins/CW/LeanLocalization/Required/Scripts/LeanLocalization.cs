@@ -55,7 +55,9 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			new Dictionary<string, LeanTranslation>();
 
 		/// <summary>The language that is currently being used by this instance.</summary>
-		[LeanLanguageName] [SerializeField] private string currentLanguage;
+		[LeanLanguageName]
+		[SerializeField]
+		private string currentLanguage;
 
 		/// <summary>How should the cultures be used to detect the user's device language?</summary>
 		public DetectType DetectLanguage

@@ -1,4 +1,4 @@
-using Sources.ControllersInterfaces.Common;
+using Sources.ControllersInterfaces;
 using UnityEngine;
 
 namespace Sources.PresentationInterfaces.Common

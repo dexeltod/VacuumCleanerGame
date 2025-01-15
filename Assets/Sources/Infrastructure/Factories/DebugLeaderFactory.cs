@@ -1,18 +1,18 @@
 using System;
 using Cysharp.Threading.Tasks;
-using Sources.InfrastructureInterfaces.Factory;
+using Sources.BuisenessLogic.Interfaces.Factory;
 
 namespace Sources.Infrastructure.Factories
 {
-    public class DebugLeaderFactory
-    {
-        private readonly ILeaderBoardPlayersFactory _leaderBoardPlayersFactory;
+	public class DebugLeaderFactory
+	{
+		private readonly ILeaderBoardPlayersFactory _leaderBoardPlayersFactory;
 
-        public DebugLeaderFactory(ILeaderBoardPlayersFactory leaderBoardPlayersFactory) =>
-            _leaderBoardPlayersFactory = leaderBoardPlayersFactory ??
-                                         throw new ArgumentNullException(nameof(leaderBoardPlayersFactory));
+		public DebugLeaderFactory(ILeaderBoardPlayersFactory leaderBoardPlayersFactory) =>
+			_leaderBoardPlayersFactory = leaderBoardPlayersFactory ??
+			                             throw new ArgumentNullException(nameof(leaderBoardPlayersFactory));
 
-        public UniTask Create() =>
-            _leaderBoardPlayersFactory.Create();
-    }
+		public UniTask Create() =>
+			_leaderBoardPlayersFactory.Create();
+	}
 }

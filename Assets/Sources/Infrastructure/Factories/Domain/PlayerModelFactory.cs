@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sources.BuisenessLogic.ServicesInterfaces;
 using Sources.Domain.Player;
 using Sources.Domain.Progress;
 using Sources.Domain.Progress.Entities.Values;
 using Sources.Domain.Stats;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Infrastructure.Configs;
 using Sources.Infrastructure.Factories.UpgradeEntitiesConfigs;
-using Sources.ServicesInterfaces;
+using Sources.InfrastructureInterfaces.Configs;
 using Sources.Utils;
 
 namespace Sources.Infrastructure.Factories.Domain
@@ -34,7 +34,7 @@ namespace Sources.Infrastructure.Factories.Domain
 
 			var startConfigs = _assetFactory.LoadFromResources<StartStatsConfig>(StartStats).Stats;
 
-			var items = _assetFactory.LoadFromResources<UpgradeEntityListConfig>(ShopItems)
+			var items = _assetFactory.LoadFromResources<UpgradesListConfig>(ShopItems)
 				.ReadOnlyItems;
 
 			InitStats(items, startConfigs, ref stats);
@@ -43,7 +43,7 @@ namespace Sources.Infrastructure.Factories.Domain
 		}
 
 		private void InitStats(
-			IReadOnlyCollection<UpgradeEntityViewConfig> items,
+			IReadOnlyCollection<PlayerUpgradeShopViewsConfig> items,
 			IReadOnlyCollection<StartStatConfig> startConfigs,
 			ref List<Stat> stats
 		)
@@ -65,11 +65,11 @@ namespace Sources.Infrastructure.Factories.Domain
 		) =>
 			startConfigs.ElementAt(configIndex).Stat;
 
-		private IReadOnlyProgressValue<int> GetProgress(int i) =>
+		private IReadOnlyProgress<int> GetProgress(int i) =>
 			_shopModelFactory.ProgressEntities.ElementAt(i).LevelProgress ??
 			throw new ArgumentNullException($"shopModelFactory.ProgressEntities.ElementAt({i}).LevelProgress is null");
 
-		private UpgradeEntityViewConfig GetConfigElement(IEnumerable<UpgradeEntityViewConfig> items, int i) =>
+		private PlayerUpgradeShopViewsConfig GetConfigElement(IEnumerable<PlayerUpgradeShopViewsConfig> items, int i) =>
 			items.ElementAt(i) ??
 			throw new ArgumentNullException($"items.ElementAt({i}) is null");
 	}

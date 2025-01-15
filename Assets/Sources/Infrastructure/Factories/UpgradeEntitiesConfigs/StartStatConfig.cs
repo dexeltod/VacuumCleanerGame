@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace Sources.Infrastructure.Factories.UpgradeEntitiesConfigs
 {
-	[Serializable] public class StartStatConfig
+	[Serializable]
+	public class StartStatConfig
 	{
 		[SerializeField] private float _stat;
 		[SerializeField] private ProgressType _type;

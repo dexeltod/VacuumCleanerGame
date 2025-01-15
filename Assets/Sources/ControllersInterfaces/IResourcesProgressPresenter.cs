@@ -1,4 +1,3 @@
-using Sources.ControllersInterfaces.Common;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 
 namespace Sources.ControllersInterfaces
@@ -6,7 +5,7 @@ namespace Sources.ControllersInterfaces
 	public interface IResourcesProgressPresenter : IPresenter
 	{
 		bool IsMaxScoreReached { get; }
-		IReadOnlyProgressValue<int> SoftCurrency { get; }
+		IReadOnlyProgress<int> SoftCurrency { get; }
 
 		bool TryAddSand(int newScore);
 		void ClearTotalResources();

@@ -1,9 +1,9 @@
- using System;
+using System;
 using System.Collections;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
-using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
+using Sources.Utils;
 using UnityEngine;
 
 namespace Sources.Controllers
@@ -14,21 +14,21 @@ namespace Sources.Controllers
 		private const float Delta = 0.01f;
 
 		private readonly IDissolveShaderView _dissolveShaderView;
-		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
+		private readonly ICoroutineRunner _coroutineRunnerProvider;
 		private readonly WaitForSeconds _waitForSeconds;
 
 		public DissolveShaderViewController(
 			IDissolveShaderView dissolveShaderView,
-			ICoroutineRunnerProvider coroutineRunnerProvider
+			ICoroutineRunner coroutineRunnerProvider
 		)
 		{
 			_dissolveShaderView = dissolveShaderView ?? throw new ArgumentNullException(nameof(dissolveShaderView));
 			_coroutineRunnerProvider = coroutineRunnerProvider ??
-				throw new ArgumentNullException(nameof(coroutineRunnerProvider));
+			                           throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 		}
 
 		public void StartDissolving() =>
-			_coroutineRunnerProvider.Self.Run(DissolvingRoutine());
+			_coroutineRunnerProvider.Run(DissolvingRoutine());
 
 		private IEnumerator DissolvingRoutine()
 		{

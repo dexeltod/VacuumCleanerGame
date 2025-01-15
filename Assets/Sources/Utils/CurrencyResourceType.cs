@@ -1,10 +1,8 @@
-using System;
-
 namespace Sources.Utils
 {
-	[Serializable] public enum CurrencyResourceType
+	public enum CurrencyResourceType
 	{
-		Soft,
+		Soft = 1,
 		Hard,
 		CashScore,
 		GlobalScore

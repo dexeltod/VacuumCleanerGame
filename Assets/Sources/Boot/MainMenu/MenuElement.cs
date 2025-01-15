@@ -1,6 +1,6 @@
+using Sources.BuisenessLogic.UiToolkitElements;
+using Sources.Infrastructure.Services;
 using Sources.Infrastructure.UI;
-using Sources.InfrastructureInterfaces.UiToolkitElements;
-using Sources.Services;
 using UnityEngine.UIElements;
 
 namespace Sources.Boot.MainMenu
@@ -12,7 +12,8 @@ namespace Sources.Boot.MainMenu
 		protected readonly VisualElementSwitcher VisualElementController;
 		protected readonly UIElementGetterFacade ElementGetter;
 
-		protected MenuElement(VisualElement thisElement, VisualElementSwitcher visualElementSwitcher,
+		protected MenuElement(VisualElement thisElement,
+			VisualElementSwitcher visualElementSwitcher,
 			UIElementGetterFacade elementGetter)
 		{
 			ThisElement = thisElement;

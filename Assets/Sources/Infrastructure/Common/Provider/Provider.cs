@@ -1,10 +1,9 @@
 using System;
 using System.Linq;
-using Sources.InfrastructureInterfaces.Common.Providers;
 
 namespace Sources.Infrastructure.Common.Provider
 {
-	public abstract class Provider<TImplementation> : IProvider<TImplementation> where TImplementation : class
+	public abstract class Provider<TImplementation> where TImplementation : class
 	{
 		private TImplementation _implementation;
 
@@ -44,7 +43,7 @@ namespace Sources.Infrastructure.Common.Provider
 			throw new ArgumentNullException(nameof(TI), $"Contract {typeof(TI)} not found");
 		}
 
-#region Registration
+		#region Registration
 
 		public virtual TImplementation Register<TI>(TImplementation instance)
 		{
@@ -60,7 +59,7 @@ namespace Sources.Infrastructure.Common.Provider
 		public virtual TImplementation Register(TImplementation instance) =>
 			_implementation = instance;
 
-#endregion
+		#endregion
 
 		public virtual void Unregister()
 		{

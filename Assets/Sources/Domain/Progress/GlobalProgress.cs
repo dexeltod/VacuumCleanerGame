@@ -8,7 +8,8 @@ using UnityEngine;
 
 namespace Sources.Domain.Progress
 {
-	[Serializable] public class GlobalProgress : IGlobalProgress
+	[Serializable]
+	public class GlobalProgress : IGlobalProgress
 	{
 		[SerializeField] private ResourceModel _resource;
 
@@ -29,15 +30,13 @@ namespace Sources.Domain.Progress
 			_playerModel != null &&
 			_shopModel.ProgressEntities != null;
 
-		public GlobalProgress(
-			ResourceModel resourceModel,
+		public GlobalProgress(ResourceModel resourceModel,
 			LevelProgress levelProgress,
 			ShopModel shopModel,
 			PlayerModel playerModel
 		)
 		{
-			_resource = resourceModel ??
-				throw new ArgumentNullException(nameof(resourceModel));
+			_resource = resourceModel ?? throw new ArgumentNullException(nameof(resourceModel));
 
 			_levelProgress = levelProgress ?? throw new ArgumentNullException(nameof(levelProgress));
 

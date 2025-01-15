@@ -1,4 +1,4 @@
-using Sources.ServicesInterfaces.StateMachine;
+using Sources.BuisenessLogic.ServicesInterfaces.StateMachine;
 
 namespace Sources.Infrastructure.Factories.Player
 {

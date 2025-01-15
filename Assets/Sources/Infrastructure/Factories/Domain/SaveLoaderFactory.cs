@@ -1,37 +1,35 @@
-using System;
-using Sources.ApplicationServicesInterfaces;
-using Sources.Controllers;
+using Sources.BuisenessLogic.Interfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Services.DomainServices;
+using Sources.Infrastructure.Services.DomainServices;
 using Unity.Services.Core;
-using VContainer;
 
 namespace Sources.Infrastructure.Factories.Domain
 {
 	public class SaveLoaderFactory
 	{
-		private readonly ICloudSave _cloudSave;
+		private readonly ICloudSaveLoader _cloudSaveLoader;
 
-		[Inject]
-		public SaveLoaderFactory(ICloudSave cloudSave) =>
-			_cloudSave = cloudSave ?? throw new ArgumentNullException(nameof(cloudSave));
-
-		public ISaveLoader GetSaveLoader()
+		public ISaveLoader Create()
 		{
+			var cloudSaveLoader =
+#if !YANDEX_CODE
+				new UnityCloudSaveLoaderLoader();
+			return GetEditorSaveLoader();
+#endif
 #if YANDEX_CODE
-			return new YandexSaveLoader(_cloudSave);
+				new YandexCloudSaveLoader();
 #endif
 
-#if UNITY_EDITOR
-			return GetEditorSaveLoader();
+#if YANDEX_CODE
+			return new YandexSaveLoader(_cloudSave);
 #endif
 		}
 
 		private UnitySaveLoader GetEditorSaveLoader()
 		{
-			IUnityServicesController controller = new UnityServicesController(new InitializationOptions());
+			UnityServicesController controller = new UnityServicesController(new InitializationOptions());
 
-			return new UnitySaveLoader(controller, _cloudSave);
+			return new UnitySaveLoader(controller, _cloudSaveLoader);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 using System;
-using Sources.ControllersInterfaces.Common;
+using Sources.ControllersInterfaces;
 using Sources.Presentation.UI;
 using Sources.PresentationInterfaces.Common;
 using UnityEngine;

@@ -12,7 +12,10 @@
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags
+        {
+            "RenderType"="Opaque"
+        }
         LOD 200
 
         CGPROGRAM
@@ -44,7 +47,7 @@
             // put more per-instance properties here
         UNITY_INSTANCING_BUFFER_END(Props)
 
-        void surf (Input IN, inout SurfaceOutputStandard o)
+        void surf(Input IN, inout SurfaceOutputStandard o)
         {
             fixed4 a = tex2D(_MainTex, IN.uv_MainTex);
             fixed4 b = tex2D(_Texture1, IN.uv_MainTex);

@@ -1,6 +1,6 @@
 using Cysharp.Threading.Tasks;
+using Sources.BuisenessLogic.Interfaces;
 using Sources.DomainInterfaces;
-using Sources.InfrastructureInterfaces;
 
 namespace Sources.Infrastructure.Services
 {
@@ -11,7 +11,9 @@ namespace Sources.Infrastructure.Services
 		public UniTask<IPlayerAccount> GetPlayerAccount() =>
 			new(null);
 
-		public void SetStatusInitialized() { }
+		public void SetStatusInitialized()
+		{
+		}
 
 		public bool IsAuthorized => CheckAuthorization();
 

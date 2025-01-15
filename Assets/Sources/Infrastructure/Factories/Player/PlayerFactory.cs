@@ -1,10 +1,9 @@
 using System;
 using Plugins.Joystick_Pack.Scripts.Base;
-using Sources.Controllers;
-using Sources.InfrastructureInterfaces.Factory;
-using Sources.InfrastructureInterfaces.Providers;
-using Sources.InfrastructureInterfaces.Repository;
-using Sources.ServicesInterfaces;
+using Sources.BuisenessLogic.Interfaces.Factory;
+using Sources.BuisenessLogic.Repository;
+using Sources.BuisenessLogic.ServicesInterfaces;
+using Sources.ControllersInterfaces;
 using Sources.Utils;
 using Sources.Utils.Enums;
 using UnityEngine;
@@ -17,8 +16,9 @@ namespace Sources.Infrastructure.Factories.Player
 		private readonly AnimationHasher _hasher;
 		private readonly IAssetFactory _assetFactory;
 		private readonly IObjectResolver _objectResolver;
-		private readonly IGameplayInterfacePresenterProvider _interfaceProvider;
-		private readonly IPlayerModelRepositoryProvider _modelRepository;
+		private readonly IGameplayInterfacePresenter _interfaceProvider;
+		private readonly IPlayerModelRepository _modelRepository;
+
 		private GameObject _character;
 		private Rigidbody _body;
 		private Animator _animator;
@@ -27,32 +27,18 @@ namespace Sources.Infrastructure.Factories.Player
 		public PlayerFactory(
 			IAssetFactory assetFactory,
 			IObjectResolver objectResolver,
-			IGameplayInterfacePresenterProvider interfaceProvider,
-			IPlayerModelRepositoryProvider modelRepository
+			IGameplayInterfacePresenter interfaceProvider,
+			IPlayerModelRepository modelRepository
 		)
 		{
-			_assetFactory = assetFactory ??
-			                throw new ArgumentNullException(
-				                nameof(assetFactory)
-			                );
-			_objectResolver = objectResolver ??
-			                  throw new ArgumentNullException(
-				                  nameof(objectResolver)
-			                  );
+			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_objectResolver = objectResolver ?? throw new ArgumentNullException(nameof(objectResolver));
 
-			_interfaceProvider = interfaceProvider ??
-			                     throw new ArgumentNullException(
-				                     nameof(interfaceProvider)
-			                     );
-			_modelRepository = modelRepository ??
-			                   throw new ArgumentNullException(
-				                   nameof(modelRepository)
-			                   );
+			_interfaceProvider = interfaceProvider ?? throw new ArgumentNullException(nameof(interfaceProvider));
+			_modelRepository = modelRepository ?? throw new ArgumentNullException(nameof(modelRepository));
 		}
 
-		private IPlayerModelRepository PlayerModelRepository => _modelRepository.Self;
-
-		private Joystick ImplementationJoystick => _interfaceProvider.Self.Joystick;
+		private Joystick ImplementationJoystick => _interfaceProvider.Joystick;
 
 		public GameObject Create(GameObject spawnPoint)
 		{
@@ -84,7 +70,7 @@ namespace Sources.Infrastructure.Factories.Player
 			PlayerTransformable playerTransformable = new(
 				_character.transform,
 				joystick,
-				PlayerModelRepository.Get(
+				_modelRepository.Get(
 					(int)ProgressType.Speed
 				),
 				_body
@@ -99,7 +85,8 @@ namespace Sources.Infrastructure.Factories.Player
 			return _character;
 		}
 
-		private void SetPresenter(PlayerBody playerBodyComponentPresenter, PlayerTransformable playerTransformable,
+		private void SetPresenter(PlayerBody playerBodyComponentPresenter,
+			PlayerTransformable playerTransformable,
 			AnimationHasher animationHasher)
 		{
 			playerBodyComponentPresenter.Initialize(

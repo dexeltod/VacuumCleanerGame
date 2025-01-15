@@ -1,9 +1,10 @@
 using System;
+using Sources.BuisenessLogic.Interfaces;
+using Sources.BuisenessLogic.ServicesInterfaces;
+using Sources.Infrastructure.Services;
 using Sources.Infrastructure.UI;
-using Sources.InfrastructureInterfaces;
-using Sources.Services;
-using Sources.ServicesInterfaces;
 using Sources.Utils.ConstantNames;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Sources.Boot.MainMenu
@@ -83,7 +84,7 @@ namespace Sources.Boot.MainMenu
 			_playButton.clicked -= OnPlay;
 
 		private void OnExitGame() =>
-			UnityEngine.Application.Quit();
+			Application.Quit();
 
 		private void OnOpenLevelsMenu() =>
 			_visualElementSwitcher.Enter(ThisElement, _levelsVisualElement);

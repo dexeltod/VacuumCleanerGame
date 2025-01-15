@@ -8,7 +8,8 @@ using UnityEngine;
 
 namespace Sources.Domain.Player
 {
-	[Serializable] public class PlayerModel : IPlayerModel
+	[Serializable]
+	public class PlayerModel : IPlayerModel
 	{
 		[SerializeField] private List<Stat> _stats;
 
@@ -17,6 +18,8 @@ namespace Sources.Domain.Player
 
 		public IStatReadOnly Get(int id)
 		{
+			if (id < 0) throw new ArgumentOutOfRangeException(nameof(id));
+
 			Stat stat = _stats.First(elem => elem.Id == id);
 
 			if (stat == null)
@@ -27,6 +30,8 @@ namespace Sources.Domain.Player
 
 		public void Set(int id, float value)
 		{
+			if (id < 0) throw new ArgumentOutOfRangeException(nameof(id));
+
 			Stat stat = _stats.First(elem => elem.Id == id);
 
 			if (stat == null)

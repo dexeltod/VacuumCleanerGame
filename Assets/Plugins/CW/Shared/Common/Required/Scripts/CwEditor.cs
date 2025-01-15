@@ -369,7 +369,9 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			return property.isExpanded;
 		}
 
-		public static bool DrawExpand(string propertyPath, ref bool modified, string overrideTooltip = null,
+		public static bool DrawExpand(string propertyPath,
+			ref bool modified,
+			string overrideTooltip = null,
 			string overrideText = null)
 		{
 			var property = GetPropertyAndSetCustomContent(
@@ -440,7 +442,9 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			return EditorGUI.EndChangeCheck();
 		}
 
-		public static void Draw(string propertyPath, ref bool dirty, string overrideTooltip = null,
+		public static void Draw(string propertyPath,
+			ref bool dirty,
+			string overrideTooltip = null,
 			string overrideText = null)
 		{
 			if (Draw(
@@ -454,7 +458,10 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			}
 		}
 
-		public static void Draw(string propertyPath, ref bool dirty1, ref bool dirty2, string overrideTooltip = null,
+		public static void Draw(string propertyPath,
+			ref bool dirty1,
+			ref bool dirty2,
+			string overrideTooltip = null,
 			string overrideText = null)
 		{
 			if (Draw(
@@ -469,7 +476,10 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			}
 		}
 
-		public static bool DrawSlider(string propertyPath, float min, float max, string overrideTooltip = null,
+		public static bool DrawSlider(string propertyPath,
+			float min,
+			float max,
+			string overrideTooltip = null,
 			string overrideText = null)
 		{
 			var property = GetPropertyAndSetCustomContent(
@@ -498,7 +508,10 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			return false;
 		}
 
-		public static bool DrawIntSlider(string propertyPath, int min, int max, string overrideTooltip = null,
+		public static bool DrawIntSlider(string propertyPath,
+			int min,
+			int max,
+			string overrideTooltip = null,
 			string overrideText = null)
 		{
 			var property = GetPropertyAndSetCustomContent(
@@ -527,7 +540,10 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			return false;
 		}
 
-		public static bool DrawMinMax(string propertyPath, float min, float max, string overrideTooltip = null,
+		public static bool DrawMinMax(string propertyPath,
+			float min,
+			float max,
+			string overrideTooltip = null,
 			string overrideText = null)
 		{
 			var property = GetPropertyAndSetCustomContent(
@@ -583,8 +599,11 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			return false;
 		}
 
-		public static bool DrawIntPopup(int[] values, GUIContent[] contents, string propertyPath,
-			string overrideTooltip = null, string overrideText = null)
+		public static bool DrawIntPopup(int[] values,
+			GUIContent[] contents,
+			string propertyPath,
+			string overrideTooltip = null,
+			string overrideText = null)
 		{
 			var property = GetPropertyAndSetCustomContent(
 				propertyPath,
@@ -604,8 +623,12 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			return EditorGUI.EndChangeCheck();
 		}
 
-		public static void DrawIntPopup(int[] values, GUIContent[] contents, string propertyPath, ref bool modified,
-			string overrideTooltip = null, string overrideText = null)
+		public static void DrawIntPopup(int[] values,
+			GUIContent[] contents,
+			string propertyPath,
+			ref bool modified,
+			string overrideTooltip = null,
+			string overrideText = null)
 		{
 			if (DrawIntPopup(
 				    values,
@@ -646,7 +669,8 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			return false;
 		}
 
-		public static bool DrawEulerAngles(string propertyPath, string overrideTooltip = null,
+		public static bool DrawEulerAngles(string propertyPath,
+			string overrideTooltip = null,
 			string overrideText = null)
 		{
 			var property = GetPropertyAndSetCustomContent(
@@ -719,7 +743,8 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			return null;
 		}
 
-		private static SerializedProperty GetPropertyAndSetCustomContent(string propertyPath, string overrideTooltip,
+		private static SerializedProperty GetPropertyAndSetCustomContent(string propertyPath,
+			string overrideTooltip,
 			string overrideText)
 		{
 			var property = GetProperty(

@@ -1,13 +1,11 @@
-using Sources.ControllersInterfaces;
-using Sources.ServicesInterfaces;
+using Sources.Domain.Interfaces;
 using UnityEngine;
 
 namespace Sources.PresentationInterfaces
 {
-    public interface IUpgradeWindowActivator
-    {
-        void Construct(IUpgradeWindowPresenter upgradeWindowPresentation, IUpgradeTriggerObserver upgradeTrigger);
-        GameObject Container { get; }
-        ITextPhrases PhrasesList { get; }
-    }
+	public interface IUpgradeWindowActivator
+	{
+		GameObject Container { get; }
+		ITextPhrases PhrasesList { get; }
+	}
 }

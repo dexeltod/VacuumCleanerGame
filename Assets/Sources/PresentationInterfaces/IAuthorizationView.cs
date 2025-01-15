@@ -3,7 +3,7 @@ using Sources.PresentationInterfaces.Common;
 
 namespace Sources.PresentationInterfaces
 {
-	public interface IAuthorizationView : IPresentableCanvas<IAuthorizationPresenter> { }
-
-	
+	public interface IAuthorizationView : IPresentableCanvas<IAuthorizationPresenter>
+	{
+	}
 }

@@ -1,0 +1,27 @@
+{
+  "name": "BuisenessLogic",
+  "rootNamespace": "",
+  "references": [
+    "GUID:f51ebe6a0ceec4240a699833d6309b23",
+    "GUID:9be9b0481bef5e74b995a6ecec47c0ed",
+    "GUID:ef7e0e3eb213f324c87b70a782844fb6",
+    "GUID:4307f53044263cf4b835bd812fc161a4",
+    "GUID:124d50db4e257fb43b814badf2ac648e",
+    "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+    "GUID:2e1e7a8a594b8bc40be67d87dd026650",
+    "GUID:2150d3a8cf087ac428995ec2b2e22d5c",
+    "GUID:def56a6ba8784d0087ed3b0ebbdf1c10",
+    "GUID:218c8d088c76f5f45b9b3de347da2c05",
+    "GUID:e765ada688eb4f0f83d7c5942bcfcfea",
+    "GUID:9c083e14e5b544e48bf0facb20289e9b"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

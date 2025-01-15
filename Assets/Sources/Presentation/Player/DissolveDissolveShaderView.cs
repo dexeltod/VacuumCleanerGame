@@ -11,7 +11,7 @@ namespace Sources.Presentation.Player
 
 		private const string DissolvingParameterName = "_Dissolve";
 
-		private static readonly int Dissolve = Shader.PropertyToID(DissolvingParameterName);
+		private readonly static int Dissolve = Shader.PropertyToID(DissolvingParameterName);
 
 		public void SetDissolvingValue(float normalizedDissolvingValue)
 		{

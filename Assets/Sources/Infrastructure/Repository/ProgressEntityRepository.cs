@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sources.BuisenessLogic.Repository;
 using Sources.DomainInterfaces.Models.Shop.Upgrades;
 using Sources.InfrastructureInterfaces.Configs;
-using Sources.InfrastructureInterfaces.Repository;
 
 namespace Sources.Infrastructure.Repository
 {
 	public sealed class ProgressEntityRepository : IProgressEntityRepository
 	{
-		private readonly Dictionary<int, IUpgradeEntityReadOnly> _entities;
+		private readonly Dictionary<int, IStatUpgradeEntityReadOnly> _entities;
 		private readonly Dictionary<int, IUpgradeEntityViewConfig> _configs;
 
 		public ProgressEntityRepository(
-			Dictionary<int, IUpgradeEntityReadOnly> entities,
+			Dictionary<int, IStatUpgradeEntityReadOnly> entities,
 			Dictionary<int, IUpgradeEntityViewConfig> configs
 		)
 		{
@@ -21,10 +21,14 @@ namespace Sources.Infrastructure.Repository
 			_configs = configs ?? throw new ArgumentNullException(nameof(configs));
 		}
 
-		public IUpgradeEntityReadOnly GetEntity(int id) =>
-			_entities[id] ?? throw new ArgumentNullException($"{id} not found");
+		public IStatUpgradeEntityReadOnly GetEntity(int id)
+		{
+			if (id < 0) throw new ArgumentOutOfRangeException(nameof(id));
 
-		public IReadOnlyList<IUpgradeEntityReadOnly> GetEntities() =>
+			return _entities[id] ?? throw new ArgumentNullException($"{id} not found");
+		}
+
+		public IReadOnlyList<IStatUpgradeEntityReadOnly> GetEntities() =>
 			_entities.Values.ToList();
 
 		public IReadOnlyList<IUpgradeEntityViewConfig> GetConfigs() =>
@@ -39,7 +43,7 @@ namespace Sources.Infrastructure.Repository
 				throw new ArgumentOutOfRangeException(nameof(id));
 
 			IUpgradeEntityViewConfig config = _configs[id];
-			IUpgradeEntityReadOnly entity = _entities[id];
+			IStatUpgradeEntityReadOnly entity = _entities[id];
 
 			if (entity.Value >= 0 && entity.Value < config.Prices.Count)
 				return config.Prices[entity.Value];

@@ -2,7 +2,6 @@ using System;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
-using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
 
 namespace Sources.Controllers
@@ -12,7 +11,7 @@ namespace Sources.Controllers
 		private readonly IUpgradeWindowPresentation _upgradeWindowPresentation;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadService;
 		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenter;
-		private readonly IResourcesProgressPresenterProvider _resourcesProgressPresenterProvider;
+		private readonly IResourcesProgressPresenter _resourcesProgressPresenterProvider;
 
 		private bool _isCanSave;
 
@@ -20,20 +19,20 @@ namespace Sources.Controllers
 			IUpgradeWindowPresentation upgradeWindowPresentation,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			IGameplayInterfacePresenter gameplayInterfacePresenter,
-			IResourcesProgressPresenterProvider resourcesProgressPresenterProvider
+			IResourcesProgressPresenter resourcesProgressPresenterProvider
 		)
 		{
 			_upgradeWindowPresentation = upgradeWindowPresentation ??
-				throw new ArgumentNullException(nameof(upgradeWindowPresentation));
+			                             throw new ArgumentNullException(nameof(upgradeWindowPresentation));
 			_progressSaveLoadService = progressSaveLoadDataService ??
-				throw new ArgumentNullException(nameof(progressSaveLoadDataService));
+			                           throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 			_gameplayInterfacePresenter = gameplayInterfacePresenter ??
-				throw new ArgumentNullException(nameof(gameplayInterfacePresenter));
+			                              throw new ArgumentNullException(nameof(gameplayInterfacePresenter));
 			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ??
-				throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
+			                                      throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
 		}
 
-		private int SoftCurrencyCount => _resourcesProgressPresenterProvider.Self.SoftCurrency.Value;
+		private int SoftCurrencyCount => _resourcesProgressPresenterProvider.SoftCurrency.Value;
 
 		public void Dispose() =>
 			Disable();

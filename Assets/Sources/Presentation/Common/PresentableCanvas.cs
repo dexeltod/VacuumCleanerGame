@@ -1,6 +1,6 @@
-using Sources.ControllersInterfaces.Common;
+using Sources.ControllersInterfaces;
+using Sources.Domain.Interfaces;
 using Sources.PresentationInterfaces.Common;
-using Sources.ServicesInterfaces;
 using UnityEngine;
 
 namespace Sources.Presentation.Common

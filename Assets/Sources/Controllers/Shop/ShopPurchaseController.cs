@@ -1,6 +1,6 @@
 using System;
+using Sources.BuisenessLogic.Repository;
 using Sources.ControllersInterfaces;
-using Sources.InfrastructureInterfaces.Repository;
 using Sources.Utils.Enums;
 using UnityEngine;
 
@@ -15,13 +15,12 @@ namespace Sources.Controllers.Shop
 		public ShopPurchaseController(
 			IProgressEntityRepository progressRepository,
 			IResourcesProgressPresenter resourcesProgressPresenter,
-			IPlayerModelRepository playerModelRepository,
-			AudioSource audioSource
+			IPlayerModelRepository playerModelRepository
 		)
 		{
 			_progressRepository = progressRepository ?? throw new ArgumentNullException(nameof(progressRepository));
 			_resourcesProgressPresenter = resourcesProgressPresenter ??
-				throw new ArgumentNullException(nameof(resourcesProgressPresenter));
+			                              throw new ArgumentNullException(nameof(resourcesProgressPresenter));
 			_playerModelRepository
 				= playerModelRepository ?? throw new ArgumentNullException(nameof(playerModelRepository));
 		}

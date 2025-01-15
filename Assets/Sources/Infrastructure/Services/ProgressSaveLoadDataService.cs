@@ -1,21 +1,20 @@
 using System;
 using Cysharp.Threading.Tasks;
+using Sources.BuisenessLogic.Interfaces.Factory;
+using Sources.BuisenessLogic.Services;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Infrastructure.Providers;
-using Sources.InfrastructureInterfaces.Factory;
-using Sources.InfrastructureInterfaces.Providers;
-using Sources.InfrastructureInterfaces.Services;
-using Sources.Services.DomainServices;
+using Sources.Infrastructure.Services.DomainServices;
 using UnityEngine;
 using VContainer;
 
 namespace Sources.Infrastructure.Services
 {
-	[Serializable] public class ProgressSaveLoadDataService : IProgressSaveLoadDataService
+	[Serializable]
+	public class ProgressSaveLoadDataService : IProgressSaveLoadDataService
 	{
-		private readonly ISaveLoaderProvider _saveLoader;
-		private readonly IPersistentProgressServiceProvider _progressServiceProvider;
+		private readonly ISaveLoader _saveLoader;
+		private readonly IPersistentProgressService _progressService;
 
 		private readonly BinaryDataSaveLoader _binaryDataSaveLoader;
 		private readonly JsonDataSaveLoader _jsonDataLoader;
@@ -25,33 +24,31 @@ namespace Sources.Infrastructure.Services
 
 		[Inject]
 		public ProgressSaveLoadDataService(
-			ISaveLoaderProvider saveLoader,
-			IPersistentProgressServiceProvider progressService,
+			ISaveLoader saveLoader,
+			IPersistentProgressService progressService,
 			IInitialProgressFactory initialProgressFactory,
 			IProgressCleaner progressFactory
 		)
 		{
 			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
-			_progressServiceProvider = progressService ?? throw new ArgumentNullException(nameof(progressService));
+			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
 			_progressCleaner = progressFactory ?? throw new ArgumentNullException(nameof(progressFactory));
 
 			_jsonDataLoader = new JsonDataSaveLoader();
 		}
 
-		private ISaveLoader SaveLoaderImplementation => _saveLoader.Self;
+		private ISaveLoader SaveLoaderImplementation => _saveLoader;
 
 		public bool IsCallbackReceived { get; private set; }
 
-		private IPersistentProgressService PersistentProgressService => _progressServiceProvider.Self;
-
 		public async UniTask SaveToCloud(Action succeededCallback = null)
 		{
-			await Save(PersistentProgressService.GlobalProgress);
+			await Save(_progressService.GlobalProgress);
 			succeededCallback?.Invoke();
 		}
 
 		public async UniTask ClearSaves() =>
-			await _saveLoader.Self.Save(_progressCleaner.Clear());
+			await _saveLoader.Save(_progressCleaner.Clear());
 
 		public async UniTask<IGlobalProgress> LoadFromCloud()
 		{

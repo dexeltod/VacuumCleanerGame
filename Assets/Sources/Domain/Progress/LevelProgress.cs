@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace Sources.Domain.Progress
 {
-	[Serializable] public class LevelProgress : ILevelProgress
+	[Serializable]
+	public class LevelProgress : ILevelProgress
 	{
 		[SerializeField] private int _currentLevel;
 		[SerializeField] private int _maxTotalResourceCount;

@@ -23,10 +23,10 @@ namespace Sources.Presentation.SceneEntity
 		private void OnValidate()
 		{
 			if (_isDebug)
-				SetSand(_sandValueSliderTest);
+				Set(_sandValueSliderTest);
 		}
 
-		public void SetSand(float normalizedCount)
+		public void Set(float normalizedCount)
 		{
 			_sand.gameObject.SetActive(_normalizedCount > 0);
 

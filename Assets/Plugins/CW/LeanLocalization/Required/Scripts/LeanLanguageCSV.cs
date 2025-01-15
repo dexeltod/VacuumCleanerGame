@@ -48,7 +48,8 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		public FormatType Format = FormatType.Comma;
 
 		/// <summary>The language of the translations in the source file.</summary>
-		[LeanLanguageName] public string Language;
+		[LeanLanguageName]
+		public string Language;
 
 		/// <summary>This allows you to control when the CSV file is loaded or unloaded. The lower down you set this, the lower your app's memory usage will be. However, setting it too low means you can miss translations if you haven't translated absolutely every phrase in every language, so I recommend you use <b>LoadImmediately</b> unless you have LOTS of translations.
 		/// LoadImmediately = Regardless of the language, the CSV will load when this component activates, and then it will be kept in memory until this component is destroyed.

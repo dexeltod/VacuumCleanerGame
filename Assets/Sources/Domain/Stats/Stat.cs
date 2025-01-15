@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace Sources.Domain.Stats
 {
-	[Serializable] public sealed class Stat : IStat
+	[Serializable]
+	public sealed class Stat : IStat
 	{
 		[SerializeField] private float _startValue;
 		[SerializeField] private IntEntityValue _currentLevel;
@@ -59,6 +60,7 @@ namespace Sources.Domain.Stats
 		public void Set(float value)
 		{
 			if (value < 0) throw new ArgumentOutOfRangeException(nameof(value));
+
 			_value = value;
 			_startValue = value;
 			Changed?.Invoke();

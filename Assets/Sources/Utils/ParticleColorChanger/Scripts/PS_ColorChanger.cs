@@ -3,9 +3,10 @@ using UnityEngine;
 
 namespace Sources.Utils.ParticleColorChanger.Scripts
 {
-	[DisallowMultipleComponent] public class PS_ColorChanger : MonoBehaviour
+	[DisallowMultipleComponent]
+	public class PS_ColorChanger : MonoBehaviour
 	{
-#region Fields
+		#region Fields
 
 		[Tooltip("Current \"Main\" color of all particle systems")]
 		public Color currentColor;
@@ -16,9 +17,9 @@ namespace Sources.Utils.ParticleColorChanger.Scripts
 		private Color currentHSV; // r -> H; g -> S; b -> V (not a really correct way to do it :D)
 		private Color newHSV; // r -> H; g -> S; b -> V (not a really correct way to do it :D)
 
-#endregion
+		#endregion
 
-#region Methods
+		#region Methods
 
 		/**
 			Update colors of all child systems
@@ -33,6 +34,7 @@ namespace Sources.Utils.ParticleColorChanger.Scripts
 			foreach (var system in systems)
 			{
 				var main = system.main;
+
 				switch (main.startColor.mode)
 				{
 					case ParticleSystemGradientMode.Color:
@@ -110,6 +112,6 @@ namespace Sources.Utils.ParticleColorChanger.Scripts
 			return endRes;
 		}
 
-#endregion
+		#endregion
 	}
 }

@@ -1,1 +1,0 @@
-namespace Sources.InfrastructureInterfaces.Scene { }

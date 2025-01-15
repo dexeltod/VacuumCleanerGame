@@ -6,13 +6,14 @@ using UnityEngine;
 
 namespace Sources.Domain.Progress
 {
-	[Serializable] public class ShopModel : IShopModel
+	[Serializable]
+	public class ShopModel : IShopModel
 	{
-		[SerializeField] private List<UpgradeEntity> _progressEntities;
+		[SerializeField] private List<StatUpgradeEntity> _progressEntities;
 
-		public ShopModel(List<UpgradeEntity> progressEntities) =>
+		public ShopModel(List<StatUpgradeEntity> progressEntities) =>
 			_progressEntities = progressEntities ?? throw new ArgumentNullException(nameof(progressEntities));
 
-		public IReadOnlyList<IUpgradeEntityReadOnly> ProgressEntities => _progressEntities;
+		public IReadOnlyList<IStatUpgradeEntityReadOnly> ProgressEntities => _progressEntities;
 	}
 }

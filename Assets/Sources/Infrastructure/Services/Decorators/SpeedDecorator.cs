@@ -1,10 +1,9 @@
 using System;
 using System.Collections;
-using Sources.ControllersInterfaces;
+using Sources.BuisenessLogic.ServicesInterfaces.Advertisement;
+using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.Entities;
 using Sources.Infrastructure.Services.Decorators.Common;
-using Sources.InfrastructureInterfaces.Providers;
-using Sources.ServicesInterfaces.Advertisement;
 using Sources.Utils;
 using UnityEngine;
 
@@ -15,14 +14,14 @@ namespace Sources.Infrastructure.Services.Decorators
 		private readonly IAdvertisement _advertisement;
 		private readonly IStat _speed;
 		private readonly float _baseSpeed;
-		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
+		private readonly ICoroutineRunner _coroutineRunnerProvider;
 
 		private readonly WaitForSeconds _waitForSeconds;
 
 		private float _currentBaseSpeed;
 
 		public SpeedDecorator(
-			ICoroutineRunnerProvider coroutineRunnerProvider,
+			ICoroutineRunner coroutineRunnerProvider,
 			IAdvertisement advertisement,
 			float time,
 			IStat speed
@@ -31,14 +30,14 @@ namespace Sources.Infrastructure.Services.Decorators
 			if (time < 0) throw new ArgumentOutOfRangeException(nameof(time));
 
 			_coroutineRunnerProvider = coroutineRunnerProvider ??
-				throw new ArgumentNullException(nameof(coroutineRunnerProvider));
+			                           throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 			_speed = speed ?? throw new ArgumentNullException(nameof(speed));
 
 			_waitForSeconds = new WaitForSeconds(time);
 		}
 
-		private ICoroutineRunner CoroutineRunner => _coroutineRunnerProvider.Self;
+		private ICoroutineRunner CoroutineRunner => _coroutineRunnerProvider;
 
 		public bool IsDecorated { get; private set; }
 

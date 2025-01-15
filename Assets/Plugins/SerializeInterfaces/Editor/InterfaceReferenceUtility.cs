@@ -14,7 +14,9 @@ namespace Plugins.SerializeInterfaces.Editor
 		private static GUIStyle _normalInterfaceLabelStyle;
 		private static bool _isOpeningQueued = false;
 
-		public static void OnGUI(Rect position, SerializedProperty property, GUIContent label,
+		public static void OnGUI(Rect position,
+			SerializedProperty property,
+			GUIContent label,
 			InterfaceObjectArguments args)
 		{
 			InitializeStyleIfNeeded();
@@ -109,7 +111,8 @@ namespace Plugins.SerializeInterfaces.Editor
 			);
 		}
 
-		private static void ReplaceObjectPickerForControl(SerializedProperty property, InterfaceObjectArguments args,
+		private static void ReplaceObjectPickerForControl(SerializedProperty property,
+			InterfaceObjectArguments args,
 			int controlID)
 		{
 			var currentObjectPickerID = EditorGUIUtility.GetObjectPickerControlID();
@@ -192,7 +195,8 @@ namespace Plugins.SerializeInterfaces.Editor
 			_normalInterfaceLabelStyle.normal.background = texture;
 		}
 
-		public static float GetPropertyHeight(SerializedProperty property, GUIContent label,
+		public static float GetPropertyHeight(SerializedProperty property,
+			GUIContent label,
 			InterfaceObjectArguments args)
 		{
 			if (IsAssignedAndHasWrongInterface(
@@ -300,7 +304,8 @@ namespace Plugins.SerializeInterfaces.Editor
 			return null;
 		}
 
-		private static bool TryFindSuitableComponent(GameObject go, InterfaceObjectArguments args,
+		private static bool TryFindSuitableComponent(GameObject go,
+			InterfaceObjectArguments args,
 			out Component component)
 		{
 			foreach (var comp in go.GetComponents(

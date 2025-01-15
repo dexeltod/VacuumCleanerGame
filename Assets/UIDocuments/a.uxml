@@ -1,7 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
-         xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements"
+         xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements"
+         editor="UnityEditor.UIElements"
          noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UIDocuments/Menu.uss?fileID=7433441132597879392&amp;guid=93bc728ff47f05943862917164c376ac&amp;id=3#Menu"/>
+    <Style
+        src="project://database/Assets/UIDocuments/Menu.uss?fileID=7433441132597879392&amp;guid=93bc728ff47f05943862917164c376ac&amp;id=3#Menu"/>
     <ui:VisualElement configName="Background"
                       style="width: 100%; height: 100%; color: rgba(60, 33, 33, 255); opacity: 1; background-color: rgb(31, 123, 41);">
         <ui:VisualElement configName="MainMenu"

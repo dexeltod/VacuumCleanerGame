@@ -312,7 +312,9 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Editor
 			).AddComponent<LeanPhrase>();
 		}
 
-		private static bool TryAutoTranslate(string languageCodeInput, string languageCodeOutput, string wordInput,
+		private static bool TryAutoTranslate(string languageCodeInput,
+			string languageCodeOutput,
+			string wordInput,
 			ref string wordOutput)
 		{
 			try
@@ -325,10 +327,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Editor
 						wordInput
 					)
 				);
-				var webClient = new WebClient
-				{
-					Encoding = Encoding.UTF8
-				};
+				var webClient = new WebClient { Encoding = Encoding.UTF8 };
 				var result = webClient.DownloadString(
 					url
 				);

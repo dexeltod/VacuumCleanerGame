@@ -1,12 +1,12 @@
 using System;
+using Sources.BuisenessLogic.ServicesInterfaces.Advertisement;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
-using Sources.ServicesInterfaces.Advertisement;
 using UnityEngine;
 
 namespace Sources.Controllers
 {
-	public sealed class AdvertisementPresenter : Presenter, IAdvertisementPresenter
+	public class AdvertisementPresenter : Presenter, IAdvertisementPresenter
 	{
 		private readonly IAdvertisement _advertisement;
 

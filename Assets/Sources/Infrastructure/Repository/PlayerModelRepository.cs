@@ -1,7 +1,7 @@
 using System;
+using Sources.BuisenessLogic.Repository;
 using Sources.DomainInterfaces.Entities;
 using Sources.DomainInterfaces.Models;
-using Sources.InfrastructureInterfaces.Repository;
 using Sources.Utils.Enums;
 
 namespace Sources.Infrastructure.Repository

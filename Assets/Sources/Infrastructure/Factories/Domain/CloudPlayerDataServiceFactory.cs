@@ -1,5 +1,5 @@
+using Sources.BuisenessLogic.Interfaces;
 using Sources.Infrastructure.Services;
-using Sources.InfrastructureInterfaces;
 #if YANDEX_CODE
 using Sources.Infrastructure.Adapters;
 using Sources.Infrastructure.Yandex;

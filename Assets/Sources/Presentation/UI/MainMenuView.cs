@@ -20,17 +20,13 @@ namespace Sources.Presentation.UI
 		[SerializeField] private Button _leaderboardButton;
 		[SerializeField] private Button _settingsButton;
 
-		[FormerlySerializedAs(
-			"_addButton"
-		)]
+		[FormerlySerializedAs("_addButton")]
 		[SerializeField]
 		private Button _addLeadersButton;
 
 		[SerializeField] private GameObject _leaderBoardView;
 
-		[FormerlySerializedAs(
-			"_translatorBehaviour"
-		)]
+		[FormerlySerializedAs("_translatorBehaviour")]
 		[SerializeField]
 		private TextPhrasesList _translator;
 

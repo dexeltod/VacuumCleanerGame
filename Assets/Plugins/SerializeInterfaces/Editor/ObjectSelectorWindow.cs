@@ -41,11 +41,7 @@ namespace Plugins.SerializeInterfaces.Editor
 		private Tab _sceneTab;
 		private Tab _assetsTab;
 
-		private static ItemInfo _nullItem = new ItemInfo()
-		{
-			InstanceID = null,
-			Label = "None"
-		};
+		private static ItemInfo _nullItem = new ItemInfo() { InstanceID = null, Label = "None" };
 
 		public bool initialized { get; private set; } = false;
 
@@ -59,8 +55,10 @@ namespace Plugins.SerializeInterfaces.Editor
 			}
 		}
 
-		public static void Show(SerializedProperty property, Action<Object> onSelectionChanged,
-			Action<Object, bool> onSelectorClosed, ObjectSelectorFilter filter)
+		public static void Show(SerializedProperty property,
+			Action<Object> onSelectionChanged,
+			Action<Object, bool> onSelectorClosed,
+			ObjectSelectorFilter filter)
 		{
 			if (Instance == null)
 				Instance = CreateInstance<ObjectSelectorWindow>();
@@ -477,12 +475,7 @@ namespace Plugins.SerializeInterfaces.Editor
 				       null
 			       ))
 			{
-				yield return new ItemInfo
-				{
-					Icon = property.icon,
-					InstanceID = property.instanceID,
-					Label = property.name
-				};
+				yield return new ItemInfo { Icon = property.icon, InstanceID = property.instanceID, Label = property.name };
 			}
 
 			yield break;
@@ -505,12 +498,7 @@ namespace Plugins.SerializeInterfaces.Editor
 				if (CheckFilter(
 					    go
 				    ))
-					yield return new ItemInfo
-					{
-						Icon = property.icon,
-						InstanceID = property.instanceID,
-						Label = property.name
-					};
+					yield return new ItemInfo { Icon = property.icon, InstanceID = property.instanceID, Label = property.name };
 
 				foreach (var comp in go.GetComponents(
 					         typeof(Component)

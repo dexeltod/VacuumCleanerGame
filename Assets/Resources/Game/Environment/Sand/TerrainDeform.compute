@@ -6,7 +6,7 @@ Texture2D<float> Heightmap;
 RWTexture2D<float> ResultHeightmap;
 
 [numthreads(8, 8, 1)]
-void DeformTerrain (uint3 id : SV_DispatchThreadID)
+void DeformTerrain(uint3 id : SV_DispatchThreadID)
 {
     // Получаем размер текстуры высот
     uint width = Heightmap.GetDimensions().x;

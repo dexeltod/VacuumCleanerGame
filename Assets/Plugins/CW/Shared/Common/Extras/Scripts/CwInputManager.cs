@@ -38,8 +38,15 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 			public KeyCode KeyPositiveAlt;
 			public float KeySensitivity;
 
-			public Axis(int fCount, bool fInvert, AxisGesture fGesture, float fSensitivty, KeyCode kNegative,
-				KeyCode kPositive, KeyCode kNegativeAlt, KeyCode kPositiveAlt, float kSensitivity)
+			public Axis(int fCount,
+				bool fInvert,
+				AxisGesture fGesture,
+				float fSensitivty,
+				KeyCode kNegative,
+				KeyCode kPositive,
+				KeyCode kNegativeAlt,
+				KeyCode kPositiveAlt,
+				float kSensitivity)
 			{
 				FingerCount = fCount;
 				FingerInvert = fInvert;

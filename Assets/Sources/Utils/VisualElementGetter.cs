@@ -5,7 +5,8 @@ using UnityEngine.UIElements;
 
 namespace Sources.Utils
 {
-	[RequireComponent(typeof(UIDocument))] public class VisualElementGetter : MonoBehaviour
+	[RequireComponent(typeof(UIDocument))]
+	public class VisualElementGetter : MonoBehaviour
 	{
 		private UIDocument _uiDocument;
 

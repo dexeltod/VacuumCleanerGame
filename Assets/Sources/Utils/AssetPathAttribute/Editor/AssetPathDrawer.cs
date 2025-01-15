@@ -40,6 +40,7 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
 			property = GetProperty(property);
+
 			if (property.propertyType != SerializedPropertyType.String)
 			{
 				// Create a rect for our label
@@ -95,7 +96,13 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 			// Invoke it (We have to do this step since there is only a generic version for showing the asset picker.
 			genericObjectPickerMethod.Invoke(
 				null,
-				new object[] { target, allowSceneObjects, searchFilter, m_PickerControlID }
+				new object[]
+				{
+					target,
+					allowSceneObjects,
+					searchFilter,
+					m_PickerControlID
+				}
 			);
 		}
 
@@ -119,6 +126,7 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 			Object propertyValue = null;
 			// Save our path
 			string assetPath = property.stringValue;
+
 			// Have a label to say it's missing
 			//bool isMissing = false;
 			// Check if we have a key
@@ -149,6 +157,7 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 				// Draw our object field.
 				propertyValue = EditorGUI.ObjectField(position, label, propertyValue, objectType, false);
 			}
+
 			if (EditorGUI.EndChangeCheck())
 			{
 				OnSelectionMade(propertyValue, property);

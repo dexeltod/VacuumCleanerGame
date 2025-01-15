@@ -1,50 +1,46 @@
 using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using Sources.BuisenessLogic.Repository;
+using Sources.BuisenessLogic.Services;
 using Sources.DomainInterfaces;
-using Sources.Infrastructure.Providers;
-using Sources.InfrastructureInterfaces.Factory;
-using Sources.InfrastructureInterfaces.Providers;
-using Sources.InfrastructureInterfaces.Services;
-using Sources.ServicesInterfaces;
+using Sources.DomainInterfaces.DomainServicesInterfaces;
 using UnityEngine;
 using VContainer;
 
-namespace Sources.Infrastructure.Factories
+namespace Sources.Infrastructure.Factories.Progress
 {
-	[Serializable] public class ProgressFactory : IProgressFactory
+	public class ProgressFactory
 	{
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IProgressCleaner _progressCleaner;
 		private readonly ProgressServiceRegister _progressServiceRegister;
 
-		private readonly ISaveLoaderProvider _saveLoaderProvider;
+		private readonly ISaveLoader _saveLoader;
 
 		[Inject]
 		public ProgressFactory(
 			IProgressSaveLoadDataService progressSaveLoadDataService,
-			IPersistentProgressServiceProvider persistentProgressServiceProvider,
-			ISaveLoaderProvider saveLoaderProvider,
+			IPersistentProgressService persistentProgressServiceProvider,
+			ISaveLoader saveLoaderProvider,
 			IProgressCleaner progressCleaner,
-			IProgressEntityRepositoryProvider progressEntityRepositoryProvider,
-			IAssetFactory assetFactory,
-			IPlayerModelRepositoryProvider playerModelRepositoryProvider,
+			IProgressEntityRepository progressEntityRepositoryProvider,
+			IPlayerModelRepository playerModelRepositoryProvider,
 			ProgressServiceRegister progressServiceRegister
 		)
 		{
 			_progressSaveLoadDataService = progressSaveLoadDataService ??
-				throw new ArgumentNullException(nameof(progressSaveLoadDataService));
-			_saveLoaderProvider = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
+			                               throw new ArgumentNullException(nameof(progressSaveLoadDataService));
+			_saveLoader = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
 			_progressCleaner = progressCleaner ?? throw new ArgumentNullException(nameof(progressCleaner));
 			_progressServiceRegister = progressServiceRegister ??
-				throw new ArgumentNullException(nameof(progressServiceRegister));
+			                           throw new ArgumentNullException(nameof(progressServiceRegister));
 		}
 
 		public async Task<IGlobalProgress> Create()
 		{
 			IGlobalProgress cloudSaves = await _progressSaveLoadDataService.LoadFromCloud();
 
-			Debug.Log("Loaded from cloud");
 			cloudSaves = await CreatNewIfNull(cloudSaves);
 
 			_progressServiceRegister.Do(cloudSaves);
@@ -66,7 +62,7 @@ namespace Sources.Infrastructure.Factories
 
 			loadedProgress = _progressCleaner.Clear();
 
-			await _saveLoaderProvider.Self.Save(loadedProgress);
+			await _saveLoader.Save(loadedProgress);
 			return loadedProgress;
 		}
 	}

@@ -7,13 +7,13 @@ namespace Sources.Infrastructure.Factories.Domain
 	// 	public ProgressUpgradeDataFactory(List<IProgressItemConfig> itemsList) =>
 	// 		_itemsList = itemsList ?? throw new ArgumentNullException(nameof(itemsList));
 	//
-	// 	public override List<UpgradeEntity> LoadList()
+	// 	public override List<StatUpgradeEntity> LoadList()
 	// 	{
-	// 		List<UpgradeEntity> progressList = new List<UpgradeEntity>();
+	// 		List<StatUpgradeEntity> progressList = new List<StatUpgradeEntity>();
 	//
 	// 		foreach (IProgressItemConfig itemData in _itemsList)
 	// 		{
-	// 			progressList.Add(new UpgradeEntity(itemData.IdName, 0, itemData.MaxProgressCount));
+	// 			progressList.Add(new StatUpgradeEntity(itemData.IdName, 0, itemData.MaxProgressCount));
 	// 			itemData.SetUpgradeLevel(0);
 	// 		}
 	//

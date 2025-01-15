@@ -35,7 +35,7 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 			else
 			{
 				string assetPath = AssetDatabase.GetAssetPath(newSelection);
-				Scene scene = SceneManager.GetSceneByPath(assetPath);
+				UnityEngine.SceneManagement.Scene scene = SceneManager.GetSceneByPath(assetPath);
 				m_Name.stringValue = scene.name;
 				m_BuildIndex.intValue = scene.buildIndex;
 			}

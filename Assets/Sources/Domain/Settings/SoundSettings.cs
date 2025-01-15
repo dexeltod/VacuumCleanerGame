@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace Sources.Domain.Settings
 {
-	[Serializable] public class SoundSettings
+	[Serializable]
+	public class SoundSettings
 	{
 		[SerializeField] private float _masterVolume;
 

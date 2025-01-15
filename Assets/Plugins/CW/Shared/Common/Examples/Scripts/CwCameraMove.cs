@@ -49,7 +49,8 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			get { return horizontalControls; }
 		}
 
-		[SerializeField] private CwInputManager.Axis horizontalControls = new CwInputManager.Axis(
+		[SerializeField]
+		private CwInputManager.Axis horizontalControls = new CwInputManager.Axis(
 			2,
 			false,
 			CwInputManager.AxisGesture.HorizontalDrag,
@@ -68,7 +69,8 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			get { return depthControls; }
 		}
 
-		[SerializeField] private CwInputManager.Axis depthControls = new CwInputManager.Axis(
+		[SerializeField]
+		private CwInputManager.Axis depthControls = new CwInputManager.Axis(
 			2,
 			false,
 			CwInputManager.AxisGesture.HorizontalDrag,
@@ -87,7 +89,8 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			get { return verticalControls; }
 		}
 
-		[SerializeField] private CwInputManager.Axis verticalControls = new CwInputManager.Axis(
+		[SerializeField]
+		private CwInputManager.Axis verticalControls = new CwInputManager.Axis(
 			3,
 			false,
 			CwInputManager.AxisGesture.HorizontalDrag,

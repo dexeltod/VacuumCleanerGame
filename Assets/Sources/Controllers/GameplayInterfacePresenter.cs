@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using Plugins.Joystick_Pack.Scripts.Base;
+using Sources.BuisenessLogic.Interfaces;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
+using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.Entities;
-using Sources.InfrastructureInterfaces.Providers;
 using Sources.PresentationInterfaces;
+using Sources.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +16,7 @@ namespace Sources.Controllers
 	public class GameplayInterfacePresenter : Presenter, IGameplayInterfacePresenter
 	{
 		private readonly IStatReadOnly _maxCashScore;
-		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
+		private readonly ICoroutineRunner _coroutineRunnerProvider;
 		private readonly float _time;
 		private readonly IGameplayInterfaceView _gameplayInterfaceView;
 		private readonly ILevelChangerService _levelChangerService;
@@ -25,7 +27,7 @@ namespace Sources.Controllers
 			ILevelChangerService levelChangerService,
 			IGameplayInterfaceView gameplayInterfaceView,
 			ISpeedDecorator speedDecorator,
-			ICoroutineRunnerProvider coroutineRunnerProvider,
+			ICoroutineRunner coroutineRunnerProvider,
 			float time,
 			int cashScore,
 			IStatReadOnly maxCashScore
@@ -78,7 +80,7 @@ namespace Sources.Controllers
 			if (_speedDecorator.IsDecorated != false)
 				return;
 
-			_coroutineRunnerProvider.Self.Run(
+			_coroutineRunnerProvider.Run(
 				StartViewCooldownSpeedRoutine(
 					_time
 				)

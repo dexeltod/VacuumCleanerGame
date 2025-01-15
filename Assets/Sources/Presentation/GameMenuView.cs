@@ -15,7 +15,8 @@ namespace Sources.Presentation
 
 		[SerializeField] private GameObject _menuWindow;
 
-		[FormerlySerializedAs("_audio")] [SerializeField]
+		[FormerlySerializedAs("_audio")]
+		[SerializeField]
 		private AudioSource _audioSource;
 
 		public Button OpenMenuButton => _openMenuButton;

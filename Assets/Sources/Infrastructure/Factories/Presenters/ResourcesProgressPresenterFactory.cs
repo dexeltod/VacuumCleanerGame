@@ -1,51 +1,53 @@
 using System;
-using Sources.Controllers;
+using Sources.BuisenessLogic.Repository;
+using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
-using Sources.Infrastructure.Common.Factory.Decorators;
-using Sources.InfrastructureInterfaces.Providers;
-using Sources.Services;
+using Sources.Infrastructure.Services;
+using Sources.Infrastructure.Services.DomainServices;
+using Sources.PresentationInterfaces.Player;
+using Sources.Utils;
 using Sources.Utils.Enums;
 using VContainer;
 
 namespace Sources.Infrastructure.Factories.Presenters
 {
-	public class ResourcesProgressPresenterFactory : PresenterFactory<ResourcesProgressPresenter>
+	public class ResourcesProgressPresenterFactory
 	{
-		private readonly IGameplayInterfacePresenterProvider _gameplayInterfacePresenterProvider;
-		private readonly IPersistentProgressServiceProvider _persistentProgressService;
-		private readonly IFillMeshShaderControllerProvider _fillMeshShaderControllerProvider;
-		private readonly ISandParticleSystemProvider _sandParticleSystemProvider;
-		private readonly ICoroutineRunnerProvider _coroutineRunnerProvider;
-		private readonly IPlayerModelRepositoryProvider _playerModelRepositoryProvider;
+		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenterProvider;
+		private readonly PersistentProgressService _persistentProgressService;
+		private readonly IFillMeshShaderController _fillMeshShaderControllerProvider;
+		private readonly ISandParticleSystem _sandParticleSystemProvider;
+		private readonly ICoroutineRunner _coroutineRunnerProvider;
+		private readonly IPlayerModelRepository _playerModelRepositoryProvider;
 
 		private IResourceModelReadOnly ResourceModelReadOnly =>
-			_persistentProgressService.Self.GlobalProgress.ResourceModelReadOnly;
+			_persistentProgressService.GlobalProgress.ResourceModelReadOnly;
 
 		[Inject]
 		public ResourcesProgressPresenterFactory(
-			IGameplayInterfacePresenterProvider gameplayInterfacePresenterProvider,
-			IPersistentProgressServiceProvider persistentProgressService,
-			IFillMeshShaderControllerProvider fillMeshShaderControllerProvider,
-			ISandParticleSystemProvider sandParticleSystemProvider,
-			ICoroutineRunnerProvider coroutineRunnerProvider,
-			IPlayerModelRepositoryProvider playerModelRepositoryProvider
+			IGameplayInterfacePresenter gameplayInterfacePresenterProvider,
+			PersistentProgressService persistentProgressService,
+			IFillMeshShaderController fillMeshShaderControllerProvider,
+			ISandParticleSystem sandParticleSystemProvider,
+			ICoroutineRunner coroutineRunnerProvider,
+			IPlayerModelRepository playerModelRepositoryProvider
 		)
 		{
 			_gameplayInterfacePresenterProvider = gameplayInterfacePresenterProvider ??
-				throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
+			                                      throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
 			_persistentProgressService = persistentProgressService ??
-				throw new ArgumentNullException(nameof(persistentProgressService));
+			                             throw new ArgumentNullException(nameof(persistentProgressService));
 			_fillMeshShaderControllerProvider = fillMeshShaderControllerProvider ??
-				throw new ArgumentNullException(nameof(fillMeshShaderControllerProvider));
+			                                    throw new ArgumentNullException(nameof(fillMeshShaderControllerProvider));
 			_sandParticleSystemProvider = sandParticleSystemProvider ??
-				throw new ArgumentNullException(nameof(sandParticleSystemProvider));
+			                              throw new ArgumentNullException(nameof(sandParticleSystemProvider));
 			_coroutineRunnerProvider = coroutineRunnerProvider ??
-				throw new ArgumentNullException(nameof(coroutineRunnerProvider));
+			                           throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 			_playerModelRepositoryProvider = playerModelRepositoryProvider ??
-				throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
+			                                 throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
 		}
 
-		public override ResourcesProgressPresenter Create()
+		public ResourcesProgressPresenter Create()
 		{
 			var sandParticlePlayerSystem
 				= new SandParticlePlayerSystem(
@@ -60,7 +62,7 @@ namespace Sources.Infrastructure.Factories.Presenters
 				ResourceModelReadOnly as IResourceModel,
 				_fillMeshShaderControllerProvider,
 				sandParticlePlayerSystem,
-				_playerModelRepositoryProvider.Self.Get(ProgressType.MaxCashScore)
+				_playerModelRepositoryProvider.Get(ProgressType.MaxCashScore)
 			);
 		}
 	}

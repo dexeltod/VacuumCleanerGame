@@ -1,42 +1,36 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sources.BuisenessLogic.Repository;
+using Sources.BuisenessLogic.ServicesInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.Models.Shop.Upgrades;
 using Sources.Infrastructure.Factories.UpgradeEntitiesConfigs;
 using Sources.Infrastructure.Repository;
+using Sources.Infrastructure.Services.DomainServices;
 using Sources.InfrastructureInterfaces.Configs;
-using Sources.InfrastructureInterfaces.Providers;
-using Sources.Services.DomainServices;
-using Sources.ServicesInterfaces;
 using Sources.Utils;
-using UnityEngine;
-using VContainer;
 
-namespace Sources.Infrastructure.Factories
+namespace Sources.Infrastructure.Factories.Progress
 {
 	public class ProgressServiceRegister
 	{
-		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
-		private readonly IProgressEntityRepositoryProvider _progressEntityRepositoryProvider;
+		private readonly IPersistentProgressService _persistentProgressServiceProvider;
+		private readonly IProgressEntityRepository _progressEntityRepository;
 		private readonly IAssetFactory _assetFactory;
-		private readonly IPlayerModelRepositoryProvider _playerModelRepositoryProvider;
+		private readonly IPlayerModelRepository _playerModelRepositoryProvider;
 
-		[Inject]
 		public ProgressServiceRegister(
-			IPersistentProgressServiceProvider persistentProgressServiceProvider,
-			IProgressEntityRepositoryProvider progressEntityRepositoryProvider,
-			IAssetFactory assetFactory,
-			IPlayerModelRepositoryProvider playerModelRepositoryProvider
+			IPersistentProgressService persistentProgressServiceProvider,
+			IProgressEntityRepository progressEntityRepositoryProvider,
+			IAssetFactory assetFactory
 		)
 		{
 			_persistentProgressServiceProvider = persistentProgressServiceProvider ??
-				throw new ArgumentNullException(nameof(persistentProgressServiceProvider));
-			_progressEntityRepositoryProvider = progressEntityRepositoryProvider ??
-				throw new ArgumentNullException(nameof(progressEntityRepositoryProvider));
+			                                     throw new ArgumentNullException(nameof(persistentProgressServiceProvider));
+			_progressEntityRepository = progressEntityRepositoryProvider ??
+			                            throw new ArgumentNullException(nameof(progressEntityRepositoryProvider));
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
-			_playerModelRepositoryProvider = playerModelRepositoryProvider ??
-				throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
 		}
 
 		public void Do(IGlobalProgress progress)
@@ -44,41 +38,38 @@ namespace Sources.Infrastructure.Factories
 			if (progress.PlayerModel == null)
 				throw new NullReferenceException(nameof(progress.PlayerModel));
 
-			_playerModelRepositoryProvider.Register(new PlayerModelRepository(progress.PlayerModel));
-
 			var configs = new Dictionary<int, IUpgradeEntityViewConfig>();
 
-			var entities = progress.ShopModel.ProgressEntities;
+			IReadOnlyList<IStatUpgradeEntityReadOnly> entities = progress.ShopModel.ProgressEntities;
 
-			UpgradeEntityListConfig configList = _assetFactory.LoadFromResources<UpgradeEntityListConfig>(
+			var configList = _assetFactory.LoadFromResources<UpgradesListConfig>(
 				ResourcesAssetPath.Configs.ShopItems
 			);
 
-			for (int i = 0; i < configList.ReadOnlyItems.Count(); i++)
+			for (var i = 0; i < configList.ReadOnlyItems.Count(); i++)
 			{
 				int id = configList.ReadOnlyItems.ElementAt(i).Id;
+				IUpgradeEntityViewConfig a = configList.ReadOnlyItems.ElementAt(i);
 
 				configs.Add(id, configList.ReadOnlyItems.ElementAt(i));
 			}
 
-			Debug.Log("register upgrade progress repository provider");
 			RegisterUpgradeProgressRepositoryProvider(entities, configs);
-			Debug.Log("register progress service provider");
+
 			RegisterProgressServiceProvider(new PersistentProgressService(progress));
-			Debug.Log("registering is done");
 		}
 
 		private void RegisterUpgradeProgressRepositoryProvider(
-			IEnumerable<IUpgradeEntityReadOnly> entities,
+			Dictionary<int, IStatUpgradeEntityReadOnly> entities,
 			Dictionary<int, IUpgradeEntityViewConfig> configs
 		)
 		{
 			if (entities == null) throw new ArgumentNullException(nameof(entities));
 			if (configs == null) throw new ArgumentNullException(nameof(configs));
 
-			_progressEntityRepositoryProvider.Register(
+			_progressEntityRepository.Register(
 				new ProgressEntityRepository(
-					entities.ToDictionary(entity => entity.ConfigId),
+					entities,
 					configs
 				)
 			);
@@ -90,13 +81,13 @@ namespace Sources.Infrastructure.Factories
 			int i
 		)
 		{
-			IUpgradeEntityReadOnly upgradeEntity = progress.ShopModel.ProgressEntities[i];
+			IStatUpgradeEntityReadOnly statUpgradeEntity = progress.ShopModel.ProgressEntities[i];
 
-			if (upgradeEntity.ConfigId >= 0 && upgradeEntity.ConfigId < configs.Count)
-				return configs[upgradeEntity.ConfigId].Stats[upgradeEntity.Value];
+			if (statUpgradeEntity.ConfigId >= 0 && statUpgradeEntity.ConfigId < configs.Count)
+				return configs[statUpgradeEntity.ConfigId].Stats[statUpgradeEntity.Value];
 
 			throw new ArgumentOutOfRangeException(
-				$"Config id is {upgradeEntity.ConfigId} but it should be in range [0, {configs[i].Stats.Count}]"
+				$"Config id is {statUpgradeEntity.ConfigId} but it should be in range [0, {configs[i].Stats.Count}]"
 			);
 		}
 

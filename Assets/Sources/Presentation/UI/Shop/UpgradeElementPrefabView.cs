@@ -18,7 +18,8 @@ namespace Sources.Presentation.UI.Shop
 		[SerializeField] private Color _boughtPointColor;
 		[SerializeField] private Transform _pointsContainer;
 
-		[Header("Upgrade window")] [SerializeField]
+		[Header("Upgrade window")]
+		[SerializeField]
 		private TextMeshProUGUI _title;
 
 		[SerializeField] private Image _icon;
@@ -46,6 +47,7 @@ namespace Sources.Presentation.UI.Shop
 		)
 		{
 			if (maxPoints < 0) throw new ArgumentOutOfRangeException(nameof(maxPoints));
+
 			_maxPoints = maxPoints;
 			_id = id;
 			if (_isInit)

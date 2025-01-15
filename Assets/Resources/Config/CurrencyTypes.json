@@ -1,0 +1,10 @@
+{
+  "IntCurrency": [
+    "Soft",
+    "Hard"
+  ],
+  "FloatCurrency": [
+    "Soft",
+    "Hard"
+  ]
+}

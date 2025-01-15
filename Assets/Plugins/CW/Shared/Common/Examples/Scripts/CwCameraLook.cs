@@ -49,7 +49,8 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			get { return pitchControls; }
 		}
 
-		[SerializeField] private CwInputManager.Axis pitchControls = new CwInputManager.Axis(
+		[SerializeField]
+		private CwInputManager.Axis pitchControls = new CwInputManager.Axis(
 			1,
 			true,
 			CwInputManager.AxisGesture.VerticalDrag,
@@ -68,7 +69,8 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			get { return yawControls; }
 		}
 
-		[SerializeField] private CwInputManager.Axis yawControls = new CwInputManager.Axis(
+		[SerializeField]
+		private CwInputManager.Axis yawControls = new CwInputManager.Axis(
 			1,
 			true,
 			CwInputManager.AxisGesture.HorizontalDrag,
@@ -87,7 +89,8 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			get { return rollControls; }
 		}
 
-		[SerializeField] private CwInputManager.Axis rollControls = new CwInputManager.Axis(
+		[SerializeField]
+		private CwInputManager.Axis rollControls = new CwInputManager.Axis(
 			2,
 			true,
 			CwInputManager.AxisGesture.Twist,

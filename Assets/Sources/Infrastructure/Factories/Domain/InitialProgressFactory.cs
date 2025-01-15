@@ -2,33 +2,27 @@ using System;
 using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Infrastructure.Providers;
-using Sources.InfrastructureInterfaces.Factory;
-using Sources.InfrastructureInterfaces.Providers;
-using Sources.ServicesInterfaces;
+using Sources.Infrastructure.Repository;
+using Sources.Infrastructure.Services;
+using Sources.Infrastructure.Services.DomainServices;
 using Sources.Utils.AssetPaths;
-using Sources.Utils.ConstantNames;
-using VContainer;
 
 namespace Sources.Infrastructure.Factories.Domain
 {
-	public class InitialProgressFactory : IInitialProgressFactory
+	public class InitialProgressFactory
 	{
-		private readonly IResourceService _resourceService;
-		private readonly IAssetFactory _assetFactory;
+		private readonly IResourcesRepository _resourcesRepository;
+		private readonly AssetFactory _assetFactory;
 
-		[Inject]
 		public InitialProgressFactory(
-			IResourceService resourceService,
-			ProgressConstantNames progressConstantNames,
-			IPersistentProgressServiceProvider persistentProgressServiceProvider,
-			ProgressEntityRepositoryProvider progressEntityRepositoryProvider,
-			IAssetFactory assetFactory
+			IResourcesRepository resourcesRepository,
+			PersistentProgressService persistentProgressServiceProvider,
+			ProgressEntityRepository progressEntityRepositoryProvider,
+			AssetFactory assetFactory
 		)
 		{
-			_resourceService = resourceService ?? throw new ArgumentNullException(nameof(resourceService));
-			_assetFactory
-				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_resourcesRepository = resourcesRepository ?? throw new ArgumentNullException(nameof(resourcesRepository));
+			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 		}
 
 		public IGlobalProgress Create()
@@ -36,7 +30,7 @@ namespace Sources.Infrastructure.Factories.Domain
 			ShopModel shopModelFactory = new ShopModelFactory(_assetFactory).LoadList();
 
 			return new GlobalProgress(
-				new ResourcesModelFactory(_resourceService).Create(),
+				new ResourcesModelFactory(_resourcesRepository).Create(),
 				new LevelProgressFactory(
 					firstLevel: 1,
 					GameConfig.DefaultMaxTotalResource

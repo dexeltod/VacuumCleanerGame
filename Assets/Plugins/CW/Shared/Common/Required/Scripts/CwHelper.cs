@@ -603,8 +603,12 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			}
 		}
 
-		public static Texture2D CreateTempTexture2D(string name, int width, int height,
-			TextureFormat format = TextureFormat.ARGB32, bool mips = false, bool linear = false)
+		public static Texture2D CreateTempTexture2D(string name,
+			int width,
+			int height,
+			TextureFormat format = TextureFormat.ARGB32,
+			bool mips = false,
+			bool linear = false)
 		{
 			var texture2D = new Texture2D(
 				width,
@@ -689,7 +693,9 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			return null;
 		}
 
-		public static GameObject CreateGameObject(string name, int layer, Transform parent = null,
+		public static GameObject CreateGameObject(string name,
+			int layer,
+			Transform parent = null,
 			string recordUndo = null)
 		{
 			return CreateGameObject(
@@ -703,8 +709,13 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			);
 		}
 
-		public static GameObject CreateGameObject(string name, int layer, Transform parent, Vector3 localPosition,
-			Quaternion localRotation, Vector3 localScale, string recordUndo = null)
+		public static GameObject CreateGameObject(string name,
+			int layer,
+			Transform parent,
+			Vector3 localPosition,
+			Quaternion localRotation,
+			Vector3 localScale,
+			string recordUndo = null)
 		{
 			var gameObject = new GameObject(
 				name
@@ -909,8 +920,11 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			return m;
 		}
 
-		public static Texture2D GetReadableCopy(Texture texture, TextureFormat format = TextureFormat.ARGB32,
-			bool mipMaps = false, int width = 0, int height = 0)
+		public static Texture2D GetReadableCopy(Texture texture,
+			TextureFormat format = TextureFormat.ARGB32,
+			bool mipMaps = false,
+			int width = 0,
+			int height = 0)
 		{
 			var newTexture = default(Texture2D);
 
@@ -1029,7 +1043,10 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			);
 		}
 
-		public static void DrawShapeOutline(Texture shapeTexture, int shapeChannel, Matrix4x4 shapeMatrix, Rect rect,
+		public static void DrawShapeOutline(Texture shapeTexture,
+			int shapeChannel,
+			Matrix4x4 shapeMatrix,
+			Rect rect,
 			Color color)
 		{
 			DrawShapeOutline(
@@ -1046,8 +1063,11 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			);
 		}
 
-		public static void DrawShapeOutline(Texture shapeTexture, int shapeChannel, Matrix4x4 shapeMatrix,
-			Vector4 coords, Color color)
+		public static void DrawShapeOutline(Texture shapeTexture,
+			int shapeChannel,
+			Matrix4x4 shapeMatrix,
+			Vector4 coords,
+			Color color)
 		{
 			if (shapeTexture != null)
 			{

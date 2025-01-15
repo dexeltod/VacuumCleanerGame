@@ -1,6 +1,6 @@
 namespace Sources.DomainInterfaces.DomainServicesInterfaces
 {
-	public interface IResource<T> : IReadOnlyProgressValue<T>
+	public interface IResource<in T>
 	{
 		void Set(T value);
 	}

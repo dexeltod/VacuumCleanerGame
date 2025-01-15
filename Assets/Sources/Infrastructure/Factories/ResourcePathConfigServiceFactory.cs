@@ -1,7 +1,7 @@
 using System;
+using Sources.BuisenessLogic.ServicesInterfaces;
 using Sources.Infrastructure.Common.Factory;
 using Sources.Infrastructure.Services;
-using Sources.ServicesInterfaces;
 
 namespace Sources.Infrastructure.Factories
 {
@@ -11,11 +11,8 @@ namespace Sources.Infrastructure.Factories
 
 		private readonly IAssetFactory _assetFactory;
 
-		public ResourcePathConfigServiceFactory(
-			IAssetFactory assetFactory
-		) =>
-			_assetFactory
-				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+		public ResourcePathConfigServiceFactory(IAssetFactory assetFactory) => _assetFactory
+			= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 
 		public override ResourcesPrefabs Create() =>
 			_assetFactory.LoadFromResources<ResourcesPrefabs>(ResourcePathConfigServicePath);

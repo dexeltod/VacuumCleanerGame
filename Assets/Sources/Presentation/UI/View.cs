@@ -1,8 +1,9 @@
+using Sources.PresentationInterfaces;
 using UnityEngine;
 
 namespace Sources.Presentation.UI
 {
-	public abstract class View : MonoBehaviour
+	public abstract class View : MonoBehaviour, IView
 	{
 		public virtual void Enable() =>
 			gameObject.SetActive(true);

@@ -1,10 +1,11 @@
 using System.Collections;
+using Sources.PresentationInterfaces;
 using TMPro;
 using UnityEngine;
 
 namespace Sources.Presentation.SceneEntity
 {
-	public class LoadingCurtain : MonoBehaviour
+	public class LoadingCurtain : MonoBehaviour, ILoadingCurtain
 	{
 		[SerializeField] private CanvasGroup _curtain;
 		[SerializeField] private TextMeshProUGUI _infoText;

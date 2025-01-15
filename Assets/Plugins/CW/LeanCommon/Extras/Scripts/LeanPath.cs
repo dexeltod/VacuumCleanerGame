@@ -250,8 +250,11 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			);
 		}
 
-		public bool TryGetClosest(Vector3 position, ref Vector3 closestPoint, ref int closestIndexA,
-			ref int closestIndexB, int smoothing = -1)
+		public bool TryGetClosest(Vector3 position,
+			ref Vector3 closestPoint,
+			ref int closestIndexA,
+			ref int closestIndexB,
+			int smoothing = -1)
 		{
 			var count = GetPointCount(
 				smoothing
@@ -319,7 +322,10 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			);
 		}
 
-		public bool TryGetClosest(Ray ray, ref Vector3 closestPoint, ref int closestIndexA, ref int closestIndexB,
+		public bool TryGetClosest(Ray ray,
+			ref Vector3 closestPoint,
+			ref int closestIndexA,
+			ref int closestIndexB,
 			int smoothing = -1)
 		{
 			var count = GetPointCount(

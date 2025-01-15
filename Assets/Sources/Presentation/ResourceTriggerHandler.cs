@@ -6,7 +6,8 @@ namespace Sources.Presentation
 {
 	public class ResourceTriggerHandler : MonoBehaviour
 	{
-		[FormerlySerializedAs("_view")] [SerializeField]
+		[FormerlySerializedAs("_view")]
+		[SerializeField]
 		private ResourcePresentation _presentation;
 
 		private void OnCollisionEnter(Collision other) =>

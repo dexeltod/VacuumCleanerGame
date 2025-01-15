@@ -5,6 +5,6 @@ namespace Sources.DomainInterfaces.Models.Shop
 {
 	public interface IShopModel
 	{
-		IReadOnlyList<IUpgradeEntityReadOnly> ProgressEntities { get; }
+		IReadOnlyList<IStatUpgradeEntityReadOnly> ProgressEntities { get; }
 	}
 }
