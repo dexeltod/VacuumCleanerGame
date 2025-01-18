@@ -1,6 +1,6 @@
-using Sources.BuisenessLogic.Services;
+using Sources.BusinessLogic.Services;
 
-namespace Sources.BuisenessLogic.Interfaces.Factory
+namespace Sources.BusinessLogic.Interfaces.Factory
 {
 	public interface IGameStateChangerFactory
 	{

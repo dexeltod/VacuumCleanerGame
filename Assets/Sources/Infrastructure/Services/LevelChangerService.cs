@@ -1,9 +1,9 @@
 using System;
-using Sources.BuisenessLogic.Interfaces;
-using Sources.BuisenessLogic.Services;
-using Sources.BuisenessLogic.ServicesInterfaces;
-using Sources.BuisenessLogic.ServicesInterfaces.Advertisement;
-using Sources.BuisenessLogic.States;
+using Sources.BusinessLogic.Interfaces;
+using Sources.BusinessLogic.Services;
+using Sources.BusinessLogic.ServicesInterfaces;
+using Sources.BusinessLogic.ServicesInterfaces.Advertisement;
+using Sources.BusinessLogic.States;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using UnityEngine;
@@ -20,7 +20,7 @@ namespace Sources.Infrastructure.Services
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IAdvertisement _rewardService;
 		private readonly ILeaderBoardService _leaderBoardService;
-		private readonly IPersistentProgressServiceProvider _persistentProgressServiceProvider;
+		private readonly IPersistentProgressService _persistentProgressService;
 
 		[Inject]
 		public LevelChangerService(
@@ -31,7 +31,7 @@ namespace Sources.Infrastructure.Services
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			IAdvertisement advertisement,
 			ILeaderBoardService leaderBoardService,
-			IPersistentProgressServiceProvider persistentProgressServiceProvider
+			IPersistentProgressService persistentProgressService
 		)
 		{
 			if (leaderBoardService == null)
@@ -39,44 +39,21 @@ namespace Sources.Infrastructure.Services
 					nameof(leaderBoardService)
 				);
 
-			_levelProgressFacade = levelProgressFacade ??
-			                       throw new ArgumentNullException(
-				                       nameof(levelProgressFacade)
-			                       );
-			_gameStateChanger = gameStateMachine ??
-			                    throw new ArgumentNullException(
-				                    nameof(gameStateMachine)
-			                    );
-			_levelConfigGetter = levelConfigGetter ??
-			                     throw new ArgumentNullException(
-				                     nameof(levelConfigGetter)
-			                     );
-			_resourcesProgressPresenter
-				= progressPresenter ??
-				  throw new ArgumentNullException(
-					  nameof(progressPresenter)
-				  );
+			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
+			_gameStateChanger = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
+			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
+			_resourcesProgressPresenter = progressPresenter ?? throw new ArgumentNullException(nameof(progressPresenter));
 			_progressSaveLoadDataService = progressSaveLoadDataService ??
-			                               throw new ArgumentNullException(
-				                               nameof(progressSaveLoadDataService)
-			                               );
+			                               throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 
-			_rewardService = advertisement ??
-			                 throw new ArgumentNullException(
-				                 nameof(advertisement)
-			                 );
-			_leaderBoardService = leaderBoardService ??
-			                      throw new ArgumentNullException(
-				                      nameof(leaderBoardService)
-			                      );
-			_persistentProgressServiceProvider = persistentProgressServiceProvider ??
-			                                     throw new ArgumentNullException(
-				                                     nameof(persistentProgressServiceProvider)
-			                                     );
+			_rewardService = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
+			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
+			_persistentProgressService =
+				persistentProgressService ?? throw new ArgumentNullException(nameof(persistentProgressService));
 		}
 
 		private int LevelProgressMaxTotalResourceCount =>
-			_persistentProgressServiceProvider.Self.GlobalProgress
+			_persistentProgressService.GlobalProgress
 				.LevelProgress.MaxTotalResourceCount;
 
 		private int LevelNumber => _levelProgressFacade.CurrentLevel;

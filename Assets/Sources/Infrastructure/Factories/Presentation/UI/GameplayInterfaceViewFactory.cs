@@ -9,7 +9,7 @@ using Sources.Presentation.UI;
 using Sources.PresentationInterfaces;
 using Sources.Utils.Enums;
 
-namespace Sources.Presentation.Factories.UI
+namespace Sources.Infrastructure.Factories.Presentation.UI
 {
 	public class GameplayInterfaceViewFactory
 	{

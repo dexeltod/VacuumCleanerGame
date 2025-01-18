@@ -1,6 +1,6 @@
-using Sources.BuisenessLogic.States.StateMachineInterfaces;
+using Sources.BusinessLogic.States.StateMachineInterfaces;
 
-namespace Sources.BuisenessLogic.Services
+namespace Sources.BusinessLogic.Services
 {
 	public interface IGameStateChanger
 	{

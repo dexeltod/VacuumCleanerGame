@@ -11,7 +11,7 @@ using Sources.PresentationInterfaces;
 using UnityEngine;
 using VContainer;
 
-namespace Sources.Presentation.Factories.LeaderBoard
+namespace Sources.Infrastructure.Factories.Presentation.LeaderBoard
 {
 	public class LeaderBoardPlayersFactory : ILeaderBoardPlayersFactory
 	{

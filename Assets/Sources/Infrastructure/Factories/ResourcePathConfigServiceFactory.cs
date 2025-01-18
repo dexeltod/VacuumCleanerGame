@@ -1,11 +1,10 @@
 using System;
-using Sources.BuisenessLogic.ServicesInterfaces;
-using Sources.Infrastructure.Common.Factory;
+using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Infrastructure.Services;
 
 namespace Sources.Infrastructure.Factories
 {
-	public sealed class ResourcePathConfigServiceFactory : Factory<ResourcesPrefabs>
+	public sealed class ResourcePathConfigServiceFactory
 	{
 		private const string ResourcePathConfigServicePath = "Config/ScriptableObjects/ResourcesPrefabs";
 
@@ -14,7 +13,7 @@ namespace Sources.Infrastructure.Factories
 		public ResourcePathConfigServiceFactory(IAssetFactory assetFactory) => _assetFactory
 			= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 
-		public override ResourcesPrefabs Create() =>
+		public ResourcesPrefabs Create() =>
 			_assetFactory.LoadFromResources<ResourcesPrefabs>(ResourcePathConfigServicePath);
 	}
 }

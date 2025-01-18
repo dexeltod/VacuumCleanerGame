@@ -1,4 +1,4 @@
-using Sources.BuisenessLogic.Interfaces;
+using Sources.BusinessLogic.Interfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Services.DomainServices;
 using Unity.Services.Core;
@@ -11,9 +11,8 @@ namespace Sources.Infrastructure.Factories.Domain
 
 		public ISaveLoader Create()
 		{
-			var cloudSaveLoader =
 #if !YANDEX_CODE
-				new UnityCloudSaveLoaderLoader();
+			var cloudSaveLoader = new UnityCloudSaveLoaderLoader();
 			return GetEditorSaveLoader();
 #endif
 #if YANDEX_CODE
@@ -27,7 +26,7 @@ namespace Sources.Infrastructure.Factories.Domain
 
 		private UnitySaveLoader GetEditorSaveLoader()
 		{
-			UnityServicesController controller = new UnityServicesController(new InitializationOptions());
+			UnityServices controller = new UnityServices(new InitializationOptions());
 
 			return new UnitySaveLoader(controller, _cloudSaveLoader);
 		}

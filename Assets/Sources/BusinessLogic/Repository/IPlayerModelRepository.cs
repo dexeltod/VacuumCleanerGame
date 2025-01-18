@@ -1,7 +1,7 @@
 using Sources.DomainInterfaces.Entities;
 using Sources.Utils.Enums;
 
-namespace Sources.BuisenessLogic.Repository
+namespace Sources.BusinessLogic.Repository
 {
 	public interface IPlayerModelRepository
 	{

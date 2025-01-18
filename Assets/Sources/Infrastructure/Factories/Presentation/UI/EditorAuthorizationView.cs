@@ -1,9 +1,10 @@
 using Sources.ControllersInterfaces;
+using Sources.Presentation;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
 using UnityEngine;
 
-namespace Sources.Presentation.Factories.UI
+namespace Sources.Infrastructure.Factories.Presentation.UI
 {
 	public class EditorAuthorizationView : PresentableCanvas<IAuthorizationPresenter>, IAuthorizationView
 	{

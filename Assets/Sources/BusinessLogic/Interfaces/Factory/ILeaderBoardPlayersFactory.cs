@@ -1,9 +1,10 @@
 using Cysharp.Threading.Tasks;
+using Sources.PresentationInterfaces;
 
-namespace Sources.BuisenessLogic.Interfaces.Factory
+namespace Sources.BusinessLogic.Interfaces.Factory
 {
 	public interface ILeaderBoardPlayersFactory
 	{
-		UniTask Create();
+		UniTask Create(ILeaderBoardView leaderBoardView);
 	}
 }

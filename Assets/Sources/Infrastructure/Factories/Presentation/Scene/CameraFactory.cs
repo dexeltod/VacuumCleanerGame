@@ -5,7 +5,7 @@ using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Infrastructure.Services;
 using UnityEngine;
 
-namespace Sources.Presentation.Factories.Scene
+namespace Sources.Infrastructure.Factories.Presentation.Scene
 {
 	public class CameraFactory : ICameraFactory
 	{

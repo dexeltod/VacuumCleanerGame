@@ -1,5 +1,5 @@
 using System;
-using Sources.BuisenessLogic.Repository;
+using Sources.BusinessLogic.Repository;
 using Sources.DomainInterfaces.Entities;
 using Sources.DomainInterfaces.Models;
 using Sources.Utils.Enums;

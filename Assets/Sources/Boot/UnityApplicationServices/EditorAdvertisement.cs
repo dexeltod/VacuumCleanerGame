@@ -1,6 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
-using Sources.BuisenessLogic.ServicesInterfaces.Advertisement;
+using Sources.BusinessLogic.ServicesInterfaces.Advertisement;
 using UnityEngine;
 
 namespace Sources.Boot.UnityApplicationServices

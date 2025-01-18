@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
-using Sources.Infrastructure.Services.SceneTriggers;
 using Sources.PresentationInterfaces;
 using Sources.Utils;
 using UnityEngine;

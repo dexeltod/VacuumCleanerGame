@@ -31,25 +31,13 @@ namespace Sources.Controllers
 			rigidbody
 		)
 		{
-			_joystick = joystick
-				? joystick
-				: throw new ArgumentNullException(
-					nameof(joystick)
-				);
-			_speedProgressValue = speedProgressValue ??
-			                      throw new ArgumentNullException(
-				                      nameof(speedProgressValue)
-			                      );
-			_rigidbody = rigidbody ??
-			             throw new ArgumentNullException(
-				             nameof(rigidbody)
-			             );
+			_joystick = joystick ? joystick : throw new ArgumentNullException(nameof(joystick));
+			_speedProgressValue = speedProgressValue ?? throw new ArgumentNullException(nameof(speedProgressValue));
+			_rigidbody = rigidbody ?? throw new ArgumentNullException(nameof(rigidbody));
 		}
 
 		public void Update(float deltaTime) =>
-			Move(
-				deltaTime
-			);
+			Move(deltaTime);
 
 		private void Move(float deltaTime)
 		{
@@ -66,12 +54,8 @@ namespace Sources.Controllers
 			if (Transform.position.y > MaxTransformHeight)
 				_offset.y = MaxTransformHeight;
 
-			MoveTo(
-				_offset
-			);
-			LookAt(
-				direction
-			);
+			MoveTo(_offset);
+			LookAt(direction);
 		}
 	}
 }

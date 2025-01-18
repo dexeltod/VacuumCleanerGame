@@ -1,6 +1,6 @@
-using Sources.BuisenessLogic.States.StateMachineInterfaces;
+using Sources.BusinessLogic.States.StateMachineInterfaces;
 
-namespace Sources.BuisenessLogic.Repository
+namespace Sources.BusinessLogic.Repository
 {
 	public interface IGameStateMachineRepository
 	{

@@ -1,6 +1,6 @@
 using Sources.DomainInterfaces;
 
-namespace Sources.BuisenessLogic.Interfaces
+namespace Sources.BusinessLogic.Interfaces
 {
 	public interface ILevelConfigGetter
 	{

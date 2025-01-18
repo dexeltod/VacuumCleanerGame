@@ -1,7 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
-using Sources.BuisenessLogic.Interfaces.Factory;
-using Sources.BuisenessLogic.Services;
+using Sources.BusinessLogic.Interfaces.Factory;
+using Sources.BusinessLogic.Services;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Services.DomainServices;
@@ -18,7 +18,7 @@ namespace Sources.Infrastructure.Services
 
 		private readonly BinaryDataSaveLoader _binaryDataSaveLoader;
 		private readonly JsonDataSaveLoader _jsonDataLoader;
-		private readonly IProgressCleaner _progressCleaner;
+		private readonly IClearProgressFactory _clearProgressFactory;
 
 		private IGlobalProgress _globalProgress;
 
@@ -27,12 +27,12 @@ namespace Sources.Infrastructure.Services
 			ISaveLoader saveLoader,
 			IPersistentProgressService progressService,
 			IInitialProgressFactory initialProgressFactory,
-			IProgressCleaner progressFactory
+			IClearProgressFactory clearProgressFactory
 		)
 		{
 			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
 			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
-			_progressCleaner = progressFactory ?? throw new ArgumentNullException(nameof(progressFactory));
+			_clearProgressFactory = clearProgressFactory ?? throw new ArgumentNullException(nameof(clearProgressFactory));
 
 			_jsonDataLoader = new JsonDataSaveLoader();
 		}
@@ -48,7 +48,7 @@ namespace Sources.Infrastructure.Services
 		}
 
 		public async UniTask ClearSaves() =>
-			await _saveLoader.Save(_progressCleaner.Clear());
+			await _saveLoader.Save(_clearProgressFactory.Create());
 
 		public async UniTask<IGlobalProgress> LoadFromCloud()
 		{

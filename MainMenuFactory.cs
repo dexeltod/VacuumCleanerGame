@@ -1,4 +1,6 @@
+using Sources.PresentationInterfaces;
+
 public interface IMainMenuFactory
 {
-	MainMenuView Create();
+	IMainMenuView Create();
 }

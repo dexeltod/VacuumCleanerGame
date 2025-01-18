@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Sources.Domain.Progress.ResourcesData
 {
 	[Serializable]
-	public abstract class Resource<T> : IResource<T>
+	public abstract class Resource<T> : IResource<T>, IReadOnlyProgress<T>
 	{
 		[SerializeField] private T _value;
 		[SerializeField] private int _id;

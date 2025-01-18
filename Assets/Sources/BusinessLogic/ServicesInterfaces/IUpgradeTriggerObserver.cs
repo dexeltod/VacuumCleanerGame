@@ -1,6 +1,6 @@
 using System;
 
-namespace Sources.BuisenessLogic.ServicesInterfaces
+namespace Sources.BusinessLogic.ServicesInterfaces
 {
 	public interface IUpgradeTriggerObserver
 	{

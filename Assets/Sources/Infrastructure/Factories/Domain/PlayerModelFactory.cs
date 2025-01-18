@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sources.BuisenessLogic.ServicesInterfaces;
+using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Domain.Player;
 using Sources.Domain.Progress;
 using Sources.Domain.Progress.Entities.Values;

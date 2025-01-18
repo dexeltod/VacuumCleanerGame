@@ -1,4 +1,5 @@
 #if YANDEX_CODE
+using Agava.YandexGames;
 using Sources.Infrastructure.Yandex;
 #endif
 

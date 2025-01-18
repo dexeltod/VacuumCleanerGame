@@ -1,22 +1,23 @@
 using System;
-using Sources.BuisenessLogic.Interfaces;
-using Sources.BuisenessLogic.Interfaces.Factory;
-using Sources.BuisenessLogic.Services;
-using Sources.BuisenessLogic.ServicesInterfaces;
-using Sources.BuisenessLogic.States;
+using Sources.BusinessLogic.Interfaces;
+using Sources.BusinessLogic.Interfaces.Factory;
+using Sources.BusinessLogic.Services;
+using Sources.BusinessLogic.ServicesInterfaces;
+using Sources.BusinessLogic.States;
 using Sources.ControllersInterfaces;
-using Sources.Domain.Settings;
 using Sources.DomainInterfaces;
+using Sources.InfrastructureInterfaces.Factories.Presentations;
+using Sources.InfrastructureInterfaces.Factories.Presenters;
 using Sources.PresentationInterfaces;
-using Sources.Utils;
 using Sources.Utils.ConstantNames;
-using UnityEngine.Audio;
 using VContainer;
 
-namespace Sources.BuisenessLogic.StateMachine.GameStates
+namespace Sources.BusinessLogic.StateMachine.GameStates
 {
 	public sealed class MenuState : IMenuState
 	{
+		private readonly IMainMenuFactory _mainMenuFactory;
+		private readonly GameFocusHandler _gameFocusHandlerProvider;
 		private readonly ILocalizationService _localizationService;
 		private readonly ISceneLoader _sceneLoader;
 		private readonly ILoadingCurtain _loadingCurtain;
@@ -25,6 +26,9 @@ namespace Sources.BuisenessLogic.StateMachine.GameStates
 		private readonly ILeaderBoardService _leaderBoardService;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IGameStateChanger _gameStateChanger;
+		private readonly IAuthorizationFactory _authorizationFactory;
+		private readonly ILeaderBoardPlayersFactory _leaderBoardPlayersFactory;
+		private readonly IMainMenuPresenterFactory _mainMenuPresenterFactory;
 
 		private readonly GameFocusHandler _gameFocusHandler;
 		private readonly IAuthorizationView _authorizationView;
@@ -39,6 +43,7 @@ namespace Sources.BuisenessLogic.StateMachine.GameStates
 
 		[Inject]
 		public MenuState(
+			IMainMenuFactory mainMenuFactory,
 			ISceneLoader sceneLoader,
 			ILoadingCurtain loadingCurtain,
 			IInjectableAssetFactory injectableAssetFactory,
@@ -48,38 +53,41 @@ namespace Sources.BuisenessLogic.StateMachine.GameStates
 			ILeaderBoardService leaderBoardService,
 			TranslatorService translatorService,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
-			IGameFocusHandler gameFocusHandlerProvider,
+			GameFocusHandler gameFocusHandlerProvider,
 			ILocalizationService localizationService,
 			ICloudServiceSdk cloudServiceSdk,
-			IGameStateChanger gameStateChanger
+			IGameStateChanger gameStateChanger,
+			IAuthorizationFactory authorizationFactory,
+			ILeaderBoardPlayersFactory leaderBoardPlayersFactory,
+			IMainMenuPresenterFactory mainMenuPresenterFactory
 		)
 		{
-			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
-			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
-			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
-			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
-
-			_progressSaveLoadDataService = progressSaveLoadDataService ??
-			                               throw new ArgumentNullException(nameof(progressSaveLoadDataService));
-
-			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
-			_injectableAssetFactory = injectableAssetFactory;
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_mainMenuFactory = mainMenuFactory ?? throw new ArgumentNullException(nameof(mainMenuFactory));
 			_sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
 			_loadingCurtain = loadingCurtain ?? throw new ArgumentNullException(nameof(loadingCurtain));
-
-			_gameFocusHandler = gameFocusHandlerProvider ??
-			                    throw new ArgumentNullException(nameof(gameFocusHandlerProvider));
-
+			_injectableAssetFactory = injectableAssetFactory ?? throw new ArgumentNullException(nameof(injectableAssetFactory));
+			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
+			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
+			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
+			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
+			_progressSaveLoadDataService = progressSaveLoadDataService ??
+			                               throw new ArgumentNullException(nameof(progressSaveLoadDataService));
+			_gameFocusHandlerProvider =
+				gameFocusHandlerProvider ?? throw new ArgumentNullException(nameof(gameFocusHandlerProvider));
+			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 			_cloudServiceSdk = cloudServiceSdk ?? throw new ArgumentNullException(nameof(cloudServiceSdk));
+			_gameStateChanger = gameStateChanger ?? throw new ArgumentNullException(nameof(gameStateChanger));
+			_authorizationFactory = authorizationFactory ?? throw new ArgumentNullException(nameof(authorizationFactory));
+			_leaderBoardPlayersFactory =
+				leaderBoardPlayersFactory ?? throw new ArgumentNullException(nameof(leaderBoardPlayersFactory));
+			_mainMenuPresenterFactory = mainMenuPresenterFactory;
 		}
 
 		public async void Enter()
 		{
-
-
 			_gameFocusHandler.Enable();
-
+			_mainMenuView = _mainMenuFactory.Create();
 			await _sceneLoader.Load(ConstantNames.MenuScene);
 
 			CreateMainMenuPresenter();
@@ -105,42 +113,11 @@ namespace Sources.BuisenessLogic.StateMachine.GameStates
 
 		private IMainMenuPresenter CreateMainMenuPresenter()
 		{
-			MainMenuFactory mainMenuFactory = new MainMenuFactory(
-				_injectableAssetFactory,
-				_translatorService
-			);
+			_authorizationPresenter = _authorizationFactory.Create(_mainMenuView);
 
-			_mainMenuView = mainMenuFactory.Create();
+			ILeaderBoardView leaderBoardView = _mainMenuView.LeaderBoardView.GetComponent<ILeaderBoardView>();
 
-			_authorizationPresenter = new AuthorizationFactory(
-				_injectableAssetFactory,
-				_cloudServiceSdk,
-				_mainMenuView,
-				_translatorService
-			).Create();
-
-			LeaderBoardView leaderBoardView = _mainMenuView.LeaderBoardView.GetComponent<LeaderBoardView>();
-
-			ILeaderBoardPlayersFactory leaderBoardPlayersFactory = new LeaderBoardPlayersFactory(
-				_assetFactory,
-				leaderBoardView,
-				_leaderBoardService,
-				_translatorService
-			);
-
-			_mainMenuPresenter = new MainMenuPresenter(
-				_mainMenuView,
-				_levelProgressFacade,
-				_gameStateChanger,
-				_levelConfigGetter,
-				_progressSaveLoadDataService,
-				_authorizationPresenter,
-				leaderBoardView,
-				_leaderBoardService,
-				_mainMenuView.GetComponent<SettingsView>(),
-				_assetFactory.LoadFromResources<AudioMixer>(ResourcesAssetPath.GameObjects.AudioMixer),
-				leaderBoardPlayersFactory,
-				new SoundSettings(PlayerPrefs.GetFloat(SettingsPlayerPrefsNames.MasterVolumeName))
+			_mainMenuPresenter = _mainMenuPresenterFactory.Create(_mainMenuView,)(
 			);
 
 			_mainMenuView.Construct(_mainMenuPresenter);

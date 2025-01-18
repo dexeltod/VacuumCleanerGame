@@ -4,13 +4,13 @@ using Sources.DomainInterfaces.DomainServicesInterfaces;
 namespace Sources.Domain.Progress.ResourcesData
 {
 	[Serializable]
-	public class IntCurrency : IResource<int>, IReadOnlyProgress<int>
+	public class IntCurrency : Resource<int>, IReadOnlyProgress<int>
 	{
 		private int _id;
 		private int _value;
 		private string _name;
 
-		public IntCurrency(int id, string name)
+		public IntCurrency(int id, string name, int value) : base(id, name, value)
 		{
 			if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(name));
 

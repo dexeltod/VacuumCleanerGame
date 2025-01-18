@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Sources.BuisenessLogic.ServicesInterfaces;
+using Sources.BusinessLogic.ServicesInterfaces;
 using UnityEngine;
 
-namespace Sources.BuisenessLogic
+namespace Sources.BusinessLogic
 {
 	public class TranslatorService
 	{

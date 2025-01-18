@@ -1,6 +1,6 @@
 using UnityEngine.UIElements;
 
-namespace Sources.BuisenessLogic.UiToolkitElements
+namespace Sources.BusinessLogic.UiToolkitElements
 {
 	public interface IVisualElement
 	{

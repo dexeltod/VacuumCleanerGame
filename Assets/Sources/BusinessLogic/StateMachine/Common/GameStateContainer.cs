@@ -1,7 +1,7 @@
 using System;
-using Sources.BuisenessLogic.States.StateMachineInterfaces;
+using Sources.BusinessLogic.States.StateMachineInterfaces;
 
-namespace Sources.BuisenessLogic.StateMachine.Common
+namespace Sources.BusinessLogic.StateMachine.Common
 {
 	public class GameStateContainer : IGameStateContainer
 	{

@@ -1,6 +1,6 @@
 using System;
-using Sources.BuisenessLogic.Services;
-using Sources.BuisenessLogic.States;
+using Sources.BusinessLogic.Services;
+using Sources.BusinessLogic.States;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
 using Sources.PresentationInterfaces;

@@ -1,6 +1,6 @@
 using System;
 
-namespace Sources.BuisenessLogic.Scene
+namespace Sources.BusinessLogic.Scene
 {
 	public interface ISceneLoadInformer
 	{

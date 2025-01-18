@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Sources.Presentation.Player
 {
-	public class SandParticleView : MonoBehaviour, ISandParticleSystem
+	public class SandParticleView : MonoBehaviour, ISandParticleView
 	{
 		[SerializeField] private ParticleSystem[] _particleSystem;
 

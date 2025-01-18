@@ -19,7 +19,7 @@ namespace Sources.Domain.Progress
 		[SerializeField] private PlayerModel _playerModel;
 
 		public ILevelProgress LevelProgress => _levelProgress;
-		public IResourceModelReadOnly ResourceModelReadOnly => _resource;
+		public IResourceModel ResourceModelReadOnly => _resource;
 		public IShopModel ShopModel => _shopModel;
 		public IPlayerModel PlayerModel => _playerModel;
 

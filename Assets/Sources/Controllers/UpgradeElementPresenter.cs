@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Sources.BuisenessLogic.Repository;
+using Sources.BusinessLogic.Repository;
 using Sources.Controllers.Common;
 using Sources.Controllers.Shop;
 using Sources.ControllersInterfaces;

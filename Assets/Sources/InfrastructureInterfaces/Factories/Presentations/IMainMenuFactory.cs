@@ -1,4 +1,4 @@
-namespace Sources.PresentationInterfaces.Factories
+namespace Sources.InfrastructureInterfaces.Factories.Presentations
 {
 	public interface IMainMenuFactory
 	{

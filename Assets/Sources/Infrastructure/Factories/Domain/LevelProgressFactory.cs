@@ -1,10 +1,9 @@
 using System;
 using Sources.Domain.Progress;
-using Sources.Infrastructure.Common.Factory;
 
 namespace Sources.Infrastructure.Factories.Domain
 {
-	public class LevelProgressFactory : Factory<LevelProgress>
+	public class LevelProgressFactory
 	{
 		private readonly int _firstLevel;
 		private readonly int _maxTotalResourcePoint;
@@ -18,7 +17,7 @@ namespace Sources.Infrastructure.Factories.Domain
 			_maxTotalResourcePoint = maxTotalResourcePoint;
 		}
 
-		public override LevelProgress Create() =>
+		public LevelProgress Create() =>
 			new(_firstLevel, _maxTotalResourcePoint);
 	}
 }

@@ -1,19 +1,30 @@
-using Sources.BuisenessLogic.Interfaces;
-using Sources.BuisenessLogic.ServicesInterfaces;
+using System;
+using Sources.BusinessLogic.Interfaces;
+using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Configs.Scripts.Level;
 using Sources.Utils;
+using VContainer;
 
 namespace Sources.Infrastructure.Services
 {
 	public sealed class LevelConfigGetter : ILevelConfigGetter
 	{
-		private readonly LevelsConfig _levelConfigs;
+		private readonly IAssetFactory _assetFactory;
+		private LevelsConfig _levelConfigs;
 
-		public LevelConfigGetter(IAssetFactory assetFactory) =>
-			_levelConfigs = assetFactory.LoadFromResources<LevelsConfig>(ResourcesAssetPath.Configs.LevelsConfig);
+		[Inject]
+		public LevelConfigGetter(IAssetFactory assetFactory)
+		{
+			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+		}
 
-		public ILevelConfig GetOrDefault(int levelNumber) =>
-			_levelConfigs.GetOrDefault(levelNumber);
+		public ILevelConfig GetOrDefault(int levelNumber)
+		{
+			if (_levelConfigs == null)
+				_levelConfigs = _assetFactory.LoadFromResources<LevelsConfig>(ResourcesAssetPath.Configs.LevelsConfig);
+
+			return _levelConfigs.GetOrDefault(levelNumber);
+		}
 	}
 }

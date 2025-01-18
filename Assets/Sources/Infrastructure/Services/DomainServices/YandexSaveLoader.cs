@@ -5,7 +5,7 @@ using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using UnityEngine;
 
-namespace Sources.Services.DomainServices
+namespace Sources.Infrastructure.Services.DomainServices
 {
 	public class YandexSaveLoader : ISaveLoader
 	{

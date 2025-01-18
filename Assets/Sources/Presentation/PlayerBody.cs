@@ -1,14 +1,13 @@
-using Sources.ControllersInterfaces;
-using Sources.DomainInterfaces;
-using Sources.Utils;
+using Sources.PresentationInterfaces;
 using UnityEngine;
 
-namespace Sources.BusinessLogic
+namespace Sources.Presentation
 {
 	public class PlayerBody : MonoBehaviour, IPlayer
 	{
-		public void Initialize(ITransformable model, Animator animator, AnimationHasher animationHasher)
-		{
-		}
+		public GameObject GameObject { get; private set; }
+
+		private void Awake() =>
+			GameObject = gameObject;
 	}
 }

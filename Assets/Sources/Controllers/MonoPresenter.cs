@@ -1,5 +1,5 @@
 using System;
-using Sources.Controllers.Common;
+using Sources.ControllersInterfaces;
 using Sources.PresentationInterfaces;
 using Sources.Utils;
 using UnityEngine;
@@ -7,9 +7,9 @@ using UnityEngine;
 namespace Sources.Controllers
 {
 	[RequireComponent(typeof(Rigidbody))]
-	public abstract class MonoPresenter : MonoBehaviour
+	public abstract class MonoPresenter : MonoBehaviour, IMonoPresenter
 	{
-		private Transformable _transformable;
+		private ITransformable _transformable;
 		private Animator _animator;
 
 		private IUpdatable _updatable = null;
@@ -18,7 +18,7 @@ namespace Sources.Controllers
 		private ParticleSystem _particleSystem;
 
 		public void Initialize(
-			Transformable model,
+			ITransformable model,
 			Animator animator,
 			AnimationHasher animationHasher
 		)

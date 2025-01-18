@@ -1,4 +1,4 @@
-using Sources.BuisenessLogic.UiToolkitElements;
+using Sources.BusinessLogic.UiToolkitElements;
 using Sources.Infrastructure.Services;
 using Sources.Infrastructure.UI;
 using UnityEngine.UIElements;

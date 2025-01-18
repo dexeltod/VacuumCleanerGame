@@ -1,11 +1,11 @@
 using System;
-using Sources.BuisenessLogic.ServicesInterfaces;
-using Sources.BuisenessLogic.States.StateMachineInterfaces;
+using Sources.BusinessLogic.ServicesInterfaces;
+using Sources.BusinessLogic.States.StateMachineInterfaces;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.PresentationInterfaces;
 
-namespace Sources.BuisenessLogic.StateMachine.GameStates
+namespace Sources.BusinessLogic.StateMachine.GameStates
 {
 	public sealed class GameLoopState : IGameState
 	{

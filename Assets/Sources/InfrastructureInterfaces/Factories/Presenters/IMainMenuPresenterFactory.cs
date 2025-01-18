@@ -1,17 +1,9 @@
 using Sources.DomainInterfaces;
 
-namespace Sources.ControllersInterfaces.Factories
+namespace Sources.InfrastructureInterfaces.Factories.Presenters
 {
 	public interface IMainMenuPresenterFactory
 	{
-		IMainMenuPresenter Create(IMainMenuView mainMenu,
-			ILevelProgressFacade levelProgress,
-			IGameStateChanger stateMachine,
-			ILevelConfigGetter levelConfigGetter,
-			IProgressSaveLoadDataService progressSaveLoadDataService,
-			IAuthorizationPresenter authorizationPresenter,
-			ILeaderBoardView leaderBoardView,
-			ILeaderBoardService leaderBoardService,
-			ILeaderBoardPlayersFactory leaderBoardPlayersFactory);
+		IMainMenuPresenter Create();
 	}
 }

@@ -1,15 +1,16 @@
 using System;
 using Plugins.Joystick_Pack.Scripts.Base;
-using Sources.BuisenessLogic.Interfaces.Factory;
-using Sources.BuisenessLogic.Repository;
-using Sources.BuisenessLogic.ServicesInterfaces;
+using Sources.BusinessLogic.Interfaces.Factory;
+using Sources.BusinessLogic.Repository;
+using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.ControllersInterfaces;
+using Sources.PresentationInterfaces;
 using Sources.Utils;
 using Sources.Utils.Enums;
 using UnityEngine;
 using VContainer;
 
-namespace Sources.Infrastructure.Factories.Player
+namespace Sources.Controllers.Factories
 {
 	public class PlayerFactory : IPlayerFactory
 	{
@@ -55,7 +56,7 @@ namespace Sources.Infrastructure.Factories.Player
 
 			AnimationHasher animationHasher = new AnimationHasher();
 
-			PlayerBody playerBodyComponentPresenter = GetPlayerBodyComponent(
+			IPlayer playerBodyComponentPresenter = GetPlayerBodyComponent(
 				spawnPoint
 			);
 

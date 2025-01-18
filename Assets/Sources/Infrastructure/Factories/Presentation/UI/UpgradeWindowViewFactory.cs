@@ -4,14 +4,14 @@ using Sources.BusinessLogic;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Controllers;
 using Sources.Infrastructure.Services.DomainServices;
+using Sources.InfrastructureInterfaces.Factories.Presentations;
 using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;
-using Sources.PresentationInterfaces.Factories;
 using Sources.Utils;
 using UnityEngine;
 using VContainer;
 
-namespace Sources.Presentation.Factories.UI
+namespace Sources.Infrastructure.Factories.Presentation.UI
 {
 	public class UpgradeWindowViewFactory : IUpgradeWindowViewFactory
 	{

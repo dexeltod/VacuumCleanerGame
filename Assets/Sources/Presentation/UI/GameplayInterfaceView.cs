@@ -15,29 +15,18 @@ using UnityEngine.UI;
 
 namespace Sources.Presentation.UI
 {
-	[RequireComponent(
-		typeof(Canvas)
-	)]
-	public class GameplayInterfaceView : PresentableView<IGameplayInterfacePresenter>,
-		IGameplayInterfaceView
+	[RequireComponent(typeof(Canvas))]
+	public class GameplayInterfaceView : PresentableView<IGameplayInterfacePresenter>, IGameplayInterfaceView
 	{
 		private const float MaxNormalizeThreshold = 1f;
 
-		[FormerlySerializedAs(
-			"_phrases"
-		)]
-		[FormerlySerializedAs(
-			"_phrasesTranslator"
-		)]
+		[FormerlySerializedAs("_phrases")]
+		[FormerlySerializedAs("_phrasesTranslator")]
 		[SerializeField]
 		private TextPhrasesList _phrasesList;
 
 //=============================Text=========================================================
-		[Header(
-			"Text"
-		)]
-		[SerializeField]
-		private TextMeshProUGUI _scoreCash;
+		[Header("Text")] [SerializeField] private TextMeshProUGUI _scoreCash;
 
 		[SerializeField] private TextMeshProUGUI _globalScoreText;
 		[SerializeField] private TextMeshProUGUI _maxGlobalScoreText;
@@ -46,9 +35,7 @@ namespace Sources.Presentation.UI
 
 //=============================Buttons===========================================================
 		[Space]
-		[Header(
-			"Buttons"
-		)]
+		[Header("Buttons")]
 		[SerializeField]
 		private Button _goToNextLevelButton;
 
@@ -56,9 +43,7 @@ namespace Sources.Presentation.UI
 
 //===============================Images============================================================
 		[Space]
-		[Header(
-			"Images"
-		)]
+		[Header("Images")]
 		[SerializeField]
 		private Image _scoreFillBar;
 
@@ -68,9 +53,7 @@ namespace Sources.Presentation.UI
 
 //=================================Other=======================================================
 		[Space]
-		[Header(
-			"Other"
-		)]
+		[Header("Other")]
 		[SerializeField]
 		private Joystick _joystick;
 
@@ -109,18 +92,14 @@ namespace Sources.Presentation.UI
 				);
 
 			if (cashScore < 0)
-				throw new ArgumentOutOfRangeException(
-					nameof(cashScore)
-				);
+				throw new ArgumentOutOfRangeException(nameof(cashScore));
 
 			if (maxGlobalScore < 0)
 				throw new ArgumentOutOfRangeException(
 					nameof(maxGlobalScore)
 				);
 
-			base.Construct(
-				gameplayInterfacePresenter
-			);
+			base.Construct(gameplayInterfacePresenter);
 
 			_goToNextLevelButton.gameObject.SetActive(
 				isHalfScoreReached

@@ -1,10 +1,11 @@
 using System;
+using Sources.BusinessLogic.ServicesInterfaces;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Sources.Infrastructure.Services
 {
-	public sealed class AssetFactory
+	public sealed class AssetFactory : IAssetFactory
 	{
 		public GameObject Instantiate(string path)
 		{

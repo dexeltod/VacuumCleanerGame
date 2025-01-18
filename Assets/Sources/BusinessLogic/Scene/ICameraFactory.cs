@@ -1,6 +1,6 @@
 using Cinemachine;
 
-namespace Sources.BuisenessLogic.Scene
+namespace Sources.BusinessLogic.Scene
 {
 	public interface ICameraFactory
 	{

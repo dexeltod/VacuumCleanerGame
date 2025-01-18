@@ -1,9 +1,7 @@
 using Cysharp.Threading.Tasks;
-using Unity.Services.Authentication;
 using Unity.Services.Core;
-using Unity.Services.Core.Environments;
 
-namespace Sources.Controllers
+namespace Sources.Infrastructure.Services
 {
 	public class UnityServices
 	{

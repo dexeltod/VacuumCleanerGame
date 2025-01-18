@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using Sources.BuisenessLogic.Repository;
-using Sources.BuisenessLogic.Services;
+using Sources.BusinessLogic.Repository;
+using Sources.BusinessLogic.Services;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using UnityEngine;
@@ -13,7 +13,7 @@ namespace Sources.Infrastructure.Factories.Progress
 	public class ProgressFactory
 	{
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
-		private readonly IProgressCleaner _progressCleaner;
+		private readonly IClearProgressFactory _clearProgressFactory;
 		private readonly ProgressServiceRegister _progressServiceRegister;
 
 		private readonly ISaveLoader _saveLoader;
@@ -23,7 +23,7 @@ namespace Sources.Infrastructure.Factories.Progress
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			IPersistentProgressService persistentProgressServiceProvider,
 			ISaveLoader saveLoaderProvider,
-			IProgressCleaner progressCleaner,
+			IClearProgressFactory clearProgressFactory,
 			IProgressEntityRepository progressEntityRepositoryProvider,
 			IPlayerModelRepository playerModelRepositoryProvider,
 			ProgressServiceRegister progressServiceRegister
@@ -32,7 +32,7 @@ namespace Sources.Infrastructure.Factories.Progress
 			_progressSaveLoadDataService = progressSaveLoadDataService ??
 			                               throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 			_saveLoader = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
-			_progressCleaner = progressCleaner ?? throw new ArgumentNullException(nameof(progressCleaner));
+			_clearProgressFactory = clearProgressFactory ?? throw new ArgumentNullException(nameof(clearProgressFactory));
 			_progressServiceRegister = progressServiceRegister ??
 			                           throw new ArgumentNullException(nameof(progressServiceRegister));
 		}
@@ -60,7 +60,7 @@ namespace Sources.Infrastructure.Factories.Progress
 
 			Debug.Log("New progress creating");
 
-			loadedProgress = _progressCleaner.Clear();
+			loadedProgress = _clearProgressFactory.Create();
 
 			await _saveLoader.Save(loadedProgress);
 			return loadedProgress;

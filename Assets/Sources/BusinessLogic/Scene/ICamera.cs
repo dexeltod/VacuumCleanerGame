@@ -1,3 +1,3 @@
-namespace Sources.BuisenessLogic.Scene
+namespace Sources.BusinessLogic.Scene
 {
 }

@@ -1,8 +1,8 @@
-namespace Sources.InfrastructureInterfaces
+namespace Sources.BusinessLogic.Interfaces.Configs
 {
 	public interface IResourcesPrefabs
 	{
-		SceneGameObjects SceneGameObjects { get; }
-		Triggers Triggers { get; }
+		ISceneGameObjects SceneGameObjects { get; }
+		ITriggers Triggers { get; }
 	}
 }

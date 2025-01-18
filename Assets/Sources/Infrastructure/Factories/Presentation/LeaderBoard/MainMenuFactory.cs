@@ -1,14 +1,14 @@
 using System;
 using Sources.BusinessLogic;
 using Sources.BusinessLogic.ServicesInterfaces;
+using Sources.InfrastructureInterfaces.Factories.Presentations;
 using Sources.Presentation.UI;
 using Sources.PresentationInterfaces;
-using Sources.PresentationInterfaces.Factories;
 using Sources.Utils;
 using UnityEngine;
 using VContainer;
 
-namespace Sources.Presentation.Factories.LeaderBoard
+namespace Sources.Infrastructure.Factories.Presentation.LeaderBoard
 {
 	public class MainMenuFactory : IMainMenuFactory
 	{

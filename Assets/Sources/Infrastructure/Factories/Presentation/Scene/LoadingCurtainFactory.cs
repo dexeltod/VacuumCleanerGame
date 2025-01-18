@@ -5,7 +5,7 @@ using Sources.PresentationInterfaces;
 using Sources.Utils;
 using VContainer;
 
-namespace Sources.Presentation.Factories.Scene
+namespace Sources.Infrastructure.Factories.Presentation.Scene
 {
 	public class LoadingCurtainFactory
 	{

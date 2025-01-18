@@ -1,35 +1,31 @@
 using System;
-using Sources.BuisenessLogic;
-using Sources.BuisenessLogic.Interfaces;
-using Sources.BuisenessLogic.Interfaces.Factory;
-using Sources.BuisenessLogic.Interfaces.Factory.StateMachine;
-using Sources.BuisenessLogic.Scene;
-using Sources.BuisenessLogic.ServicesInterfaces;
-using Sources.BuisenessLogic.StateMachine.GameStates;
-using Sources.ControllersInterfaces;
-using Sources.Domain.Progress;
+using Sources.BusinessLogic;
+using Sources.BusinessLogic.Interfaces;
+using Sources.BusinessLogic.Interfaces.Configs;
+using Sources.BusinessLogic.Interfaces.Factory;
+using Sources.BusinessLogic.Interfaces.Factory.StateMachine;
+using Sources.BusinessLogic.Scene;
+using Sources.BusinessLogic.ServicesInterfaces;
+using Sources.BusinessLogic.StateMachine.GameStates;
+using Sources.Controllers.Factories;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Domain;
-using Sources.Infrastructure.Factories.Player;
+using Sources.Infrastructure.Factories.Presentation;
+using Sources.Infrastructure.Factories.Presentation.LeaderBoard;
+using Sources.Infrastructure.Factories.Presentation.Scene;
+using Sources.Infrastructure.Factories.Presentation.UI;
 using Sources.Infrastructure.Factories.Presenters;
 using Sources.Infrastructure.Factories.Progress;
 using Sources.Infrastructure.Leaderboard;
 using Sources.Infrastructure.Services;
 using Sources.Infrastructure.Services.DomainServices;
 using Sources.InfrastructureInterfaces.Configs.Scripts;
-using Sources.Presentation.Factories;
-using Sources.Presentation.Factories.Scene;
-using Sources.Presentation.Factories.UI;
-using Sources.Presentation.SceneEntity;
-using Sources.PresentationInterfaces;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 #if YANDEX_CODE
-using Sources.Infrastructure.Yandex;
-using Sources.Services.DomainServices.YandexLeaderboard;
 #endif
 
 namespace Sources.Boot.Scripts
@@ -37,10 +33,13 @@ namespace Sources.Boot.Scripts
 	public class ServiceRegister
 	{
 		private readonly IContainerBuilder _builder;
+		private readonly IObjectResolver _resolver;
 		private IAssetFactory _assetFactory;
 
-		public ServiceRegister(IContainerBuilder builder) =>
+		public ServiceRegister(IContainerBuilder builder)
+		{
 			_builder = builder ?? throw new ArgumentNullException(nameof(builder));
+		}
 
 		public void Register()
 		{
@@ -61,24 +60,21 @@ namespace Sources.Boot.Scripts
 			).As<IAssetFactory>().AsSelf();
 
 			_builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
+			_builder.Register<IResourcesPrefabs, ResourcesPrefabs>(Lifetime.Singleton);
 			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
 			_builder.Register<TranslatorService>(Lifetime.Singleton);
-
-			_builder.RegisterFactory<IGlobalProgress, GlobalProgress>(
-				resolver => { await resolver.Resolve<ProgressFactory>().Create(); },
-				Lifetime.Singleton
-			);
+			_builder.Register<InitialProgressFactory>(Lifetime.Singleton).AsImplementedInterfaces();
 
 			_builder.Register<ProgressionConfig>(Lifetime.Singleton);
 			_builder.Register<ProgressServiceRegister>(Lifetime.Singleton);
 
-			_builder.Register<ProgressCleaner>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+			_builder.Register<ClearProgressFactory>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
 			RegisterLoadingCurtain();
 
 			#endregion
 
-			new ProviderRegister(_builder, _assetFactory).Register();
+			new ProviderRegister(_builder).Register();
 
 			_builder.Register<GameStateChangerFactory>(Lifetime.Scoped).AsImplementedInterfaces();
 			_builder.Register<GameStatesRepositoryFactory>(Lifetime.Scoped);
@@ -87,10 +83,9 @@ namespace Sources.Boot.Scripts
 
 			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Scoped);
 
-			_builder.Register<IPresentableFactory<IUpgradeWindowPresentation, IUpgradeWindowPresenter>,
-				UpgradeWindowViewFactory>(Lifetime.Scoped).AsImplementedInterfaces();
-
 			_builder.Register<ShopViewFactory>(Lifetime.Scoped);
+			_builder.Register<MainMenuFactory>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
+			_builder.Register<LeaderBoardPlayersFactory>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
 
 			_builder.Register<SaveLoaderFactory>(
 				Lifetime.Scoped
@@ -154,14 +149,7 @@ namespace Sources.Boot.Scripts
 
 		private void RegisterLoadingCurtain() =>
 			_builder.Register(
-				container =>
-				{
-					LoadingCurtain loadingCurtain = container.Resolve<LoadingCurtainFactory>().Create();
-					loadingCurtain.gameObject.SetActive(
-						true
-					);
-					return loadingCurtain;
-				},
+				container => container.Resolve<LoadingCurtainFactory>().Create(),
 				Lifetime.Singleton
 			).AsImplementedInterfaces().AsSelf();
 
@@ -184,8 +172,7 @@ namespace Sources.Boot.Scripts
 			_builder.RegisterInstance<IResourcesRepository>
 			(
 				new ResourcesRepository(
-					resourceServiceFactory.CreateIntCurrencies(),
-					resourceServiceFactory.GetFloatResources()
+					resourceServiceFactory.CreateIntCurrencies()
 				)
 			);
 		}

@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using Plugins.Joystick_Pack.Scripts.Base;
-using Sources.BuisenessLogic.Interfaces;
+using Sources.BusinessLogic.Interfaces;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;

@@ -1,9 +1,9 @@
 using System;
-using Sources.BuisenessLogic.Interfaces.Common.Factories;
-using Sources.BuisenessLogic.Services;
-using Sources.BuisenessLogic.StateMachine.Common;
+using Sources.BusinessLogic.Interfaces.Common.Factories;
+using Sources.BusinessLogic.Services;
+using Sources.BusinessLogic.StateMachine.Common;
 
-namespace Sources.BuisenessLogic.Interfaces.Factory.StateMachine
+namespace Sources.BusinessLogic.Interfaces.Factory.StateMachine
 {
 	public class GameStateChangerFactory : IFactory<IGameStateChanger>, IGameStateChangerFactory
 	{

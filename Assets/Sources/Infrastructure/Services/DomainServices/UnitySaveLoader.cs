@@ -1,6 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
-using Sources.BuisenessLogic.Interfaces;
+using Sources.BusinessLogic.Interfaces;
 using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
@@ -12,17 +12,17 @@ namespace Sources.Infrastructure.Services.DomainServices
 	{
 		private const string GameProgressKey = "GameProgress";
 
-		private readonly UnityServicesController _unityServicesController;
+		private readonly UnityServices _unityServices;
 		private readonly ICloudSaveLoader _unityCloudSaveLoaderLoader;
-		private UnityServicesController _controller;
+		private UnityServices _controller;
 
 		public UnitySaveLoader(
-			UnityServicesController unityServicesController,
+			UnityServices unityServices,
 			ICloudSaveLoader unityCloudSaveLoaderLoader
 		)
 		{
-			_unityServicesController = unityServicesController ??
-			                           throw new ArgumentNullException(nameof(unityServicesController));
+			_unityServices = unityServices ??
+			                 throw new ArgumentNullException(nameof(unityServices));
 			_unityCloudSaveLoaderLoader
 				= unityCloudSaveLoaderLoader ?? throw new ArgumentNullException(nameof(unityCloudSaveLoaderLoader));
 		}
@@ -42,7 +42,7 @@ namespace Sources.Infrastructure.Services.DomainServices
 		}
 
 		public async UniTask Initialize() =>
-			await _unityServicesController.InitializeUnityServices();
+			await _unityServices.InitializeUnityServices();
 
 		private IGlobalProgress DeserializeJson(string jsonSave)
 		{

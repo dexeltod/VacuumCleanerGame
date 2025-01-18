@@ -1,4 +1,4 @@
-namespace Sources.BuisenessLogic.ServicesInterfaces
+namespace Sources.BusinessLogic.ServicesInterfaces
 {
 	public interface ILocalizationService
 	{

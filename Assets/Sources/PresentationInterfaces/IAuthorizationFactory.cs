@@ -1,7 +1,9 @@
+using Sources.ControllersInterfaces;
+
 namespace Sources.PresentationInterfaces
 {
 	public interface IAuthorizationFactory
 	{
-		AuthorizationPresenter Create();
+		IAuthorizationPresenter Create(IMainMenuView view);
 	}
 }

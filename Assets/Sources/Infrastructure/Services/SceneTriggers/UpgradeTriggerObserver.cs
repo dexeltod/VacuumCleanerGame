@@ -1,6 +1,6 @@
 using System;
-using Sources.BuisenessLogic.ServicesInterfaces;
-using Sources.DomainInterfaces;
+using Sources.BusinessLogic.ServicesInterfaces;
+using Sources.PresentationInterfaces;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Services.SceneTriggers

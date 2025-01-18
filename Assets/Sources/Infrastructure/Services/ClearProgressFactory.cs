@@ -1,9 +1,8 @@
 using System;
-using Sources.BuisenessLogic.Interfaces.Factory;
-using Sources.BuisenessLogic.Services;
+using Sources.BusinessLogic.Interfaces.Factory;
+using Sources.BusinessLogic.Services;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Factories.Progress;
-using Sources.Infrastructure.Services.DomainServices;
 using VContainer;
 
 namespace Sources.Infrastructure.Services
@@ -11,15 +10,13 @@ namespace Sources.Infrastructure.Services
 	public class ClearProgressFactory : IClearProgressFactory
 	{
 		private readonly IInitialProgressFactory _initialProgressFactory;
-		private readonly IPersistentProgressService _progressServiceProvider;
+		private readonly IPersistentProgressServiceUpdatable _progressServiceProvider;
 		private readonly ProgressServiceRegister _progressServiceRegister;
-		private readonly PersistentProgressService _persistentProgressService;
-		private readonly IClearProgressFactory _clearProgressFactory;
 
 		[Inject]
 		public ClearProgressFactory(
 			IInitialProgressFactory initialProgressFactory,
-			IPersistentProgressService progressServiceProvider,
+			IPersistentProgressServiceUpdatable progressServiceProvider,
 			ProgressServiceRegister progressServiceRegister
 		)
 		{
@@ -31,7 +28,7 @@ namespace Sources.Infrastructure.Services
 		{
 			IGlobalProgress clearedProgress = _initialProgressFactory.Create();
 
-			_persistentProgressService.Update(clearedProgress);
+			_progressServiceProvider.Update(clearedProgress);
 
 			_progressServiceRegister.Do(clearedProgress);
 			return clearedProgress;

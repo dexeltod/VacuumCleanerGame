@@ -1,4 +1,4 @@
-namespace Sources.BuisenessLogic.Interfaces
+namespace Sources.BusinessLogic.Interfaces
 {
 	public interface ILevelChangerService
 	{

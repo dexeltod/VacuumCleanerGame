@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using Sources.BuisenessLogic.Interfaces;
+using Sources.BusinessLogic.Interfaces;
 using Sources.DomainInterfaces;
 using Unity.Services.CloudSave;
 

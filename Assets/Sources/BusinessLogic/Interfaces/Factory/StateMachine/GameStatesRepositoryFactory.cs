@@ -1,10 +1,10 @@
 using System;
-using Sources.BuisenessLogic.Interfaces.Common.Factories;
-using Sources.BuisenessLogic.Repository;
-using Sources.BuisenessLogic.StateMachine.GameStates;
-using Sources.BuisenessLogic.States;
+using Sources.BusinessLogic.Interfaces.Common.Factories;
+using Sources.BusinessLogic.Repository;
+using Sources.BusinessLogic.StateMachine.GameStates;
+using Sources.BusinessLogic.States;
 
-namespace Sources.BuisenessLogic.Interfaces.Factory.StateMachine
+namespace Sources.BusinessLogic.Interfaces.Factory.StateMachine
 {
 	public class GameStatesRepositoryFactory : IFactory<GameStateMachineRepository>
 	{

@@ -1,9 +1,10 @@
 using System;
+using Sources.ControllersInterfaces;
 using UnityEngine;
 
 namespace Sources.Controllers.Common
 {
-	public abstract class Transformable
+	public abstract class Transformable : ITransformable
 	{
 		private readonly Rigidbody _rigidbody;
 		public virtual Transform Transform { get; private set; }

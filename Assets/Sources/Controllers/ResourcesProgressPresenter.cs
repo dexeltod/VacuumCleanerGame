@@ -1,6 +1,6 @@
 using System;
-using Sources.BuisenessLogic.Providers;
-using Sources.BuisenessLogic.Services;
+using Sources.BusinessLogic.Providers;
+using Sources.BusinessLogic.Services;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;

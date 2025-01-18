@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using Sources.BuisenessLogic.Services;
+using Sources.BusinessLogic.Services;
 using Sources.PresentationInterfaces.Player;
 using Sources.Utils;
 using UnityEngine;
@@ -9,18 +9,18 @@ namespace Sources.Infrastructure.Services
 {
 	public class SandParticlePlayerSystem : ISandParticlePlayerSystem
 	{
-		private readonly ISandParticleSystem _sandParticleSystem;
+		private readonly ISandParticleView _sandParticleView;
 		private readonly ICoroutineRunner _coroutineRunner;
 		private readonly WaitForSeconds _waitForSeconds;
-		private ISandParticleSystem _particleSystem;
+		private ISandParticleView _particleView;
 
 		public SandParticlePlayerSystem(
-			ISandParticleSystem sandParticleSystem,
+			ISandParticleView sandParticleView,
 			ICoroutineRunner coroutineRunner,
 			int playTime
 		)
 		{
-			_sandParticleSystem = sandParticleSystem ?? throw new ArgumentNullException(nameof(sandParticleSystem));
+			_sandParticleView = sandParticleView ?? throw new ArgumentNullException(nameof(sandParticleView));
 			_coroutineRunner = coroutineRunner ?? throw new ArgumentNullException(nameof(coroutineRunner));
 
 			if (playTime <= 0) throw new ArgumentOutOfRangeException(nameof(playTime));
@@ -33,12 +33,12 @@ namespace Sources.Infrastructure.Services
 
 		private IEnumerator PlayParticleSystem()
 		{
-			_particleSystem = _sandParticleSystem;
-			_particleSystem.Play();
+			_particleView = _sandParticleView;
+			_particleView.Play();
 
 			yield return _waitForSeconds;
 
-			_particleSystem.Stop();
+			_particleView.Stop();
 		}
 	}
 }

@@ -12,7 +12,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-namespace Sources.Presentation.Factories.Scene
+namespace Sources.Infrastructure.Factories.Presentation.Scene
 {
 	public class RockFactory
 	{

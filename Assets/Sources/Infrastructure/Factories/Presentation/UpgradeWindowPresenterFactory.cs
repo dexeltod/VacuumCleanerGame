@@ -4,13 +4,14 @@ using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Controllers;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
+using Sources.Infrastructure.Factories.Presentation.UI;
 using Sources.Infrastructure.Services.SceneTriggers;
-using Sources.Presentation.Factories.UI;
+using Sources.InfrastructureInterfaces.Factories.Presenters;
 using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;
 using Sources.Utils;
 
-namespace Sources.Presentation.Factories
+namespace Sources.Infrastructure.Factories.Presentation
 {
 	public class UpgradeWindowPresenterFactory : PresenterFactory<IUpgradeWindowPresenter>, IUpgradeWindowPresenterFactory
 	{

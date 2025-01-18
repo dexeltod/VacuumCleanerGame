@@ -1,7 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 
-namespace Sources.BuisenessLogic.ServicesInterfaces.Advertisement
+namespace Sources.BusinessLogic.ServicesInterfaces.Advertisement
 {
 	public interface IAdvertisement
 	{

@@ -1,5 +1,5 @@
 using System;
-using Sources.BuisenessLogic.Repository;
+using Sources.BusinessLogic.Repository;
 using Sources.ControllersInterfaces;
 using Sources.Utils.Enums;
 using UnityEngine;

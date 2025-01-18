@@ -1,4 +1,4 @@
-namespace Sources.ControllersInterfaces
+namespace Sources.InfrastructureInterfaces.Factories.Presenters
 {
 	public interface IResourcesProgressPresenterFactory
 	{

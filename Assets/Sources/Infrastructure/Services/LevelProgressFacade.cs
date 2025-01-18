@@ -1,5 +1,5 @@
 using System;
-using Sources.BuisenessLogic.ServicesInterfaces;
+using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.DomainInterfaces;
 using VContainer;
 
@@ -7,27 +7,27 @@ namespace Sources.Infrastructure.Services
 {
 	public class LevelProgressFacade : ILevelProgressFacade
 	{
-		private readonly IPersistentProgressServiceProvider _progressService;
+		private readonly IPersistentProgressService _progressService;
 		private const int OnePoint = 1;
 		private const int MaxScoreDelta = 50;
 		private const int MaxScore = 500;
 
 		[Inject]
-		public LevelProgressFacade(IPersistentProgressServiceProvider progressService) =>
+		public LevelProgressFacade(IPersistentProgressService progressService) =>
 			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
 
-		public int CurrentLevel => _progressService.Self.GlobalProgress.LevelProgress.CurrentLevel;
+		public int CurrentLevel => _progressService.GlobalProgress.LevelProgress.CurrentLevel;
 
 		public int MaxTotalResourceCount =>
-			_progressService.Self.GlobalProgress.ResourceModelReadOnly.MaxTotalResourceCount;
+			_progressService.GlobalProgress.ResourceModelReadOnly.MaxTotalResourceCount;
 
-		private ILevelProgress LevelProgress => _progressService.Self.GlobalProgress.LevelProgress;
+		private ILevelProgress LevelProgress => _progressService.GlobalProgress.LevelProgress;
 
 		private IResourceModel ResourceModel =>
-			_progressService.Self.GlobalProgress.ResourceModelReadOnly as IResourceModel;
+			_progressService.GlobalProgress.ResourceModelReadOnly;
 
 		private IResourceModelReadOnly ResourceModelReadOnly =>
-			_progressService.Self.GlobalProgress.ResourceModelReadOnly as IResourceModelReadOnly;
+			_progressService.GlobalProgress.ResourceModelReadOnly;
 
 		public void SetNextLevel()
 		{

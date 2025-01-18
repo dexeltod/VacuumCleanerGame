@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Sources.Boot.MainMenu;
-using Sources.BuisenessLogic.Interfaces;
-using Sources.BuisenessLogic.ServicesInterfaces;
+using Sources.BusinessLogic.Interfaces;
+using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Infrastructure.Services;
 using Sources.Infrastructure.UI;
 using UnityEngine;

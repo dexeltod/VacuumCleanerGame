@@ -1,6 +1,6 @@
 using System;
 
-namespace Sources.BuisenessLogic.ServicesInterfaces.StateMachine
+namespace Sources.BusinessLogic.ServicesInterfaces.StateMachine
 {
 	public interface IState
 	{

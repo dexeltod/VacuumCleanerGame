@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using Agava.YandexGames;
 using Cysharp.Threading.Tasks;
-using Sources.BuisenessLogic.ServicesInterfaces.Advertisement;
+using Sources.BusinessLogic.ServicesInterfaces.Advertisement;
 using Sources.Utils;
 using UnityEngine;
 

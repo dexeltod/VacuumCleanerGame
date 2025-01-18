@@ -1,9 +1,9 @@
 using System;
-using Sources.BuisenessLogic.Interfaces;
-using Sources.BuisenessLogic.Interfaces.Factory;
-using Sources.BuisenessLogic.Services;
-using Sources.BuisenessLogic.ServicesInterfaces;
-using Sources.BuisenessLogic.States;
+using Sources.BusinessLogic.Interfaces;
+using Sources.BusinessLogic.Interfaces.Factory;
+using Sources.BusinessLogic.Services;
+using Sources.BusinessLogic.ServicesInterfaces;
+using Sources.BusinessLogic.States;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
 using Sources.Domain.Settings;
@@ -25,7 +25,6 @@ namespace Sources.Controllers.MainMenu
 		private readonly ILeaderBoardView _leaderBoardView;
 		private readonly ILeaderBoardService _leaderBoardService;
 		private readonly ISettingsView _settingsView;
-		private readonly AudioMixer _mixer;
 		private readonly ILeaderBoardPlayersFactory _leaderBoardPlayersFactory;
 		private readonly SoundSettings _soundSettings;
 		private readonly SettingsPresenter _settingsPresenter;
@@ -60,7 +59,6 @@ namespace Sources.Controllers.MainMenu
 			_leaderBoardView = leaderBoardView ?? throw new ArgumentNullException(nameof(leaderBoardView));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
 			_settingsView = settingsView ?? throw new ArgumentNullException(nameof(settingsView));
-			_mixer = mixer ?? throw new ArgumentNullException(nameof(mixer));
 			_leaderBoardPlayersFactory = leaderBoardPlayersFactory ??
 			                             throw new ArgumentNullException(nameof(leaderBoardPlayersFactory));
 			_soundSettings = soundSettings ?? throw new ArgumentNullException(nameof(soundSettings));

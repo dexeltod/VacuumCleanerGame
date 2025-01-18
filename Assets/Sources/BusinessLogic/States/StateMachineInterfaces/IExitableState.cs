@@ -1,4 +1,4 @@
-namespace Sources.BuisenessLogic.States.StateMachineInterfaces
+namespace Sources.BusinessLogic.States.StateMachineInterfaces
 {
 	public interface IExitableState
 	{

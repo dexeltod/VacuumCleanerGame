@@ -1,5 +1,5 @@
 using System;
-using Sources.BuisenessLogic.ServicesInterfaces;
+using Sources.BusinessLogic.ServicesInterfaces;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;

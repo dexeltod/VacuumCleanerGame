@@ -1,7 +1,7 @@
-using Sources.BuisenessLogic.States.StateMachineInterfaces;
+using Sources.BusinessLogic.States.StateMachineInterfaces;
 using Sources.DomainInterfaces;
 
-namespace Sources.BuisenessLogic.States
+namespace Sources.BusinessLogic.States
 {
 	public interface IBuildSceneState : IGameState<ILevelConfig>
 	{

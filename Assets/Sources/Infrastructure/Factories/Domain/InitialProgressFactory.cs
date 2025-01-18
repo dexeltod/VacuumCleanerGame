@@ -1,24 +1,25 @@
 using System;
+using Sources.BusinessLogic.Interfaces.Factory;
+using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Repository;
-using Sources.Infrastructure.Services;
 using Sources.Infrastructure.Services.DomainServices;
 using Sources.Utils.AssetPaths;
 
 namespace Sources.Infrastructure.Factories.Domain
 {
-	public class InitialProgressFactory
+	public class InitialProgressFactory : IInitialProgressFactory
 	{
 		private readonly IResourcesRepository _resourcesRepository;
-		private readonly AssetFactory _assetFactory;
+		private readonly IAssetFactory _assetFactory;
 
 		public InitialProgressFactory(
 			IResourcesRepository resourcesRepository,
 			PersistentProgressService persistentProgressServiceProvider,
 			ProgressEntityRepository progressEntityRepositoryProvider,
-			AssetFactory assetFactory
+			IAssetFactory assetFactory
 		)
 		{
 			_resourcesRepository = resourcesRepository ?? throw new ArgumentNullException(nameof(resourcesRepository));

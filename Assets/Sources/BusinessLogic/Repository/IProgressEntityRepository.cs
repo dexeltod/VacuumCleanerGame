@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Sources.DomainInterfaces.Models.Shop.Upgrades;
 using Sources.InfrastructureInterfaces.Configs;
 
-namespace Sources.BuisenessLogic.Repository
+namespace Sources.BusinessLogic.Repository
 {
 	public interface IProgressEntityRepository
 	{

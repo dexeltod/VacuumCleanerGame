@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Sources.BuisenessLogic.States.StateMachineInterfaces;
+using Sources.BusinessLogic.States.StateMachineInterfaces;
 
-namespace Sources.BuisenessLogic.Repository
+namespace Sources.BusinessLogic.Repository
 {
 	public sealed class GameStateMachineRepository : IGameStateMachineRepository
 	{

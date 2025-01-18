@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sources.BuisenessLogic.Repository;
-using Sources.BuisenessLogic.ServicesInterfaces;
+using Sources.BusinessLogic.Repository;
+using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.Models.Shop.Upgrades;
 using Sources.Infrastructure.Factories.UpgradeEntitiesConfigs;

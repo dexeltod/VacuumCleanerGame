@@ -1,6 +1,6 @@
 using Sources.DomainInterfaces;
 
-namespace Sources.BuisenessLogic.Services
+namespace Sources.BusinessLogic.Services
 {
 	public interface IPersistentProgressServiceUpdatable
 	{

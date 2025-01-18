@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using Plugins.CW.LeanLocalization.Required.Scripts;
-using Sources.BuisenessLogic.ServicesInterfaces;
+using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Domain.SerializableLocalization;
 using Sources.Utils;
 using UnityEngine;
 
-namespace Sources.BuisenessLogic
+namespace Sources.BusinessLogic
 {
 	public class LocalizationService : ILocalizationService
 	{

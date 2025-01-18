@@ -21,11 +21,13 @@ namespace Sources.Presentation.Common
 				TextPhrases = textPhrases;
 		}
 
-		public void Construct(RectTransform rectTransform, T presenter = default(T), ITextPhrases textPhrases = null)
+		public void Construct(RectTransform rectTransform,
+			T presenter = default,
+			ITextPhrases textPhrases = null)
 		{
 			RectTransform = rectTransform;
 
-			if (presenter != default(T))
+			if (presenter != null)
 				Presenter = presenter;
 
 			if (TextPhrases != textPhrases)

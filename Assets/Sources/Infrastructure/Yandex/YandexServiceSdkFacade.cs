@@ -1,3 +1,7 @@
+#if YANDEX_CODE
+using Agava.YandexGames;
+#endif
+
 namespace Sources.Infrastructure.Yandex
 {
 #if YANDEX_CODE

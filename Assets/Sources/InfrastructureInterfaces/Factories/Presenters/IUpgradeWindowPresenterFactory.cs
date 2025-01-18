@@ -1,6 +1,4 @@
-using Sources.ControllersInterfaces;
-
-namespace Sources.PresentationInterfaces
+namespace Sources.InfrastructureInterfaces.Factories.Presenters
 {
 	public interface IUpgradeWindowPresenterFactory
 	{

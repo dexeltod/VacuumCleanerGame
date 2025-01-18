@@ -6,7 +6,7 @@ namespace Sources.ControllersInterfaces
 	public interface IMonoPresenter
 	{
 		void Initialize(
-			Transformable model,
+			ITransformable model,
 			Animator animator,
 			AnimationHasher animationHasher
 		);

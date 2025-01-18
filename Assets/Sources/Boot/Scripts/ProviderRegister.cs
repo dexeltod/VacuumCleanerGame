@@ -1,16 +1,14 @@
-using System;
 using Sources.Boot.UnityApplicationServices;
-using Sources.BuisenessLogic.Interfaces.Factory.StateMachine;
-using Sources.BuisenessLogic.Services;
-using Sources.BuisenessLogic.ServicesInterfaces;
-using Sources.BuisenessLogic.ServicesInterfaces.Advertisement;
+using Sources.BusinessLogic.Interfaces.Factory.StateMachine;
+using Sources.BusinessLogic.Services;
+using Sources.BusinessLogic.ServicesInterfaces;
+using Sources.BusinessLogic.ServicesInterfaces.Advertisement;
 using Sources.Controllers;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.CoroutineRunner;
 using Sources.Infrastructure.Factories;
 using Sources.Infrastructure.Factories.Domain;
 using Sources.Infrastructure.Repository;
-using Sources.Infrastructure.Services;
 using Sources.Presentation.SceneEntity;
 using Sources.Utils;
 using Sources.Utils.Scene;
@@ -22,14 +20,10 @@ namespace Sources.Boot.Scripts
 	public class ProviderRegister
 	{
 		private readonly IContainerBuilder _builder;
-		private readonly IObjectResolver _resolver;
-		private readonly IAssetFactory _assetFactory;
 
-		public ProviderRegister(IObjectResolver resolver, IContainerBuilder containerBuilder, IAssetFactory assetFactory)
+		public ProviderRegister(IContainerBuilder containerBuilder)
 		{
-			_resolver = resolver;
 			_builder = containerBuilder;
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 		}
 
 		public void Register()
@@ -42,62 +36,65 @@ namespace Sources.Boot.Scripts
 
 			_builder.Register<SandCarContainerView>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
-			_builder.Register<FillMeshShaderControllerProvider>(
+			_builder.Register<FillMeshShaderController>(
 				Lifetime.Singleton
 			).AsImplementedInterfaces().AsSelf();
 
-			_builder.Register<PlayerModelRepository>(
-				Lifetime.Singleton
-			).AsImplementedInterfaces().AsSelf();
+			_builder.Register<PlayerModelRepository>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
-			_builder.Register<GameFocusHandler>(
-				_ =>
+			_builder.Register(
+				resolver =>
 				{
-					var audioMixer = _assetFactory.LoadFromResources<AudioMixer>(ResourcesAssetPath.GameObjects.AudioMixer);
-					var applicationQuitHandler = _assetFactory.InstantiateAndGetComponent<ApplicationQuitHandler>(
-						ResourcesAssetPath.GameObjects
-							.ApplicationQuitHandler
-					);
+					var assetFactory = resolver.Resolve<IAssetFactory>();
 
-					return new GameFocusHandler(audioMixer, applicationQuitHandler);
+					return new GameFocusHandler(
+						assetFactory.LoadFromResources<AudioMixer>(ResourcesAssetPath.GameObjects.AudioMixer),
+						assetFactory.InstantiateAndGetComponent<ApplicationQuitHandler>(
+							ResourcesAssetPath.GameObjects
+								.ApplicationQuitHandler
+						)
+					);
 				},
 				Lifetime.Singleton
 			).AsImplementedInterfaces().AsSelf();
 
-			_builder.Register<SandParticleSystemProvider>(_ => { }
-			Lifetime.Singleton
+			_builder.Register <
+				GetPlayerLanguage() >
+				(
+					Lifetime.Singleton
 				).AsImplementedInterfaces().AsSelf();
-
-			_builder.Register<CloudServiceSdkFacadeProvider>(
-				Lifetime.Singleton
-			).AsImplementedInterfaces().AsSelf();
 
 			_builder.Register<AdvertisementPresenter>(_ => new AdvertisementPresenter(RegisterAdvertisement()), Lifetime.Singleton)
 				.AsImplementedInterfaces().AsSelf();
 
-			_builder.Register<GameMenuPresenterProvider>(
+			_builder.Register<GameMenuPresenter>(
 				Lifetime.Singleton
 			).AsImplementedInterfaces().AsSelf();
 
 			_builder.Register<ISaveLoader>(_ => new SaveLoaderFactory().Create(), Lifetime.Singleton).AsImplementedInterfaces()
 				.AsSelf();
 
-			_builder.Register<GameplayInterfacePresenterProvider>(
+			_builder.Register<GameplayInterfacePresenter>(
 					Lifetime.Singleton
 				).AsImplementedInterfaces()
 				.AsSelf();
 
-			_builder.Register<UpgradeWindowPresenterProvider>(
+			_builder.Register<UpgradeWindowPresenter>(
 				Lifetime.Singleton
 			);
 			_builder.Register(
-				_ => _assetFactory.LoadFromResources<CoroutineRunner>(ResourcesAssetPath.GameObjects.CoroutineRunner),
+				resolver =>
+				{
+					var assetFactory = resolver.Resolve<IAssetFactory>();
+
+					return assetFactory.LoadFromResources<CoroutineRunner>(ResourcesAssetPath.GameObjects.CoroutineRunner);
+				},
 				Lifetime.Singleton
 			).AsSelf().AsImplementedInterfaces();
 
 			_builder.RegisterFactory(() => new CloudPlayerDataServiceFactory().Create());
 
-			_builder.Register<ResourcesProgressPresenterProvider>(
+			_builder.Register<ResourcesProgressPresenter>(
 					Lifetime.Singleton
 				).AsImplementedInterfaces()
 				.AsSelf();
@@ -106,7 +103,10 @@ namespace Sources.Boot.Scripts
 				Lifetime.Singleton
 			);
 
-			_builder.Register((_) => new ResourcePathConfigServiceFactory(_assetFactory).Create(), Lifetime.Singleton).;
+			_builder.Register(
+				(resolver) => new ResourcePathConfigServiceFactory(resolver.Resolve<IAssetFactory>()).Create(),
+				Lifetime.Singleton
+			);
 		}
 
 		private IAdvertisement RegisterAdvertisement()

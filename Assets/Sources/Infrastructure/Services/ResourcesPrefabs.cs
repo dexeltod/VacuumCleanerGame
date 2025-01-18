@@ -1,29 +1,29 @@
 using System;
-using Sources.Infrastructure.Services.SceneTriggers;
+using Sources.BusinessLogic.Interfaces.Configs;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Services
 {
 	[CreateAssetMenu(fileName = "ResourcesPrefabs", menuName = "ViewConfigs/ResourcesPrefabs")]
-	public class ResourcesPrefabs : ScriptableObject
+	public class ResourcesPrefabs : ScriptableObject, IResourcesPrefabs
 	{
 		[SerializeField] private SceneGameObjects _sceneGameObjects;
 		[SerializeField] private Triggers _triggers;
 
-		public SceneGameObjects SceneGameObjects => _sceneGameObjects;
-		public Triggers Triggers => _triggers;
+		public ISceneGameObjects SceneGameObjects => _sceneGameObjects;
+		public ITriggers Triggers => _triggers;
 	}
 
 	[Serializable]
-	public class Triggers
+	public class Triggers : ITriggers
 	{
-		[SerializeField] private TriggerReloadController _sellTrigger;
+		[SerializeField] private GameObject _sellTrigger;
 
-		public TriggerReloadController SellTrigger => _sellTrigger;
+		public GameObject SellTrigger => _sellTrigger;
 	}
 
 	[Serializable]
-	public class SceneGameObjects
+	public class SceneGameObjects : ISceneGameObjects
 	{
 		[SerializeField] private GameObject _spawnPoint;
 		[SerializeField] private GameObject _sandContainer;

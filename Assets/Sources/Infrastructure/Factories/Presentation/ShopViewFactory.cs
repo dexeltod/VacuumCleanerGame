@@ -17,7 +17,7 @@ using UnityEngine;
 using VContainer;
 using Object = UnityEngine.Object;
 
-namespace Sources.Presentation.Factories
+namespace Sources.Infrastructure.Factories.Presentation
 {
 	public class ShopViewFactory
 	{

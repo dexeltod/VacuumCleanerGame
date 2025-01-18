@@ -1,4 +1,4 @@
-namespace Sources.BuisenessLogic.Interfaces.Common.Factories
+namespace Sources.BusinessLogic.Interfaces.Common.Factories
 {
 	public interface IFactory<out T>
 	{

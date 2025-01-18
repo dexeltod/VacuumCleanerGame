@@ -1,8 +1,9 @@
 using System;
 using Sources.Controllers;
+using Sources.Presentation;
 using UnityEngine;
 
-namespace Sources.Presentation.Factories
+namespace Sources.Infrastructure.Factories.Presentation
 {
 	public class FillAreaShaderControllerFactory
 

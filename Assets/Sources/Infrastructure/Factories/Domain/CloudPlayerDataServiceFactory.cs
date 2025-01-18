@@ -1,4 +1,4 @@
-using Sources.BuisenessLogic.Interfaces;
+using Sources.BusinessLogic.Interfaces;
 using Sources.Infrastructure.Services;
 #if YANDEX_CODE
 using Sources.Infrastructure.Adapters;

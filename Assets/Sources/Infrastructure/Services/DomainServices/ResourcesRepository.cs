@@ -1,22 +1,19 @@
 using System;
 using System.Collections.Generic;
-using Sources.Domain.Progress.ResourcesData;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 
 namespace Sources.Infrastructure.Services.DomainServices
 {
 	public class ResourcesRepository : IResourcesRepository
 	{
-		private readonly Dictionary<int, IntCurrency> _intResources;
+		private readonly Dictionary<int, IResource<int>> _intResources;
 		private readonly Dictionary<int, IResource<float>> _floatResources;
 
 		public ResourcesRepository(
-			Dictionary<int, IntCurrency> intResources,
-			Dictionary<int, IResource<float>> floatResources
+			Dictionary<int, IResource<int>> intResources
 		)
 		{
 			_intResources = intResources;
-			_floatResources = floatResources;
 		}
 
 		public IResource<T> GetResource<T>(int id) =>

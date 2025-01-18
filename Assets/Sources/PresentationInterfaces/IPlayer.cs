@@ -1,6 +1,9 @@
-namespace Sources.DomainInterfaces
+using UnityEngine;
+
+namespace Sources.PresentationInterfaces
 {
 	public interface IPlayer
 	{
+		GameObject GameObject { get; }
 	}
 }

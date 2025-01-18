@@ -1,6 +1,6 @@
-using Sources.BuisenessLogic.States.StateMachineInterfaces;
+using Sources.BusinessLogic.States.StateMachineInterfaces;
 
-namespace Sources.BuisenessLogic.States
+namespace Sources.BusinessLogic.States
 {
 	public interface IMenuState : IGameState
 	{

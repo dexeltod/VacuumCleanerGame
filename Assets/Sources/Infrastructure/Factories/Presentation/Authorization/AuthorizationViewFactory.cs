@@ -1,14 +1,14 @@
 using System;
 using Sources.BusinessLogic;
 using Sources.BusinessLogic.ServicesInterfaces;
-using Sources.Presentation.Factories.UI;
+using Sources.Infrastructure.Factories.Presentation.UI;
 using Sources.Presentation.UI;
 using Sources.Presentation.UI.YandexAuthorization;
 using Sources.PresentationInterfaces;
 using Sources.Utils;
 using UnityEngine;
 
-namespace Sources.Presentation.Factories.Authorization
+namespace Sources.Infrastructure.Factories.Presentation.Authorization
 {
 	public class AuthorizationViewFactory
 	{

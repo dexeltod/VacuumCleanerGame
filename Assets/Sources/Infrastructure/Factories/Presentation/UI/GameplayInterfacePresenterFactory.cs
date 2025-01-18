@@ -14,13 +14,14 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.Entities;
 using Sources.Infrastructure.Services.Decorators;
+using Sources.InfrastructureInterfaces.Factories.Presentations;
+using Sources.Presentation;
 using Sources.Presentation.UI;
-using Sources.PresentationInterfaces.Factories;
 using Sources.Utils;
 using Sources.Utils.Enums;
 using VContainer;
 
-namespace Sources.Presentation.Factories.UI
+namespace Sources.Infrastructure.Factories.Presentation.UI
 {
 	public class GameplayInterfacePresenterFactory : PresenterFactory<IGameplayInterfacePresenter>,
 		IGameplayInterfacePresenterFactory

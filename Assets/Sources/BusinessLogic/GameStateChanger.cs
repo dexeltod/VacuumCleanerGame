@@ -1,9 +1,9 @@
 using System;
-using Sources.BuisenessLogic.Repository;
-using Sources.BuisenessLogic.Services;
-using Sources.BuisenessLogic.States.StateMachineInterfaces;
+using Sources.BusinessLogic.Repository;
+using Sources.BusinessLogic.Services;
+using Sources.BusinessLogic.States.StateMachineInterfaces;
 
-namespace Sources.BuisenessLogic
+namespace Sources.BusinessLogic
 {
 	public sealed class GameStateChanger : IGameStateChanger
 	{

@@ -4,7 +4,7 @@ using Sources.Utils.Scene;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace Sources.BuisenessLogic.Services
+namespace Sources.BusinessLogic.Services
 {
 	public class GameFocusHandler
 	{

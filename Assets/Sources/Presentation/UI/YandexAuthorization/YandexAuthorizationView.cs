@@ -1,4 +1,6 @@
+using System;
 using Sources.ControllersInterfaces;
+using Sources.Domain.Interfaces;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
 using UnityEngine;
@@ -11,6 +13,8 @@ namespace Sources.Presentation.UI.YandexAuthorization
 		[SerializeField] private GameObject _yesNoButtons;
 		[SerializeField] private Button _yesButton;
 		[SerializeField] private Button _noButton;
+
+		private IAuthorizationPresenter AuthorizationPresenter => (IAuthorizationPresenter)Presenter;
 
 		public override void Enable()
 		{
@@ -27,9 +31,14 @@ namespace Sources.Presentation.UI.YandexAuthorization
 		}
 
 		private void OnNoButtonClicked() =>
-			Presenter.SetChoice(false);
+			AuthorizationPresenter.SetChoice(false);
 
 		private void OnYesButtonClicked() =>
-			Presenter.SetChoice(true);
+			AuthorizationPresenter.SetChoice(true);
+
+		public void Construct(IPresenter presenter, RectTransform rectTransform = null, ITextPhrases textPhrases = null)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

@@ -14,5 +14,7 @@ namespace Sources.PresentationInterfaces
 		Button SettingsButton { get; }
 		GameObject LeaderBoardView { get; }
 		Button AddLeadersButton { get; }
+
+		ISettingsView GetSettingsView();
 	}
 }

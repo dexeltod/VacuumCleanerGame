@@ -1,13 +1,15 @@
 using System;
 using Sources.BusinessLogic.Repository;
+using Sources.Controllers;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Services;
+using Sources.InfrastructureInterfaces.Factories.Presenters;
 using Sources.PresentationInterfaces.Player;
 using Sources.Utils;
 using Sources.Utils.Enums;
 
-namespace Sources.Controllers.Factories.Presenters
+namespace Sources.Infrastructure.Factories.Presenters
 {
 	public class ResourcesProgressPresenterFactory : IResourcesProgressPresenterFactory
 	{

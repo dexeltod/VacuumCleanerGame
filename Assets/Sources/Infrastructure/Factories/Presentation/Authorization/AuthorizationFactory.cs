@@ -7,7 +7,7 @@ using Sources.Infrastructure.Services;
 using Sources.PresentationInterfaces;
 using UnityEngine;
 
-namespace Sources.Presentation.Factories.Authorization
+namespace Sources.Infrastructure.Factories.Presentation.Authorization
 {
 	public sealed class AuthorizationFactory : IAuthorizationFactory
 	{

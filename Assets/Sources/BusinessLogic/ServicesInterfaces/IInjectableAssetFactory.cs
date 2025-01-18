@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Sources.BuisenessLogic.ServicesInterfaces
+namespace Sources.BusinessLogic.ServicesInterfaces
 {
 	public interface IInjectableAssetFactory : IAssetFactory
 	{

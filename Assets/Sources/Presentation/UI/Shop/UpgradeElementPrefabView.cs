@@ -35,6 +35,8 @@ namespace Sources.Presentation.UI.Shop
 		private int _id;
 		private int _maxPoints;
 
+		IUpgradeElementPresenter UpgradeElementPresenter => Presenter as IUpgradeElementPresenter;
+
 		public void Construct(
 			Sprite icon,
 			IUpgradeElementPresenter presenter,
@@ -95,7 +97,7 @@ namespace Sources.Presentation.UI.Shop
 			_buttonBuy.onClick.RemoveListener(OnBuyButtonPressed);
 
 		private void OnBuyButtonPressed() =>
-			Presenter.Upgrade(_id);
+			UpgradeElementPresenter.Upgrade(_id);
 
 		private void InstantiatePoints()
 		{

@@ -41,5 +41,7 @@ namespace Sources.Presentation.Common
 
 		public virtual void SetParent(Transform parent) =>
 			transform.SetParent(parent);
+
+		public Transform Transform => transform;
 	}
 }

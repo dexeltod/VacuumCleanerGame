@@ -25,6 +25,7 @@ namespace Sources.Presentation
 		public override void Enable()
 		{
 			base.Enable();
+			Presenter.Enable();
 			_openMenuButton.onClick.AddListener(() => OnSetActiveMenuWindow(true));
 			_closeMenuButton.onClick.AddListener(() => OnSetActiveMenuWindow(false));
 			_goToMainMenuButton.onClick.AddListener(OnGoToMainMenu);
@@ -33,6 +34,8 @@ namespace Sources.Presentation
 		public override void Disable()
 		{
 			base.Disable();
+			Presenter.Disable();
+
 			_goToMainMenuButton.onClick.RemoveListener(OnGoToMainMenu);
 			_openMenuButton.onClick.RemoveListener(() => OnSetActiveMenuWindow(true));
 			_closeMenuButton.onClick.RemoveListener(() => OnSetActiveMenuWindow(false));

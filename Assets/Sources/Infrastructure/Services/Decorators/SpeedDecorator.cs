@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using Sources.BuisenessLogic.ServicesInterfaces.Advertisement;
+using Sources.BusinessLogic.ServicesInterfaces.Advertisement;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.Entities;
 using Sources.Infrastructure.Services.Decorators.Common;

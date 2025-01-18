@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sources.BuisenessLogic.Repository;
+using Sources.BusinessLogic.Repository;
 using Sources.DomainInterfaces.Models.Shop.Upgrades;
 using Sources.InfrastructureInterfaces.Configs;
 
