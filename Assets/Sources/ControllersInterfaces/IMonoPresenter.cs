@@ -1,0 +1,14 @@
+using Sources.Utils;
+using UnityEngine;
+
+namespace Sources.ControllersInterfaces
+{
+	public interface IMonoPresenter
+	{
+		void Initialize(
+			Transformable model,
+			Animator animator,
+			AnimationHasher animationHasher
+		);
+	}
+}

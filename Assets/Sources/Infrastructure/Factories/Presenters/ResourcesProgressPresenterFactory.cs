@@ -1,34 +1,31 @@
 using System;
-using Sources.BuisenessLogic.Repository;
+using Sources.BusinessLogic.Repository;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.Infrastructure.Services;
-using Sources.Infrastructure.Services.DomainServices;
 using Sources.PresentationInterfaces.Player;
 using Sources.Utils;
 using Sources.Utils.Enums;
-using VContainer;
 
-namespace Sources.Infrastructure.Factories.Presenters
+namespace Sources.Controllers.Factories.Presenters
 {
-	public class ResourcesProgressPresenterFactory
+	public class ResourcesProgressPresenterFactory : IResourcesProgressPresenterFactory
 	{
 		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenterProvider;
-		private readonly PersistentProgressService _persistentProgressService;
+		private readonly IPersistentProgressService _persistentProgressService;
 		private readonly IFillMeshShaderController _fillMeshShaderControllerProvider;
-		private readonly ISandParticleSystem _sandParticleSystemProvider;
+		private readonly ISandParticleView _sandParticleViewProvider;
 		private readonly ICoroutineRunner _coroutineRunnerProvider;
 		private readonly IPlayerModelRepository _playerModelRepositoryProvider;
 
 		private IResourceModelReadOnly ResourceModelReadOnly =>
 			_persistentProgressService.GlobalProgress.ResourceModelReadOnly;
 
-		[Inject]
 		public ResourcesProgressPresenterFactory(
 			IGameplayInterfacePresenter gameplayInterfacePresenterProvider,
-			PersistentProgressService persistentProgressService,
+			IPersistentProgressService persistentProgressService,
 			IFillMeshShaderController fillMeshShaderControllerProvider,
-			ISandParticleSystem sandParticleSystemProvider,
+			ISandParticleView sandParticleViewProvider,
 			ICoroutineRunner coroutineRunnerProvider,
 			IPlayerModelRepository playerModelRepositoryProvider
 		)
@@ -39,8 +36,8 @@ namespace Sources.Infrastructure.Factories.Presenters
 			                             throw new ArgumentNullException(nameof(persistentProgressService));
 			_fillMeshShaderControllerProvider = fillMeshShaderControllerProvider ??
 			                                    throw new ArgumentNullException(nameof(fillMeshShaderControllerProvider));
-			_sandParticleSystemProvider = sandParticleSystemProvider ??
-			                              throw new ArgumentNullException(nameof(sandParticleSystemProvider));
+			_sandParticleViewProvider = sandParticleViewProvider ??
+			                            throw new ArgumentNullException(nameof(sandParticleViewProvider));
 			_coroutineRunnerProvider = coroutineRunnerProvider ??
 			                           throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 			_playerModelRepositoryProvider = playerModelRepositoryProvider ??
@@ -51,7 +48,7 @@ namespace Sources.Infrastructure.Factories.Presenters
 		{
 			var sandParticlePlayerSystem
 				= new SandParticlePlayerSystem(
-					_sandParticleSystemProvider,
+					_sandParticleViewProvider,
 					_coroutineRunnerProvider,
 					playTime: 1
 				);
