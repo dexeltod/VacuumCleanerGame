@@ -5,6 +5,7 @@ using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.Models;
 using Sources.DomainInterfaces.Models.Shop;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Sources.Domain.Progress
 {
@@ -16,24 +17,26 @@ namespace Sources.Domain.Progress
 		[SerializeField] private LevelProgress _levelProgress;
 		[SerializeField] private ShopModel _shopModel;
 
-		[SerializeField] private PlayerModel _playerModel;
+		[FormerlySerializedAs("_playerModel")]
+		[SerializeField]
+		private PlayerStatsModel _playerStatsModel;
 
 		public ILevelProgress LevelProgress => _levelProgress;
 		public IResourceModel ResourceModelReadOnly => _resource;
 		public IShopModel ShopModel => _shopModel;
-		public IPlayerModel PlayerModel => _playerModel;
+		public IPlayerStatsModel PlayerStatsModel => _playerStatsModel;
 
 		public bool Validate() =>
 			_resource != null &&
 			_levelProgress != null &&
 			_shopModel != null &&
-			_playerModel != null &&
+			_playerStatsModel != null &&
 			_shopModel.ProgressEntities != null;
 
 		public GlobalProgress(ResourceModel resourceModel,
 			LevelProgress levelProgress,
 			ShopModel shopModel,
-			PlayerModel playerModel
+			PlayerStatsModel playerStatsModel
 		)
 		{
 			_resource = resourceModel ?? throw new ArgumentNullException(nameof(resourceModel));
@@ -45,7 +48,7 @@ namespace Sources.Domain.Progress
 			if (shopModel.ProgressEntities == null)
 				throw new ArgumentNullException(nameof(shopModel.ProgressEntities));
 
-			_playerModel = playerModel ?? throw new ArgumentNullException(nameof(playerModel));
+			_playerStatsModel = playerStatsModel ?? throw new ArgumentNullException(nameof(playerStatsModel));
 		}
 	}
 }

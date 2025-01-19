@@ -123,7 +123,7 @@ namespace Sources.Controllers.MainMenu
 
 			if (_leaderboardInitialized == false)
 			{
-				_leaderBoardPlayersFactory.Create();
+				_leaderBoardPlayersFactory.Create(_leaderBoardView);
 				_leaderboardInitialized = true;
 			}
 

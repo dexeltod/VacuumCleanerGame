@@ -2,16 +2,16 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Sources.Boot.Scripts.Factories;
+using Sources.Boot.Scripts.Factories.Domain;
+using Sources.Boot.Scripts.Factories.Progress;
+using Sources.Boot.Scripts.Factories.StateMachine;
 using Sources.BusinessLogic.Interfaces.Factory;
-using Sources.BusinessLogic.Interfaces.Factory.StateMachine;
 using Sources.BusinessLogic.Services;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.BusinessLogic.States;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.Infrastructure.Factories;
-using Sources.Infrastructure.Factories.Domain;
-using Sources.Infrastructure.Factories.Progress;
 using Sources.Infrastructure.Services;
 using VContainer;
 using VContainer.Unity;
@@ -20,13 +20,13 @@ namespace Sources.Boot.Scripts
 {
 	public class GameBuilder : IAsyncStartable
 	{
-		private readonly IGameStateChanger _gameStateChangerProvider;
+		private readonly IGameStateChanger _gameStateChanger;
 		private readonly ProgressFactory _progressFactory;
 		private readonly ISaveLoader _saveLoader;
 		private readonly IGameStateChangerFactory _gameStateChangerFactory;
 		private readonly ResourcePathConfigServiceFactory _resourcePathConfigServiceFactory;
 		private readonly ResourcesPrefabs _pathNameConfigProvider;
-		private readonly IPersistentProgressServiceUpdatable _persistentProgressService;
+		private readonly IUpdatablePersistentProgressService _updatablePersistentProgressService;
 		private readonly ISaveLoader _saveLoaderProvider;
 		private readonly SaveLoaderFactory _saveLoaderFactory;
 		private readonly IAdvertisementPresenter _advertisement;
@@ -40,7 +40,7 @@ namespace Sources.Boot.Scripts
 			IGameStateChangerFactory gameStateChangerFactory,
 			ResourcePathConfigServiceFactory resourcePathConfigServiceFactory,
 			ResourcesPrefabs pathNameConfigProvider,
-			IPersistentProgressServiceUpdatable persistentProgressService,
+			IUpdatablePersistentProgressService updatablePersistentProgressService,
 			ISaveLoader saveLoaderProvider,
 			SaveLoaderFactory saveLoaderFactory,
 			IAdvertisementPresenter advertisement,
@@ -49,7 +49,7 @@ namespace Sources.Boot.Scripts
 		{
 			_progressFactory = progressFactory ?? throw new ArgumentNullException(nameof(progressFactory));
 			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
-			_gameStateChangerProvider = gameStateChangerProvider ??
+			_gameStateChanger = gameStateChangerProvider ??
 			                            throw new ArgumentNullException(nameof(gameStateChangerProvider));
 			_gameStateChangerFactory = gameStateChangerFactory ??
 			                           throw new ArgumentNullException(nameof(gameStateChangerFactory));
@@ -58,8 +58,8 @@ namespace Sources.Boot.Scripts
 			_pathNameConfigProvider = pathNameConfigProvider ??
 			                          throw new ArgumentNullException(nameof(pathNameConfigProvider));
 
-			_persistentProgressService =
-				persistentProgressService ?? throw new ArgumentNullException(nameof(persistentProgressService));
+			_updatablePersistentProgressService =
+				updatablePersistentProgressService ?? throw new ArgumentNullException(nameof(updatablePersistentProgressService));
 
 			_saveLoaderProvider = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
 			_saveLoaderFactory = saveLoaderFactory ?? throw new ArgumentNullException(nameof(saveLoaderFactory));
@@ -73,16 +73,14 @@ namespace Sources.Boot.Scripts
 
 			DOTween.Init();
 
-			var a = new GameStateChangerFactory();
-
-			_gameStateChangerProvider.Enter<IMenuState>();
+			_gameStateChanger.Enter<IMenuState>();
 		}
 
 		private async UniTask Initialize()
 		{
 			await _saveLoader.Initialize();
 
-			_persistentProgressService.Update(await _progressFactory.Create());
+			_updatablePersistentProgressService.Update(await _progressFactory.Create());
 
 			IGameStateChanger a = _gameStateChangerFactory.Create();
 		}

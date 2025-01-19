@@ -8,7 +8,7 @@ namespace Sources.DomainInterfaces
 		ILevelProgress LevelProgress { get; }
 		IResourceModel ResourceModelReadOnly { get; }
 		IShopModel ShopModel { get; }
-		IPlayerModel PlayerModel { get; }
+		IPlayerStatsModel PlayerStatsModel { get; }
 		bool Validate();
 	}
 }

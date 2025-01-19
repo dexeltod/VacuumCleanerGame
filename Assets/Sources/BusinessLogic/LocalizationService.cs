@@ -25,14 +25,8 @@ namespace Sources.BusinessLogic
 			_languages = new string[localizationData.Languages.Count];
 			_phraseNames = new string[localizationData.Phrases.Count];
 
-			AddLanguages(
-				localizationData,
-				leanLocalization
-			);
-			CreatePhrases(
-				localizationData,
-				leanLocalization
-			);
+			AddLanguages(localizationData, leanLocalization);
+			CreatePhrases(localizationData, leanLocalization);
 
 #if YANDEX_CODE
 			return;

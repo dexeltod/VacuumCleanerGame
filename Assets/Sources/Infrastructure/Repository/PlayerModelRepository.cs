@@ -8,18 +8,18 @@ namespace Sources.Infrastructure.Repository
 {
 	public class PlayerModelRepository : IPlayerModelRepository
 	{
-		private readonly IPlayerModel _playerModel;
+		private readonly IPlayerStatsModel _playerStatsModel;
 
-		public PlayerModelRepository(IPlayerModel playerModel) =>
-			_playerModel = playerModel ?? throw new ArgumentNullException(nameof(playerModel));
+		public PlayerModelRepository(IPlayerStatsModel playerStatsModel) =>
+			_playerStatsModel = playerStatsModel ?? throw new ArgumentNullException(nameof(playerStatsModel));
 
 		public IStatReadOnly Get(ProgressType type) =>
-			_playerModel.Get((int)type);
+			_playerStatsModel.Get((int)type);
 
 		public IStatReadOnly Get(int id) =>
-			_playerModel.Get(id);
+			_playerStatsModel.Get(id);
 
 		public void Set(ProgressType type, float value) =>
-			_playerModel.Set((int)type, value);
+			_playerStatsModel.Set((int)type, value);
 	}
 }

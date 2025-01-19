@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
@@ -44,11 +43,6 @@ namespace Sources.Presentation.UI
 
 		public ISettingsView GetSettingsView() =>
 			GetComponent<ISettingsView>();
-
-		public void Construct(T presenter)
-		{
-			throw new NotImplementedException();
-		}
 
 		public override void Enable()
 		{

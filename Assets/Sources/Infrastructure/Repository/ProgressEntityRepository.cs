@@ -10,11 +10,11 @@ namespace Sources.Infrastructure.Repository
 	public sealed class ProgressEntityRepository : IProgressEntityRepository
 	{
 		private readonly Dictionary<int, IStatUpgradeEntityReadOnly> _entities;
-		private readonly Dictionary<int, IUpgradeEntityViewConfig> _configs;
+		private readonly Dictionary<int, IUpgradeEntityConfig> _configs;
 
 		public ProgressEntityRepository(
 			Dictionary<int, IStatUpgradeEntityReadOnly> entities,
-			Dictionary<int, IUpgradeEntityViewConfig> configs
+			Dictionary<int, IUpgradeEntityConfig> configs
 		)
 		{
 			_entities = entities ?? throw new ArgumentNullException(nameof(entities));
@@ -31,10 +31,10 @@ namespace Sources.Infrastructure.Repository
 		public IReadOnlyList<IStatUpgradeEntityReadOnly> GetEntities() =>
 			_entities.Values.ToList();
 
-		public IReadOnlyList<IUpgradeEntityViewConfig> GetConfigs() =>
+		public IReadOnlyList<IUpgradeEntityConfig> GetConfigs() =>
 			_configs.Values.ToList();
 
-		public IUpgradeEntityViewConfig GetConfig(int id) =>
+		public IUpgradeEntityConfig GetConfig(int id) =>
 			_configs[id] ?? throw new ArgumentNullException($"{id} not found");
 
 		public int GetPrice(int id)
@@ -42,7 +42,7 @@ namespace Sources.Infrastructure.Repository
 			if (id >= _configs.Count || id < 0)
 				throw new ArgumentOutOfRangeException(nameof(id));
 
-			IUpgradeEntityViewConfig config = _configs[id];
+			IUpgradeEntityConfig config = _configs[id];
 			IStatUpgradeEntityReadOnly entity = _entities[id];
 
 			if (entity.Value >= 0 && entity.Value < config.Prices.Count)
@@ -56,7 +56,7 @@ namespace Sources.Infrastructure.Repository
 
 		public float GetStatByProgress(int id)
 		{
-			IUpgradeEntityViewConfig config = _configs[id];
+			IUpgradeEntityConfig config = _configs[id];
 
 			return config.Stats[_entities[id].Value];
 		}

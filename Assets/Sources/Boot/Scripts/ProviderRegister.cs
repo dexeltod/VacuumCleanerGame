@@ -1,13 +1,14 @@
+using Sources.Boot.Scripts.Factories;
+using Sources.Boot.Scripts.Factories.Domain;
+using Sources.Boot.Scripts.Factories.StateMachine;
 using Sources.Boot.UnityApplicationServices;
-using Sources.BusinessLogic.Interfaces.Factory.StateMachine;
+using Sources.BusinessLogic;
 using Sources.BusinessLogic.Services;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.BusinessLogic.ServicesInterfaces.Advertisement;
 using Sources.Controllers;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.CoroutineRunner;
-using Sources.Infrastructure.Factories;
-using Sources.Infrastructure.Factories.Domain;
 using Sources.Infrastructure.Repository;
 using Sources.Presentation.SceneEntity;
 using Sources.Utils;
@@ -58,13 +59,12 @@ namespace Sources.Boot.Scripts
 				Lifetime.Singleton
 			).AsImplementedInterfaces().AsSelf();
 
-			_builder.Register <
-				GetPlayerLanguage() >
-				(
-					Lifetime.Singleton
-				).AsImplementedInterfaces().AsSelf();
+			_builder.Register(
+				resolver => new TranslatorService(new LocalizationService(resolver.Resolve<IAssetFactory>())),
+				Lifetime.Singleton
+			).AsImplementedInterfaces().AsSelf();
 
-			_builder.Register<AdvertisementPresenter>(_ => new AdvertisementPresenter(RegisterAdvertisement()), Lifetime.Singleton)
+			_builder.Register(_ => new AdvertisementPresenter(RegisterAdvertisement()), Lifetime.Singleton)
 				.AsImplementedInterfaces().AsSelf();
 
 			_builder.Register<GameMenuPresenter>(

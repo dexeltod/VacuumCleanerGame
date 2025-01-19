@@ -3,6 +3,7 @@ using System.Collections;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.PresentationInterfaces;
+using Sources.PresentationInterfaces.Triggers;
 using Sources.Utils;
 using UnityEngine;
 using VContainer;
@@ -17,7 +18,7 @@ namespace Sources.Presentation.Triggers
 		private IPersistentProgressService _persistentProgressService;
 		public IResourcesProgressPresenter ResourceProgress => _progressPresenterProvider;
 
-		public int CurrentScore =>
+		private int CurrentScore =>
 			_persistentProgressService.GlobalProgress.ResourceModelReadOnly.CurrentCashScore;
 
 		[Inject]

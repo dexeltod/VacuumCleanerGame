@@ -12,17 +12,17 @@ namespace Sources.Infrastructure.Services.DomainServices
 	{
 		private const string GameProgressKey = "GameProgress";
 
-		private readonly UnityServices _unityServices;
+		private readonly UnityServicesOptions _unityServicesOptions;
 		private readonly ICloudSaveLoader _unityCloudSaveLoaderLoader;
-		private UnityServices _controller;
+		private UnityServicesOptions _controller;
 
 		public UnitySaveLoader(
-			UnityServices unityServices,
+			UnityServicesOptions unityServicesOptions,
 			ICloudSaveLoader unityCloudSaveLoaderLoader
 		)
 		{
-			_unityServices = unityServices ??
-			                 throw new ArgumentNullException(nameof(unityServices));
+			_unityServicesOptions = unityServicesOptions ??
+			                        throw new ArgumentNullException(nameof(unityServicesOptions));
 			_unityCloudSaveLoaderLoader
 				= unityCloudSaveLoaderLoader ?? throw new ArgumentNullException(nameof(unityCloudSaveLoaderLoader));
 		}
@@ -42,7 +42,7 @@ namespace Sources.Infrastructure.Services.DomainServices
 		}
 
 		public async UniTask Initialize() =>
-			await _unityServices.InitializeUnityServices();
+			await _unityServicesOptions.InitializeUnityServices();
 
 		private IGlobalProgress DeserializeJson(string jsonSave)
 		{

@@ -6,7 +6,12 @@ namespace Sources.BusinessLogic.Repository
 {
 	public sealed class GameStateMachineRepository : IGameStateMachineRepository
 	{
-		private readonly Dictionary<Type, IExitableState> _states = new();
+		private readonly Dictionary<Type, IExitableState> _states;
+
+		public GameStateMachineRepository(Dictionary<Type, IExitableState> states)
+		{
+			_states = states ?? throw new ArgumentNullException(nameof(states));
+		}
 
 		public IExitableState Get<TState>() where TState : IExitableState
 		{
