@@ -60,12 +60,8 @@ namespace Sources.Boot.Scripts
 				.AsImplementedInterfaces().AsSelf();
 
 			_builder.Register(
-				resolver =>
-				{
-					var assetFactory = resolver.Resolve<IAssetFactory>();
-
-					return assetFactory.LoadFromResources<CoroutineRunner>(ResourcesAssetPath.GameObjects.CoroutineRunner);
-				},
+				resolver => resolver.Resolve<IAssetFactory>()
+					.LoadFromResources<CoroutineRunner>(ResourcesAssetPath.GameObjects.CoroutineRunner),
 				Lifetime.Singleton
 			).AsSelf().AsImplementedInterfaces();
 

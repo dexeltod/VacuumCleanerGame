@@ -15,14 +15,13 @@ namespace Sources.Boot.Scripts
 	public class GameBuilder : IAsyncStartable
 	{
 		private readonly IGameStateChanger _gameStateChanger;
-		private readonly ProgressFactory _progressFactory;
+		private readonly IProgressFactory _progressFactory;
 		private readonly ISaveLoader _saveLoader;
-		private readonly IGameStateChangerFactory _gameStateChangerFactory;
 		private readonly IUpdatablePersistentProgressService _updatablePersistentProgressService;
 
 		[Inject]
 		public GameBuilder(
-			ProgressFactory progressFactory,
+			IProgressFactory progressFactory,
 			ISaveLoader saveLoader,
 			IGameStateChanger gameStateChangerProvider,
 			IGameStateChangerFactory gameStateChangerFactory,
@@ -33,8 +32,6 @@ namespace Sources.Boot.Scripts
 			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
 			_gameStateChanger = gameStateChangerProvider ??
 			                    throw new ArgumentNullException(nameof(gameStateChangerProvider));
-			_gameStateChangerFactory = gameStateChangerFactory ??
-			                           throw new ArgumentNullException(nameof(gameStateChangerFactory));
 
 			_updatablePersistentProgressService =
 				updatablePersistentProgressService ?? throw new ArgumentNullException(nameof(updatablePersistentProgressService));

@@ -22,7 +22,6 @@ namespace Sources.Boot.Scripts
 		public void Register()
 		{
 			_builder.Register<ShopModelFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
-			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Scoped);
 
 			_builder.Register<LeaderBoardPlayersFactory>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
 
@@ -35,7 +34,6 @@ namespace Sources.Boot.Scripts
 			_builder.Register<LoadingCurtainFactory>(Lifetime.Scoped);
 
 			_builder.Register<ProgressFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
-			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Singleton);
 
 			_builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Singleton);
 		}

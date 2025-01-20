@@ -18,7 +18,6 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 	public sealed class MenuState : IMenuState
 	{
 		private readonly IMainMenuFactory _mainMenuFactory;
-		private readonly GameFocusHandler _gameFocusHandlerProvider;
 		private readonly ILocalizationService _localizationService;
 		private readonly ISceneLoader _sceneLoader;
 		private readonly ILoadingCurtain _loadingCurtain;
@@ -74,8 +73,6 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 			_progressSaveLoadDataService = progressSaveLoadDataService ??
 			                               throw new ArgumentNullException(nameof(progressSaveLoadDataService));
-			_gameFocusHandlerProvider =
-				gameFocusHandlerProvider ?? throw new ArgumentNullException(nameof(gameFocusHandlerProvider));
 			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 			_cloudServiceSdk = cloudServiceSdk ?? throw new ArgumentNullException(nameof(cloudServiceSdk));
 			_gameStateChanger = gameStateChanger ?? throw new ArgumentNullException(nameof(gameStateChanger));

@@ -40,6 +40,8 @@ namespace Sources.Boot.Scripts
 
 		public void Register()
 		{
+			_builder.RegisterEntryPoint<Boot>();
+
 			#region BaseServices
 
 			_builder.Register<GameBuilder>(Lifetime.Singleton);
