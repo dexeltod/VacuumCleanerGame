@@ -7,7 +7,6 @@ using Sources.Domain.Player;
 using Sources.Domain.Progress;
 using Sources.Domain.Progress.Entities.Values;
 using Sources.Domain.Stats;
-using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.InfrastructureInterfaces.Configs;
 using Sources.Utils;
 
@@ -30,48 +29,25 @@ namespace Sources.Boot.Scripts.Factories.Domain
 
 		public PlayerStatsModel Create()
 		{
-			List<Stat> stats = new List<Stat>();
-
-			IReadOnlyCollection<StartStatConfig> startConfigs =
-				_assetFactory.LoadFromResources<StartStatsConfig>(StartStats).Stats;
-
-			var items = _assetFactory.LoadFromResources<UpgradesListConfig>(ShopItems)
-				.ReadOnlyItems;
-
-			var myStats = items.Select(elem => new Stat(0, new IntEntityValue(elem.Id), elem.Id));
-
-			InitStats(items, startConfigs, ref stats);
-
-			return new PlayerStatsModel(stats);
+			return new PlayerStatsModel(
+				InitStats(
+					_assetFactory.LoadFromResources<UpgradesListConfig>(ShopItems).ReadOnlyItems,
+					_assetFactory.LoadFromResources<StartStatsConfig>(StartStats).Stats
+				)
+			);
 		}
 
-		private void InitStats(
+		private List<Stat> InitStats(
 			IReadOnlyCollection<PlayerUpgradeShopConfig> items,
-			IReadOnlyCollection<StartStatConfig> startConfigs,
-			ref List<Stat> stats
+			IReadOnlyCollection<StartStatConfig> startConfigs
 		)
 		{
-			var myStats = items.Select(elem => new Stat())
-
-			for (int i = 0; i < items.Count; i++)
-			{
-				var progress = GetProgress(i);
-
-				float startValue = GetStartValuesFromStartConfig(startConfigs, configIndex: i);
-
-				int id = startConfigs.ElementAt(i).Id;
-				stats.Add(new Stat(startValue, progress as IntEntityValue, id));
-			}
+			return items.Join(
+				startConfigs,
+				item => item.Id,
+				start => (int)start.Type,
+				(item, start) => new Stat(start.Stat, new IntEntityValue(item.Id, item.Title, 0), item.Id)
+			).ToList();
 		}
-
-		private float GetStartValuesFromStartConfig(
-			IReadOnlyCollection<StartStatConfig> startConfigs,
-			int configIndex
-		) =>
-			startConfigs.ElementAt(configIndex).Stat;
-
-		private IReadOnlyProgress<int> GetProgress(int i) =>
-			_shopModelFactory.ProgressEntities.ElementAt(i).LevelProgress ??
-			throw new ArgumentNullException($"shopModelFactory.ProgressEntities.ElementAt({i}).LevelProgress is null");
 	}
 }

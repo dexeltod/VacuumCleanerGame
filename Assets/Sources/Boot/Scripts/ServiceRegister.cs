@@ -3,18 +3,18 @@ using System.Linq;
 using Sources.Boot.Scripts.Factories;
 using Sources.Boot.Scripts.Factories.Domain;
 using Sources.Boot.Scripts.Factories.Presentation.Scene;
-using Sources.Boot.Scripts.Factories.Progress;
 using Sources.Boot.Scripts.Factories.StateMachine;
 using Sources.Boot.Scripts.Factories.UpgradeEntitiesConfigs;
-using Sources.Boot.Scripts.States.StateMachine.GameStates;
 using Sources.BusinessLogic;
 using Sources.BusinessLogic.Interfaces;
 using Sources.BusinessLogic.Interfaces.Configs;
+using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.Scene;
-using Sources.BusinessLogic.Services;
 using Sources.BusinessLogic.ServicesInterfaces;
+using Sources.Controllers.Services;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.DomainInterfaces.Models;
 using Sources.Infrastructure.Leaderboard;
 using Sources.Infrastructure.Repository;
 using Sources.Infrastructure.Services;
@@ -56,7 +56,6 @@ namespace Sources.Boot.Scripts
 			_builder.Register<TranslatorService>(Lifetime.Singleton);
 
 			_builder.Register<ProgressionConfig>(Lifetime.Singleton);
-			_builder.Register<ProgressServiceRegister>(Lifetime.Singleton);
 
 			_builder.Register<ClearProgressFactory>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
@@ -71,6 +70,14 @@ namespace Sources.Boot.Scripts
 				Lifetime.Singleton
 			).AsImplementedInterfaces().AsSelf();
 
+			_builder.Register(
+					container => new PlayerModelRepository(
+						container.Resolve<IPersistentProgressService>().GlobalProgress.PlayerStatsModel
+					),
+					Lifetime.Singleton
+				)
+				.AsImplementedInterfaces()
+				.AsSelf();
 			RegisterLoadingCurtain();
 
 			#endregion
@@ -138,6 +145,7 @@ namespace Sources.Boot.Scripts
 			).AsSelf().AsImplementedInterfaces();
 
 			_builder.Register<GameStatesRepositoryFactory>(Lifetime.Scoped);
+			_builder.Register<PresentersContainerRepository>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
 			_builder.RegisterInstance<ILeaderBoardService>(new LeaderBoardRepository(GetLeaderboard()));
 			_builder.RegisterInstance<IResourcesRepository>(
 				new ResourcesRepository(new ResourceServiceFactory().CreateIntCurrencies())

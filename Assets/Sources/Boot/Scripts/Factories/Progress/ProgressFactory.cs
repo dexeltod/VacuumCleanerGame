@@ -14,7 +14,6 @@ namespace Sources.Boot.Scripts.Factories.Progress
 	{
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IClearProgressFactory _clearProgressFactory;
-		private readonly ProgressServiceRegister _progressServiceRegister;
 
 		private readonly ISaveLoader _saveLoader;
 
@@ -25,16 +24,13 @@ namespace Sources.Boot.Scripts.Factories.Progress
 			ISaveLoader saveLoaderProvider,
 			IClearProgressFactory clearProgressFactory,
 			IProgressEntityRepository progressEntityRepositoryProvider,
-			IPlayerModelRepository playerModelRepositoryProvider,
-			ProgressServiceRegister progressServiceRegister
+			IPlayerModelRepository playerModelRepositoryProvider
 		)
 		{
 			_progressSaveLoadDataService = progressSaveLoadDataService ??
 			                               throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 			_saveLoader = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
 			_clearProgressFactory = clearProgressFactory ?? throw new ArgumentNullException(nameof(clearProgressFactory));
-			_progressServiceRegister = progressServiceRegister ??
-			                           throw new ArgumentNullException(nameof(progressServiceRegister));
 		}
 
 		public async Task<IGlobalProgress> Create()
@@ -42,8 +38,6 @@ namespace Sources.Boot.Scripts.Factories.Progress
 			IGlobalProgress cloudSaves = await _progressSaveLoadDataService.LoadFromCloud();
 
 			cloudSaves = await CreatNewIfNull(cloudSaves);
-
-			_progressServiceRegister.Do(cloudSaves);
 
 			return cloudSaves;
 		}

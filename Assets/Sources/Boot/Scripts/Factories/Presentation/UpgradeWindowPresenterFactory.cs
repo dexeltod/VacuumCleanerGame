@@ -1,5 +1,4 @@
 using System;
-using Sources.Boot.Scripts.Factories.Presentation.UI;
 using Sources.Boot.Scripts.Factories.Presenters;
 using Sources.BusinessLogic;
 using Sources.BusinessLogic.ServicesInterfaces;
@@ -15,7 +14,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 {
 	public class UpgradeWindowPresenterFactory : PresenterFactory<IUpgradeWindowPresenter>, IUpgradeWindowPresenterFactory
 	{
-		private readonly UpgradeWindowViewFactory _upgradeWindowViewFactory;
+		private readonly IUpgradeWindowViewFactory _upgradeWindowViewFactory;
 		private readonly IAssetFactory _assetFactory;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IPersistentProgressService _persistentProgressService;
@@ -25,7 +24,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 		private readonly IUpgradeWindowPresenter _upgradeWindowPresenter;
 
 		public UpgradeWindowPresenterFactory(
-			UpgradeWindowViewFactory upgradeWindowViewFactory,
+			IUpgradeWindowViewFactory upgradeWindowViewFactory,
 			IAssetFactory assetFactory,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			IPersistentProgressService persistentProgressService,

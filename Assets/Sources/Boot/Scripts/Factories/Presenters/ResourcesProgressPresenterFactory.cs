@@ -15,7 +15,7 @@ namespace Sources.Boot.Scripts.Factories.Presenters
 		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenterProvider;
 		private readonly IPersistentProgressService _persistentProgressService;
 		private readonly IFillMeshShaderController _fillMeshShaderControllerProvider;
-		private readonly ISandParticleView _sandParticleViewProvider;
+		private readonly ISandParticleView _sandParticleView;
 		private readonly ICoroutineRunner _coroutineRunnerProvider;
 		private readonly IPlayerModelRepository _playerModelRepositoryProvider;
 
@@ -37,8 +37,8 @@ namespace Sources.Boot.Scripts.Factories.Presenters
 			                             throw new ArgumentNullException(nameof(persistentProgressService));
 			_fillMeshShaderControllerProvider = fillMeshShaderControllerProvider ??
 			                                    throw new ArgumentNullException(nameof(fillMeshShaderControllerProvider));
-			_sandParticleViewProvider = sandParticleViewProvider ??
-			                            throw new ArgumentNullException(nameof(sandParticleViewProvider));
+			_sandParticleView = sandParticleViewProvider ??
+			                    throw new ArgumentNullException(nameof(sandParticleViewProvider));
 			_coroutineRunnerProvider = coroutineRunnerProvider ??
 			                           throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 			_playerModelRepositoryProvider = playerModelRepositoryProvider ??
@@ -52,7 +52,7 @@ namespace Sources.Boot.Scripts.Factories.Presenters
 				ResourceModelReadOnly as IResourceModel,
 				_fillMeshShaderControllerProvider,
 				new SandParticlePlayerSystem(
-					_sandParticleViewProvider,
+					_sandParticleView,
 					_coroutineRunnerProvider,
 					playTime: 1
 				),

@@ -8,6 +8,6 @@ namespace Sources.PresentationInterfaces
 	public interface IGameMenuView : IPresentableView<IGameMenuPresenter>
 	{
 		public Button OpenMenuButton { get; }
-		AudioSource AudioSourceSource { get; }
+		AudioSource AudioSource { get; }
 	}
 }

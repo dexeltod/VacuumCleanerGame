@@ -118,8 +118,7 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 
 			ILeaderBoardView leaderBoardView = _mainMenuView.LeaderBoardView.GetComponent<ILeaderBoardView>();
 
-			_mainMenuPresenter = _mainMenuPresenterFactory.Create(_mainMenuView,)(
-			);
+			_mainMenuPresenter = _mainMenuPresenterFactory.Create();
 
 			_mainMenuView.Construct(_mainMenuPresenter);
 			return _mainMenuPresenter;

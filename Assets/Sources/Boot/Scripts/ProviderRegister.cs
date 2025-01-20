@@ -67,21 +67,9 @@ namespace Sources.Boot.Scripts
 			_builder.Register(_ => new AdvertisementPresenter(RegisterAdvertisement()), Lifetime.Singleton)
 				.AsImplementedInterfaces().AsSelf();
 
-			_builder.Register<GameMenuPresenter>(
-				Lifetime.Singleton
-			).AsImplementedInterfaces().AsSelf();
-
 			_builder.Register<ISaveLoader>(_ => new SaveLoaderFactory().Create(), Lifetime.Singleton).AsImplementedInterfaces()
 				.AsSelf();
 
-			_builder.Register<GameplayInterfacePresenter>(
-					Lifetime.Singleton
-				).AsImplementedInterfaces()
-				.AsSelf();
-
-			_builder.Register<UpgradeWindowPresenter>(
-				Lifetime.Singleton
-			);
 			_builder.Register(
 				resolver =>
 				{
@@ -93,15 +81,6 @@ namespace Sources.Boot.Scripts
 			).AsSelf().AsImplementedInterfaces();
 
 			_builder.RegisterFactory(() => new CloudPlayerDataServiceFactory().Create());
-
-			_builder.Register<ResourcesProgressPresenter>(
-					Lifetime.Singleton
-				).AsImplementedInterfaces()
-				.AsSelf();
-
-			_builder.Register<DissolveShaderViewController>(
-				Lifetime.Singleton
-			);
 
 			_builder.Register(
 				(resolver) => new ResourcePathConfigServiceFactory(resolver.Resolve<IAssetFactory>()).Create(),

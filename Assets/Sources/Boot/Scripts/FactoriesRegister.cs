@@ -27,8 +27,6 @@ namespace Sources.Boot.Scripts
 			_builder.Register<ShopModelFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
 			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Scoped);
 
-			_builder.Register<ShopViewFactory>(Lifetime.Scoped);
-			_builder.Register<MainMenuFactory>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
 			_builder.Register<LeaderBoardPlayersFactory>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
 
 			_builder.Register<SaveLoaderFactory>(
@@ -38,13 +36,11 @@ namespace Sources.Boot.Scripts
 			_builder.Register<InitialProgressFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
 			_builder.Register<CoroutineRunnerFactory>(Lifetime.Scoped);
 			_builder.Register<LoadingCurtainFactory>(Lifetime.Scoped);
-			_builder.Register<GameplayInterfacePresenterFactory>(Lifetime.Scoped);
+
 			_builder.Register<ProgressFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
 			_builder.Register<ResourcePathConfigServiceFactory>(Lifetime.Singleton);
 
 			_builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Singleton);
-
-			_builder.Register<ResourcesProgressPresenterFactory>(Lifetime.Singleton);
 		}
 	}
 }

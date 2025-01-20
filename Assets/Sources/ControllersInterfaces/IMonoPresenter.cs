@@ -10,5 +10,7 @@ namespace Sources.ControllersInterfaces
 			Animator animator,
 			AnimationHasher animationHasher
 		);
+
+		GameObject GameObject { get; }
 	}
 }

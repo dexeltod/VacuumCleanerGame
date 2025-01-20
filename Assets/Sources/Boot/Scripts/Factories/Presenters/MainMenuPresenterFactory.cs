@@ -76,6 +76,6 @@ namespace Sources.Boot.Scripts.Factories.Presenters
 				_leaderBoardPlayersFactory,
 				soundSettings
 			);
-		};
+		}
 	}
 }

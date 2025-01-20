@@ -4,8 +4,6 @@ using Sources.BusinessLogic.Interfaces.Factory;
 using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.ControllersInterfaces;
-using Sources.Presentation;
-using Sources.PresentationInterfaces;
 using Sources.Utils;
 using Sources.Utils.Enums;
 using UnityEngine;
@@ -52,7 +50,7 @@ namespace Sources.Controllers.Factories
 				? ImplementationJoystick
 				: throw new ArgumentNullException(nameof(ImplementationJoystick));
 
-			IPlayer playerBodyComponentPresenter = GetPlayerBodyComponent(spawnPoint);
+			IMonoPresenter playerBodyComponentPresenter = GetPlayerBodyComponent(spawnPoint);
 
 			_objectResolver.Inject(playerBodyComponentPresenter);
 
@@ -78,7 +76,7 @@ namespace Sources.Controllers.Factories
 			return _character;
 		}
 
-		private void SetPresenter(PlayerPresenter playerBodyComponentPresenter,
+		private void SetPresenter(IMonoPresenter playerBodyComponentPresenter,
 			PlayerTransformable playerTransformable,
 			AnimationHasher animationHasher)
 		{
@@ -87,15 +85,13 @@ namespace Sources.Controllers.Factories
 				_animator,
 				animationHasher
 			);
-			playerBodyComponentPresenter.gameObject.SetActive(
+			playerBodyComponentPresenter.GameObject.SetActive(
 				true
 			);
 		}
 
-		private IPlayer GetPlayerBodyComponent(GameObject spawnPoint) =>
-			_assetFactory.InstantiateAndGetComponent <
-			(PlayerBody)IPlayer >
-			(
+		private IMonoPresenter GetPlayerBodyComponent(GameObject spawnPoint) =>
+			_assetFactory.InstantiateAndGetComponent<MonoPresenter>(
 				ResourcesAssetPath.Scene.Player,
 				spawnPoint.transform.position
 			);

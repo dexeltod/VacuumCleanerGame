@@ -15,7 +15,6 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 	{
 		private const bool IsGlobalScoreViewed = false;
 
-		private readonly IGameMenuPresenter _gameMenuPresenterProvider;
 		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenter;
 		private readonly GameplayInterfaceView _gameplayInterfaceView;
 		private readonly IResourceModelReadOnly _resourceModelReadOnly;
@@ -25,7 +24,6 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 
 		public GameplayInterfaceViewFactory(
 			IGameplayInterfacePresenter gameplayInterfacePresenterProvider,
-			IGameMenuPresenter gameMenuPresenterProvider,
 			IGameStateChanger stateChangerProvider,
 			TranslatorService translatorService,
 			IResourceModelReadOnly resourceModelReadOnly,
@@ -36,8 +34,6 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 			_gameplayInterfacePresenter = gameplayInterfacePresenterProvider ??
 			                              throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
 
-			_gameMenuPresenterProvider =
-				gameMenuPresenterProvider ?? throw new ArgumentNullException(nameof(gameMenuPresenterProvider));
 			_stateChangerProvider = stateChangerProvider ?? throw new ArgumentNullException(nameof(stateChangerProvider));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 			_resourceModelReadOnly = resourceModelReadOnly ?? throw new ArgumentNullException(nameof(resourceModelReadOnly));
@@ -47,11 +43,11 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 				: throw new ArgumentNullException(nameof(gameplayInterfaceView));
 		}
 
-		public void Create()
+		public IGameMenuPresenter Create()
 		{
 			if (_resourceModelReadOnly == null) throw new ArgumentNullException(nameof(_resourceModelReadOnly));
 
-			var a = new GameMenuPresenter(
+			IGameMenuPresenter presenter = new GameMenuPresenter(
 				_gameplayInterfaceView.GetComponent<IGameMenuView>(),
 				_stateChangerProvider
 			);
@@ -72,6 +68,8 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 
 			_gameplayInterfaceView.PhrasesList.Phrases =
 				_translatorService.GetLocalize(_gameplayInterfaceView.PhrasesList.Phrases);
+
+			return presenter;
 		}
 	}
 }

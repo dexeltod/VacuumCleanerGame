@@ -23,25 +23,26 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 	{
 		private readonly IPersistentProgressService _persistentProgressServiceProvider;
 		private readonly TranslatorService _translatorService;
-		private readonly UpgradeWindowPresenter _upgradeWindowPresenterProvider;
+		private readonly IUpgradeWindowPresenter _upgradeWindowPresenterProvider;
 		private readonly IResourcesProgressPresenter _resourcesProgressPresenterProvider;
 		private readonly IGameplayInterfacePresenter _gameplayInterfaceProvider;
 		private readonly IProgressEntityRepository _progressEntityRepository;
 		private readonly IPlayerModelRepository _playerModelRepositoryProvider;
 		private readonly ISaveLoader _saveLoaderProvider;
 		private readonly IAssetFactory _assetFactory;
+		private readonly IProgressEntityRepository _entityRepository;
 
-		[Inject]
 		public ShopViewFactory(
 			IPersistentProgressService persistentProgressService,
 			TranslatorService translatorService,
-			UpgradeWindowPresenter upgradeWindowPresenterProvider,
+			IUpgradeWindowPresenter upgradeWindowPresenterProvider,
 			IResourcesProgressPresenter resourcesProgressPresenterProvider,
 			IGameplayInterfacePresenter gameplayInterfaceProvider,
 			IProgressEntityRepository progressEntityRepository,
 			IPlayerModelRepository playerModelRepositoryProvider,
 			ISaveLoader saveLoaderProvider,
-			IAssetFactory assetFactory
+			IAssetFactory assetFactory,
+			IProgressEntityRepository entityRepository
 		)
 		{
 			_upgradeWindowPresenterProvider = upgradeWindowPresenterProvider ??
@@ -56,6 +57,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 			                                 throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
 			_saveLoaderProvider = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
 			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_entityRepository = entityRepository ?? throw new ArgumentNullException(nameof(entityRepository));
 			_persistentProgressServiceProvider = persistentProgressService ??
 			                                     throw new ArgumentNullException(nameof(persistentProgressService));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
@@ -63,44 +65,62 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 
 		public Dictionary<int, IUpgradeElementPrefabView> Create(Transform transform, AudioSource audioSource)
 		{
-			IReadOnlyList<IUpgradeEntityConfig> configs = _progressEntityRepository.GetConfigs();
-			IReadOnlyList<IStatUpgradeEntityReadOnly> entities = _progressEntityRepository.GetEntities();
-
-			return Instantiate(transform, configs, entities, audioSource);
+			return Instantiate(transform, audioSource);
 		}
 
 		private Dictionary<int, IUpgradeElementPrefabView> Instantiate(
 			Component transform,
-			IReadOnlyList<IUpgradeEntityConfig> configs,
-			IReadOnlyList<IStatUpgradeEntityReadOnly> entities,
 			AudioSource audioSource
 		)
 		{
-			Dictionary<int, IUpgradeElementPrefabView> views = new();
-			Dictionary<int, IUpgradeElementChangeableView> changeableViews = new();
+			IReadOnlyList<IUpgradeEntityConfig> configs = _entityRepository.GetConfigs();
+			IReadOnlyList<IStatUpgradeEntityReadOnly> entities = _entityRepository.GetEntities();
 
-			for (int i = 0; i < configs.Count; i++)
-			{
-				IUpgradeEntityConfig entity = configs.ElementAt(i);
+			UpgradeElementPresenter presenter = CreateUpgradeElementPresenter(audioSource, configs);
 
-				var view = Object.Instantiate(entity.PrefabView.GetComponent<UpgradeElementPrefabView>(), transform.transform);
+			var a = configs.Join(
+				entities,
+				elem => elem.Id,
+				elem2 => elem2.ConfigId,
+				(elem, elem2) =>
+				{
+					var view = (IUpgradeElementPrefabView)Object.Instantiate(
+						elem.PrefabView.GetComponent<UpgradeElementPrefabView>(),
+						transform.transform
+					);
 
-				views.Add(i, view);
-				changeableViews.Add(configs.ElementAt(i).Id, view);
-			}
+					view.Construct(
+						elem.Icon,
+						presenter,
+						Localize(elem.Title),
+						Localize(elem.Description),
+						elem.Id,
+						elem2.Value,
+						_progressEntityRepository.GetPrice(elem.Id),
+						elem.MaxProgressCount
+					);
 
-			UpgradeElementPresenter presenter = new(
-				changeableViews,
-				_persistentProgressServiceProvider,
-				_upgradeWindowPresenterProvider,
-				_gameplayInterfaceProvider,
-				_progressEntityRepository,
-				_saveLoaderProvider,
-				_resourcesProgressPresenterProvider,
-				_playerModelRepositoryProvider,
-				_assetFactory.LoadFromResources<AudioClip>(ResourcesAssetPath.SoundNames.SoundBuy),
-				_assetFactory.LoadFromResources<AudioClip>(ResourcesAssetPath.SoundNames.SoundClose),
-				audioSource
+					return view;
+				}
+			);
+
+			Dictionary<int, IUpgradeElementPrefabView> views = configs.ToDictionary(
+				elem => elem.Id,
+				elem2 =>
+				{
+					var view = (IUpgradeElementPrefabView)Object.Instantiate(
+						elem2.PrefabView.GetComponent<UpgradeElementPrefabView>(),
+						transform.transform
+					);
+
+					view.Construct(
+						elem2.Icon,
+						presenter,
+						Localize(elem2.Title),
+						Localize(elem2.Description),
+						elem2.Id,
+					);
+				}
 			);
 
 			for (int i = 0; i < views.Count; i++)
@@ -127,6 +147,25 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 
 			return views;
 		}
+
+		private UpgradeElementPresenter CreateUpgradeElementPresenter(AudioSource audioSource,
+			IReadOnlyList<IUpgradeEntityConfig> configs) =>
+			new(
+				configs.ToDictionary(
+					elem => elem.Id,
+					elem2 => (IUpgradeElementChangeableView)elem2.PrefabView.GetComponent<UpgradeElementPrefabView>()
+				),
+				_persistentProgressServiceProvider,
+				_upgradeWindowPresenterProvider,
+				_gameplayInterfaceProvider,
+				_progressEntityRepository,
+				_saveLoaderProvider,
+				_resourcesProgressPresenterProvider,
+				_playerModelRepositoryProvider,
+				_assetFactory.LoadFromResources<AudioClip>(ResourcesAssetPath.SoundNames.SoundBuy),
+				_assetFactory.LoadFromResources<AudioClip>(ResourcesAssetPath.SoundNames.SoundClose),
+				audioSource
+			);
 
 		private string Localize(string phrase) =>
 			_translatorService.GetLocalize(phrase);

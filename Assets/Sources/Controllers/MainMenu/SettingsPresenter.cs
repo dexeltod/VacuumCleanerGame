@@ -1,5 +1,5 @@
 using System;
-using Sources.Domain.Settings;
+using Sources.DomainInterfaces.Entities;
 using Sources.Utils;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -11,9 +11,9 @@ namespace Sources.Controllers.MainMenu
 		private const string MasterVolumeName = "Master";
 
 		private readonly AudioMixer _audioMixer;
-		private readonly SoundSettings _soundSettings;
+		private readonly ISoundSettings _soundSettings;
 
-		public SettingsPresenter(AudioMixer audioMixer, SoundSettings soundSettings)
+		public SettingsPresenter(AudioMixer audioMixer, ISoundSettings soundSettings)
 		{
 			_audioMixer = audioMixer ?? throw new ArgumentNullException(nameof(audioMixer));
 			_soundSettings = soundSettings ?? throw new ArgumentNullException(nameof(soundSettings));

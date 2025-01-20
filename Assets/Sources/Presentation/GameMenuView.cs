@@ -20,7 +20,7 @@ namespace Sources.Presentation
 		private AudioSource _audioSource;
 
 		public Button OpenMenuButton => _openMenuButton;
-		public AudioSource AudioSourceSource => _audioSource;
+		public AudioSource AudioSource => _audioSource;
 
 		public override void Enable()
 		{

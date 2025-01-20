@@ -6,8 +6,8 @@ using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.BusinessLogic.States;
 using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
-using Sources.Domain.Settings;
 using Sources.DomainInterfaces;
+using Sources.DomainInterfaces.Entities;
 using Sources.PresentationInterfaces;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -26,7 +26,7 @@ namespace Sources.Controllers.MainMenu
 		private readonly ILeaderBoardService _leaderBoardService;
 		private readonly ISettingsView _settingsView;
 		private readonly ILeaderBoardPlayersFactory _leaderBoardPlayersFactory;
-		private readonly SoundSettings _soundSettings;
+		private readonly ISoundSettings _soundSettings;
 		private readonly SettingsPresenter _settingsPresenter;
 
 		private bool _leaderboardInitialized;
@@ -45,7 +45,7 @@ namespace Sources.Controllers.MainMenu
 			ISettingsView settingsView,
 			AudioMixer mixer,
 			ILeaderBoardPlayersFactory leaderBoardPlayersFactory,
-			SoundSettings soundSettings
+			ISoundSettings soundSettings
 		)
 		{
 			_mainMenuView = mainMenu ?? throw new ArgumentNullException(nameof(mainMenu));

@@ -17,6 +17,8 @@ namespace Sources.Controllers
 		private AnimationHasher _animationHasher;
 		private ParticleSystem _particleSystem;
 
+		public GameObject GameObject => gameObject;
+
 		public void Initialize(
 			ITransformable model,
 			Animator animator,

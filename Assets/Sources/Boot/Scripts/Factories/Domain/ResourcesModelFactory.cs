@@ -18,16 +18,11 @@ namespace Sources.Boot.Scripts.Factories.Domain
 
 		public ResourceModel Create()
 		{
-			IntCurrency soft = GetResource((int)CurrencyResourceType.Soft) as IntCurrency;
-			IntCurrency hard = GetResource((int)CurrencyResourceType.Hard) as IntCurrency;
-			IntCurrency cashScore = GetResource((int)CurrencyResourceType.CashScore) as IntCurrency;
-			IntCurrency globalScore = GetResource((int)CurrencyResourceType.GlobalScore) as IntCurrency;
-
 			return new ResourceModel(
-				soft,
-				hard,
-				cashScore,
-				globalScore,
+				GetResource((int)CurrencyResourceType.Soft) as IntCurrency,
+				GetResource((int)CurrencyResourceType.Hard) as IntCurrency,
+				GetResource((int)CurrencyResourceType.CashScore) as IntCurrency,
+				GetResource((int)CurrencyResourceType.GlobalScore) as IntCurrency,
 				StartScoreCount,
 				StartCurrencyCount,
 				StartScoreCount

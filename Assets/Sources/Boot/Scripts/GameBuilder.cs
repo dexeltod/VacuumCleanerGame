@@ -5,7 +5,6 @@ using DG.Tweening;
 using Sources.Boot.Scripts.Factories;
 using Sources.Boot.Scripts.Factories.Domain;
 using Sources.Boot.Scripts.Factories.Progress;
-using Sources.Boot.Scripts.Factories.StateMachine;
 using Sources.BusinessLogic.Interfaces.Factory;
 using Sources.BusinessLogic.Services;
 using Sources.BusinessLogic.ServicesInterfaces;
@@ -50,7 +49,7 @@ namespace Sources.Boot.Scripts
 			_progressFactory = progressFactory ?? throw new ArgumentNullException(nameof(progressFactory));
 			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
 			_gameStateChanger = gameStateChangerProvider ??
-			                            throw new ArgumentNullException(nameof(gameStateChangerProvider));
+			                    throw new ArgumentNullException(nameof(gameStateChangerProvider));
 			_gameStateChangerFactory = gameStateChangerFactory ??
 			                           throw new ArgumentNullException(nameof(gameStateChangerFactory));
 			_resourcePathConfigServiceFactory = resourcePathConfigServiceFactory ??

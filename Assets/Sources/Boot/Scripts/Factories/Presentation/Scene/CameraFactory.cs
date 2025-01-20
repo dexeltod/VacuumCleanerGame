@@ -1,8 +1,8 @@
 using System;
 using Cinemachine;
+using Sources.BusinessLogic.Interfaces.Configs;
 using Sources.BusinessLogic.Scene;
 using Sources.BusinessLogic.ServicesInterfaces;
-using Sources.Infrastructure.Services;
 using UnityEngine;
 
 namespace Sources.Boot.Scripts.Factories.Presentation.Scene
@@ -11,14 +11,14 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 	{
 		private readonly IAssetFactory _assetFactory;
 		private readonly GameObject _player;
-		private readonly ResourcesPrefabs _assetPathNameConfigProvider;
+		private readonly IResourcesPrefabs _assetPathNameConfigProvider;
 
 		private GameObject _characterObject;
 
 		public CameraFactory(
 			IAssetFactory assetFactory,
 			GameObject playerFactory,
-			ResourcesPrefabs assetPathNameConfigProvider
+			IResourcesPrefabs assetPathNameConfigProvider
 		)
 		{
 			_assetFactory
