@@ -29,19 +29,11 @@ namespace Sources.Boot.Scripts
 
 		public void Register()
 		{
-			_builder.Register<IGameStateChanger>(
-					(resolver) => resolver.Resolve<GameStateChangerFactory>().Create(),
-					Lifetime.Scoped
-				)
-				.AsImplementedInterfaces().AsSelf();
-
 			_builder.Register<SandCarContainerView>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
 			_builder.Register<FillMeshShaderController>(
 				Lifetime.Singleton
 			).AsImplementedInterfaces().AsSelf();
-
-			_builder.Register<PlayerModelRepository>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
 
 			_builder.Register(
 				resolver =>
@@ -66,9 +58,6 @@ namespace Sources.Boot.Scripts
 
 			_builder.Register(_ => new AdvertisementPresenter(RegisterAdvertisement()), Lifetime.Singleton)
 				.AsImplementedInterfaces().AsSelf();
-
-			_builder.Register<ISaveLoader>(_ => new SaveLoaderFactory().Create(), Lifetime.Singleton).AsImplementedInterfaces()
-				.AsSelf();
 
 			_builder.Register(
 				resolver =>

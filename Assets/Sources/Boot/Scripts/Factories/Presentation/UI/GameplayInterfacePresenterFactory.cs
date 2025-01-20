@@ -78,9 +78,8 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 
 			GameMenuView gameMenuView = gameplayInterfaceView.GetComponent<GameMenuView>();
 
-			gameMenuView.Construct();
-
 			IGameMenuPresenter gameMenuPresenter = CreateGameMenuPresenter(gameplayInterfaceView);
+			gameMenuView.Construct(gameMenuPresenter);
 
 			return presenter;
 		}

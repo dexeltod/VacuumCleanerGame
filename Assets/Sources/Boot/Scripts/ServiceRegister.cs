@@ -8,13 +8,11 @@ using Sources.Boot.Scripts.Factories.UpgradeEntitiesConfigs;
 using Sources.BusinessLogic;
 using Sources.BusinessLogic.Interfaces;
 using Sources.BusinessLogic.Interfaces.Configs;
-using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.Scene;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Controllers.Services;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
-using Sources.DomainInterfaces.Models;
 using Sources.Infrastructure.Leaderboard;
 using Sources.Infrastructure.Repository;
 using Sources.Infrastructure.Services;
@@ -42,18 +40,15 @@ namespace Sources.Boot.Scripts
 
 		public void Register()
 		{
-			_builder.RegisterEntryPoint<GameBuilder>();
-
 			#region BaseServices
 
+			_builder.Register<GameBuilder>(Lifetime.Singleton);
 			_builder.Register<IInjectableAssetFactory, InjectableAssetFactory>(Lifetime.Singleton).As<IInjectableAssetFactory>()
 				.AsSelf();
 
 			_builder.Register<IAssetFactory, AssetFactory>(Lifetime.Singleton);
 			_builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
-			_builder.Register<IResourcesPrefabs, ResourcesPrefabs>(Lifetime.Singleton);
 			_builder.Register<ILocalizationService, LocalizationService>(Lifetime.Singleton);
-			_builder.Register<TranslatorService>(Lifetime.Singleton);
 
 			_builder.Register<ProgressionConfig>(Lifetime.Singleton);
 
@@ -109,7 +104,7 @@ namespace Sources.Boot.Scripts
 
 			RegisterCloudSavers();
 
-			_builder.Register<ISaveLoader>(container => new SaveLoaderFactory().Create(), Lifetime.Singleton)
+			_builder.Register(_ => new SaveLoaderFactory().Create(), Lifetime.Singleton)
 				.AsImplementedInterfaces().AsSelf();
 
 			CreateSceneLoadServices();

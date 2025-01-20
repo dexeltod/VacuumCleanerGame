@@ -1,11 +1,8 @@
 using System;
 using Sources.Boot.Scripts.Factories;
 using Sources.Boot.Scripts.Factories.Domain;
-using Sources.Boot.Scripts.Factories.Presentation;
 using Sources.Boot.Scripts.Factories.Presentation.LeaderBoard;
 using Sources.Boot.Scripts.Factories.Presentation.Scene;
-using Sources.Boot.Scripts.Factories.Presentation.UI;
-using Sources.Boot.Scripts.Factories.Presenters;
 using Sources.Boot.Scripts.Factories.Progress;
 using Sources.BusinessLogic.Interfaces.Factory;
 using Sources.Controllers.Factories;

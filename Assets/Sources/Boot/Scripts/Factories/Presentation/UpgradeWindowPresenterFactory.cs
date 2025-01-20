@@ -1,10 +1,15 @@
 using System;
+using Sources.Boot.Scripts.Factories.Presentation.UI;
 using Sources.Boot.Scripts.Factories.Presenters;
 using Sources.BusinessLogic;
+using Sources.BusinessLogic.Repository;
+using Sources.BusinessLogic.Services;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Controllers;
 using Sources.ControllersInterfaces;
+using Sources.ControllersInterfaces.Services;
 using Sources.DomainInterfaces;
+using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Services.SceneTriggers;
 using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;
@@ -14,27 +19,34 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 {
 	public class UpgradeWindowPresenterFactory : PresenterFactory<IUpgradeWindowPresenter>, IUpgradeWindowPresenterFactory
 	{
-		private readonly IUpgradeWindowViewFactory _upgradeWindowViewFactory;
+		private readonly IPresentersContainerRepository _presentersContainerRepository;
+		private readonly IUpgradeWindowPresentation _upgradeWindowPresentation;
 		private readonly IAssetFactory _assetFactory;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IPersistentProgressService _persistentProgressService;
 		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenter;
 		private readonly IResourcesProgressPresenter _resourcesProgressPresenterProvider;
 		private readonly TranslatorService _translatorService;
+		private readonly IProgressEntityRepository _progressEntityRepository;
+		private readonly IPlayerModelRepository _playerModelRepository;
+		private readonly ISaveLoader _saveLoader;
 		private readonly IUpgradeWindowPresenter _upgradeWindowPresenter;
 
 		public UpgradeWindowPresenterFactory(
-			IUpgradeWindowViewFactory upgradeWindowViewFactory,
+			IPresentersContainerRepository presentersContainerRepository,
 			IAssetFactory assetFactory,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			IPersistentProgressService persistentProgressService,
 			IGameplayInterfacePresenter gameplayInterfacePresenter,
 			IResourcesProgressPresenter resourcesProgressPresenterProvider,
-			TranslatorService localizationService
+			TranslatorService localizationService,
+			IProgressEntityRepository progressEntityRepository,
+			IPlayerModelRepository playerModelRepository,
+			ISaveLoader saveLoader
 		)
 		{
-			_upgradeWindowViewFactory
-				= upgradeWindowViewFactory ?? throw new ArgumentNullException(nameof(upgradeWindowViewFactory));
+			_presentersContainerRepository = presentersContainerRepository ??
+			                                 throw new ArgumentNullException(nameof(presentersContainerRepository));
 			_assetFactory
 				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
 			_progressSaveLoadDataService = progressSaveLoadDataService ??
@@ -48,6 +60,10 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 				                                      nameof(resourcesProgressPresenterProvider)
 			                                      );
 			_translatorService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
+			_progressEntityRepository =
+				progressEntityRepository ?? throw new ArgumentNullException(nameof(progressEntityRepository));
+			_playerModelRepository = playerModelRepository ?? throw new ArgumentNullException(nameof(playerModelRepository));
+			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
 		}
 
 		private IResourceModelReadOnly GameProgressResourceModelReadOnly =>
@@ -60,18 +76,29 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 
 		public override IUpgradeWindowPresenter Create()
 		{
-			IUpgradeWindowPresentation upgradeWindowPresentation = _upgradeWindowViewFactory.Create();
-
 			IUpgradeTriggerObserver upgradeTrigger = _assetFactory.InstantiateAndGetComponent<UpgradeTriggerObserver>(
 				GameObjectsUpgradeTrigger
 			);
 
 			UpgradeWindowPresenter presenter = new(
-				upgradeWindowPresentation,
+				_upgradeWindowPresentation,
 				_progressSaveLoadDataService,
 				_gameplayInterfacePresenter,
 				_resourcesProgressPresenterProvider
 			);
+
+			IUpgradeWindowPresentation upgradeWindowPresentation = new UpgradeWindowViewFactory(
+				_presentersContainerRepository,
+				_assetFactory,
+				_resourcesProgressPresenterProvider,
+				_persistentProgressService as IUpdatablePersistentProgressService,
+				_translatorService,
+				presenter,
+				_gameplayInterfacePresenter,
+				_progressEntityRepository,
+				_playerModelRepository,
+				_saveLoader
+			).Create();
 
 			var enabler = _assetFactory.InstantiateAndGetComponent<UpgradeWindowActivator>(UpgradeYesNoButtonsCanvas);
 
@@ -81,8 +108,8 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 			enabler.Construct(presenter, upgradeTrigger);
 			enabler.enabled = true;
 
-			upgradeWindowPresentation.Construct(presenter, SoftCurrencyCount, enabler);
-			upgradeWindowPresentation.UpgradeWindowMain.SetActive(false);
+			_upgradeWindowPresentation.Construct(presenter, SoftCurrencyCount, enabler);
+			_upgradeWindowPresentation.UpgradeWindowMain.SetActive(false);
 
 			return presenter;
 		}

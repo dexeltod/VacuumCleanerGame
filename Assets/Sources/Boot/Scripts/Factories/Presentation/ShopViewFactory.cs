@@ -14,7 +14,6 @@ using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;
 using Sources.Utils;
 using UnityEngine;
-using VContainer;
 using Object = UnityEngine.Object;
 
 namespace Sources.Boot.Scripts.Factories.Presentation
@@ -63,12 +62,12 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 		}
 
-		public Dictionary<int, IUpgradeElementPrefabView> Create(Transform transform, AudioSource audioSource)
+		public IEnumerable<IUpgradeElementPrefabView> Create(Transform transform, AudioSource audioSource)
 		{
 			return Instantiate(transform, audioSource);
 		}
 
-		private Dictionary<int, IUpgradeElementPrefabView> Instantiate(
+		private IEnumerable<IUpgradeElementPrefabView> Instantiate(
 			Component transform,
 			AudioSource audioSource
 		)
@@ -78,7 +77,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 
 			UpgradeElementPresenter presenter = CreateUpgradeElementPresenter(audioSource, configs);
 
-			var a = configs.Join(
+			return configs.Join(
 				entities,
 				elem => elem.Id,
 				elem2 => elem2.ConfigId,
@@ -103,49 +102,6 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 					return view;
 				}
 			);
-
-			Dictionary<int, IUpgradeElementPrefabView> views = configs.ToDictionary(
-				elem => elem.Id,
-				elem2 =>
-				{
-					var view = (IUpgradeElementPrefabView)Object.Instantiate(
-						elem2.PrefabView.GetComponent<UpgradeElementPrefabView>(),
-						transform.transform
-					);
-
-					view.Construct(
-						elem2.Icon,
-						presenter,
-						Localize(elem2.Title),
-						Localize(elem2.Description),
-						elem2.Id,
-					);
-				}
-			);
-
-			for (int i = 0; i < views.Count; i++)
-			{
-				IStatUpgradeEntityReadOnly statUpgrade = entities.ElementAt(i);
-				IUpgradeEntityConfig upgradeEntityConfig = configs.ElementAt(i);
-
-				var translatedTitle = Localize(upgradeEntityConfig.Title);
-				var translatedDescription = Localize(upgradeEntityConfig.Description);
-
-				int configId = configs.ElementAt(i).Id;
-
-				views[i].Construct(
-					upgradeEntityConfig.Icon,
-					presenter,
-					translatedTitle,
-					translatedDescription,
-					configId,
-					statUpgrade.Value,
-					_progressEntityRepository.GetPrice(configId),
-					upgradeEntityConfig.MaxProgressCount
-				);
-			}
-
-			return views;
 		}
 
 		private UpgradeElementPresenter CreateUpgradeElementPresenter(AudioSource audioSource,

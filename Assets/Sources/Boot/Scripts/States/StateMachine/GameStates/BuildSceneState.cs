@@ -40,7 +40,6 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 		private readonly IResourcesPrefabs _resourcePathNameConfig;
 		private readonly ICoroutineRunner _coroutineRunner;
 		private readonly ISceneLoader _sceneLoader;
-		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenter;
 		private readonly TranslatorService _translatorService;
 		private readonly IPresentersContainerRepository _presentersContainerRepository;
 		private readonly IPlayerModelRepository _playerModelRepository;
@@ -61,7 +60,6 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 
 			IGameStateChanger gameStateMachine,
 			IPlayerFactory playerFactory,
-			IUpgradeWindowViewFactory upgradeWindowViewFactory,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			ILevelConfigGetter levelConfigGetter,
 			ILevelProgressFacade levelProgressFacade,
@@ -175,30 +173,27 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 				sendParticleView
 			);
 
-			IUpgradeWindowPresentation upgradeWindowPresentation = new UpgradeWindowViewFactory(
+			var upgradeWindowPresenter = new UpgradeWindowPresenterFactory(
+				_presentersContainerRepository,
 				_assetFactory,
-				resourcesProgressPresenter,
-				(IUpdatablePersistentProgressService)_persistentProgress,
-				_translatorService,
-				upgradeWindowPresenter,
+				_progressSaveLoadDataService,
+				_persistentProgress,
 				gameplayInterfacePresenter,
+				resourcesProgressPresenter,
+				_translatorService,
 				_progressEntityRepository,
 				_playerModelRepository,
 				_saveLoader
 			).Create();
 
-			IUpgradeWindowPresenter upgradeWindowPresenter = new UpgradeWindowPresenterFactory(
-				_assetFactory,
-				_progressSaveLoadDataService,
-				_persistentProgress,
-				_gameplayInterfacePresenter,
-				_translatorService
-			).Create();
-
 			_presentersContainerRepository.AddRange(
 				new List<IPresenter>
 				{
-					gameplayInterfacePresenter, shaderViewController, _advertisementPresenter, resourcesProgressPresenter
+					gameplayInterfacePresenter,
+					shaderViewController,
+					_advertisementPresenter,
+					resourcesProgressPresenter,
+					upgradeWindowPresenter
 				}
 			);
 			InstantiateRocks(resourcesProgressPresenter);
