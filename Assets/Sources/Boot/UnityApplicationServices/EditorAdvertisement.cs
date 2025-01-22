@@ -7,12 +7,6 @@ namespace Sources.Boot.UnityApplicationServices
 {
 	public sealed class EditorAdvertisement : IAdvertisement
 	{
-		public UniTask ShowVideoAd()
-		{
-			Debug.Log("ShowVideoAd");
-			return UniTask.CompletedTask;
-		}
-
 		public UniTask ShowVideoAd(Action onClosed, Action onRewarded, Action onOpened, Action onError = null)
 		{
 			onRewarded.Invoke();
@@ -41,5 +35,11 @@ namespace Sources.Boot.UnityApplicationServices
 		public event Action Closed;
 		public event Action Rewarded;
 		public event Action Opened;
+
+		public UniTask ShowVideoAd()
+		{
+			Debug.Log("ShowVideoAd");
+			return UniTask.CompletedTask;
+		}
 	}
 }

@@ -4,7 +4,10 @@ using UnityEngine;
 
 namespace Plugins.CW.LeanCommon.Extras.Scripts
 {
-	/// <summary>This component stores information about a 3D plane. By default this plane lays on the XY axis, or faces the Z axis.</summary>
+	/// <summary>
+	///     This component stores information about a 3D plane. By default this plane lays on the XY axis, or faces the Z
+	///     axis.
+	/// </summary>
 	[HelpURL(
 		Required.Scripts.LeanCommon.HelpUrlPrefix + "LeanPlane"
 	)]
@@ -33,125 +36,15 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 		/// <summary>The distance between each position snap on the x axis.</summary>
 		public float SnapY;
 
-		public Vector3 GetClosest(Vector3 position, float offset = 0.0f)
-		{
-			// Transform point to plane space
-			var point = transform.InverseTransformPoint(
-				position
-			);
-
-			// Clamp values?
-			if (ClampX == true)
-			{
-				point.x = Mathf.Clamp(
-					point.x,
-					MinX,
-					MaxX
-				);
-			}
-
-			if (ClampY == true)
-			{
-				point.y = Mathf.Clamp(
-					point.y,
-					MinY,
-					MaxY
-				);
-			}
-
-			// Snap values?
-			if (SnapX != 0.0f)
-			{
-				point.x = Mathf.Round(
-					          point.x / SnapX
-				          ) *
-				          SnapX;
-			}
-
-			if (SnapY != 0.0f)
-			{
-				point.y = Mathf.Round(
-					          point.y / SnapY
-				          ) *
-				          SnapY;
-			}
-
-			// Reset Z to plane
-			point.z = 0.0f;
-
-			// Transform back into world space
-			return transform.TransformPoint(
-				       point
-			       ) +
-			       transform.forward * offset;
-		}
-
-		public bool TryRaycast(Ray ray, ref Vector3 hit, float offset = 0.0f, bool getClosest = true)
-		{
-			var normal = transform.forward;
-			var point = transform.position + normal * offset;
-			var distance = default(float);
-
-			if (RayToPlane(
-				    point,
-				    normal,
-				    ray,
-				    ref distance
-			    ) ==
-			    true)
-			{
-				hit = ray.GetPoint(
-					distance
-				);
-
-				if (getClosest == true)
-				{
-					hit = GetClosest(
-						hit,
-						offset
-					);
-				}
-
-				return true;
-			}
-
-			return false;
-		}
-
-		public Vector3 GetClosest(Ray ray, float offset = 0.0f)
-		{
-			var normal = transform.forward;
-			var point = transform.position + normal * offset;
-			var distance = default(float);
-
-			if (RayToPlane(
-				    point,
-				    normal,
-				    ray,
-				    ref distance
-			    ) ==
-			    true)
-			{
-				return GetClosest(
-					ray.GetPoint(
-						distance
-					),
-					offset
-				);
-			}
-
-			return point;
-		}
-
 #if UNITY_EDITOR
 		protected virtual void OnDrawGizmosSelected()
 		{
 			Gizmos.matrix = transform.localToWorldMatrix;
 
-			var x1 = MinX;
-			var x2 = MaxX;
-			var y1 = MinY;
-			var y2 = MaxY;
+			float x1 = MinX;
+			float x2 = MaxX;
+			float y1 = MinY;
+			float y2 = MaxY;
 
 			if (ClampX == false)
 			{
@@ -235,9 +128,105 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 		}
 #endif
 
+		public Vector3 GetClosest(Vector3 position, float offset = 0.0f)
+		{
+			// Transform point to plane space
+			Vector3 point = transform.InverseTransformPoint(
+				position
+			);
+
+			// Clamp values?
+			if (ClampX)
+				point.x = Mathf.Clamp(
+					point.x,
+					MinX,
+					MaxX
+				);
+
+			if (ClampY)
+				point.y = Mathf.Clamp(
+					point.y,
+					MinY,
+					MaxY
+				);
+
+			// Snap values?
+			if (SnapX != 0.0f)
+				point.x = Mathf.Round(
+					          point.x / SnapX
+				          ) *
+				          SnapX;
+
+			if (SnapY != 0.0f)
+				point.y = Mathf.Round(
+					          point.y / SnapY
+				          ) *
+				          SnapY;
+
+			// Reset Z to plane
+			point.z = 0.0f;
+
+			// Transform back into world space
+			return transform.TransformPoint(
+				       point
+			       ) +
+			       transform.forward * offset;
+		}
+
+		public bool TryRaycast(Ray ray, ref Vector3 hit, float offset = 0.0f, bool getClosest = true)
+		{
+			Vector3 normal = transform.forward;
+			Vector3 point = transform.position + normal * offset;
+			var distance = default(float);
+
+			if (RayToPlane(
+				    point,
+				    normal,
+				    ray,
+				    ref distance
+			    ))
+			{
+				hit = ray.GetPoint(
+					distance
+				);
+
+				if (getClosest)
+					hit = GetClosest(
+						hit,
+						offset
+					);
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public Vector3 GetClosest(Ray ray, float offset = 0.0f)
+		{
+			Vector3 normal = transform.forward;
+			Vector3 point = transform.position + normal * offset;
+			var distance = default(float);
+
+			if (RayToPlane(
+				    point,
+				    normal,
+				    ray,
+				    ref distance
+			    ))
+				return GetClosest(
+					ray.GetPoint(
+						distance
+					),
+					offset
+				);
+
+			return point;
+		}
+
 		private static bool RayToPlane(Vector3 point, Vector3 normal, Ray ray, ref float distance)
 		{
-			var b = Vector3.Dot(
+			float b = Vector3.Dot(
 				ray.direction,
 				normal
 			);
@@ -245,21 +234,18 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			if (Mathf.Approximately(
 				    b,
 				    0.0f
-			    ) ==
-			    true)
-			{
+			    ))
 				return false;
-			}
 
-			var d = -Vector3.Dot(
+			float d = -Vector3.Dot(
 				normal,
 				point
 			);
-			var a = -Vector3.Dot(
-				        ray.origin,
-				        normal
-			        ) -
-			        d;
+			float a = -Vector3.Dot(
+				          ray.origin,
+				          normal
+			          ) -
+			          d;
 
 			distance = a / b;
 
@@ -290,7 +276,7 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 
 			if (Any(
 				    tgts,
-				    t => t.ClampX == true
+				    t => t.ClampX
 			    ))
 			{
 				BeginIndent();
@@ -316,7 +302,7 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 
 			if (Any(
 				    tgts,
-				    t => t.ClampX == true
+				    t => t.ClampX
 			    ))
 			{
 				BeginIndent();

@@ -26,78 +26,90 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 			LateUpdate
 		}
 
+		[SerializeField] private FollowType follow;
+
+		[SerializeField] private Transform target;
+
+		[SerializeField] private float damping = -1.0f;
+
+		[SerializeField] private bool rotate = true;
+
+		[SerializeField] private bool ignoreZ;
+
+		[SerializeField] private UpdateType followIn = UpdateType.LateUpdate;
+
+		[SerializeField] private Vector3 localPosition;
+
+		[SerializeField] private Vector3 localRotation;
+
 		/// <summary>What should this component follow?</summary>
 		public FollowType Follow
 		{
-			set { follow = value; }
-			get { return follow; }
+			set => follow = value;
+			get => follow;
 		}
-
-		[SerializeField] private FollowType follow;
 
 		/// <summary>The transform that will be followed.</summary>
 		public Transform Target
 		{
-			set { target = value; }
-			get { return target; }
+			set => target = value;
+			get => target;
 		}
 
-		[SerializeField] private Transform target;
-
-		/// <summary>How quickly this Transform follows the target.
-		/// -1 = instant.</summary>
+		/// <summary>
+		///     How quickly this Transform follows the target.
+		///     -1 = instant.
+		/// </summary>
 		public float Damping
 		{
-			set { damping = value; }
-			get { return damping; }
+			set => damping = value;
+			get => damping;
 		}
-
-		[SerializeField] private float damping = -1.0f;
 
 		/// <summary>Follow the target's rotation too?</summary>
 		public bool Rotate
 		{
-			set { rotate = value; }
-			get { return rotate; }
+			set => rotate = value;
+			get => rotate;
 		}
-
-		[SerializeField] private bool rotate = true;
 
 		/// <summary>Ignore Z axis for 2D?</summary>
 		public bool IgnoreZ
 		{
-			set { ignoreZ = value; }
-			get { return ignoreZ; }
+			set => ignoreZ = value;
+			get => ignoreZ;
 		}
-
-		[SerializeField] private bool ignoreZ;
 
 		/// <summary>Where in the game loop should this component update?</summary>
 		public UpdateType FollowIn
 		{
-			set { followIn = value; }
-			get { return followIn; }
+			set => followIn = value;
+			get => followIn;
 		}
-
-		[SerializeField] private UpdateType followIn = UpdateType.LateUpdate;
 
 		/// <summary>This allows you to specify a positional offset relative to the <b>Target</b>.</summary>
 		public Vector3 LocalPosition
 		{
-			set { localPosition = value; }
-			get { return localPosition; }
+			set => localPosition = value;
+			get => localPosition;
 		}
-
-		[SerializeField] private Vector3 localPosition;
 
 		/// <summary>This allows you to specify a rotational offset relative to the <b>Target</b>.</summary>
 		public Vector3 LocalRotation
 		{
-			set { localRotation = value; }
-			get { return localRotation; }
+			set => localRotation = value;
+			get => localRotation;
 		}
 
-		[SerializeField] private Vector3 localRotation;
+		protected virtual void Update()
+		{
+			if (followIn == UpdateType.Update) UpdatePosition();
+		}
+
+		protected virtual void LateUpdate()
+		{
+			if (followIn == UpdateType.LateUpdate) UpdatePosition();
+		}
 
 		/// <summary>This method will update the follow position now.</summary>
 		[ContextMenu(
@@ -105,33 +117,27 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 		)]
 		public void UpdatePosition()
 		{
-			var finalTarget = target;
+			Transform finalTarget = target;
 
 			if (follow == FollowType.MainCamera)
 			{
-				var mainCamera = Camera.main;
+				Camera mainCamera = Camera.main;
 
-				if (mainCamera != null)
-				{
-					finalTarget = mainCamera.transform;
-				}
+				if (mainCamera != null) finalTarget = mainCamera.transform;
 			}
 
 			if (finalTarget != null)
 			{
-				var currentPosition = transform.position;
-				var targetPosition = finalTarget.TransformPoint(
+				Vector3 currentPosition = transform.position;
+				Vector3 targetPosition = finalTarget.TransformPoint(
 					localPosition
 				);
-				var factor = CwHelper.DampenFactor(
+				float factor = CwHelper.DampenFactor(
 					damping,
 					Time.deltaTime
 				);
 
-				if (ignoreZ == true)
-				{
-					targetPosition.z = currentPosition.z;
-				}
+				if (ignoreZ) targetPosition.z = currentPosition.z;
 
 				transform.position = Vector3.Lerp(
 					currentPosition,
@@ -139,12 +145,12 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 					factor
 				);
 
-				if (rotate == true)
+				if (rotate)
 				{
-					var targetRotation = finalTarget.rotation *
-					                     Quaternion.Euler(
-						                     localRotation
-					                     );
+					Quaternion targetRotation = finalTarget.rotation *
+					                            Quaternion.Euler(
+						                            localRotation
+					                            );
 
 					transform.rotation = Quaternion.Slerp(
 						transform.rotation,
@@ -152,22 +158,6 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 						factor
 					);
 				}
-			}
-		}
-
-		protected virtual void Update()
-		{
-			if (followIn == UpdateType.Update)
-			{
-				UpdatePosition();
-			}
-		}
-
-		protected virtual void LateUpdate()
-		{
-			if (followIn == UpdateType.LateUpdate)
-			{
-				UpdatePosition();
 			}
 		}
 	}

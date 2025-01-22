@@ -7,11 +7,10 @@ namespace Sources.Presentation.Player
 {
 	public class DissolveDissolveShaderView : PresentableView<IDissolveShaderViewController>, IDissolveShaderView
 	{
-		[SerializeField] private Renderer[] _renderers;
-
 		private const string DissolvingParameterName = "_Dissolve";
 
 		private readonly static int Dissolve = Shader.PropertyToID(DissolvingParameterName);
+		[SerializeField] private Renderer[] _renderers;
 
 		public void SetDissolvingValue(float normalizedDissolvingValue)
 		{

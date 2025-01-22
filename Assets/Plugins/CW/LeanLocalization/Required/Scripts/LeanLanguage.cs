@@ -18,14 +18,16 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 	)]
 	public class LeanLanguage : LeanSource
 	{
+		[SerializeField] private string translationCode;
+
+		[SerializeField] private List<string> cultures;
+
 		/// <summary>The language code used for auto translation.</summary>
 		public string TranslationCode
 		{
-			set { translationCode = value; }
-			get { return translationCode; }
+			set => translationCode = value;
+			get => translationCode;
 		}
-
-		[SerializeField] private string translationCode;
 
 		/// <summary>This culture names for this language (e.g. en-GB, en-US).</summary>
 		public List<string> Cultures
@@ -37,20 +39,16 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			}
 		}
 
-		[SerializeField] private List<string> cultures;
-
 		public override void Register()
 		{
 			if (LeanLocalization.CurrentLanguages.ContainsKey(
 				    name
 			    ) ==
 			    false)
-			{
 				LeanLocalization.CurrentLanguages.Add(
 					name,
 					this
 				);
-			}
 
 			TryAddAlias(
 				name,
@@ -58,15 +56,11 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			);
 
 			if (cultures != null)
-			{
-				foreach (var culture in cultures)
-				{
+				foreach (string culture in cultures)
 					TryAddAlias(
 						culture,
 						name
 					);
-				}
-			}
 		}
 
 		private void TryAddAlias(string key, string value)
@@ -75,12 +69,10 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				    key
 			    ) ==
 			    false)
-			{
 				LeanLocalization.CurrentAliases.Add(
 					key,
 					value
 				);
-			}
 		}
 	}
 

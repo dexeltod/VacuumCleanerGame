@@ -8,7 +8,6 @@ namespace Sources.PresentationInterfaces
 {
 	public interface IUpgradeWindowPresentation : IPresentableView<IUpgradeWindowPresenter>
 	{
-		void SetActiveYesNoButtons(bool isActive);
 		Transform ContainerTransform { get; }
 		List<string> Phrases { get; set; }
 		Button CloseMenuButton { get; }
@@ -16,6 +15,7 @@ namespace Sources.PresentationInterfaces
 		AudioSource AudioSource { get; }
 
 		void Construct(IUpgradeWindowPresenter presenter, int money, IUpgradeWindowActivator activator);
+		void SetActiveYesNoButtons(bool isActive);
 		void SetMoney(int money);
 	}
 }

@@ -5,32 +5,31 @@ using Sources.Presentation.UI;
 using Sources.PresentationInterfaces;
 using Sources.Utils;
 using UnityEngine;
-using VContainer;
 
 namespace Sources.Boot.Scripts.Factories.Presentation.LeaderBoard
 {
-	public class MainMenuFactory
+	public class MainMenuFactory : IMainMenuFactory
 	{
-		private readonly IAssetFactory _assetFactory;
+		private readonly IAssetLoader _assetLoader;
 		private readonly TranslatorService _translatorService;
 
-		[Inject]
+		private MainMenuView _mainMenuView;
+
 		public MainMenuFactory(
-			IAssetFactory assetFactory,
+			IAssetLoader assetLoader,
 			TranslatorService translatorService
 		)
 		{
-			_assetFactory
-				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetLoader
+				= assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 		}
 
-		private MainMenuView _mainMenuView;
 		private string MainMenuCanvasResourcePath => ResourcesAssetPath.Scene.UIResources.MainMenuCanvas;
 
 		public IMainMenuView Create()
 		{
-			GameObject gameObject = _assetFactory.Instantiate(MainMenuCanvasResourcePath);
+			GameObject gameObject = _assetLoader.Instantiate(MainMenuCanvasResourcePath);
 
 			_mainMenuView = gameObject.GetComponent<MainMenuView>();
 

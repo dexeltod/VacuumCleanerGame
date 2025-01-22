@@ -10,19 +10,22 @@ namespace Sources.Controllers
 	public class GameMenuPresenter : Presenter, IGameMenuPresenter, IDisposable
 	{
 		private readonly IGameMenuView _gameMenu;
-		private readonly IGameStateChanger _gameStateChanger;
+		private readonly IStateMachine _stateMachine;
 
 		public GameMenuPresenter(
 			IGameMenuView gameMenu,
-			IGameStateChanger gameStateChanger
+			IStateMachine stateMachine
 		)
 		{
 			_gameMenu = gameMenu ?? throw new ArgumentNullException(nameof(gameMenu));
-			_gameStateChanger = gameStateChanger ?? throw new ArgumentNullException(nameof(gameStateChanger));
+			_stateMachine = stateMachine ?? throw new ArgumentNullException(nameof(stateMachine));
 		}
 
+		public void Dispose() =>
+			Disable();
+
 		public void GoToMainMenu() =>
-			_gameStateChanger.Enter<IMenuState>();
+			_stateMachine.Enter<IMenuState>();
 
 		public override void Enable()
 		{
@@ -35,8 +38,5 @@ namespace Sources.Controllers
 			_gameMenu.OpenMenuButton.onClick.RemoveListener(_gameMenu.Disable);
 			_gameMenu.OpenMenuButton.onClick.RemoveListener(_gameMenu.Enable);
 		}
-
-		public void Dispose() =>
-			Disable();
 	}
 }

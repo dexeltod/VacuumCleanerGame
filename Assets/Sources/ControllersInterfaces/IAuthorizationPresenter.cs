@@ -2,8 +2,8 @@ namespace Sources.ControllersInterfaces
 {
 	public interface IAuthorizationPresenter : IPresenter
 	{
-		void SetChoice(bool isWants);
-		void Authorize();
 		bool IsAuthorized { get; }
+		void Authorize();
+		void SetChoice(bool isWants);
 	}
 }

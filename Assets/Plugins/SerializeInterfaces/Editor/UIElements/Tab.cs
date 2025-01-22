@@ -4,9 +4,9 @@ namespace Plugins.SerializeInterfaces.Editor.UIElements
 {
 	internal class Tab : Toggle
 	{
-		public Tab(string text) : base()
+		public Tab(string text)
 		{
-			base.text = text;
+			this.text = text;
 			RemoveFromClassList(
 				ussClassName
 			);

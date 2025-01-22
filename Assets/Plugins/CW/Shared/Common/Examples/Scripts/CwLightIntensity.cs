@@ -18,38 +18,44 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 		/// <summary>All light values will be multiplied by this before use.</summary>
 		public float Multiplier
 		{
-			set { multiplier = value; }
-			get { return multiplier; }
+			set => multiplier = value;
+			get => multiplier;
 		}
 
 		[SerializeField] private float multiplier = 1.0f;
 
-		/// <summary>This allows you to control the intensity of the attached light when using the <b>Standard</b> rendering pipeline.
-		/// -1 = The attached light intensity will not be modified.</summary>
+		/// <summary>
+		///     This allows you to control the intensity of the attached light when using the <b>Standard</b> rendering pipeline.
+		///     -1 = The attached light intensity will not be modified.
+		/// </summary>
 		public float IntensityInStandard
 		{
-			set { intensityInStandard = value; }
-			get { return intensityInStandard; }
+			set => intensityInStandard = value;
+			get => intensityInStandard;
 		}
 
 		[SerializeField] private float intensityInStandard = 1.0f;
 
-		/// <summary>This allows you to control the intensity of the attached light when using the <b>URP</b> rendering pipeline.
-		/// -1 = The attached light intensity will not be modified.</summary>
+		/// <summary>
+		///     This allows you to control the intensity of the attached light when using the <b>URP</b> rendering pipeline.
+		///     -1 = The attached light intensity will not be modified.
+		/// </summary>
 		public float IntensityInURP
 		{
-			set { intensityInURP = value; }
-			get { return intensityInURP; }
+			set => intensityInURP = value;
+			get => intensityInURP;
 		}
 
 		[SerializeField] private float intensityInURP = 1.0f;
 
-		/// <summary>This allows you to control the intensity of the attached light when using the <b>HDRP</b> rendering pipeline.
-		/// -1 = The attached light intensity will not be modified.</summary>
+		/// <summary>
+		///     This allows you to control the intensity of the attached light when using the <b>HDRP</b> rendering pipeline.
+		///     -1 = The attached light intensity will not be modified.
+		/// </summary>
 		public float IntensityInHDRP
 		{
-			set { intensityInHDRP = value; }
-			get { return intensityInHDRP; }
+			set => intensityInHDRP = value;
+			get => intensityInHDRP;
 		}
 
 		[SerializeField] private float intensityInHDRP = 120000.0f;
@@ -79,24 +85,18 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 
 		protected virtual void Update()
 		{
-			if (CwHelper.IsBIRP == true)
-			{
+			if (CwHelper.IsBIRP)
 				ApplyIntensity(
 					intensityInStandard
 				);
-			}
-			else if (CwHelper.IsURP == true)
-			{
+			else if (CwHelper.IsURP)
 				ApplyIntensity(
 					intensityInURP
 				);
-			}
-			else if (CwHelper.IsHDRP == true)
-			{
+			else if (CwHelper.IsHDRP)
 				ApplyIntensity(
 					intensityInHDRP
 				);
-			}
 		}
 
 		private void ApplyIntensity(float intensity)

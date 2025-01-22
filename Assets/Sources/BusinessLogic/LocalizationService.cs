@@ -11,16 +11,16 @@ namespace Sources.BusinessLogic
 	public class LocalizationService : ILocalizationService
 	{
 		private const string StartLanguage = "ru";
-
-		private readonly IAssetFactory _factory;
-		private readonly string[] _phraseNames;
 		private readonly string[] _languages;
 
-		public LocalizationService(IAssetFactory factory)
-		{
-			_factory = factory ?? throw new ArgumentNullException(nameof(factory));
+		private readonly IAssetLoader _loader;
+		private readonly string[] _phraseNames;
 
-			LeanLocalization leanLocalization = LoadAssets(factory, out var localizationData);
+		public LocalizationService(IAssetLoader loader)
+		{
+			_loader = loader ?? throw new ArgumentNullException(nameof(loader));
+
+			LeanLocalization leanLocalization = LoadAssets(loader, out LocalizationRoot localizationData);
 
 			_languages = new string[localizationData.Languages.Count];
 			_phraseNames = new string[localizationData.Phrases.Count];
@@ -51,7 +51,7 @@ namespace Sources.BusinessLogic
 					    ))
 						throw new ArgumentException(
 							"Value cannot be null or whitespace.",
-							(elem)
+							elem
 						);
 
 					return elem == phrase;
@@ -78,26 +78,9 @@ namespace Sources.BusinessLogic
 			);
 		}
 
-		private LeanLocalization LoadAssets(IAssetFactory assetFactory, out LocalizationRoot localizationData)
-		{
-			LeanLocalization leanLocalization =
-				assetFactory.InstantiateAndGetComponent<LeanLocalization>(
-					ResourcesAssetPath.GameObjects.LeanLocalization
-				);
-
-			var config = Resources.Load<TextAsset>(
-				ResourcesAssetPath.Configs.Localization
-			);
-
-			localizationData = JsonUtility.FromJson<LocalizationRoot>(
-				config.text
-			);
-			return leanLocalization;
-		}
-
 		private void AddLanguages(LocalizationRoot localizationData, LeanLocalization leanLocalization)
 		{
-			for (int i = 0; i < localizationData.Languages.Count; i++)
+			for (var i = 0; i < localizationData.Languages.Count; i++)
 			{
 				string language = localizationData.Languages[i];
 				_languages[i] = language;
@@ -115,7 +98,7 @@ namespace Sources.BusinessLogic
 					localizationData.Phrases[x].Name
 				);
 
-				for (int i = 0; i < _languages.Length; i++)
+				for (var i = 0; i < _languages.Length; i++)
 				{
 					Phrase phraseData = localizationData.Phrases[x];
 
@@ -133,11 +116,28 @@ namespace Sources.BusinessLogic
 
 		private void InitPhraseNames(LocalizationRoot localizationData)
 		{
-			for (int i = 0; i < localizationData.Phrases.Count; i++)
+			for (var i = 0; i < localizationData.Phrases.Count; i++)
 			{
 				Phrase phrase = localizationData.Phrases[i];
 				_phraseNames[i] = phrase.Name;
 			}
+		}
+
+		private LeanLocalization LoadAssets(IAssetLoader assetLoader, out LocalizationRoot localizationData)
+		{
+			var leanLocalization =
+				assetLoader.InstantiateAndGetComponent<LeanLocalization>(
+					ResourcesAssetPath.GameObjects.LeanLocalization
+				);
+
+			var config = Resources.Load<TextAsset>(
+				ResourcesAssetPath.Configs.Localization
+			);
+
+			localizationData = JsonUtility.FromJson<LocalizationRoot>(
+				config.text
+			);
+			return leanLocalization;
 		}
 	}
 }

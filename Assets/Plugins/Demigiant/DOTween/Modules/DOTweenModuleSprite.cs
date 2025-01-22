@@ -16,9 +16,12 @@ namespace Plugins.Demigiant.DOTween.Modules
 
 		#region SpriteRenderer
 
-		/// <summary>Tweens a SpriteRenderer's color to the given value.
-		/// Also stores the spriteRenderer as the tween's target so it can be used for filtered operations</summary>
-		/// <param name="endValue">The end value to reach</param><param name="duration">The duration of the tween</param>
+		/// <summary>
+		///     Tweens a SpriteRenderer's color to the given value.
+		///     Also stores the spriteRenderer as the tween's target so it can be used for filtered operations
+		/// </summary>
+		/// <param name="endValue">The end value to reach</param>
+		/// <param name="duration">The duration of the tween</param>
 		public static TweenerCore<Color, Color, ColorOptions> DOColor(
 			this SpriteRenderer target,
 			Color endValue,
@@ -37,9 +40,12 @@ namespace Plugins.Demigiant.DOTween.Modules
 			return t;
 		}
 
-		/// <summary>Tweens a Material's alpha color to the given value.
-		/// Also stores the spriteRenderer as the tween's target so it can be used for filtered operations</summary>
-		/// <param name="endValue">The end value to reach</param><param name="duration">The duration of the tween</param>
+		/// <summary>
+		///     Tweens a Material's alpha color to the given value.
+		///     Also stores the spriteRenderer as the tween's target so it can be used for filtered operations
+		/// </summary>
+		/// <param name="endValue">The end value to reach</param>
+		/// <param name="duration">The duration of the tween</param>
 		public static TweenerCore<Color, Color, ColorOptions> DOFade(
 			this SpriteRenderer target,
 			float endValue,
@@ -58,17 +64,20 @@ namespace Plugins.Demigiant.DOTween.Modules
 			return t;
 		}
 
-		/// <summary>Tweens a SpriteRenderer's color using the given gradient
-		/// (NOTE 1: only uses the colors of the gradient, not the alphas - NOTE 2: creates a Sequence, not a Tweener).
-		/// Also stores the image as the tween's target so it can be used for filtered operations</summary>
-		/// <param name="gradient">The gradient to use</param><param name="duration">The duration of the tween</param>
+		/// <summary>
+		///     Tweens a SpriteRenderer's color using the given gradient
+		///     (NOTE 1: only uses the colors of the gradient, not the alphas - NOTE 2: creates a Sequence, not a Tweener).
+		///     Also stores the image as the tween's target so it can be used for filtered operations
+		/// </summary>
+		/// <param name="gradient">The gradient to use</param>
+		/// <param name="duration">The duration of the tween</param>
 		public static Sequence DOGradientColor(this SpriteRenderer target, Gradient gradient, float duration)
 		{
 			Sequence s = DG.Tweening.DOTween.Sequence();
 			GradientColorKey[] colors = gradient.colorKeys;
 			int len = colors.Length;
 
-			for (int i = 0; i < len; ++i)
+			for (var i = 0; i < len; ++i)
 			{
 				GradientColorKey c = colors[i];
 
@@ -106,15 +115,18 @@ namespace Plugins.Demigiant.DOTween.Modules
 
 		#region SpriteRenderer
 
-		/// <summary>Tweens a SpriteRenderer's color to the given value,
-		/// in a way that allows other DOBlendableColor tweens to work together on the same target,
-		/// instead than fight each other as multiple DOColor would do.
-		/// Also stores the SpriteRenderer as the tween's target so it can be used for filtered operations</summary>
-		/// <param name="endValue">The value to tween to</param><param name="duration">The duration of the tween</param>
+		/// <summary>
+		///     Tweens a SpriteRenderer's color to the given value,
+		///     in a way that allows other DOBlendableColor tweens to work together on the same target,
+		///     instead than fight each other as multiple DOColor would do.
+		///     Also stores the SpriteRenderer as the tween's target so it can be used for filtered operations
+		/// </summary>
+		/// <param name="endValue">The value to tween to</param>
+		/// <param name="duration">The duration of the tween</param>
 		public static Tweener DOBlendableColor(this SpriteRenderer target, Color endValue, float duration)
 		{
 			endValue = endValue - target.color;
-			Color to = new Color(
+			var to = new Color(
 				0,
 				0,
 				0,

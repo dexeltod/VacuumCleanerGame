@@ -16,22 +16,22 @@ namespace Sources.Boot.Scripts.Factories.Presenters
 {
 	public class MainMenuPresenterFactory : IMainMenuPresenterFactory
 	{
-		private readonly IAssetFactory _assetFactory;
-		private readonly IMainMenuView _mainMenu;
-		private readonly ILevelProgressFacade _levelProgress;
-		private readonly IGameStateChanger _stateMachine;
-		private readonly ILevelConfigGetter _levelConfigGetter;
-		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
+		private readonly IAssetLoader _assetLoader;
 		private readonly IAuthorizationPresenter _authorizationPresenter;
-		private readonly ILeaderBoardView _leaderBoardView;
-		private readonly ILeaderBoardService _leaderBoardService;
 		private readonly ILeaderBoardPlayersFactory _leaderBoardPlayersFactory;
+		private readonly ILeaderBoardService _leaderBoardService;
+		private readonly ILeaderBoardView _leaderBoardView;
+		private readonly ILevelConfigGetter _levelConfigGetter;
+		private readonly ILevelProgressFacade _levelProgress;
+		private readonly IMainMenuView _mainMenu;
+		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly ISettingsView _settingsView;
+		private readonly IStateMachine _stateMachine;
 
-		public MainMenuPresenterFactory(IAssetFactory assetFactory,
+		public MainMenuPresenterFactory(IAssetLoader assetLoader,
 			IMainMenuView mainMenu,
 			ILevelProgressFacade levelProgress,
-			IGameStateChanger stateMachine,
+			IStateMachine stateMachine,
 			ILevelConfigGetter levelConfigGetter,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			IAuthorizationPresenter authorizationPresenter,
@@ -40,9 +40,9 @@ namespace Sources.Boot.Scripts.Factories.Presenters
 			ILeaderBoardPlayersFactory leaderBoardPlayersFactory,
 			ISettingsView settingsView)
 		{
-			if (assetFactory == null) throw new ArgumentNullException(nameof(assetFactory));
+			if (assetLoader == null) throw new ArgumentNullException(nameof(assetLoader));
 
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetLoader = assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 			_mainMenu = mainMenu ?? throw new ArgumentNullException(nameof(mainMenu));
 			_levelProgress = levelProgress ?? throw new ArgumentNullException(nameof(levelProgress));
 			_stateMachine = stateMachine ?? throw new ArgumentNullException(nameof(stateMachine));
@@ -59,13 +59,13 @@ namespace Sources.Boot.Scripts.Factories.Presenters
 
 		public IMainMenuPresenter Create()
 		{
-			var mixer = _assetFactory.LoadFromResources<AudioMixer>(ResourcesAssetPath.GameObjects.AudioMixer);
+			var mixer = _assetLoader.LoadFromResources<AudioMixer>(ResourcesAssetPath.GameObjects.AudioMixer);
 
 			var soundSettings = new SoundSettings(PlayerPrefs.GetFloat(SettingsPlayerPrefsNames.MasterVolumeName));
 			return new MainMenuPresenter(
+				_stateMachine,
 				_mainMenu,
 				_levelProgress,
-				_stateMachine,
 				_levelConfigGetter,
 				_progressSaveLoadDataService,
 				_authorizationPresenter,

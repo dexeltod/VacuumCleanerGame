@@ -13,12 +13,10 @@ namespace Sources.Infrastructure.Services
 	[Serializable]
 	public class ProgressSaveLoadDataService : IProgressSaveLoadDataService
 	{
-		private readonly ISaveLoader _saveLoader;
-		private readonly IPersistentProgressService _progressService;
-
 		private readonly BinaryDataSaveLoader _binaryDataSaveLoader;
-		private readonly JsonDataSaveLoader _jsonDataLoader;
 		private readonly IClearProgressFactory _clearProgressFactory;
+		private readonly JsonDataSaveLoader _jsonDataLoader;
+		private readonly IPersistentProgressService _progressService;
 
 		private IGlobalProgress _globalProgress;
 
@@ -30,14 +28,14 @@ namespace Sources.Infrastructure.Services
 			IClearProgressFactory clearProgressFactory
 		)
 		{
-			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
+			SaveLoaderImplementation = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
 			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
 			_clearProgressFactory = clearProgressFactory ?? throw new ArgumentNullException(nameof(clearProgressFactory));
 
 			_jsonDataLoader = new JsonDataSaveLoader();
 		}
 
-		private ISaveLoader SaveLoaderImplementation => _saveLoader;
+		private ISaveLoader SaveLoaderImplementation { get; }
 
 		public bool IsCallbackReceived { get; private set; }
 
@@ -48,7 +46,7 @@ namespace Sources.Infrastructure.Services
 		}
 
 		public async UniTask ClearSaves() =>
-			await _saveLoader.Save(_clearProgressFactory.Create());
+			await SaveLoaderImplementation.Save(_clearProgressFactory.Create());
 
 		public async UniTask<IGlobalProgress> LoadFromCloud()
 		{

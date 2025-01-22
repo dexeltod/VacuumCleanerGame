@@ -5,13 +5,6 @@ namespace Sources.BusinessLogic.ServicesInterfaces.Advertisement
 {
 	public interface IAdvertisement
 	{
-		public UniTask ShowVideoAd(
-			Action onClosed,
-			Action onRewarded,
-			Action onOpened,
-			Action onError = null
-		);
-
 		public UniTask ShowInterstitialAd(
 			Action onClosed,
 			Action onRewarded,
@@ -20,6 +13,13 @@ namespace Sources.BusinessLogic.ServicesInterfaces.Advertisement
 		);
 
 		public UniTask ShowStickAd(
+			Action onClosed,
+			Action onRewarded,
+			Action onOpened,
+			Action onError = null
+		);
+
+		public UniTask ShowVideoAd(
 			Action onClosed,
 			Action onRewarded,
 			Action onOpened,

@@ -3,8 +3,11 @@ using UnityEngine;
 
 namespace Plugins.CW.LeanCommon.Extras.Scripts
 {
-	/// <summary>This is the base class for all components that need to implement some kind of special logic when selected. You can do this manually without this class, but this makes it much easier.
-	/// NOTE: This component will register and unregister the associated LeanSelectable in OnEnable and OnDisable.</summary>
+	/// <summary>
+	///     This is the base class for all components that need to implement some kind of special logic when selected. You can
+	///     do this manually without this class, but this makes it much easier.
+	///     NOTE: This component will register and unregister the associated LeanSelectable in OnEnable and OnDisable.
+	/// </summary>
 	public abstract class LeanSelectableBehaviour : MonoBehaviour
 	{
 		[NonSerialized] private LeanSelectable selectable;
@@ -14,16 +17,31 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 		{
 			get
 			{
-				if (selectable == null)
-				{
-					Register();
-				}
+				if (selectable == null) Register();
 
 				return selectable;
 			}
 		}
 
-		/// <summary>This method allows you to manually register the LeanSelectable this component is associated with. This is useful if you're manually spawning and attaching children from code.</summary>
+		protected virtual void Start()
+		{
+			if (selectable == null) Register();
+		}
+
+		protected virtual void OnEnable()
+		{
+			Register();
+		}
+
+		protected virtual void OnDisable()
+		{
+			Unregister();
+		}
+
+		/// <summary>
+		///     This method allows you to manually register the LeanSelectable this component is associated with. This is
+		///     useful if you're manually spawning and attaching children from code.
+		/// </summary>
 		[ContextMenu(
 			"Register"
 		)]
@@ -57,7 +75,10 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			}
 		}
 
-		/// <summary>This method allows you to manually register the LeanSelectable this component is associated with. This is useful if you're changing the associated LeanSelectable.</summary>
+		/// <summary>
+		///     This method allows you to manually register the LeanSelectable this component is associated with. This is
+		///     useful if you're changing the associated LeanSelectable.
+		/// </summary>
 		[ContextMenu(
 			"Unregister"
 		)]
@@ -74,24 +95,6 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 
 				selectable = null;
 			}
-		}
-
-		protected virtual void OnEnable()
-		{
-			Register();
-		}
-
-		protected virtual void Start()
-		{
-			if (selectable == null)
-			{
-				Register();
-			}
-		}
-
-		protected virtual void OnDisable()
-		{
-			Unregister();
 		}
 
 		/// <summary>Called when selection begins.</summary>

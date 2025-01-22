@@ -9,10 +9,10 @@ namespace Sources.BusinessLogic.Services
 {
 	public class GameFocusHandler
 	{
-		private readonly AudioMixer _audioMixer;
 		private readonly ApplicationQuitHandler _applicationQuitHandler;
+		private readonly AudioMixer _audioMixer;
 
-		private bool _isEnabled = false;
+		private bool _isEnabled;
 
 		public GameFocusHandler(AudioMixer audioMixer, ApplicationQuitHandler applicationQuitHandler)
 		{
@@ -22,6 +22,14 @@ namespace Sources.BusinessLogic.Services
 		}
 
 		private string MasterVolume => ConstantNames.Sound.SoundMixerNames.MasterVolume;
+
+		public void Disable()
+		{
+			_isEnabled = false;
+			_applicationQuitHandler.ApplicationClosed -= Disable;
+			Application.focusChanged -= OnFocusChanged;
+			WebApplication.InBackgroundChangeEvent -= OnInBackgroundChanged;
+		}
 
 		public void Enable()
 		{
@@ -34,12 +42,10 @@ namespace Sources.BusinessLogic.Services
 			WebApplication.InBackgroundChangeEvent += OnInBackgroundChanged;
 		}
 
-		private void Disable()
+		private void OnFocusChanged(bool isFocused)
 		{
-			_isEnabled = false;
-			_applicationQuitHandler.ApplicationClosed -= Disable;
-			Application.focusChanged -= OnFocusChanged;
-			WebApplication.InBackgroundChangeEvent -= OnInBackgroundChanged;
+			SetTimePause(!isFocused);
+			SetMute(!isFocused);
 		}
 
 		private void OnInBackgroundChanged(bool isBackground)
@@ -48,15 +54,6 @@ namespace Sources.BusinessLogic.Services
 			SetMute(isBackground);
 		}
 
-		private void OnFocusChanged(bool isFocused)
-		{
-			SetTimePause(!isFocused);
-			SetMute(!isFocused);
-		}
-
-		private void SetTimePause(bool isPaused) =>
-			Time.timeScale = isPaused ? 0f : 1f;
-
 		private void SetMute(bool isMute)
 		{
 			if (isMute)
@@ -64,5 +61,8 @@ namespace Sources.BusinessLogic.Services
 			else
 				_audioMixer.SetFloat(MasterVolume, 0f);
 		}
+
+		private void SetTimePause(bool isPaused) =>
+			Time.timeScale = isPaused ? 0f : 1f;
 	}
 }

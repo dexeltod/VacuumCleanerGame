@@ -29,13 +29,19 @@ namespace Sources.Presentation.UI.Shop
 
 		private readonly List<Image> _pointsColors = new();
 
-		private bool _isInit;
-
 		private int _boughtPoints;
 		private int _id;
+
+		private bool _isInit;
 		private int _maxPoints;
 
-		IUpgradeElementPresenter UpgradeElementPresenter => Presenter as IUpgradeElementPresenter;
+		private IUpgradeElementPresenter UpgradeElementPresenter => Presenter;
+
+		private void OnEnable() =>
+			_buttonBuy.onClick.AddListener(OnBuyButtonPressed);
+
+		private void OnDisable() =>
+			_buttonBuy.onClick.RemoveListener(OnBuyButtonPressed);
 
 		public void Construct(
 			Sprite icon,
@@ -89,12 +95,6 @@ namespace Sources.Presentation.UI.Shop
 
 		public void SetPriceText(int price) =>
 			_price.SetText(price.ToString());
-
-		private void OnEnable() =>
-			_buttonBuy.onClick.AddListener(OnBuyButtonPressed);
-
-		private void OnDisable() =>
-			_buttonBuy.onClick.RemoveListener(OnBuyButtonPressed);
 
 		private void OnBuyButtonPressed() =>
 			UpgradeElementPresenter.Upgrade(_id);

@@ -13,37 +13,30 @@ namespace Plugins.SerializeInterfaces.Editor
 {
 	internal class ObjectSelectorWindow : EditorWindow
 	{
-		public class ItemInfo
-		{
-			public Texture Icon;
-			public int? InstanceID;
-			public string Label;
-		}
-
-		public static ObjectSelectorWindow Instance { get; private set; }
+		private readonly static ItemInfo _nullItem = new() { InstanceID = null, Label = "None" };
+		private List<ItemInfo> _allItems;
+		private Tab _assetsTab;
+		private ItemInfo _currentItem;
+		private Label _detailsIndexLabel;
+		private Label _detailsLabel;
+		private Label _detailsTypeLabel;
+		private SerializedProperty _editingProperty;
+		private ObjectSelectorFilter _filter;
+		private List<ItemInfo> _filteredItems;
+		private ListView _listView;
+		private Tab _sceneTab;
+		private ToolbarSearchField _searchbox;
+		private string _searchText;
 
 		private Action<Object> _selectionChangedCallback;
 		private Action<Object, bool> _selectorClosedCallback;
-		private ObjectSelectorFilter _filter;
-		private SerializedProperty _editingProperty;
-		private List<ItemInfo> _allItems;
-		private List<ItemInfo> _filteredItems;
-		private ItemInfo _currentItem;
-		private string _searchText;
-		private bool _userCanceled = false;
 		private bool _showSceneObjects = true;
 		private int _undoGroup;
-		private ToolbarSearchField _searchbox;
-		private ListView _listView;
-		private Label _detailsLabel;
-		private Label _detailsIndexLabel;
-		private Label _detailsTypeLabel;
-		private Tab _sceneTab;
-		private Tab _assetsTab;
+		private bool _userCanceled;
 
-		private static ItemInfo _nullItem = new ItemInfo() { InstanceID = null, Label = "None" };
+		public static ObjectSelectorWindow Instance { get; private set; }
 
-		public bool initialized { get; private set; } = false;
+		public bool initialized { get; private set; }
 
 		public string SearchText
 		{
@@ -53,6 +46,23 @@ namespace Plugins.SerializeInterfaces.Editor
 				_searchText = value;
 				FilterItems();
 			}
+		}
+
+		private void OnDisable()
+		{
+			_selectorClosedCallback?.Invoke(
+				GetCurrentObject(),
+				_userCanceled
+			);
+			if (_userCanceled)
+				Undo.RevertAllDownToGroup(
+					_undoGroup
+				);
+			else
+				Undo.CollapseUndoOperations(
+					_undoGroup
+				);
+			Instance = null;
 		}
 
 		public static void Show(SerializedProperty property,
@@ -92,7 +102,7 @@ namespace Plugins.SerializeInterfaces.Editor
 			_filteredItems = new List<ItemInfo>();
 
 			_showSceneObjects = true;
-			var target = _editingProperty.objectReferenceValue;
+			Object target = _editingProperty.objectReferenceValue;
 			if (target != null)
 				_showSceneObjects = !AssetDatabase.Contains(
 					target
@@ -189,7 +199,7 @@ namespace Plugins.SerializeInterfaces.Editor
 			toggleGroup.OnToggleChanged += HandleGroupChanged;
 
 			if (GetIndexOfEditingPropertyValue(
-				    out var index
+				    out int index
 			    ))
 				_listView.selectedIndex = index;
 		}
@@ -206,7 +216,7 @@ namespace Plugins.SerializeInterfaces.Editor
 		private bool GetIndexOfEditingPropertyValue(out int index)
 		{
 			index = -1;
-			var targetObject = _editingProperty.objectReferenceValue;
+			Object targetObject = _editingProperty.objectReferenceValue;
 
 			if (targetObject)
 			{
@@ -232,14 +242,14 @@ namespace Plugins.SerializeInterfaces.Editor
 
 		private void HandleGroupChanged(object sender, Toggle toggle)
 		{
-			if (_showSceneObjects && toggle == this._sceneTab) return;
+			if (_showSceneObjects && toggle == _sceneTab) return;
 
 			_showSceneObjects = !_showSceneObjects;
 			PopulateItems();
 			FilterItems();
 			var list = new List<int>();
 			if (GetIndexOfCurrentItem(
-				    out var index
+				    out int index
 			    ))
 				list.Add(
 					index
@@ -248,23 +258,6 @@ namespace Plugins.SerializeInterfaces.Editor
 				list
 			);
 			_listView.Focus();
-		}
-
-		private void OnDisable()
-		{
-			_selectorClosedCallback?.Invoke(
-				GetCurrentObject(),
-				_userCanceled
-			);
-			if (_userCanceled)
-				Undo.RevertAllDownToGroup(
-					_undoGroup
-				);
-			else
-				Undo.CollapseUndoOperations(
-					_undoGroup
-				);
-			Instance = null;
 		}
 
 		private void PopulateItems()
@@ -371,14 +364,14 @@ namespace Plugins.SerializeInterfaces.Editor
 		{
 			GetText(
 				_currentItem,
-				out var infoText,
-				out var indexText,
-				out var typeText
+				out string infoText,
+				out string indexText,
+				out string typeText
 			);
 
 			void SetText(Label label, string text)
 			{
-				label.text = String.IsNullOrEmpty(
+				label.text = string.IsNullOrEmpty(
 					text
 				)
 					? ""
@@ -413,7 +406,7 @@ namespace Plugins.SerializeInterfaces.Editor
 				return;
 			}
 
-			var obj = EditorUtility.InstanceIDToObject(
+			Object obj = EditorUtility.InstanceIDToObject(
 				(int)itemInfo.InstanceID
 			);
 
@@ -427,7 +420,7 @@ namespace Plugins.SerializeInterfaces.Editor
 			}
 			else
 			{
-				var transform = (obj is GameObject go) ? go.transform : (obj as Component).transform;
+				Transform transform = obj is GameObject go ? go.transform : (obj as Component).transform;
 				int compIndex = Array.IndexOf(
 					transform.gameObject.GetComponents(
 						typeof(Component)
@@ -443,7 +436,7 @@ namespace Plugins.SerializeInterfaces.Editor
 
 		private static string GetTransformPath(Transform transform)
 		{
-			StringBuilder sb = new StringBuilder();
+			var sb = new StringBuilder();
 			sb.Append(
 				transform.name
 			);
@@ -474,11 +467,7 @@ namespace Plugins.SerializeInterfaces.Editor
 			while (property.Next(
 				       null
 			       ))
-			{
 				yield return new ItemInfo { Icon = property.icon, InstanceID = property.instanceID, Label = property.name };
-			}
-
-			yield break;
 		}
 
 		private IEnumerable<ItemInfo> FetchAllComponents()
@@ -500,10 +489,9 @@ namespace Plugins.SerializeInterfaces.Editor
 				    ))
 					yield return new ItemInfo { Icon = property.icon, InstanceID = property.instanceID, Label = property.name };
 
-				foreach (var comp in go.GetComponents(
+				foreach (Component comp in go.GetComponents(
 					         typeof(Component)
 				         ))
-				{
 					if (CheckFilter(
 						    comp
 					    ))
@@ -516,16 +504,15 @@ namespace Plugins.SerializeInterfaces.Editor
 							InstanceID = comp.GetInstanceID(),
 							Label = property.name
 						};
-				}
 			}
 		}
 
 		private bool CheckFilter(Object obj)
 		{
-			var matchFilterConstraint = _filter.SceneFilterCallback?.Invoke(
+			bool? matchFilterConstraint = _filter.SceneFilterCallback?.Invoke(
 				obj
 			);
-			return (!matchFilterConstraint.HasValue || matchFilterConstraint.Value);
+			return !matchFilterConstraint.HasValue || matchFilterConstraint.Value;
 		}
 
 		private Object GetCurrentObject()
@@ -535,6 +522,13 @@ namespace Plugins.SerializeInterfaces.Editor
 			return EditorUtility.InstanceIDToObject(
 				(int)_currentItem.InstanceID
 			);
+		}
+
+		public class ItemInfo
+		{
+			public Texture Icon;
+			public int? InstanceID;
+			public string Label;
 		}
 	}
 

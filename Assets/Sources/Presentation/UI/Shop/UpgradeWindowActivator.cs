@@ -21,6 +21,13 @@ namespace Sources.Presentation.UI.Shop
 		private IUpgradeWindowPresenter _presenter;
 		private IUpgradeTriggerObserver _upgradeTrigger;
 
+		public void Dispose()
+		{
+			_yes.onClick.RemoveListener(OnYes);
+			_no.onClick.RemoveListener(OnNo);
+			_upgradeTrigger.TriggerEntered -= OnEnter;
+		}
+
 		public ITextPhrases PhrasesList => _phrasesList;
 		public GameObject Container => _container;
 
@@ -34,13 +41,6 @@ namespace Sources.Presentation.UI.Shop
 			_no.onClick.AddListener(OnNo);
 
 			_upgradeTrigger.TriggerEntered += OnEnter;
-		}
-
-		public void Dispose()
-		{
-			_yes.onClick.RemoveListener(OnYes);
-			_no.onClick.RemoveListener(OnNo);
-			_upgradeTrigger.TriggerEntered -= OnEnter;
 		}
 
 		private void OnEnter(bool isActive) =>

@@ -13,6 +13,8 @@ namespace Sources.Domain.Progress.Player
 		private const int HundredPercent = 100;
 		private const int OnePoint = 1;
 
+		private const int MultiplyFactor = 1;
+
 		[SerializeField] private IntCurrency _softCurrency;
 		[SerializeField] private IntCurrency _hardCurrency;
 
@@ -21,8 +23,6 @@ namespace Sources.Domain.Progress.Player
 		[SerializeField] private IntCurrency _totalAmount;
 
 		[SerializeField] private int _maxTotalResourceModifier;
-
-		private const int MultiplyFactor = 1;
 
 		public ResourceModel(
 			IntCurrency softCurrency,
@@ -114,7 +114,7 @@ namespace Sources.Domain.Progress.Player
 		}
 
 		/// <summary>
-		/// Decrease soft currency. Validates that there is enough money.
+		///     Decrease soft currency. Validates that there is enough money.
 		/// </summary>
 		public bool TryDecreaseMoney(int newValue)
 		{

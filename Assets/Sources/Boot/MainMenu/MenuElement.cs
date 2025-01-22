@@ -7,10 +7,9 @@ namespace Sources.Boot.MainMenu
 {
 	public abstract class MenuElement : IVisualElement
 	{
-		public VisualElement ThisElement { get; }
+		protected readonly UIElementGetterFacade ElementGetter;
 
 		protected readonly VisualElementSwitcher VisualElementController;
-		protected readonly UIElementGetterFacade ElementGetter;
 
 		protected MenuElement(VisualElement thisElement,
 			VisualElementSwitcher visualElementSwitcher,
@@ -20,5 +19,7 @@ namespace Sources.Boot.MainMenu
 			VisualElementController = visualElementSwitcher;
 			ElementGetter = elementGetter;
 		}
+
+		public VisualElement ThisElement { get; }
 	}
 }

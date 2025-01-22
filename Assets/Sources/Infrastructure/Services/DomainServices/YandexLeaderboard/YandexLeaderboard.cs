@@ -14,12 +14,12 @@ namespace Sources.Infrastructure.Services.DomainServices.YandexLeaderboard
 
 		public async UniTask<Dictionary<string, int>> GetPlayers(int playersCount)
 		{
-			bool isResponseReceived = false;
+			var isResponseReceived = false;
 			LeaderboardGetEntriesResponse leaderboardResponse = null;
 
 			Agava.YandexGames.Leaderboard.GetEntries(
 				BoardName,
-				onSuccessCallback: response =>
+				response =>
 				{
 					leaderboardResponse = response;
 					isResponseReceived = true;
@@ -34,7 +34,7 @@ namespace Sources.Infrastructure.Services.DomainServices.YandexLeaderboard
 
 			await UniTask.WaitWhile(() => isResponseReceived == false);
 
-			var entries = leaderboardResponse.entries;
+			LeaderboardEntryResponse[] entries = leaderboardResponse.entries;
 
 			return entries.ToDictionary(
 				response => response.player.publicName,
@@ -44,7 +44,7 @@ namespace Sources.Infrastructure.Services.DomainServices.YandexLeaderboard
 
 		public async UniTask AddScore(int newScore)
 		{
-			bool isResponseReceived = false;
+			var isResponseReceived = false;
 			LeaderboardEntryResponse player = await GetPlayerEntry();
 
 			Agava.YandexGames.Leaderboard.SetScore(BoardName, player.score + newScore, () => isResponseReceived = true);
@@ -54,7 +54,7 @@ namespace Sources.Infrastructure.Services.DomainServices.YandexLeaderboard
 
 		public async UniTask Set(int score)
 		{
-			bool isResponseReceived = false;
+			var isResponseReceived = false;
 
 			Agava.YandexGames.Leaderboard.SetScore(BoardName, score, () => isResponseReceived = false);
 
@@ -63,7 +63,7 @@ namespace Sources.Infrastructure.Services.DomainServices.YandexLeaderboard
 
 		public async UniTask<Tuple<string, int>> GetPlayer()
 		{
-			bool isResponseReceived = false;
+			var isResponseReceived = false;
 			LeaderboardEntryResponse leaderboardResponse = null;
 
 			Agava.YandexGames.Leaderboard.GetPlayerEntry(
@@ -90,7 +90,7 @@ namespace Sources.Infrastructure.Services.DomainServices.YandexLeaderboard
 
 		private async UniTask<LeaderboardEntryResponse> GetPlayerEntry()
 		{
-			bool isResponseReceived = false;
+			var isResponseReceived = false;
 			LeaderboardEntryResponse leaderboardResponse = null;
 
 			Agava.YandexGames.Leaderboard.GetPlayerEntry(
@@ -100,7 +100,7 @@ namespace Sources.Infrastructure.Services.DomainServices.YandexLeaderboard
 					leaderboardResponse = response;
 					isResponseReceived = true;
 				},
-				onErrorCallback: async errorResponse =>
+				async errorResponse =>
 				{
 					Debug.LogError("ERROR IN GETTING PLAYER" + errorResponse);
 					Agava.YandexGames.Leaderboard.SetScore(BoardName, 0, () => isResponseReceived = true);

@@ -10,7 +10,7 @@ namespace Sources.Infrastructure.Services.DomainServices
 			{ "player2", 300 },
 			{ "player3", 50 },
 			{ "player4", 300 },
-			{ "player5", 200 },
+			{ "player5", 200 }
 		};
 
 		public Dictionary<string, int> GetTestLeaders() =>

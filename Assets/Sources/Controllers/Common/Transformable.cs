@@ -7,17 +7,23 @@ namespace Sources.Controllers.Common
 	public abstract class Transformable : ITransformable
 	{
 		private readonly Rigidbody _rigidbody;
-		public virtual Transform Transform { get; private set; }
+
+		protected Transformable(Transform transform, Rigidbody rigidbody)
+		{
+			_rigidbody = rigidbody;
+			Transform = transform;
+		}
+
+		public virtual Transform Transform { get; }
 		public Vector3 LookDirection { get; private set; }
 
 		public event Action<Vector3> Moved;
 		public event Action<Vector3> Looked;
 		public event Action Destroying;
 
-		protected Transformable(Transform transform, Rigidbody rigidbody)
+		public void Destroy()
 		{
-			_rigidbody = rigidbody;
-			Transform = transform;
+			Destroying?.Invoke();
 		}
 
 		protected void LookAt(Vector3 direction)
@@ -30,11 +36,6 @@ namespace Sources.Controllers.Common
 		{
 			_rigidbody.position = position;
 			Moved?.Invoke(position);
-		}
-
-		public void Destroy()
-		{
-			Destroying?.Invoke();
 		}
 	}
 }

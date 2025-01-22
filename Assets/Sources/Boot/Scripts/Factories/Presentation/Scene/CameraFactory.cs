@@ -9,20 +9,18 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 {
 	public class CameraFactory : ICameraFactory
 	{
-		private readonly IAssetFactory _assetFactory;
-		private readonly GameObject _player;
+		private readonly IAssetLoader _assetLoader;
 		private readonly IResourcesPrefabs _assetPathNameConfigProvider;
-
-		private GameObject _characterObject;
+		private readonly GameObject _player;
 
 		public CameraFactory(
-			IAssetFactory assetFactory,
+			IAssetLoader assetLoader,
 			GameObject playerFactory,
 			IResourcesPrefabs assetPathNameConfigProvider
 		)
 		{
-			_assetFactory
-				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetLoader
+				= assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 			_player = playerFactory ? playerFactory : throw new ArgumentNullException(nameof(playerFactory));
 			_assetPathNameConfigProvider = assetPathNameConfigProvider ??
 			                               throw new ArgumentNullException(nameof(assetPathNameConfigProvider));
@@ -36,20 +34,19 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 
 		public CinemachineVirtualCamera Create()
 		{
-			_characterObject = _player;
-			_assetFactory.InstantiateAndGetComponent<Camera>(MainCamera);
+			_assetLoader.InstantiateAndGetComponent<Camera>(MainCamera);
 
 			return GetVirtualCamera();
 		}
 
 		private CinemachineVirtualCamera GetVirtualCamera()
 		{
-			CinemachineVirtualCamera virtualCamera
-				= _assetFactory.Instantiate(VirtualCamera).GetComponent<CinemachineVirtualCamera>();
+			var virtualCamera
+				= _assetLoader.Instantiate(VirtualCamera).GetComponent<CinemachineVirtualCamera>();
 
-			Collider bounds = _assetFactory.Instantiate(CustomCameraConfiner).GetComponent<Collider>();
+			var bounds = _assetLoader.Instantiate(CustomCameraConfiner).GetComponent<Collider>();
 			virtualCamera.GetComponent<CinemachineConfiner>().m_BoundingVolume = bounds;
-			virtualCamera.Follow = _characterObject.transform;
+			virtualCamera.Follow = _player.transform;
 
 			return virtualCamera;
 		}

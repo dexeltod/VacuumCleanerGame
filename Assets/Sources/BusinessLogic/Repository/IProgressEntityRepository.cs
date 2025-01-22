@@ -6,12 +6,12 @@ namespace Sources.BusinessLogic.Repository
 {
 	public interface IProgressEntityRepository
 	{
+		void AddOneLevel(int id);
 		IUpgradeEntityConfig GetConfig(int id);
-		IStatUpgradeEntityReadOnly GetEntity(int id);
-		IReadOnlyList<IStatUpgradeEntityReadOnly> GetEntities();
 		IReadOnlyList<IUpgradeEntityConfig> GetConfigs();
+		IReadOnlyList<IStatUpgradeEntityReadOnly> GetEntities();
+		IStatUpgradeEntityReadOnly GetEntity(int id);
 		int GetPrice(int id);
 		float GetStatByProgress(int id);
-		void AddOneLevel(int id);
 	}
 }

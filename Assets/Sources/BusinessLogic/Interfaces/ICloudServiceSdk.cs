@@ -5,10 +5,10 @@ namespace Sources.BusinessLogic.Interfaces
 {
 	public interface ICloudServiceSdk
 	{
-		UniTask<IPlayerAccount> GetPlayerAccount();
-		void SetStatusInitialized();
-		UniTask Authorize();
 		bool IsAuthorized { get; }
+		UniTask Authorize();
+		UniTask<IPlayerAccount> GetPlayerAccount();
 		UniTask<string> GetPlayerLanguage();
+		void SetStatusInitialized();
 	}
 }

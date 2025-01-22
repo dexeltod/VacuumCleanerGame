@@ -8,16 +8,16 @@ namespace Sources.Boot.Scripts.Factories
 {
 	public class CoroutineRunnerFactory
 	{
-		private readonly IAssetFactory _assetFactory;
+		private readonly IAssetLoader _assetLoader;
 
 		[Inject]
-		public CoroutineRunnerFactory(IAssetFactory assetFactory) =>
-			_assetFactory
-				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+		public CoroutineRunnerFactory(IAssetLoader assetLoader) =>
+			_assetLoader
+				= assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 
 		private string CoroutineRunnerPath => ResourcesAssetPath.GameObjects.CoroutineRunner;
 
 		public ICoroutineRunner Create() =>
-			_assetFactory.InstantiateAndGetComponent<CoroutineRunner>(CoroutineRunnerPath);
+			_assetLoader.InstantiateAndGetComponent<CoroutineRunner>(CoroutineRunnerPath);
 	}
 }

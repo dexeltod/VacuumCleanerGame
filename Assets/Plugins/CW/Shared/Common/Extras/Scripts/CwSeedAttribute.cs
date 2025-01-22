@@ -16,9 +16,9 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 	{
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
-			var rect1 = position;
+			Rect rect1 = position;
 			rect1.xMax = position.xMax - 20;
-			var rect2 = position;
+			Rect rect2 = position;
 			rect2.xMin = position.xMax - 18;
 
 			EditorGUI.PropertyField(
@@ -30,14 +30,11 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 			if (GUI.Button(
 				    rect2,
 				    "R"
-			    ) ==
-			    true)
-			{
+			    ))
 				property.intValue = Random.Range(
 					int.MinValue,
 					int.MaxValue
 				);
-			}
 		}
 	}
 

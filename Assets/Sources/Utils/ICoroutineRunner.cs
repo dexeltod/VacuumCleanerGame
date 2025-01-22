@@ -5,8 +5,8 @@ namespace Sources.Utils
 {
 	public interface ICoroutineRunner
 	{
-		void StopCoroutineRunning(Coroutine coroutine);
 		Coroutine Run(string methodName);
 		Coroutine Run(IEnumerator enumerator);
+		void StopCoroutineRunning(Coroutine coroutine);
 	}
 }

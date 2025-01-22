@@ -17,17 +17,14 @@ namespace Sources.Presentation.Common
 				Presenter?.Enable();
 		}
 
-		protected virtual void DestroySelf() =>
-			Destroy(gameObject);
-
-		private void OnDestroy() =>
-			DestroySelf();
-
 		private void OnDisable()
 		{
 			if (_isEnabled)
 				Presenter?.Disable();
 		}
+
+		private void OnDestroy() =>
+			DestroySelf();
 
 		public virtual void Construct(T presenter)
 		{
@@ -43,5 +40,8 @@ namespace Sources.Presentation.Common
 			transform.SetParent(parent);
 
 		public Transform Transform => transform;
+
+		protected virtual void DestroySelf() =>
+			Destroy(gameObject);
 	}
 }

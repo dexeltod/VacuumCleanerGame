@@ -22,10 +22,10 @@ namespace Sources.BusinessLogic
 
 		public void GetLocalize(string[] phrases)
 		{
-			for (int i = 0; i < phrases.Length; i++)
+			for (var i = 0; i < phrases.Length; i++)
 			{
 				if (string.IsNullOrWhiteSpace(phrases[i]))
-					throw new ArgumentException("Value cannot be null or whitespace.", (phrases[i]));
+					throw new ArgumentException("Value cannot be null or whitespace.", phrases[i]);
 
 				phrases[i] = _localizationService.GetTranslationText(phrases[i]);
 			}
@@ -33,12 +33,12 @@ namespace Sources.BusinessLogic
 
 		public List<string> GetLocalize(List<string> phrases)
 		{
-			for (int i = 0; i < phrases.Count; i++)
+			for (var i = 0; i < phrases.Count; i++)
 			{
 				if (string.IsNullOrWhiteSpace(phrases[i]))
-					throw new ArgumentException($"Value cannot be null or whitespace. Phrase {(phrases[i])}");
+					throw new ArgumentException($"Value cannot be null or whitespace. Phrase {phrases[i]}");
 
-				var translatedText = _localizationService.GetTranslationText(phrases[i]);
+				string translatedText = _localizationService.GetTranslationText(phrases[i]);
 
 				if (string.IsNullOrWhiteSpace(translatedText))
 					Debug.LogAssertion($"not found phrase {phrases[i]}");

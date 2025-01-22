@@ -21,8 +21,8 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 		/// <summary>This allows you to set how many frames an unused RenderTexture will remaining in memory before it's released.</summary>
 		public int Lifetime
 		{
-			set { lifetime = value; }
-			get { return lifetime; }
+			set => lifetime = value;
+			get => lifetime;
 		}
 
 		[SerializeField] private int lifetime = 3;
@@ -201,7 +201,7 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 #else
 		public static RenderTexture GetTemporary(RenderTextureDescriptor desc, string title)
 		{
-			var renderTexture = RenderTexture.GetTemporary(
+			RenderTexture renderTexture = RenderTexture.GetTemporary(
 				desc
 			);
 

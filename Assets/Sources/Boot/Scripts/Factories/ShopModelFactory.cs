@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Sources.Boot.Scripts.Factories.UpgradeEntitiesConfigs;
+using Sources.Boot.Scripts.UpgradeEntitiesConfigs;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Domain.Progress;
 using Sources.Domain.Progress.Entities.Values;
@@ -12,14 +12,14 @@ namespace Sources.Boot.Scripts.Factories
 {
 	public class ShopModelFactory
 	{
-		private readonly IAssetFactory _assetFactory;
+		private readonly IAssetLoader _assetLoader;
 
 		private List<StatUpgradeEntity> _entities;
 		private Dictionary<int, StatUpgradeEntity> _entitiesByName;
 
 		[Inject]
-		public ShopModelFactory(IAssetFactory assetFactor) =>
-			_assetFactory = assetFactor ?? throw new ArgumentNullException(nameof(assetFactor));
+		public ShopModelFactory(IAssetLoader assetFactor) =>
+			_assetLoader = assetFactor ?? throw new ArgumentNullException(nameof(assetFactor));
 
 		private string ShopItemsPath => ResourcesAssetPath.Configs.ShopItems;
 
@@ -27,7 +27,7 @@ namespace Sources.Boot.Scripts.Factories
 		{
 			_entities = new List<StatUpgradeEntity>();
 
-			UpgradesListConfig configs = _assetFactory.LoadFromResources<UpgradesListConfig>(ShopItemsPath);
+			var configs = _assetLoader.LoadFromResources<UpgradesListConfig>(ShopItemsPath);
 
 			foreach (PlayerUpgradeShopConfig config in configs.ReadOnlyItems)
 				_entities.Add(new StatUpgradeEntity(new IntEntityValue(config.Id, config.Title, 0), config.Id));

@@ -7,27 +7,30 @@ namespace Sources.Controllers.Services
 {
 	public class PresentersContainerRepository : IPresentersContainerRepository
 	{
-		private readonly ICollection<IPresenter> _presenters = new List<IPresenter>();
+		private readonly Dictionary<Type, IPresenter> _presenters = new();
 
 		public void Add(IPresenter presenter)
 		{
 			if (presenter == null) throw new ArgumentNullException(nameof(presenter));
 
-			_presenters.Add(presenter);
+			_presenters[presenter.GetType()] = presenter;
 		}
+
+		public IPresenter Get<T>() where T : IPresenter =>
+			_presenters.GetValueOrDefault(typeof(T));
 
 		public void AddRange(IEnumerable<IPresenter> presenters)
 		{
 			if (presenters == null) throw new ArgumentNullException(nameof(presenters));
 
-			foreach (var presenter in presenters) Add(presenter);
+			foreach (IPresenter presenter in presenters) Add(presenter);
 		}
 
 		public void Remove(IPresenter presenter)
 		{
 			if (presenter == null) throw new ArgumentNullException(nameof(presenter));
 
-			_presenters.Remove(presenter);
+			_presenters.Remove(presenter.GetType());
 		}
 
 		public void RemoveAll() =>
@@ -35,12 +38,12 @@ namespace Sources.Controllers.Services
 
 		public void EnableAll()
 		{
-			foreach (var presenter in _presenters) presenter.Enable();
+			foreach (IPresenter presenter in _presenters.Values) presenter.Enable();
 		}
 
 		public void DisableAll()
 		{
-			foreach (var presenter in _presenters) presenter.Disable();
+			foreach (IPresenter presenter in _presenters.Values) presenter.Disable();
 		}
 	}
 }

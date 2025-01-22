@@ -10,29 +10,27 @@ namespace Sources.Infrastructure.Yandex
 {
 	public sealed class YandexAdvertisement : IAdvertisement
 	{
-		private readonly ICoroutineRunner _coroutineRunner;
-
-		private bool _isClosed;
-		private bool _isRewarded;
+		private const int Cooldown = 60;
+		private readonly WaitForSeconds _waitForSeconds = new(Cooldown);
 
 		private bool _canSeeReward;
 
 		private Coroutine _interstitialAdCooldown;
 
-		private const int Cooldown = 60;
-		private readonly WaitForSeconds _waitForSeconds = new WaitForSeconds(Cooldown);
-
-		public event Action Closed;
-		public event Action Opened;
-		public event Action Rewarded;
+		private bool _isClosed;
+		private bool _isRewarded;
 
 		public YandexAdvertisement(ICoroutineRunner coroutineRunner)
 		{
 			_canSeeReward = true;
-			_coroutineRunner = coroutineRunner ?? throw new ArgumentNullException(nameof(coroutineRunner));
+			CoroutineRunner = coroutineRunner ?? throw new ArgumentNullException(nameof(coroutineRunner));
 		}
 
-		private ICoroutineRunner CoroutineRunner => _coroutineRunner;
+		private ICoroutineRunner CoroutineRunner { get; }
+
+		public event Action Closed;
+		public event Action Opened;
+		public event Action Rewarded;
 
 		public async UniTask ShowVideoAd(Action onClosed, Action onRewarded, Action onOpened, Action onError = null)
 		{
@@ -60,7 +58,7 @@ namespace Sources.Infrastructure.Yandex
 				}
 			);
 
-			await UniTask.WaitWhile(() => _isClosed == false || _isRewarded == true);
+			await UniTask.WaitWhile(() => _isClosed == false || _isRewarded);
 		}
 
 		public async UniTask ShowInterstitialAd(
@@ -98,7 +96,7 @@ namespace Sources.Infrastructure.Yandex
 				() => throw new Exception("You are offline")
 			);
 
-			await UniTask.WaitWhile(() => _isClosed == false || _isRewarded == true);
+			await UniTask.WaitWhile(() => _isClosed == false || _isRewarded);
 		}
 
 		public UniTask ShowStickAd(Action onClosed, Action onRewarded, Action onOpened, Action onError = null)
@@ -109,14 +107,6 @@ namespace Sources.Infrastructure.Yandex
 			return default;
 		}
 
-		private void StartInterstitialAdCooldown()
-		{
-			if (_interstitialAdCooldown != null)
-				CoroutineRunner.StopCoroutineRunning(_interstitialAdCooldown);
-
-			_interstitialAdCooldown = CoroutineRunner.Run(RunInterstitialAdCooldownCoroutine());
-		}
-
 		private IEnumerator RunInterstitialAdCooldownCoroutine()
 		{
 			_canSeeReward = false;
@@ -124,6 +114,14 @@ namespace Sources.Infrastructure.Yandex
 			yield return _waitForSeconds;
 
 			_canSeeReward = true;
+		}
+
+		private void StartInterstitialAdCooldown()
+		{
+			if (_interstitialAdCooldown != null)
+				CoroutineRunner.StopCoroutineRunning(_interstitialAdCooldown);
+
+			_interstitialAdCooldown = CoroutineRunner.Run(RunInterstitialAdCooldownCoroutine());
 		}
 	}
 }

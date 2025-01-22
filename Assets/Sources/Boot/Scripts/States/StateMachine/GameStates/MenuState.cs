@@ -1,5 +1,6 @@
 using System;
-using Sources.Boot.Scripts.Factories.Presentation;
+using Sources.Boot.Scripts.Factories.Presentation.Authorization;
+using Sources.Boot.Scripts.Factories.Presentation.LeaderBoard;
 using Sources.Boot.Scripts.Factories.Presenters;
 using Sources.BusinessLogic;
 using Sources.BusinessLogic.Interfaces;
@@ -17,37 +18,30 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 {
 	public sealed class MenuState : IMenuState
 	{
-		private readonly IMainMenuFactory _mainMenuFactory;
-		private readonly ILocalizationService _localizationService;
-		private readonly ISceneLoader _sceneLoader;
-		private readonly ILoadingCurtain _loadingCurtain;
-		private readonly ILevelProgressFacade _levelProgressFacade;
-		private readonly ILevelConfigGetter _levelConfigGetter;
-		private readonly ILeaderBoardService _leaderBoardService;
-		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
-		private readonly IGameStateChanger _gameStateChanger;
-		private readonly IAuthorizationFactory _authorizationFactory;
-		private readonly ILeaderBoardPlayersFactory _leaderBoardPlayersFactory;
-		private readonly IMainMenuPresenterFactory _mainMenuPresenterFactory;
+		private readonly IAssetLoader _assetLoader;
 
-		private readonly GameFocusHandler _gameFocusHandler;
 		private readonly IAuthorizationView _authorizationView;
-		private readonly IAssetFactory _injectableAssetFactory;
-		private readonly IAssetFactory _assetFactory;
-		private readonly TranslatorService _translatorService;
 		private readonly ICloudServiceSdk _cloudServiceSdk;
+		private readonly GameFocusHandler _focusHandler;
+		private readonly ILeaderBoardPlayersFactory _leaderBoardPlayersFactory;
+		private readonly ILeaderBoardService _leaderBoardService;
+		private readonly ILevelConfigGetter _levelConfigGetter;
+		private readonly ILevelProgressFacade _levelProgressFacade;
+		private readonly ILoadingCurtain _loadingCurtain;
+		private readonly ILocalizationService _localizationService;
+		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
+		private readonly ISceneLoader _sceneLoader;
+		private readonly IStateMachine _stateMachine;
+		private readonly TranslatorService _translatorService;
+		private IAuthorizationPresenter _authorizationPresenter;
 
 		private IMainMenuPresenter _mainMenuPresenter;
-		private IAuthorizationPresenter _authorizationPresenter;
 		private IMainMenuView _mainMenuView;
 
 		[Inject]
-		public MenuState(
-			IMainMenuFactory mainMenuFactory,
-			ISceneLoader sceneLoader,
+		public MenuState(ISceneLoader sceneLoader,
 			ILoadingCurtain loadingCurtain,
-			IInjectableAssetFactory injectableAssetFactory,
-			IAssetFactory assetFactory,
+			IAssetLoader assetLoader,
 			ILevelProgressFacade levelProgressFacade,
 			ILevelConfigGetter levelConfigGetter,
 			ILeaderBoardService leaderBoardService,
@@ -56,17 +50,13 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 			GameFocusHandler gameFocusHandlerProvider,
 			ILocalizationService localizationService,
 			ICloudServiceSdk cloudServiceSdk,
-			IGameStateChanger gameStateChanger,
-			IAuthorizationFactory authorizationFactory,
 			ILeaderBoardPlayersFactory leaderBoardPlayersFactory,
-			IMainMenuPresenterFactory mainMenuPresenterFactory
-		)
+			IStateMachine stateMachine,
+			GameFocusHandler focusHandler)
 		{
-			_mainMenuFactory = mainMenuFactory ?? throw new ArgumentNullException(nameof(mainMenuFactory));
 			_sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
 			_loadingCurtain = loadingCurtain ?? throw new ArgumentNullException(nameof(loadingCurtain));
-			_injectableAssetFactory = injectableAssetFactory ?? throw new ArgumentNullException(nameof(injectableAssetFactory));
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetLoader = assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 			_levelProgressFacade = levelProgressFacade ?? throw new ArgumentNullException(nameof(levelProgressFacade));
 			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
@@ -75,50 +65,70 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 			                               throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 			_cloudServiceSdk = cloudServiceSdk ?? throw new ArgumentNullException(nameof(cloudServiceSdk));
-			_gameStateChanger = gameStateChanger ?? throw new ArgumentNullException(nameof(gameStateChanger));
-			_authorizationFactory = authorizationFactory ?? throw new ArgumentNullException(nameof(authorizationFactory));
 			_leaderBoardPlayersFactory =
 				leaderBoardPlayersFactory ?? throw new ArgumentNullException(nameof(leaderBoardPlayersFactory));
-			_mainMenuPresenterFactory = mainMenuPresenterFactory;
+
+			_stateMachine = stateMachine ?? throw new ArgumentNullException(nameof(stateMachine));
+			_focusHandler = focusHandler ?? throw new ArgumentNullException(nameof(focusHandler));
+		}
+
+		public void Exit()
+		{
+			_focusHandler.Disable();
+			_authorizationPresenter.Disable();
+			_mainMenuPresenter.Disable();
+			_loadingCurtain.Show();
 		}
 
 		public async void Enter()
 		{
-			_gameFocusHandler.Enable();
-			_mainMenuView = _mainMenuFactory.Create();
 			await _sceneLoader.Load(ConstantNames.MenuScene);
 
-			CreateMainMenuPresenter();
+			_mainMenuView = new MainMenuFactory(_assetLoader, _translatorService).Create();
+			_focusHandler.Enable();
 
 #if YANDEX_CODE
 			var language = await _cloudServiceSdkFacadeProvider.Self.GetPlayerLanguage();
 			Debug.Log("Language: " + language);
 			_localizationService.SetLocalLanguage(language);
 #endif
+			_authorizationPresenter = CreateAuthorizationPresenter();
 
+			_mainMenuPresenter = new MainMenuPresenterFactory(
+				_assetLoader,
+				_mainMenuView,
+				_levelProgressFacade,
+				_stateMachine,
+				_levelConfigGetter,
+				_progressSaveLoadDataService,
+				_authorizationPresenter,
+				_mainMenuView.LeaderBoardView.GetComponent<ILeaderBoardView>(),
+				_leaderBoardService,
+				_leaderBoardPlayersFactory,
+				_mainMenuView.GetSettingsView()
+			).Create();
+
+			InitializeMainMenuPresenter();
+			_loadingCurtain.HideSlowly();
+			EnablePresenters();
+		}
+
+		private IAuthorizationPresenter CreateAuthorizationPresenter() =>
+			new AuthorizationFactory(
+				_assetLoader,
+				_cloudServiceSdk,
+				_translatorService
+			).Create(_mainMenuView);
+
+		private void EnablePresenters()
+		{
 			_mainMenuPresenter.Enable();
 			_authorizationPresenter.Enable();
-
-			_loadingCurtain.HideSlowly();
 		}
 
-		public void Exit()
+		private void InitializeMainMenuPresenter()
 		{
-			_authorizationPresenter.Disable();
-			_mainMenuPresenter.Disable();
-			_loadingCurtain.Show();
-		}
-
-		private IMainMenuPresenter CreateMainMenuPresenter()
-		{
-			_authorizationPresenter = _authorizationFactory.Create(_mainMenuView);
-
-			ILeaderBoardView leaderBoardView = _mainMenuView.LeaderBoardView.GetComponent<ILeaderBoardView>();
-
-			_mainMenuPresenter = _mainMenuPresenterFactory.Create();
-
 			_mainMenuView.Construct(_mainMenuPresenter);
-			return _mainMenuPresenter;
 		}
 	}
 }

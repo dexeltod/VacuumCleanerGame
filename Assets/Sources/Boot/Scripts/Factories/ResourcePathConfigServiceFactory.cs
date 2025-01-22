@@ -8,12 +8,12 @@ namespace Sources.Boot.Scripts.Factories
 	{
 		private const string ResourcePathConfigServicePath = "Config/ScriptableObjects/ResourcesPrefabs";
 
-		private readonly IAssetFactory _assetFactory;
+		private readonly IAssetLoader _assetLoader;
 
-		public ResourcePathConfigServiceFactory(IAssetFactory assetFactory) => _assetFactory
-			= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+		public ResourcePathConfigServiceFactory(IAssetLoader assetLoader) => _assetLoader
+			= assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 
 		public ResourcesPrefabs Create() =>
-			_assetFactory.LoadFromResources<ResourcesPrefabs>(ResourcePathConfigServicePath);
+			_assetLoader.LoadFromResources<ResourcesPrefabs>(ResourcePathConfigServicePath);
 	}
 }

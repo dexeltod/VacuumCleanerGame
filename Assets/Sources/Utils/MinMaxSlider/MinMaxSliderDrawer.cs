@@ -11,7 +11,7 @@ namespace Sources.Utils.MinMaxSlider
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
 			var minMaxAttribute = (MinMaxSliderAttribute)attribute;
-			var propertyType = property.propertyType;
+			SerializedPropertyType propertyType = property.propertyType;
 
 			label.tooltip = minMaxAttribute.min.ToString("F2") + " to " + minMaxAttribute.max.ToString("F2");
 
@@ -40,22 +40,13 @@ namespace Sources.Utils.MinMaxSlider
 					minMaxAttribute.max
 				);
 
-				if (minVal < minMaxAttribute.min)
-				{
-					minVal = minMaxAttribute.min;
-				}
+				if (minVal < minMaxAttribute.min) minVal = minMaxAttribute.min;
 
-				if (maxVal > minMaxAttribute.max)
-				{
-					maxVal = minMaxAttribute.max;
-				}
+				if (maxVal > minMaxAttribute.max) maxVal = minMaxAttribute.max;
 
 				vector = new Vector2(minVal > maxVal ? maxVal : minVal, maxVal);
 
-				if (EditorGUI.EndChangeCheck())
-				{
-					property.vector2Value = vector;
-				}
+				if (EditorGUI.EndChangeCheck()) property.vector2Value = vector;
 			}
 			else if (propertyType == SerializedPropertyType.Vector2Int)
 			{
@@ -76,41 +67,30 @@ namespace Sources.Utils.MinMaxSlider
 					minMaxAttribute.max
 				);
 
-				if (minVal < minMaxAttribute.min)
-				{
-					maxVal = minMaxAttribute.min;
-				}
+				if (minVal < minMaxAttribute.min) maxVal = minMaxAttribute.min;
 
-				if (minVal > minMaxAttribute.max)
-				{
-					maxVal = minMaxAttribute.max;
-				}
+				if (minVal > minMaxAttribute.max) maxVal = minMaxAttribute.max;
 
 				vector = new Vector2Int(Mathf.FloorToInt(minVal > maxVal ? maxVal : minVal), Mathf.FloorToInt(maxVal));
 
-				if (EditorGUI.EndChangeCheck())
-				{
-					property.vector2IntValue = vector;
-				}
+				if (EditorGUI.EndChangeCheck()) property.vector2IntValue = vector;
 			}
 		}
 
-		Rect[] SplitRect(Rect rectToSplit, int n)
+		private Rect[] SplitRect(Rect rectToSplit, int n)
 		{
-			Rect[] rects = new Rect[n];
+			var rects = new Rect[n];
 
-			for (int i = 0; i < n; i++)
-			{
+			for (var i = 0; i < n; i++)
 				rects[i] = new Rect(
-					rectToSplit.position.x + (i * rectToSplit.width / n),
+					rectToSplit.position.x + i * rectToSplit.width / n,
 					rectToSplit.position.y,
 					rectToSplit.width / n,
 					rectToSplit.height
 				);
-			}
 
 			int padding = (int)rects[0].width - 40;
-			int space = 5;
+			var space = 5;
 
 			rects[0].width -= padding + space;
 			rects[2].width -= padding + space;

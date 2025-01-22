@@ -7,7 +7,7 @@ namespace Plugins.SerializeInterfaces.Samples.Scripts
 		public void Interact()
 		{
 			Debug.Log(
-				$"Interacted with asset: {this.name}"
+				$"Interacted with asset: {name}"
 			);
 		}
 	}

@@ -2,8 +2,6 @@ namespace Sources.InfrastructureInterfaces.Configs.Scripts
 {
 	public sealed class ProgressionConfig
 	{
-		private readonly float _maxScoreMultiplier = 1.5f;
-
-		public float MaxScoreMultiplier => _maxScoreMultiplier;
+		public float MaxScoreMultiplier { get; } = 1.5f;
 	}
 }

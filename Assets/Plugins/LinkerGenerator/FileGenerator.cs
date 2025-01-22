@@ -17,9 +17,9 @@ namespace Plugins.LinkerGenerator
 
 		public void Generate()
 		{
-			var assetsDir = Application.dataPath;
+			string assetsDir = Application.dataPath;
 
-			var assembliesToPreserve = Enumerable.Empty<string>()
+			IOrderedEnumerable<string> assembliesToPreserve = Enumerable.Empty<string>()
 				.Concat(
 					GetDllAssemblyNames(
 						assetsDir
@@ -44,7 +44,7 @@ namespace Plugins.LinkerGenerator
 					s => s
 				);
 
-			var linkXmlFilePath = Path.Combine(
+			string linkXmlFilePath = Path.Combine(
 				assetsDir,
 				_settings.FolderPath,
 				"link.xml"
@@ -59,7 +59,7 @@ namespace Plugins.LinkerGenerator
 				)
 			);
 
-			using (var fileStream = File.Open(
+			using (FileStream fileStream = File.Open(
 				       linkXmlFilePath,
 				       FileMode.Create
 			       ))
@@ -91,6 +91,28 @@ namespace Plugins.LinkerGenerator
 			}
 		}
 
+		[MenuItem(
+			"Window / Linker / Generate link.xml"
+		)]
+		public static void GenerateLinkXml()
+		{
+			var settings = LinkerSettings.GetOrCreateSettings();
+
+			new FileGenerator(
+				settings
+			).Generate();
+		}
+
+		private IEnumerable<string> GetAsmdefAssemblyNames() => !_settings.AddAsmdefs
+			? Array.Empty<string>()
+			: CompilationPipeline.GetAssemblies(
+					AssembliesType.PlayerWithoutTestAssemblies
+				)
+				.Select(
+					a => a.name
+				)
+				.Distinct();
+
 		private IEnumerable<string> GetDllAssemblyNames(string assetsDir) => !_settings.AddDlls
 			? Array.Empty<string>()
 			: Directory.EnumerateFiles(
@@ -102,16 +124,6 @@ namespace Plugins.LinkerGenerator
 				.Select(
 					Path.GetFileNameWithoutExtension
 				);
-
-		private IEnumerable<string> GetAsmdefAssemblyNames() => !_settings.AddAsmdefs
-			? Array.Empty<string>()
-			: CompilationPipeline.GetAssemblies(
-					AssembliesType.PlayerWithoutTestAssemblies
-				)
-				.Select(
-					a => a.name
-				)
-				.Distinct();
 
 		private IEnumerable<string> GetRspAssemblyNames(string assetsDir) => !_settings.AddRsps
 			? Array.Empty<string>()
@@ -166,17 +178,5 @@ namespace Plugins.LinkerGenerator
 					}
 				}
 			);
-
-		[MenuItem(
-			"Window / Linker / Generate link.xml"
-		)]
-		public static void GenerateLinkXml()
-		{
-			var settings = LinkerSettings.GetOrCreateSettings();
-
-			new FileGenerator(
-				settings
-			).Generate();
-		}
 	}
 }

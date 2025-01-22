@@ -7,9 +7,9 @@ namespace Sources.Infrastructure.Services.Facade
 	{
 		private Animator _animator;
 
-		private Coroutine _currentAnimationRoutine;
-
 		private int _currentAnimationHash;
+
+		private Coroutine _currentAnimationRoutine;
 
 		private void Start() => _animator = GetComponent<Animator>();
 
@@ -27,7 +27,7 @@ namespace Sources.Infrastructure.Services.Facade
 
 		private IEnumerator StartAnimationRoutine(int hash)
 		{
-			float timeOut = 1f;
+			var timeOut = 1f;
 
 			while (GetAnimatorInfo().shortNameHash != hash)
 			{

@@ -19,22 +19,22 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 {
 	public class UpgradeWindowPresenterFactory : PresenterFactory<IUpgradeWindowPresenter>, IUpgradeWindowPresenterFactory
 	{
-		private readonly IPresentersContainerRepository _presentersContainerRepository;
-		private readonly IUpgradeWindowPresentation _upgradeWindowPresentation;
-		private readonly IAssetFactory _assetFactory;
-		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
-		private readonly IPersistentProgressService _persistentProgressService;
+		private readonly IAssetLoader _assetLoader;
 		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenter;
-		private readonly IResourcesProgressPresenter _resourcesProgressPresenterProvider;
-		private readonly TranslatorService _translatorService;
-		private readonly IProgressEntityRepository _progressEntityRepository;
+		private readonly IPersistentProgressService _persistentProgressService;
 		private readonly IPlayerModelRepository _playerModelRepository;
+		private readonly IPresentersContainerRepository _presentersContainerRepository;
+		private readonly IProgressEntityRepository _progressEntityRepository;
+		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
+		private readonly IResourcesProgressPresenter _resourcesProgressPresenterProvider;
 		private readonly ISaveLoader _saveLoader;
+		private readonly TranslatorService _translatorService;
+		private readonly IUpgradeWindowPresentation _upgradeWindowPresentation;
 		private readonly IUpgradeWindowPresenter _upgradeWindowPresenter;
 
 		public UpgradeWindowPresenterFactory(
 			IPresentersContainerRepository presentersContainerRepository,
-			IAssetFactory assetFactory,
+			IAssetLoader assetLoader,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			IPersistentProgressService persistentProgressService,
 			IGameplayInterfacePresenter gameplayInterfacePresenter,
@@ -47,8 +47,8 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 		{
 			_presentersContainerRepository = presentersContainerRepository ??
 			                                 throw new ArgumentNullException(nameof(presentersContainerRepository));
-			_assetFactory
-				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetLoader
+				= assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 			_progressSaveLoadDataService = progressSaveLoadDataService ??
 			                               throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 			_persistentProgressService = persistentProgressService ??
@@ -76,7 +76,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 
 		public override IUpgradeWindowPresenter Create()
 		{
-			IUpgradeTriggerObserver upgradeTrigger = _assetFactory.InstantiateAndGetComponent<UpgradeTriggerObserver>(
+			IUpgradeTriggerObserver upgradeTrigger = _assetLoader.InstantiateAndGetComponent<UpgradeTriggerObserver>(
 				GameObjectsUpgradeTrigger
 			);
 
@@ -89,7 +89,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 
 			IUpgradeWindowPresentation upgradeWindowPresentation = new UpgradeWindowViewFactory(
 				_presentersContainerRepository,
-				_assetFactory,
+				_assetLoader,
 				_resourcesProgressPresenterProvider,
 				_persistentProgressService as IUpdatablePersistentProgressService,
 				_translatorService,
@@ -100,7 +100,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 				_saveLoader
 			).Create();
 
-			var enabler = _assetFactory.InstantiateAndGetComponent<UpgradeWindowActivator>(UpgradeYesNoButtonsCanvas);
+			var enabler = _assetLoader.InstantiateAndGetComponent<UpgradeWindowActivator>(UpgradeYesNoButtonsCanvas);
 
 			enabler.PhrasesList.Phrases = _translatorService.GetLocalize(enabler.PhrasesList.Phrases);
 

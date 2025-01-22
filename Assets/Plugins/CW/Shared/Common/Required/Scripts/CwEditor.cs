@@ -10,15 +10,15 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 	/// <summary>This is the base class for all inspectors.</summary>
 	public abstract class CwEditor : Editor
 	{
-		private static Stack<object> datas = new Stack<object>();
+		private readonly static Stack<object> datas = new();
 
-		private static GUIContent customContent = new GUIContent();
+		private readonly static GUIContent customContent = new();
 
-		private static List<Color> colors = new List<Color>();
+		private readonly static List<Color> colors = new();
 
-		private static List<float> labelWidths = new List<float>();
+		private readonly static List<float> labelWidths = new();
 
-		private static List<bool> mixedValues = new List<bool>();
+		private readonly static List<bool> mixedValues = new();
 
 		public void GetTargets<T>(out T tgt, out T[] tgts)
 			where T : Object
@@ -75,46 +75,34 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 				    undo
 			    ) ==
 			    false)
-			{
 				Undo.RecordObjects(
 					tgts,
 					undo
 				);
-			}
 
-			if (apply == true)
-			{
-				serializedObject.ApplyModifiedProperties();
-			}
+			if (apply) serializedObject.ApplyModifiedProperties();
 
-			foreach (var t in tgts)
+			foreach (T t in tgts)
 			{
 				update(
 					t
 				);
 
-				if (dirty == true)
-				{
+				if (dirty)
 					EditorUtility.SetDirty(
 						t
 					);
-				}
 			}
 		}
 
 		protected bool Any<T>(T[] tgts, Func<T, bool> check)
 			where T : Object
 		{
-			foreach (var t in tgts)
-			{
+			foreach (T t in tgts)
 				if (check(
 					    t
-				    ) ==
-				    true)
-				{
+				    ))
 					return true;
-				}
-			}
 
 			return false;
 		}
@@ -122,23 +110,19 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 		protected bool All<T>(T[] tgts, Func<T, bool> check)
 			where T : Object
 		{
-			foreach (var t in tgts)
-			{
+			foreach (T t in tgts)
 				if (check(
 					    t
 				    ) ==
 				    false)
-				{
 					return false;
-				}
-			}
 
 			return true;
 		}
 
 		public static Rect Reserve(float height = 19.0f)
 		{
-			var rect =
+			Rect rect =
 				EditorGUILayout.BeginVertical();
 			EditorGUILayout.LabelField(
 				string.Empty,
@@ -202,12 +186,10 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			EditorGUI.indentLevel -= 1;
 		}
 
-		public static bool Button(string text)
-		{
-			return GUILayout.Button(
+		public static bool Button(string text) =>
+			GUILayout.Button(
 				text
 			);
-		}
 
 		public static bool HelpButton(string helpText, MessageType type, string buttonText, float buttonWidth)
 		{
@@ -243,20 +225,11 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 
 		public static void ClearStacks()
 		{
-			while (colors.Count > 0)
-			{
-				EndColor();
-			}
+			while (colors.Count > 0) EndColor();
 
-			while (labelWidths.Count > 0)
-			{
-				EndLabelWidth();
-			}
+			while (labelWidths.Count > 0) EndLabelWidth();
 
-			while (mixedValues.Count > 0)
-			{
-				EndMixedValue();
-			}
+			while (mixedValues.Count > 0) EndMixedValue();
 		}
 
 		public static void BeginMixedValue(bool mixed = true)
@@ -272,7 +245,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 		{
 			if (mixedValues.Count > 0)
 			{
-				var index = mixedValues.Count - 1;
+				int index = mixedValues.Count - 1;
 
 				EditorGUI.showMixedValue = mixedValues[index];
 
@@ -313,14 +286,14 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 				GUI.color
 			);
 
-			GUI.color = show == true ? color : colors[0];
+			GUI.color = show ? color : colors[0];
 		}
 
 		public static void EndColor()
 		{
 			if (colors.Count > 0)
 			{
-				var index = colors.Count - 1;
+				int index = colors.Count - 1;
 
 				GUI.color = colors[index];
 
@@ -343,7 +316,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 		{
 			if (labelWidths.Count > 0)
 			{
-				var index = labelWidths.Count - 1;
+				int index = labelWidths.Count - 1;
 
 				EditorGUIUtility.labelWidth = labelWidths[index];
 
@@ -355,7 +328,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 
 		public static bool DrawFoldout(string overrideText, string overrideTooltip, string propertyPath = "m_Name")
 		{
-			var property = GetPropertyAndSetCustomContent(
+			SerializedProperty property = GetPropertyAndSetCustomContent(
 				propertyPath,
 				overrideTooltip,
 				overrideText
@@ -374,12 +347,12 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			string overrideTooltip = null,
 			string overrideText = null)
 		{
-			var property = GetPropertyAndSetCustomContent(
+			SerializedProperty property = GetPropertyAndSetCustomContent(
 				propertyPath,
 				overrideTooltip,
 				overrideText
 			);
-			var rect = EditorGUILayout.BeginVertical();
+			Rect rect = EditorGUILayout.BeginVertical();
 			EditorGUILayout.LabelField(
 				string.Empty,
 				GUILayout.Height(
@@ -389,7 +362,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 				)
 			);
 			EditorGUILayout.EndVertical();
-			var rectF = rect;
+			Rect rectF = rect;
 			rectF.height = 16;
 
 			property.isExpanded = EditorGUI.Foldout(
@@ -425,7 +398,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 
 		public static bool Draw(string propertyPath, string overrideTooltip = null, string overrideText = null)
 		{
-			var property = GetPropertyAndSetCustomContent(
+			SerializedProperty property = GetPropertyAndSetCustomContent(
 				propertyPath,
 				overrideTooltip,
 				overrideText
@@ -451,11 +424,8 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 				    propertyPath,
 				    overrideTooltip,
 				    overrideText
-			    ) ==
-			    true)
-			{
+			    ))
 				dirty = true;
-			}
 		}
 
 		public static void Draw(string propertyPath,
@@ -468,8 +438,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 				    propertyPath,
 				    overrideTooltip,
 				    overrideText
-			    ) ==
-			    true)
+			    ))
 			{
 				dirty1 = true;
 				dirty2 = true;
@@ -482,12 +451,12 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			string overrideTooltip = null,
 			string overrideText = null)
 		{
-			var property = GetPropertyAndSetCustomContent(
+			SerializedProperty property = GetPropertyAndSetCustomContent(
 				propertyPath,
 				overrideTooltip,
 				overrideText
 			);
-			var value = property.floatValue;
+			float value = property.floatValue;
 
 			EditorGUI.BeginChangeCheck();
 
@@ -498,7 +467,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 				max
 			);
 
-			if (EditorGUI.EndChangeCheck() == true)
+			if (EditorGUI.EndChangeCheck())
 			{
 				property.floatValue = value;
 
@@ -514,12 +483,12 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			string overrideTooltip = null,
 			string overrideText = null)
 		{
-			var property = GetPropertyAndSetCustomContent(
+			SerializedProperty property = GetPropertyAndSetCustomContent(
 				propertyPath,
 				overrideTooltip,
 				overrideText
 			);
-			var value = property.intValue;
+			int value = property.intValue;
 
 			EditorGUI.BeginChangeCheck();
 
@@ -530,7 +499,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 				max
 			);
 
-			if (EditorGUI.EndChangeCheck() == true)
+			if (EditorGUI.EndChangeCheck())
 			{
 				property.intValue = value;
 
@@ -546,12 +515,12 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			string overrideTooltip = null,
 			string overrideText = null)
 		{
-			var property = GetPropertyAndSetCustomContent(
+			SerializedProperty property = GetPropertyAndSetCustomContent(
 				propertyPath,
 				overrideTooltip,
 				overrideText
 			);
-			var value = property.vector2Value;
+			Vector2 value = property.vector2Value;
 
 			EditorGUI.BeginChangeCheck();
 
@@ -563,7 +532,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 				max
 			);
 
-			if (EditorGUI.EndChangeCheck() == true)
+			if (EditorGUI.EndChangeCheck())
 			{
 				property.vector2Value = value;
 
@@ -575,12 +544,12 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 
 		public static bool DrawVector4(string propertyPath, string overrideTooltip = null, string overrideText = null)
 		{
-			var property = GetPropertyAndSetCustomContent(
+			SerializedProperty property = GetPropertyAndSetCustomContent(
 				propertyPath,
 				overrideTooltip,
 				overrideText
 			);
-			var value = property.vector4Value;
+			Vector4 value = property.vector4Value;
 
 			EditorGUI.BeginChangeCheck();
 
@@ -589,7 +558,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 				value
 			);
 
-			if (EditorGUI.EndChangeCheck() == true)
+			if (EditorGUI.EndChangeCheck())
 			{
 				property.vector4Value = value;
 
@@ -605,7 +574,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			string overrideTooltip = null,
 			string overrideText = null)
 		{
-			var property = GetPropertyAndSetCustomContent(
+			SerializedProperty property = GetPropertyAndSetCustomContent(
 				propertyPath,
 				overrideTooltip,
 				overrideText
@@ -636,21 +605,18 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 				    propertyPath,
 				    overrideTooltip,
 				    overrideText
-			    ) ==
-			    true)
-			{
+			    ))
 				modified = true;
-			}
 		}
 
 		public static bool DrawLayer(string propertyPath, string overrideTooltip = null, string overrideText = null)
 		{
-			var property = GetPropertyAndSetCustomContent(
+			SerializedProperty property = GetPropertyAndSetCustomContent(
 				propertyPath,
 				overrideTooltip,
 				overrideText
 			);
-			var value = property.intValue;
+			int value = property.intValue;
 
 			EditorGUI.BeginChangeCheck();
 
@@ -659,7 +625,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 				value
 			);
 
-			if (EditorGUI.EndChangeCheck() == true)
+			if (EditorGUI.EndChangeCheck())
 			{
 				property.intValue = value;
 
@@ -673,12 +639,12 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			string overrideTooltip = null,
 			string overrideText = null)
 		{
-			var property = GetPropertyAndSetCustomContent(
+			SerializedProperty property = GetPropertyAndSetCustomContent(
 				propertyPath,
 				overrideTooltip,
 				overrideText
 			);
-			var value = property.quaternionValue.eulerAngles;
+			Vector3 value = property.quaternionValue.eulerAngles;
 
 			EditorGUI.BeginChangeCheck();
 
@@ -691,7 +657,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			);
 			EndMixedValue();
 
-			if (EditorGUI.EndChangeCheck() == true)
+			if (EditorGUI.EndChangeCheck())
 			{
 				property.quaternionValue = Quaternion.Euler(
 					value
@@ -705,39 +671,33 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 
 		protected void DirtyAndUpdate()
 		{
-			for (var i = targets.Length - 1; i >= 0; i--)
-			{
+			for (int i = targets.Length - 1; i >= 0; i--)
 				EditorUtility.SetDirty(
 					targets[i]
 				);
-			}
 
 			serializedObject.Update();
 		}
 
 		public static SerializedProperty GetProperty(string propertyPath)
 		{
-			var data = datas.Peek();
+			object data = datas.Peek();
 
 			if (data != null)
 			{
 				var dataA = data as SerializedObject;
 
 				if (dataA != null)
-				{
 					return dataA.FindProperty(
 						propertyPath
 					);
-				}
 
 				var dataB = data as SerializedProperty;
 
 				if (dataB != null)
-				{
 					return dataB.FindPropertyRelative(
 						propertyPath
 					);
-				}
 			}
 
 			return null;
@@ -747,7 +707,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			string overrideTooltip,
 			string overrideText)
 		{
-			var property = GetProperty(
+			SerializedProperty property = GetProperty(
 				propertyPath
 			);
 
@@ -771,16 +731,14 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			return property;
 		}
 
-		private static string StripRichText(string s)
-		{
-			return s.Replace(
+		private static string StripRichText(string s) =>
+			s.Replace(
 				"<b>",
 				""
 			).Replace(
 				"</b>",
 				""
 			);
-		}
 
 		protected virtual void OnInspector()
 		{

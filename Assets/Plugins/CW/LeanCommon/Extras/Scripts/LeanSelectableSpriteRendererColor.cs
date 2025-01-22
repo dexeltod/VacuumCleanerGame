@@ -5,7 +5,10 @@ using UnityEngine;
 
 namespace Plugins.CW.LeanCommon.Extras.Scripts
 {
-	/// <summary>This component allows you to change the color of the SpriteRenderer attached to the current GameObject when selected.</summary>
+	/// <summary>
+	///     This component allows you to change the color of the SpriteRenderer attached to the current GameObject when
+	///     selected.
+	/// </summary>
 	[ExecuteInEditMode]
 	[RequireComponent(
 		typeof(SpriteRenderer)
@@ -18,6 +21,12 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 	)]
 	public class LeanSelectableSpriteRendererColor : LeanSelectableBehaviour
 	{
+		[SerializeField] private Color defaultColor = Color.white;
+
+		[SerializeField] private Color selectedColor = Color.green;
+
+		[NonSerialized] private SpriteRenderer cachedSpriteRenderer;
+
 		/// <summary>The default color given to the SpriteRenderer.</summary>
 		public Color DefaultColor
 		{
@@ -26,10 +35,8 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 				defaultColor = value;
 				UpdateColor();
 			}
-			get { return defaultColor; }
+			get => defaultColor;
 		}
-
-		[SerializeField] private Color defaultColor = Color.white;
 
 		/// <summary>The color given to the SpriteRenderer when selected.</summary>
 		public Color SelectedColor
@@ -39,12 +46,8 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 				selectedColor = value;
 				UpdateColor();
 			}
-			get { return selectedColor; }
+			get => selectedColor;
 		}
-
-		[SerializeField] private Color selectedColor = Color.green;
-
-		[NonSerialized] private SpriteRenderer cachedSpriteRenderer;
 
 		protected override void OnSelected(LeanSelect select)
 		{
@@ -60,7 +63,7 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 		{
 			if (cachedSpriteRenderer == null) cachedSpriteRenderer = GetComponent<SpriteRenderer>();
 
-			var color = Selectable != null && Selectable.IsSelected == true ? selectedColor : defaultColor;
+			Color color = Selectable != null && Selectable.IsSelected ? selectedColor : defaultColor;
 
 			cachedSpriteRenderer.color = color;
 		}
@@ -95,7 +98,7 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 				"The color given to the SpriteRenderer when selected."
 			);
 
-			if (updateColor == true)
+			if (updateColor)
 			{
 				serializedObject.ApplyModifiedProperties();
 

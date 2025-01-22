@@ -2,12 +2,12 @@ namespace Sources.DomainInterfaces
 {
 	public interface IResourceModel : IResourceModelReadOnly
 	{
-		void AddScore(int newCashScore);
 		void AddMaxTotalResourceModifier(int newAmount);
-		void DecreaseCashScore(int newValue);
 		void AddMoney(int newValue);
-		bool TryDecreaseMoney(int newValue);
+		void AddScore(int newCashScore);
 		void ClearAllScores();
 		void ClearTotalResources();
+		void DecreaseCashScore(int newValue);
+		bool TryDecreaseMoney(int newValue);
 	}
 }

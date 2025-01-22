@@ -17,14 +17,14 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 
 		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenter;
 		private readonly GameplayInterfaceView _gameplayInterfaceView;
-		private readonly IResourceModelReadOnly _resourceModelReadOnly;
 		private readonly IPlayerModelRepository _playerModelRepository;
-		private readonly IGameStateChanger _stateChangerProvider;
+		private readonly IResourceModelReadOnly _resourceModelReadOnly;
+		private readonly IStateMachine _stateMachineProvider;
 		private readonly TranslatorService _translatorService;
 
 		public GameplayInterfaceViewFactory(
 			IGameplayInterfacePresenter gameplayInterfacePresenterProvider,
-			IGameStateChanger stateChangerProvider,
+			IStateMachine stateMachineProvider,
 			TranslatorService translatorService,
 			IResourceModelReadOnly resourceModelReadOnly,
 			GameplayInterfaceView gameplayInterfaceView,
@@ -34,7 +34,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 			_gameplayInterfacePresenter = gameplayInterfacePresenterProvider ??
 			                              throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
 
-			_stateChangerProvider = stateChangerProvider ?? throw new ArgumentNullException(nameof(stateChangerProvider));
+			_stateMachineProvider = stateMachineProvider ?? throw new ArgumentNullException(nameof(stateMachineProvider));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 			_resourceModelReadOnly = resourceModelReadOnly ?? throw new ArgumentNullException(nameof(resourceModelReadOnly));
 			_playerModelRepository = playerModelRepository ?? throw new ArgumentNullException(nameof(playerModelRepository));
@@ -49,7 +49,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 
 			IGameMenuPresenter presenter = new GameMenuPresenter(
 				_gameplayInterfaceView.GetComponent<IGameMenuView>(),
-				_stateChangerProvider
+				_stateMachineProvider
 			);
 
 			bool isHalfScoreReached
@@ -57,8 +57,8 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 
 			_gameplayInterfaceView.Construct(
 				_gameplayInterfacePresenter,
-				_resourceModelReadOnly.CurrentCashScore,
-				_resourceModelReadOnly.CurrentTotalResources,
+				_resourceModelReadOnly.CashScore.Value,
+				_resourceModelReadOnly.TotalAmount.Value,
 				(int)_playerModelRepository.Get(ProgressType.MaxCashScore).Value,
 				_resourceModelReadOnly.MaxTotalResourceCount,
 				_resourceModelReadOnly.SoftCurrency.Value,

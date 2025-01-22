@@ -6,21 +6,28 @@ namespace Plugins.Joystick_Pack.Scripts.Joysticks
 {
 	public class VariableJoystick : Joystick
 	{
-		public float MoveThreshold
-		{
-			get { return moveThreshold; }
-			set
-			{
-				moveThreshold = Mathf.Abs(
-					value
-				);
-			}
-		}
-
 		[SerializeField] private float moveThreshold = 1;
 		[SerializeField] private JoystickType joystickType = JoystickType.Fixed;
 
 		private Vector2 fixedPosition = Vector2.zero;
+
+		public float MoveThreshold
+		{
+			get => moveThreshold;
+			set =>
+				moveThreshold = Mathf.Abs(
+					value
+				);
+		}
+
+		protected override void Start()
+		{
+			base.Start();
+			fixedPosition = background.anchoredPosition;
+			SetMode(
+				joystickType
+			);
+		}
 
 		public void SetMode(JoystickType joystickType)
 		{
@@ -34,18 +41,11 @@ namespace Plugins.Joystick_Pack.Scripts.Joysticks
 				);
 			}
 			else
+			{
 				background.gameObject.SetActive(
 					false
 				);
-		}
-
-		protected override void Start()
-		{
-			base.Start();
-			fixedPosition = background.anchoredPosition;
-			SetMode(
-				joystickType
-			);
+			}
 		}
 
 		public override void OnPointerDown(PointerEventData eventData)

@@ -16,9 +16,11 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 	)]
 	public class LeanSelect : MonoBehaviour
 	{
-		[Serializable]
-		public class LeanSelectableEvent : UnityEvent<LeanSelectable>
+		public enum LimitType
 		{
+			Unlimited,
+			StopAtMax,
+			DeselectFirst
 		}
 
 		public enum ReselectType
@@ -29,55 +31,64 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			SelectAgain
 		}
 
-		public enum LimitType
-		{
-			Unlimited,
-			StopAtMax,
-			DeselectFirst
-		}
-
-		public static LinkedList<LeanSelect> Instances = new LinkedList<LeanSelect>();
-		[NonSerialized] private LinkedListNode<LeanSelect> instancesNode;
-
-		/// <summary>If you attempt to select a point that has no objects underneath, should all currently selected objects be deselected?</summary>
-		public bool DeselectWithNothing
-		{
-			set { deselectWithNothing = value; }
-			get { return deselectWithNothing; }
-		}
+		public static LinkedList<LeanSelect> Instances = new();
 
 		[SerializeField] private bool deselectWithNothing;
 
-		/// <summary>If you have selected the maximum number of objects, what should happen?
-		/// Unlimited = Always allow selection.
-		/// StopAtMax = Allow selection up to the <b>MaxSelectables</b> count, then do nothing.
-		/// DeselectFirst = Always allow selection, but deselect the first object when the <b>MaxSelectables</b> count is reached.</summary>
-		public LimitType Limit
-		{
-			set { limit = value; }
-			get { return limit; }
-		}
-
 		[SerializeField] private LimitType limit;
 
-		/// <summary>The maximum number of selectables that can be selected at the same time.
-		/// 0 = Unlimited.</summary>
-		public int MaxSelectables
+		[SerializeField] private int maxSelectables = 5;
+
+		[SerializeField] private ReselectType reselect = ReselectType.SelectAgain;
+
+		[SerializeField] protected List<LeanSelectable> selectables;
+
+		[SerializeField] private LeanSelectableEvent onSelected;
+
+		[SerializeField] private LeanSelectableEvent onDeselected;
+
+		[SerializeField] private UnityEvent onNothing;
+		[NonSerialized] private LinkedListNode<LeanSelect> instancesNode;
+
+		/// <summary>
+		///     If you attempt to select a point that has no objects underneath, should all currently selected objects be
+		///     deselected?
+		/// </summary>
+		public bool DeselectWithNothing
 		{
-			set { maxSelectables = value; }
-			get { return maxSelectables; }
+			set => deselectWithNothing = value;
+			get => deselectWithNothing;
 		}
 
-		[SerializeField] private int maxSelectables = 5;
+		/// <summary>
+		///     If you have selected the maximum number of objects, what should happen?
+		///     Unlimited = Always allow selection.
+		///     StopAtMax = Allow selection up to the <b>MaxSelectables</b> count, then do nothing.
+		///     DeselectFirst = Always allow selection, but deselect the first object when the <b>MaxSelectables</b> count is
+		///     reached.
+		/// </summary>
+		public LimitType Limit
+		{
+			set => limit = value;
+			get => limit;
+		}
+
+		/// <summary>
+		///     The maximum number of selectables that can be selected at the same time.
+		///     0 = Unlimited.
+		/// </summary>
+		public int MaxSelectables
+		{
+			set => maxSelectables = value;
+			get => maxSelectables;
+		}
 
 		/// <summary>If you select an already selected selectable, what should happen?</summary>
 		public ReselectType Reselect
 		{
-			set { reselect = value; }
-			get { return reselect; }
+			set => reselect = value;
+			get => reselect;
 		}
-
-		[SerializeField] private ReselectType reselect = ReselectType.SelectAgain;
 
 		/// <summary>This stores all objects selected by this component.</summary>
 		public List<LeanSelectable> Selectables
@@ -89,8 +100,6 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			}
 		}
 
-		[SerializeField] protected List<LeanSelectable> selectables;
-
 		/// <summary>This is invoked when an object is selected.</summary>
 		public LeanSelectableEvent OnSelected
 		{
@@ -100,8 +109,6 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 				return onSelected;
 			}
 		}
-
-		[SerializeField] private LeanSelectableEvent onSelected;
 
 		/// <summary>This is invoked when an object is deselected.</summary>
 		public LeanSelectableEvent OnDeselected
@@ -113,8 +120,6 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			}
 		}
 
-		[SerializeField] private LeanSelectableEvent onDeselected;
-
 		/// <summary>This is invoked when you try to select, but nothing is found.</summary>
 		public UnityEvent OnNothing
 		{
@@ -125,21 +130,40 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			}
 		}
 
-		[SerializeField] private UnityEvent onNothing;
+		protected virtual void OnEnable()
+		{
+			instancesNode = Instances.AddLast(
+				this
+			);
+		}
+
+		protected virtual void OnDisable()
+		{
+			Instances.Remove(
+				instancesNode
+			);
+			instancesNode = null;
+		}
+
+		protected virtual void OnDestroy()
+		{
+			DeselectAll();
+		}
 
 		public static event Action<LeanSelect, LeanSelectable> OnAnySelected;
 
 		public static event Action<LeanSelect, LeanSelectable> OnAnyDeselected;
 
-		public bool IsSelected(LeanSelectable selectable)
-		{
-			return selectables != null &&
-			       selectables.Contains(
-				       selectable
-			       );
-		}
+		public bool IsSelected(LeanSelectable selectable) =>
+			selectables != null &&
+			selectables.Contains(
+				selectable
+			);
 
-		/// <summary>This will select the specified object and add it to this component's <b>Selectables</b> list, if it isn't already there.</summary>
+		/// <summary>
+		///     This will select the specified object and add it to this component's <b>Selectables</b> list, if it isn't
+		///     already there.
+		/// </summary>
 		public void Select(LeanSelectable selectable)
 		{
 			TrySelect(
@@ -151,30 +175,25 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 		public void Deselect(LeanSelectable selectable)
 		{
 			if (selectable != null && selectables != null)
-			{
 				TryDeselect(
 					selectable
 				);
-			}
 		}
 
 		protected bool TrySelect(LeanSelectable selectable)
 		{
 			if (CwHelper.Enabled(
 				    selectable
-			    ) ==
-			    true)
+			    ))
 			{
 				if (TryReselect(
 					    selectable
-				    ) ==
-				    true)
+				    ))
 				{
 					if (Selectables.Contains(
 						    selectable
 					    ) ==
 					    false) // NOTE: Property
-					{
 						switch (limit)
 						{
 							case LimitType.Unlimited:
@@ -184,25 +203,19 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 
 							case LimitType.StopAtMax:
 							{
-								if (selectables.Count >= maxSelectables)
-								{
-									return false;
-								}
+								if (selectables.Count >= maxSelectables) return false;
 							}
 								break;
 
 							case LimitType.DeselectFirst:
 							{
 								if (selectables.Count > 0 && selectables.Count >= maxSelectables)
-								{
 									TryDeselect(
 										selectables[0]
 									);
-								}
 							}
 								break;
 						}
-					}
 
 					selectables.Add(
 						selectable
@@ -231,10 +244,7 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			{
 				if (onNothing != null) onNothing.Invoke();
 
-				if (deselectWithNothing == true)
-				{
-					DeselectAll();
-				}
+				if (deselectWithNothing) DeselectAll();
 			}
 
 			return false;
@@ -250,9 +260,7 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 						    selectable
 					    ) ==
 					    false) // NOTE: Property
-					{
 						return true;
-					}
 				}
 					break;
 
@@ -262,15 +270,11 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 						    selectable
 					    ) ==
 					    false) // NOTE: Property
-					{
 						return true;
-					}
-					else
-					{
-						Deselect(
-							selectable
-						);
-					}
+
+					Deselect(
+						selectable
+					);
 				}
 					break;
 
@@ -278,13 +282,10 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 				{
 					if (Selectables.Contains(
 						    selectable
-					    ) ==
-					    true) // NOTE: Property
-					{
+					    )) // NOTE: Property
 						Deselect(
 							selectable
 						);
-					}
 				}
 					return true;
 
@@ -301,16 +302,14 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 		{
 			if (selectables != null)
 			{
-				var index = selectables.IndexOf(
+				int index = selectables.IndexOf(
 					selectable
 				);
 
 				if (index >= 0)
-				{
 					return TryDeselect(
 						index
 					);
-				}
 			}
 
 			return false;
@@ -322,7 +321,7 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 
 			if (selectables != null && index >= 0 && index < selectables.Count)
 			{
-				var selectable = selectables[index];
+				LeanSelectable selectable = selectables[index];
 
 				selectables.RemoveAt(
 					index
@@ -335,19 +334,15 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 					);
 
 					if (onDeselected != null)
-					{
 						onDeselected.Invoke(
 							selectable
 						);
-					}
 
 					if (OnAnyDeselected != null)
-					{
 						OnAnyDeselected.Invoke(
 							this,
 							selectable
 						);
-					}
 				}
 
 				success = true;
@@ -363,11 +358,10 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 		public void DeselectAll()
 		{
 			if (selectables != null)
-			{
 				while (selectables.Count > 0)
 				{
-					var index = selectables.Count - 1;
-					var selectable = selectables[index];
+					int index = selectables.Count - 1;
+					LeanSelectable selectable = selectables[index];
 
 					selectables.RemoveAt(
 						index
@@ -377,53 +371,34 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 						this
 					);
 				}
-			}
 		}
 
-		/// <summary>This will deselect objects in chronological order until the selected object count reaches the specified amount.</summary>
+		/// <summary>
+		///     This will deselect objects in chronological order until the selected object count reaches the specified
+		///     amount.
+		/// </summary>
 		public void Cull(int maxCount)
 		{
 			if (selectables != null)
-			{
 				while (selectables.Count > 0 && selectables.Count > maxCount)
 				{
-					var selectable = selectables[0];
+					LeanSelectable selectable = selectables[0];
 
 					selectables.RemoveAt(
 						0
 					);
 
 					if (selectable != null)
-					{
 						if (selectable != null)
-						{
 							Deselect(
 								selectable
 							);
-						}
-					}
 				}
-			}
 		}
 
-		protected virtual void OnEnable()
+		[Serializable]
+		public class LeanSelectableEvent : UnityEvent<LeanSelectable>
 		{
-			instancesNode = Instances.AddLast(
-				this
-			);
-		}
-
-		protected virtual void OnDisable()
-		{
-			Instances.Remove(
-				instancesNode
-			);
-			instancesNode = null;
-		}
-
-		protected virtual void OnDestroy()
-		{
-			DeselectAll();
 		}
 	}
 
@@ -434,8 +409,8 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 	)]
 	public class LeanSelect_Editor : CwEditor
 	{
-		[NonSerialized] LeanSelect tgt;
-		[NonSerialized] LeanSelect[] tgts;
+		[NonSerialized] private LeanSelect tgt;
+		[NonSerialized] private LeanSelect[] tgts;
 
 		protected override void OnInspector()
 		{
@@ -501,7 +476,7 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 
 			Separator();
 
-			var showUnusedEvents = DrawFoldout(
+			bool showUnusedEvents = DrawFoldout(
 				"Show Unused Events",
 				"Show all events?"
 			);
@@ -511,7 +486,6 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			);
 
 			if (select != null)
-			{
 				Each(
 					tgts,
 					t => t.Select(
@@ -519,10 +493,8 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 					),
 					true
 				);
-			}
 
 			if (deselect != null)
-			{
 				Each(
 					tgts,
 					t => t.Deselect(
@@ -530,7 +502,6 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 					),
 					true
 				);
-			}
 		}
 
 		protected virtual void DrawEvents(bool showUnusedEvents)
@@ -538,38 +509,29 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			if (Any(
 				    tgts,
 				    t => t.OnSelected.GetPersistentEventCount() > 0
-			    ) ==
-			    true ||
-			    showUnusedEvents == true)
-			{
+			    ) ||
+			    showUnusedEvents)
 				Draw(
 					"onSelected"
 				);
-			}
 
 			if (Any(
 				    tgts,
 				    t => t.OnDeselected.GetPersistentEventCount() > 0
-			    ) ==
-			    true ||
-			    showUnusedEvents == true)
-			{
+			    ) ||
+			    showUnusedEvents)
 				Draw(
 					"onDeselected"
 				);
-			}
 
 			if (Any(
 				    tgts,
 				    t => t.OnNothing.GetPersistentEventCount() > 0
-			    ) ==
-			    true ||
-			    showUnusedEvents == true)
-			{
+			    ) ||
+			    showUnusedEvents)
 				Draw(
 					"onNothing"
 				);
-			}
 		}
 	}
 

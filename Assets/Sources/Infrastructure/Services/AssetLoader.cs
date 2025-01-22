@@ -5,7 +5,7 @@ using Object = UnityEngine.Object;
 
 namespace Sources.Infrastructure.Services
 {
-	public sealed class AssetFactory : IAssetFactory
+	public sealed class AssetLoader : IAssetLoader
 	{
 		public GameObject Instantiate(string path)
 		{
@@ -53,7 +53,7 @@ namespace Sources.Infrastructure.Services
 
 		public T InstantiateAndGetComponent<T>(GameObject gameObject) where T : Behaviour
 		{
-			T component = Object.Instantiate(gameObject).GetComponent<T>();
+			var component = Object.Instantiate(gameObject).GetComponent<T>();
 
 			return component;
 		}
@@ -115,7 +115,7 @@ namespace Sources.Infrastructure.Services
 		private void CheckPathException(string path, object @object)
 		{
 			if (string.IsNullOrEmpty(path))
-				throw new ArgumentNullException($"File from resource not found:" + nameof(path));
+				throw new ArgumentNullException("File from resource not found:" + nameof(path));
 
 			if (@object == null)
 				throw new ArgumentNullException(nameof(@object) + path);

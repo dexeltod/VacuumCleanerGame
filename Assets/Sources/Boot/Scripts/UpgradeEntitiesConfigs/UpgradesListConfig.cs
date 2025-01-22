@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Sources.InfrastructureInterfaces.Configs;
 using UnityEngine;
 
-namespace Sources.Boot.Scripts.Factories.UpgradeEntitiesConfigs
+namespace Sources.Boot.Scripts.UpgradeEntitiesConfigs
 {
 	[CreateAssetMenu(fileName = "ShopItemsList", menuName = "Data/Shop/Upgrade/ItemsList")]
 	public class UpgradesListConfig : ScriptableObject

@@ -7,87 +7,50 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 	/// <summary>This contains the translated value for the current language, and other associated data.</summary>
 	public class LeanTranslation
 	{
-		public struct Entry
-		{
-			public string Language;
+		private static bool buffering;
 
-			public Object Owner;
-		}
+		private readonly static StringBuilder current = new();
 
-		/// <summary>The name of this translation.</summary>
-		public string Name
-		{
-			get { return name; }
-		}
+		private readonly static StringBuilder buffer = new();
 
-		[SerializeField] private string name;
+		private readonly static List<LeanToken> tokens = new();
 
-		/// <summary>The data of this translation (e.g. string or Object).
-		/// NOTE: This is a System.Object, so you must correctly cast it back before use.</summary>
+		/// <summary>
+		///     The data of this translation (e.g. string or Object).
+		///     NOTE: This is a System.Object, so you must correctly cast it back before use.
+		/// </summary>
 		public object Data;
+
+		[SerializeField] private readonly string name;
 
 		/// <summary>If Data has been filled with data for the primary language, then this will be set to true.</summary>
 		public bool Primary;
 
-		/// <summary>This stores a list of all LeanSource instances that are currently managing the current value of this translation in the current language.
-		/// NOTE: If this is empty then no LeanSource of this name is localized for the current language.</summary>
-		public List<Entry> Entries
-		{
-			get { return entries; }
-		}
-
-		private List<Entry> entries = new List<Entry>();
-
-		private static bool buffering;
-
-		private static StringBuilder current = new StringBuilder();
-
-		private static StringBuilder buffer = new StringBuilder();
-
-		private static List<LeanToken> tokens = new List<LeanToken>();
-
-		public LeanTranslation(string newName)
-		{
+		public LeanTranslation(string newName) =>
 			name = newName;
-		}
 
-		public void Register(string language, Object owner)
-		{
-			var entry = new Entry();
+		/// <summary>The name of this translation.</summary>
+		public string Name => name;
 
-			entry.Language = language;
-			entry.Owner = owner;
-
-			entries.Add(
-				entry
-			);
-		}
+		/// <summary>
+		///     This stores a list of all LeanSource instances that are currently managing the current value of this translation in
+		///     the current language.
+		///     NOTE: If this is empty then no LeanSource of this name is localized for the current language.
+		/// </summary>
+		public List<Entry> Entries { get; } = new();
 
 		public void Clear()
 		{
 			Data = null;
 			Primary = false;
 
-			entries.Clear();
+			Entries.Clear();
 		}
 
-		public int LanguageCount(string language)
-		{
-			var total = 0;
-
-			for (var i = entries.Count - 1; i >= 0; i--)
-			{
-				if (entries[i].Language == language)
-				{
-					total += 1;
-				}
-			}
-
-			return total;
-		}
-
-		/// <summary>This returns Text with all tokens substituted using the LeanLocalization.Tokens list.
-		/// NOTE: If you want local tokens to work, then specify the localTokenRoot GameObject.</summary>
+		/// <summary>
+		///     This returns Text with all tokens substituted using the LeanLocalization.Tokens list.
+		///     NOTE: If you want local tokens to work, then specify the localTokenRoot GameObject.
+		/// </summary>
 		public static string FormatText(string rawText,
 			string currentText = null,
 			ILocalizationHandler handler = null,
@@ -95,11 +58,8 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		{
 			if (string.IsNullOrEmpty(
 				    currentText
-			    ) ==
-			    true)
-			{
+			    ))
 				currentText = rawText;
-			}
 
 			if (rawText != null)
 			{
@@ -109,11 +69,11 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 				for (var i = 0; i < rawText.Length; i++)
 				{
-					var rawChar = rawText[i];
+					char rawChar = rawText[i];
 
 					if (rawChar == '{')
 					{
-						if (buffering == true)
+						if (buffering)
 						{
 							buffering = false;
 
@@ -126,7 +86,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 					}
 					else if (rawChar == '}')
 					{
-						if (buffering == true)
+						if (buffering)
 						{
 							if (buffer.Length > 0)
 							{
@@ -139,8 +99,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 									    localTokenRoot,
 									    buffer.ToString(),
 									    ref token
-								    ) ==
-								    true) // TODO: Avoid ToString here?
+								    )) // TODO: Avoid ToString here?
 								{
 									current.Append(
 										token.Value
@@ -155,8 +114,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 								         LeanLocalization.CurrentTokens.TryGetValue(
 									         buffer.ToString(),
 									         out token
-								         ) ==
-								         true) // TODO: Avoid ToString here?
+								         )) // TODO: Avoid ToString here?
 								{
 									current.Append(
 										token.Value
@@ -186,18 +144,14 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 					}
 					else
 					{
-						if (buffering == true)
-						{
+						if (buffering)
 							buffer.Append(
 								rawChar
 							);
-						}
 						else
-						{
 							current.Append(
 								rawChar
 							);
-						}
 					}
 				}
 
@@ -211,9 +165,9 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 					{
 						handler.UnregisterAll();
 
-						for (var i = tokens.Count - 1; i >= 0; i--)
+						for (int i = tokens.Count - 1; i >= 0; i--)
 						{
-							var token = tokens[i];
+							LeanToken token = tokens[i];
 
 							token.Register(
 								handler
@@ -232,27 +186,47 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			return currentText;
 		}
 
+		public int LanguageCount(string language)
+		{
+			var total = 0;
+
+			for (int i = Entries.Count - 1; i >= 0; i--)
+				if (Entries[i].Language == language)
+					total += 1;
+
+			return total;
+		}
+
+		public void Register(string language, Object owner)
+		{
+			var entry = new Entry();
+
+			entry.Language = language;
+			entry.Owner = owner;
+
+			Entries.Add(
+				entry
+			);
+		}
+
 		private static bool Match(string a, StringBuilder b)
 		{
-			if (a == null && b.Length > 0)
-			{
-				return false;
-			}
+			if (a == null && b.Length > 0) return false;
 
-			if (a.Length != b.Length)
-			{
-				return false;
-			}
+			if (a.Length != b.Length) return false;
 
 			for (var i = 0; i < a.Length; i++)
-			{
 				if (a[i] != b[i])
-				{
 					return false;
-				}
-			}
 
 			return true;
+		}
+
+		public struct Entry
+		{
+			public string Language;
+
+			public Object Owner;
 		}
 	}
 }

@@ -2,7 +2,7 @@ using Sources.BusinessLogic.States.StateMachineInterfaces;
 
 namespace Sources.BusinessLogic.Services
 {
-	public interface IGameStateChanger
+	public interface IStateMachine
 	{
 		void Enter<TState>() where TState : class, IGameState;
 

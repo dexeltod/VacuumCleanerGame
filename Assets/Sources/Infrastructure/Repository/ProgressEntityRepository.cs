@@ -9,8 +9,8 @@ namespace Sources.Infrastructure.Repository
 {
 	public sealed class ProgressEntityRepository : IProgressEntityRepository
 	{
-		private readonly Dictionary<int, IStatUpgradeEntityReadOnly> _entities;
 		private readonly Dictionary<int, IUpgradeEntityConfig> _configs;
+		private readonly Dictionary<int, IStatUpgradeEntityReadOnly> _entities;
 
 		public ProgressEntityRepository(
 			Dictionary<int, IStatUpgradeEntityReadOnly> entities,

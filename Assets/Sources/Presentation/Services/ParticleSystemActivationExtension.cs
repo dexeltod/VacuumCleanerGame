@@ -6,8 +6,14 @@ namespace Sources.Presentation.Services
 {
 	public class ParticleSystemActivationExtension : MonoBehaviour
 	{
-		private ParticleSystem _particleSystem;
 		private ICollectable _collectable;
+		private ParticleSystem _particleSystem;
+
+		private void OnDisable() =>
+			_collectable.Collected -= OnCollected;
+
+		private void OnDestroy() =>
+			_collectable.Collected -= OnCollected;
 
 		public void Construct(ParticleSystem particles, ICollectable collectable)
 		{
@@ -18,11 +24,5 @@ namespace Sources.Presentation.Services
 
 		private void OnCollected() =>
 			_particleSystem.Stop();
-
-		private void OnDisable() =>
-			_collectable.Collected -= OnCollected;
-
-		private void OnDestroy() =>
-			_collectable.Collected -= OnCollected;
 	}
 }

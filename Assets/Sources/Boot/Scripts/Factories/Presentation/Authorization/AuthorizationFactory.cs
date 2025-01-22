@@ -1,9 +1,9 @@
 using System;
 using Sources.BusinessLogic;
 using Sources.BusinessLogic.Interfaces;
+using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Controllers;
 using Sources.ControllersInterfaces;
-using Sources.Infrastructure.Services;
 using Sources.PresentationInterfaces;
 using UnityEngine;
 
@@ -11,17 +11,17 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Authorization
 {
 	public sealed class AuthorizationFactory : IAuthorizationFactory
 	{
-		private readonly AssetFactory _assetFactory;
+		private readonly IAssetLoader _assetLoader;
 		private readonly ICloudServiceSdk _cloudServiceSdk;
 		private readonly TranslatorService _localizationService;
 
 		public AuthorizationFactory(
-			AssetFactory assetFactory,
+			IAssetLoader assetLoader,
 			ICloudServiceSdk cloudServiceSdk,
 			TranslatorService localizationService
 		)
 		{
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetLoader = assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 
 			_cloudServiceSdk = cloudServiceSdk;
 			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
@@ -30,12 +30,12 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Authorization
 		public IAuthorizationPresenter Create(IMainMenuView view)
 		{
 			IAuthorizationView authorizationView = new AuthorizationViewFactory(
-				_assetFactory,
+				_assetLoader,
 				_localizationService,
 				view
 			).Create();
 
-			AuthorizationPresenter authorizationPresenter = new AuthorizationPresenter(_cloudServiceSdk, authorizationView);
+			var authorizationPresenter = new AuthorizationPresenter(_cloudServiceSdk, authorizationView);
 
 			Construct(
 				authorizationView,

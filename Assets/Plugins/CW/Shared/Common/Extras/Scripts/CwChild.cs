@@ -3,12 +3,15 @@ using UnityEngine;
 
 namespace Plugins.CW.Shared.Common.Extras.Scripts
 {
-	/// <summary>This is the base class for all components that are created as children of another component, allowing them to be more easily managed.</summary>
+	/// <summary>
+	///     This is the base class for all components that are created as children of another component, allowing them to
+	///     be more easily managed.
+	/// </summary>
 	public abstract class CwChild : MonoBehaviour
 	{
-		public interface IHasChildren
+		protected virtual void Start()
 		{
-			bool HasChild(CwChild child);
+			//DestroyGameObjectIfInvalid();
 		}
 
 		[ContextMenu(
@@ -17,12 +20,8 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 		public void DestroyGameObjectIfInvalidAll()
 		{
 			if (transform.parent != null)
-			{
-				foreach (var siblings in transform.parent.GetComponentsInChildren<CwChild>())
-				{
+				foreach (CwChild siblings in transform.parent.GetComponentsInChildren<CwChild>())
 					siblings.DestroyGameObjectIfInvalid();
-				}
-			}
 		}
 
 		[ContextMenu(
@@ -30,7 +29,7 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 		)]
 		public void DestroyGameObjectIfInvalid()
 		{
-			var parent = GetParent();
+			IHasChildren parent = GetParent();
 
 			if (parent == null ||
 			    parent.HasChild(
@@ -50,9 +49,9 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 
 		protected abstract IHasChildren GetParent();
 
-		protected virtual void Start()
+		public interface IHasChildren
 		{
-			//DestroyGameObjectIfInvalid();
+			bool HasChild(CwChild child);
 		}
 	}
 }

@@ -18,6 +18,8 @@ namespace Sources.Infrastructure.Services.DomainServices
 		private string _lastTime;
 		private string _saveFilePath;
 
+		private string DirectorySavePath => Application.persistentDataPath + SavesDirectory;
+
 		public void Save(object data)
 		{
 			DeleteSaves();
@@ -28,8 +30,6 @@ namespace Sources.Infrastructure.Services.DomainServices
 				new BinaryFormatter().Serialize(saveFile, data);
 			}
 		}
-
-		private string DirectorySavePath => Application.persistentDataPath + SavesDirectory;
 
 		public void DeleteSaves()
 		{
@@ -56,7 +56,7 @@ namespace Sources.Infrastructure.Services.DomainServices
 			using FileStream file = File.Open(lastSaveFilePath, FileMode.Open);
 			{
 				object loadedData = new BinaryFormatter().Deserialize(file);
-				GlobalProgress globalProgress = (GlobalProgress)loadedData;
+				var globalProgress = (GlobalProgress)loadedData;
 				return globalProgress;
 			}
 		}

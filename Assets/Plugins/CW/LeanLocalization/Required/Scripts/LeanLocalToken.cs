@@ -3,7 +3,10 @@ using UnityEngine;
 
 namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
-	/// <summary>The component works like <b>LeanToken</b>, but must be added to the child GameObject of the one that will be translated.</summary>
+	/// <summary>
+	///     The component works like <b>LeanToken</b>, but must be added to the child GameObject of the one that will be
+	///     translated.
+	/// </summary>
 	[ExecuteInEditMode]
 	[HelpURL(
 		LeanLocalization.HelpUrlPrefix + "LeanLocalToken"
@@ -13,7 +16,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 	)]
 	public class LeanLocalToken : LeanToken
 	{
-		private static List<LeanLocalToken> tempLocalTokens = new List<LeanLocalToken>();
+		private readonly static List<LeanLocalToken> tempLocalTokens = new();
 
 		public static bool TryGetLocalToken(GameObject root, string name, ref LeanToken result)
 		{
@@ -23,15 +26,13 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 					tempLocalTokens
 				);
 
-				foreach (var localToken in tempLocalTokens)
-				{
+				foreach (LeanLocalToken localToken in tempLocalTokens)
 					if (localToken.name == name)
 					{
 						result = localToken;
 
 						return true;
 					}
-				}
 			}
 
 			return false;

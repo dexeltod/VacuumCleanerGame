@@ -9,12 +9,12 @@ namespace Sources.Presentation.UI.MainMenu.LeaderBoard
 		[SerializeField] private TextMeshProUGUI _playerName;
 		[SerializeField] private TextMeshProUGUI _playerScore;
 
+		public GameObject GameObject => gameObject;
+
 		public void Construct(string playerName, int playerScore)
 		{
 			_playerName.SetText(playerName);
 			_playerScore.SetText(playerScore.ToString());
 		}
-
-		public GameObject GameObject => this.gameObject;
 	}
 }

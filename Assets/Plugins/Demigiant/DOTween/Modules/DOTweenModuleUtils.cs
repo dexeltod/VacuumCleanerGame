@@ -15,25 +15,25 @@ using UnityEngine.Scripting;
 namespace Plugins.Demigiant.DOTween.Modules
 {
 	/// <summary>
-	/// Utility functions that deal with available Modules.
-	/// Modules defines:
-	/// - DOTAUDIO
-	/// - DOTPHYSICS
-	/// - DOTPHYSICS2D
-	/// - DOTSPRITE
-	/// - DOTUI
-	/// Extra defines set and used for implementation of external assets:
-	/// - DOTWEEN_TMP ► TextMesh Pro
-	/// - DOTWEEN_TK2D ► 2D Toolkit
+	///     Utility functions that deal with available Modules.
+	///     Modules defines:
+	///     - DOTAUDIO
+	///     - DOTPHYSICS
+	///     - DOTPHYSICS2D
+	///     - DOTSPRITE
+	///     - DOTUI
+	///     Extra defines set and used for implementation of external assets:
+	///     - DOTWEEN_TMP ► TextMesh Pro
+	///     - DOTWEEN_TK2D ► 2D Toolkit
 	/// </summary>
 	public static class DOTweenModuleUtils
 	{
-		static bool _initialized;
+		private static bool _initialized;
 
 		#region Reflection
 
 		/// <summary>
-		/// Called via Reflection by DOTweenComponent on Awake
+		///     Called via Reflection by DOTweenComponent on Awake
 		/// </summary>
 #if UNITY_2018_1_OR_NEWER
 		[Preserve]
@@ -58,7 +58,7 @@ namespace Plugins.Demigiant.DOTween.Modules
 #pragma warning disable
 		[Preserve]
 		// Just used to preserve methods when building, never called
-		static void Preserver()
+		private static void Preserver()
 		{
 			Assembly[] loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 			MethodInfo mi = typeof(MonoBehaviour).GetMethod(
@@ -75,7 +75,7 @@ namespace Plugins.Demigiant.DOTween.Modules
 #if UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_5 || UNITY_2017_1
         static void PlaymodeStateChanged()
 #else
-		static void PlaymodeStateChanged(PlayModeStateChange state)
+		private static void PlaymodeStateChanged(PlayModeStateChange state)
 #endif
 		{
 			if (DG.Tweening.DOTween.instance == null) return;
@@ -92,6 +92,16 @@ namespace Plugins.Demigiant.DOTween.Modules
 
 		public static class Physics
 		{
+			// Returns FALSE if the DOTween's Physics2D Module is disabled, or if there's no Rigidbody2D attached
+			public static bool HasRigidbody2D(Component target)
+			{
+#if true // PHYSICS2D_MARKER
+				return target.GetComponent<Rigidbody2D>() != null;
+#else
+                return false;
+#endif
+			}
+
 			// Called via DOTweenExternalCommand callback
 			public static void SetOrientationOnPath(PathOptions options, Tween t, Quaternion newRot, Transform trans)
 			{
@@ -100,16 +110,6 @@ namespace Plugins.Demigiant.DOTween.Modules
 				else trans.rotation = newRot;
 #else
                 trans.rotation = newRot;
-#endif
-			}
-
-			// Returns FALSE if the DOTween's Physics2D Module is disabled, or if there's no Rigidbody2D attached
-			public static bool HasRigidbody2D(Component target)
-			{
-#if true // PHYSICS2D_MARKER
-				return target.GetComponent<Rigidbody2D>() != null;
-#else
-                return false;
 #endif
 			}
 
@@ -143,11 +143,11 @@ namespace Plugins.Demigiant.DOTween.Modules
 			)
 			{
 				TweenerCore<Vector3, Path, PathOptions> t = null;
-				bool rBodyFoundAndTweened = false;
+				var rBodyFoundAndTweened = false;
 #if true // PHYSICS_MARKER
 				if (tweenRigidbody)
 				{
-					Rigidbody rBody = target.GetComponent<Rigidbody>();
+					var rBody = target.GetComponent<Rigidbody>();
 
 					if (rBody != null)
 					{
@@ -169,7 +169,7 @@ namespace Plugins.Demigiant.DOTween.Modules
 #if true // PHYSICS2D_MARKER
 				if (!rBodyFoundAndTweened && tweenRigidbody)
 				{
-					Rigidbody2D rBody2D = target.GetComponent<Rigidbody2D>();
+					var rBody2D = target.GetComponent<Rigidbody2D>();
 
 					if (rBody2D != null)
 					{
@@ -189,7 +189,6 @@ namespace Plugins.Demigiant.DOTween.Modules
 				}
 #endif
 				if (!rBodyFoundAndTweened)
-				{
 					t = isLocal
 						? target.transform.DOLocalPath(
 							path,
@@ -201,7 +200,6 @@ namespace Plugins.Demigiant.DOTween.Modules
 							duration,
 							pathMode
 						);
-				}
 
 				return t;
 			}

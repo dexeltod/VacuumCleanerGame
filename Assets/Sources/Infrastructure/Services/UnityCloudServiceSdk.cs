@@ -6,7 +6,7 @@ namespace Sources.Infrastructure.Services
 {
 	public class UnityCloudServiceSdk : ICloudServiceSdk
 	{
-		private bool _isAuthorized = false;
+		private bool _isAuthorized;
 
 		public UniTask<IPlayerAccount> GetPlayerAccount() =>
 			new(null);

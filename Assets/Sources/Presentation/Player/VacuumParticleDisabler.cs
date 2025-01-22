@@ -8,7 +8,7 @@ namespace Sources.Presentation.Player
 
 		public void SetActiveParticle(bool isActive)
 		{
-			if (isActive == true)
+			if (isActive)
 				_particle.Play();
 			else
 				_particle.Stop();

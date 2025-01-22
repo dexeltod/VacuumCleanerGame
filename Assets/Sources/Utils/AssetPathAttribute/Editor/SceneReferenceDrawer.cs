@@ -10,8 +10,8 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 	[CustomPropertyDrawer(typeof(SceneReference))]
 	public class SceneReferenceDrawer : AssetPathDrawer
 	{
-		private SerializedProperty m_Name;
 		private SerializedProperty m_BuildIndex;
+		private SerializedProperty m_Name;
 
 		protected override SerializedProperty GetProperty(SerializedProperty rootProperty)
 		{
@@ -20,10 +20,8 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 			return rootProperty.FindPropertyRelative("m_Path");
 		}
 
-		protected override Type ObjectType()
-		{
-			return typeof(SceneAsset);
-		}
+		protected override Type ObjectType() =>
+			typeof(SceneAsset);
 
 		protected override void OnSelectionMade(Object newSelection, SerializedProperty property)
 		{

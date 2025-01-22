@@ -5,7 +5,8 @@ using Object = UnityEngine.Object;
 namespace Plugins.SerializeInterfaces.Runtime
 {
 	/// <summary>
-	/// Serializes a UnityEngine.Object with the given interface. Adds a nice decorator in the inspector as well and a custom object selector.
+	///     Serializes a UnityEngine.Object with the given interface. Adds a nice decorator in the inspector as well and a
+	///     custom object selector.
 	/// </summary>
 	/// <typeparam name="TInterface">The interface.</typeparam>
 	/// <typeparam name="UObject">The UnityEngine.Object.</typeparam>
@@ -15,8 +16,18 @@ namespace Plugins.SerializeInterfaces.Runtime
 	{
 		[SerializeField] [HideInInspector] private UObject _underlyingValue;
 
+		public InterfaceReference()
+		{
+		}
+
+		public InterfaceReference(UObject target) =>
+			_underlyingValue = target;
+
+		public InterfaceReference(TInterface @interface) =>
+			_underlyingValue = @interface as UObject;
+
 		/// <summary>
-		/// Get the interface, if the UnderlyingValue is not null and implements the given interface.
+		///     Get the interface, if the UnderlyingValue is not null and implements the given interface.
 		/// </summary>
 		public TInterface Value
 		{
@@ -35,7 +46,9 @@ namespace Plugins.SerializeInterfaces.Runtime
 			set
 			{
 				if (value == null)
+				{
 					_underlyingValue = null;
+				}
 				else
 				{
 					var newValue = value as UObject;
@@ -49,7 +62,7 @@ namespace Plugins.SerializeInterfaces.Runtime
 		}
 
 		/// <summary>
-		/// Get the actual UnityEngine.Object that gets serialized.
+		///     Get the actual UnityEngine.Object that gets serialized.
 		/// </summary>
 		public UObject UnderlyingValue
 		{
@@ -57,22 +70,13 @@ namespace Plugins.SerializeInterfaces.Runtime
 			set => _underlyingValue = value;
 		}
 
-		public InterfaceReference()
-		{
-		}
-
-		public InterfaceReference(UObject target) =>
-			_underlyingValue = target;
-
-		public InterfaceReference(TInterface @interface) =>
-			_underlyingValue = @interface as UObject;
-
 		public static implicit operator TInterface(InterfaceReference<TInterface, UObject> obj) =>
 			obj.Value;
 	}
 
 	/// <summary>
-	/// Serializes a UnityEngine.Object with the given interface. Adds a nice decorator in the inspector as well and a custom object selector.
+	///     Serializes a UnityEngine.Object with the given interface. Adds a nice decorator in the inspector as well and a
+	///     custom object selector.
 	/// </summary>
 	/// <typeparam name="TInterface">The interface.</typeparam>
 	[Serializable]

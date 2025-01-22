@@ -14,17 +14,17 @@ namespace Sources.Controllers
 {
 	public class UpgradeElementPresenter : Presenter, IUpgradeElementPresenter
 	{
-		private readonly Dictionary<int, IUpgradeElementChangeableView> _upgradeElementChangeableViews;
-		private readonly IPersistentProgressService _persistentProgressServiceProvider;
-		private readonly IUpgradeWindowPresenter _upgradeWindowPresenter;
+		private readonly AudioSource _audioSource;
 		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenterProvider;
+		private readonly GameplayInterfaceSoundPlayer _gameplayInterfaceSoundPlayer;
+		private readonly IPersistentProgressService _persistentProgressServiceProvider;
 		private readonly IProgressEntityRepository _progressEntityRepository;
 		private readonly ISaveLoader _saveLoader;
-		private readonly AudioSource _audioSource;
 
 		private readonly ShopPurchaseController _shopPurchaseController;
+		private readonly Dictionary<int, IUpgradeElementChangeableView> _upgradeElementChangeableViews;
+		private readonly IUpgradeWindowPresenter _upgradeWindowPresenter;
 		private IReadOnlyList<IStatUpgradeEntityReadOnly> _entities;
-		private readonly GameplayInterfaceSoundPlayer _gameplayInterfaceSoundPlayer;
 
 		public UpgradeElementPresenter(
 			Dictionary<int, IUpgradeElementChangeableView> panel,
@@ -76,17 +76,6 @@ namespace Sources.Controllers
 			SetView(id);
 		}
 
-		private void SetView(int id)
-		{
-			IUpgradeElementChangeableView panel = _upgradeElementChangeableViews[id];
-
-			panel.AddProgressPointColor();
-			panel.SetPriceText(_progressEntityRepository.GetPrice(id));
-
-			_upgradeWindowPresenter.SetMoney(Money);
-			_gameplayInterfacePresenterProvider.SetSoftCurrency(Money);
-		}
-
 		public override void Enable()
 		{
 			_entities = _progressEntityRepository.GetEntities();
@@ -105,6 +94,17 @@ namespace Sources.Controllers
 
 		private void LevelProgressChanged()
 		{
+		}
+
+		private void SetView(int id)
+		{
+			IUpgradeElementChangeableView panel = _upgradeElementChangeableViews[id];
+
+			panel.AddProgressPointColor();
+			panel.SetPriceText(_progressEntityRepository.GetPrice(id));
+
+			_upgradeWindowPresenter.SetMoney(Money);
+			_gameplayInterfacePresenterProvider.SetSoftCurrency(Money);
 		}
 	}
 }

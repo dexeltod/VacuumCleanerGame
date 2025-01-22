@@ -4,10 +4,10 @@ namespace Sources.Utils
 {
 	public static class ResourcesAssetPath
 	{
-		public static readonly SceneResources Scene = new();
-		public static readonly GameObjects GameObjects = new();
-		public static readonly Materials Materials = new();
-		public static readonly Configs Configs = new();
-		public static readonly SoundNames SoundNames = new();
+		public readonly static SceneResources Scene = new();
+		public readonly static GameObjects GameObjects = new();
+		public readonly static Materials Materials = new();
+		public readonly static Configs Configs = new();
+		public readonly static SoundNames SoundNames = new();
 	}
 }

@@ -18,18 +18,18 @@ namespace Sources.Boot.Scripts.Factories.Presentation.LeaderBoard
 		private const int LeaderBoardPlayersCount = 5;
 		private const string AnonymousPlayerName = "Anonymous";
 
-		private readonly IAssetFactory _assetFactory;
+		private readonly IAssetLoader _assetLoader;
 		private readonly ILeaderBoardService _leaderBoardService;
 		private readonly TranslatorService _translatorService;
 
 		[Inject]
 		public LeaderBoardPlayersFactory(
-			IAssetFactory assetFactory,
+			IAssetLoader assetLoader,
 			ILeaderBoardService leaderBoardService,
 			TranslatorService translatorService
 		)
 		{
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetLoader = assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
 			_translatorService = translatorService;
 		}
@@ -49,7 +49,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.LeaderBoard
 
 			sortedLeaders.Sort((x, y) => y.Value.CompareTo(x.Value));
 
-			foreach (var player in sortedLeaders)
+			foreach (KeyValuePair<string, int> player in sortedLeaders)
 			{
 				string name = player.Key;
 				int score = player.Value;
@@ -57,7 +57,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.LeaderBoard
 				Transform containerTransform = leaderBoardView.Container;
 				GameObject playerPanelGameObject = leaderBoardView.PlayerPanel.GameObject;
 
-				LeaderBoardPlayerPanelBehaviour panel = _assetFactory.Instantiate(
+				var panel = _assetLoader.Instantiate(
 					playerPanelGameObject,
 					containerTransform
 				).GetComponent<LeaderBoardPlayerPanelBehaviour>();

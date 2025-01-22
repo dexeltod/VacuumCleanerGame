@@ -11,15 +11,15 @@ namespace Sources.Controllers
 	{
 		private const float MaxTransformHeight = 2.5f;
 
+		private readonly Joystick _joystick;
+		private readonly Rigidbody _rigidbody;
+		private readonly IStatReadOnly _speedProgressValue;
+
 		public readonly float VacuumDistance;
 
-		private readonly Joystick _joystick;
-		private readonly IStatReadOnly _speedProgressValue;
-		private readonly Rigidbody _rigidbody;
+		private int _currentSpeedValue;
 
 		private Vector3 _offset;
-
-		private int _currentSpeedValue;
 
 		public PlayerTransformable(
 			Transform transform,
@@ -41,7 +41,7 @@ namespace Sources.Controllers
 
 		private void Move(float deltaTime)
 		{
-			Vector3 joystickDirection = new Vector3(
+			var joystickDirection = new Vector3(
 				_joystick.Direction.x,
 				0,
 				_joystick.Direction.y

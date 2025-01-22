@@ -21,24 +21,6 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 		)]
 		public AudioClip FallbackAudioClip;
 
-		// This gets called every time the translation needs updating
-		public override void UpdateTranslation(LeanTranslation translation)
-		{
-			// Get the AudioSource component attached to this GameObject
-			var audioSource = GetComponent<AudioSource>();
-
-			// Use translation?
-			if (translation != null && translation.Data is AudioClip)
-			{
-				audioSource.clip = (AudioClip)translation.Data;
-			}
-			// Use fallback?
-			else
-			{
-				audioSource.clip = FallbackAudioClip;
-			}
-		}
-
 		protected virtual void Awake()
 		{
 			// Should we set FallbackAudioClip?
@@ -50,6 +32,20 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 				// Copy current sprite to fallback
 				FallbackAudioClip = audioSource.clip;
 			}
+		}
+
+		// This gets called every time the translation needs updating
+		public override void UpdateTranslation(LeanTranslation translation)
+		{
+			// Get the AudioSource component attached to this GameObject
+			var audioSource = GetComponent<AudioSource>();
+
+			// Use translation?
+			if (translation != null && translation.Data is AudioClip)
+				audioSource.clip = (AudioClip)translation.Data;
+			// Use fallback?
+			else
+				audioSource.clip = FallbackAudioClip;
 		}
 	}
 }

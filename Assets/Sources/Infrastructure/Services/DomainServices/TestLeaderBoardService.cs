@@ -25,6 +25,6 @@ namespace Sources.Infrastructure.Services.DomainServices
 			_leaders;
 
 		public async UniTask<Tuple<string, int>> GetPlayer() =>
-			new Tuple<string, int>("player1", 1);
+			new("player1", 1);
 	}
 }

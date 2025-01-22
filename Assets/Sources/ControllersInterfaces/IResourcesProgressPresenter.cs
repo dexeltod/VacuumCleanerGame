@@ -6,12 +6,11 @@ namespace Sources.ControllersInterfaces
 	{
 		bool IsMaxScoreReached { get; }
 		IReadOnlyProgress<int> SoftCurrency { get; }
+		void AddMoney(int count);
+		void ClearTotalResources();
+		int GetCalculatedDecreasedMoney(int count);
 
 		bool TryAddSand(int newScore);
-		void ClearTotalResources();
-		void Sell();
-		void AddMoney(int count);
-		int GetCalculatedDecreasedMoney(int count);
 		bool TryDecreaseMoney(int count);
 	}
 }

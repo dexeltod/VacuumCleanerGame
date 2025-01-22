@@ -11,8 +11,8 @@ namespace Plugins.Joystick_Pack.Scripts.Editor
 	)]
 	public class VariableJoystickEditor : JoystickEditor
 	{
-		private SerializedProperty moveThreshold;
 		private SerializedProperty joystickType;
+		private SerializedProperty moveThreshold;
 
 		protected override void OnEnable()
 		{
@@ -31,7 +31,7 @@ namespace Plugins.Joystick_Pack.Scripts.Editor
 
 			if (background != null)
 			{
-				RectTransform backgroundRect = (RectTransform)background.objectReferenceValue;
+				var backgroundRect = (RectTransform)background.objectReferenceValue;
 				backgroundRect.pivot = center;
 			}
 		}

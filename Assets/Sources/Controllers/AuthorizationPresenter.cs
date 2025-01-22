@@ -8,8 +8,8 @@ namespace Sources.Controllers
 {
 	public class AuthorizationPresenter : Presenter, IAuthorizationPresenter
 	{
-		private readonly ICloudServiceSdk _cloudServiceSdk;
 		private readonly IAuthorizationView _authorizationView;
+		private readonly ICloudServiceSdk _cloudServiceSdk;
 
 		public AuthorizationPresenter(
 			ICloudServiceSdk cloudServiceSdk,

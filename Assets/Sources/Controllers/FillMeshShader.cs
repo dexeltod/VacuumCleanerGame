@@ -4,20 +4,20 @@ using UnityEngine;
 
 namespace Sources.Controllers
 {
-	public class FillMeshShaderController : IFillMeshShaderController
+	public class FillMeshShader : IFillMeshShader
 	{
 		private const float NormalizeConst = 1;
 		private const string FillAreaShaderName = "_FillAmount";
+		private readonly float _maxFillArea;
+
+		private readonly float _minFillArea;
 
 		private readonly MeshRenderer _renderer;
 
-		private readonly float _minFillArea;
-		private readonly float _maxFillArea;
+		public FillMeshShader(MeshRenderer renderer) =>
+			_renderer = renderer ? renderer : throw new ArgumentNullException(nameof(renderer));
 
 		private int FillAreaShaderPropertyId => Shader.PropertyToID(FillAreaShaderName);
-
-		public FillMeshShaderController(MeshRenderer renderer) =>
-			_renderer = renderer ? renderer : throw new ArgumentNullException(nameof(renderer));
 
 		public void FillArea(float originalCount, float minFillCount, float maxFillCount)
 		{

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -16,9 +17,9 @@ namespace Plugins.CW.LeanCommon.Required.Scripts
 
 		public static Vector2 Hermite(Vector2 a, Vector2 b, Vector2 c, Vector2 d, float t)
 		{
-			var mu2 = t * t;
-			var mu3 = mu2 * t;
-			var x = HermiteInterpolate(
+			float mu2 = t * t;
+			float mu3 = mu2 * t;
+			float x = HermiteInterpolate(
 				a.x,
 				b.x,
 				c.x,
@@ -27,7 +28,7 @@ namespace Plugins.CW.LeanCommon.Required.Scripts
 				mu2,
 				mu3
 			);
-			var y = HermiteInterpolate(
+			float y = HermiteInterpolate(
 				a.y,
 				b.y,
 				c.y,
@@ -45,12 +46,12 @@ namespace Plugins.CW.LeanCommon.Required.Scripts
 
 		private static float HermiteInterpolate(float y0, float y1, float y2, float y3, float mu, float mu2, float mu3)
 		{
-			var m0 = (y1 - y0) * 0.5f + (y2 - y1) * 0.5f;
-			var m1 = (y2 - y1) * 0.5f + (y3 - y2) * 0.5f;
-			var a0 = 2.0f * mu3 - 3.0f * mu2 + 1.0f;
-			var a1 = mu3 - 2.0f * mu2 + mu;
-			var a2 = mu3 - mu2;
-			var a3 = -2.0f * mu3 + 3.0f * mu2;
+			float m0 = (y1 - y0) * 0.5f + (y2 - y1) * 0.5f;
+			float m1 = (y2 - y1) * 0.5f + (y3 - y2) * 0.5f;
+			float a0 = 2.0f * mu3 - 3.0f * mu2 + 1.0f;
+			float a1 = mu3 - 2.0f * mu2 + mu;
+			float a2 = mu3 - mu2;
+			float a3 = -2.0f * mu3 + 3.0f * mu2;
 
 			return a0 * y1 + a1 * m0 + a2 * m1 + a3 * y2;
 		}
@@ -62,7 +63,7 @@ namespace Plugins.CW.LeanCommon.Required.Scripts
 		/// <summary>This method gives you the actual object behind a SerializedProperty given to you by a property drawer.</summary>
 		public static T GetObjectFromSerializedProperty<T>(object target, SerializedProperty property)
 		{
-			var tokens = property.propertyPath.Replace(
+			string[] tokens = property.propertyPath.Replace(
 				".Array.data[",
 				".["
 			).Split(
@@ -71,13 +72,13 @@ namespace Plugins.CW.LeanCommon.Required.Scripts
 
 			for (var i = 0; i < tokens.Length; i++)
 			{
-				var token = tokens[i];
-				var type = target.GetType();
+				string token = tokens[i];
+				Type type = target.GetType();
 
 				if (target is IList)
 				{
 					var list = (IList)target;
-					var index = int.Parse(
+					int index = int.Parse(
 						token.Substring(
 							1,
 							token.Length - 2
@@ -90,7 +91,7 @@ namespace Plugins.CW.LeanCommon.Required.Scripts
 				{
 					while (type != null)
 					{
-						var field = type.GetField(
+						FieldInfo field = type.GetField(
 							token,
 							BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
 						);

@@ -5,11 +5,11 @@ namespace Sources.DomainInterfaces
 {
 	public interface IProgressSaveLoadDataService
 	{
-		void SaveToJson(string fileName, object data);
+		UniTask ClearSaves();
+		UniTask<IGlobalProgress> LoadFromCloud();
 		string LoadFromJson(string fileName);
 		T LoadFromJson<T>(string fileName);
 		UniTask SaveToCloud(Action succeededCallback = null);
-		UniTask<IGlobalProgress> LoadFromCloud();
-		UniTask ClearSaves();
+		void SaveToJson(string fileName, object data);
 	}
 }

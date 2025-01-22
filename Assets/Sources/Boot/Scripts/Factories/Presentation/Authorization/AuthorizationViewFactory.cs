@@ -12,18 +12,18 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Authorization
 {
 	public class AuthorizationViewFactory
 	{
-		private readonly IAssetFactory _assetFactory;
+		private readonly IAssetLoader _assetLoader;
 		private readonly TranslatorService _localizationService;
 		private readonly IMainMenuView _mainMenuView;
 
 		public AuthorizationViewFactory(
-			IAssetFactory assetFactory,
+			IAssetLoader assetLoader,
 			TranslatorService localizationService,
 			IMainMenuView mainMenuView
 		)
 		{
-			_assetFactory
-				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetLoader
+				= assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 			_mainMenuView = mainMenuView ?? throw new ArgumentNullException(nameof(mainMenuView));
 		}
@@ -38,31 +38,14 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Authorization
 #endif
 #if DEBUG
 
-			return CreateYandexAuthorizationWindow();
 #endif
-			//return CreateEditorAuthorizationView();
-		}
-
-		private IAuthorizationView CreateYandexAuthorizationWindow(bool isEnabled = false)
-		{
-			YandexAuthorizationView view = _assetFactory.InstantiateAndGetComponent<YandexAuthorizationView>(
-				YandexPath,
-				_mainMenuView.Transform
-			);
-
-			view.gameObject.SetActive(isEnabled);
-
-			TextPhrasesList phrasesList = view.GetComponent<TextPhrasesList>();
-			view.Construct(view.GetComponent<RectTransform>(), null, phrasesList);
-			view.TextPhrases.Phrases = _localizationService.GetLocalize(phrasesList.Phrases);
-
-			return view;
+			return CreateEditorAuthorizationView();
 		}
 
 #if !YANDEX_CODE
 		private IAuthorizationView CreateEditorAuthorizationView()
 		{
-			var view = _assetFactory.InstantiateAndGetComponent<EditorAuthorizationView>(
+			var view = _assetLoader.InstantiateAndGetComponent<EditorAuthorizationView>(
 				EditorAuthorizationView,
 				_mainMenuView.Transform
 			);
@@ -73,5 +56,21 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Authorization
 			return view;
 		}
 #endif
+
+		private IAuthorizationView CreateYandexAuthorizationWindow(bool isEnabled = false)
+		{
+			var view = _assetLoader.InstantiateAndGetComponent<YandexAuthorizationView>(
+				YandexPath,
+				_mainMenuView.Transform
+			);
+
+			view.gameObject.SetActive(isEnabled);
+
+			var phrasesList = view.GetComponent<TextPhrasesList>();
+			view.Construct(view.GetComponent<RectTransform>(), null, phrasesList);
+			view.TextPhrases.Phrases = _localizationService.GetLocalize(phrasesList.Phrases);
+
+			return view;
+		}
 	}
 }

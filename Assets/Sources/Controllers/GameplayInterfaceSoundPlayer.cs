@@ -5,9 +5,9 @@ namespace Sources.Controllers
 {
 	public class GameplayInterfaceSoundPlayer
 	{
+		private readonly AudioSource _audioSource;
 		private readonly AudioClip _soundBuy;
 		private readonly AudioClip _soundClose;
-		private readonly AudioSource _audioSource;
 
 		public GameplayInterfaceSoundPlayer(AudioClip soundBuy, AudioClip soundClose, AudioSource audioSource)
 		{

@@ -19,9 +19,9 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Editor
 	)]
 	public class LeanPhrase_Editor : CwEditor
 	{
-		private static List<string> languageNames = new List<string>();
+		private readonly static List<string> languageNames = new();
 
-		private static List<LeanPhrase.Entry> entries = new List<LeanPhrase.Entry>();
+		private readonly static List<LeanPhrase.Entry> entries = new();
 
 		protected override void OnInspector()
 		{
@@ -44,7 +44,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Editor
 
 			tgt.Data = (LeanPhrase.DataType)GUILayout.Toolbar(
 				(int)tgt.Data,
-				new string[]
+				new[]
 				{
 					"Text",
 					"Object",
@@ -54,15 +54,14 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Editor
 
 			Separator();
 
-			foreach (var languageName in languageNames)
+			foreach (string languageName in languageNames)
 			{
 				var entry = default(LeanPhrase.Entry);
 
 				if (tgt.TryFindTranslation(
 					    languageName,
 					    ref entry
-				    ) ==
-				    true)
+				    ))
 				{
 					DrawEntry(
 						tgt,
@@ -88,8 +87,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Editor
 						    GUILayout.Width(
 							    45.0f
 						    )
-					    ) ==
-					    true)
+					    ))
 					{
 						Undo.RecordObject(
 							tgt,
@@ -110,16 +108,12 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Editor
 			}
 
 			if (entries.Count > 0)
-			{
-				foreach (var entry in entries)
-				{
+				foreach (LeanPhrase.Entry entry in entries)
 					DrawEntry(
 						tgt,
 						entry,
 						true
 					);
-				}
-			}
 		}
 
 		private void DrawEntry(TARGET tgt, LeanPhrase.Entry entry, bool unexpected)
@@ -136,12 +130,11 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Editor
 				    GUILayout.Width(
 					    65.0f
 				    )
-			    ) ==
-			    true)
+			    ))
 			{
 				var menu = new GenericMenu();
 
-				foreach (var otherEntry in tgt.Entries)
+				foreach (LeanPhrase.Entry otherEntry in tgt.Entries)
 				{
 					var title = new GUIContent(
 						"Auto Translate/From " + otherEntry.Language
@@ -153,23 +146,21 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Editor
 					    ) ==
 					    false)
 					{
-						var textInput = otherEntry.Text;
+						string textInput = otherEntry.Text;
 						var languageInput = default(LeanLanguage);
 						var languageOutput = default(LeanLanguage);
 
 						if (LeanLocalization.CurrentLanguages.TryGetValue(
 							    otherEntry.Language,
 							    out languageInput
-						    ) ==
-						    true &&
+						    ) &&
 						    LeanLocalization.CurrentLanguages.TryGetValue(
 							    entry.Language,
 							    out languageOutput
-						    ) ==
-						    true)
+						    ))
 						{
-							var languageCodeInput = languageInput.TranslationCode;
-							var languageCodeOutput = languageOutput.TranslationCode;
+							string languageCodeInput = languageInput.TranslationCode;
+							string languageCodeOutput = languageOutput.TranslationCode;
 
 							menu.AddItem(
 								title,
@@ -183,8 +174,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Editor
 										    languageCodeOutput,
 										    textInput,
 										    ref textOutput
-									    ) ==
-									    true)
+									    ))
 									{
 										Undo.RecordObject(
 											tgt,
@@ -252,13 +242,11 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Editor
 
 			EditorGUILayout.EndHorizontal();
 
-			if (unexpected == true)
-			{
+			if (unexpected)
 				EditorGUILayout.HelpBox(
 					"Your LeanLocalization component doesn't define the " + entry.Language + " language.",
 					MessageType.Warning
 				);
-			}
 
 			Undo.RecordObject(
 				tgt,
@@ -293,7 +281,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Editor
 					break;
 			}
 
-			if (EditorGUI.EndChangeCheck() == true)
+			if (EditorGUI.EndChangeCheck())
 			{
 				DirtyAndUpdate();
 				LeanLocalization.UpdateTranslations();
@@ -319,7 +307,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Editor
 		{
 			try
 			{
-				var url = string.Format(
+				string url = string.Format(
 					"https://translate.googleapis.com/translate_a/single?client=gtx&sl={0}&tl={1}&dt=t&q={2}",
 					languageCodeInput,
 					languageCodeOutput,
@@ -328,7 +316,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Editor
 					)
 				);
 				var webClient = new WebClient { Encoding = Encoding.UTF8 };
-				var result = webClient.DownloadString(
+				string result = webClient.DownloadString(
 					url
 				);
 

@@ -8,7 +8,10 @@ using UnityEngine.Rendering;
 
 namespace Plugins.CW.Shared.Common.Required.Scripts
 {
-	/// <summary>This asset stores multiple variants of a shader for different rendering pipelines, and allows you to switch between them in the editor.</summary>
+	/// <summary>
+	///     This asset stores multiple variants of a shader for different rendering pipelines, and allows you to switch
+	///     between them in the editor.
+	/// </summary>
 	//[CreateAssetMenu(fileName = "NewShaderBundle", menuName = "MakeShaderBundle", order = 1)]
 	public class CwShaderBundle : ScriptableObject
 	{
@@ -34,17 +37,14 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			public int Hash;
 			public bool Dirty;
 
-			public string HashString
-			{
-				get { return "//<HASH>" + Hash + "</HASH>"; }
-			}
+			public string HashString => "//<HASH>" + Hash + "</HASH>";
 		}
 
 		/// <summary>The title of the generated shader.</summary>
 		public string Title
 		{
-			set { title = value; }
-			get { return title; }
+			set => title = value;
+			get => title;
 		}
 
 		[SerializeField] private string title;
@@ -52,8 +52,8 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 		/// <summary>The shader that will be modified to work with the selected rendering pipeline.</summary>
 		public Shader Target
 		{
-			set { target = value; }
-			get { return target; }
+			set => target = value;
+			get => target;
 		}
 
 		[SerializeField] private Shader target;
@@ -61,8 +61,8 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 		/// <summary>The hash code of the currently loaded bundle.</summary>
 		public int VariantHash
 		{
-			set { variantHash = value; }
-			get { return variantHash; }
+			set => variantHash = value;
+			get => variantHash;
 		}
 
 		[SerializeField] private int variantHash;
@@ -70,8 +70,8 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 		/// <summary>The hash code of the current device to make sure the shaders have been loaded properly.</summary>
 		public int ProjectHash
 		{
-			set { projectHash = value; }
-			get { return projectHash; }
+			set => projectHash = value;
+			get => projectHash;
 		}
 
 		[SerializeField] private int projectHash;
@@ -93,15 +93,9 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			get
 			{
 				if (variants != null)
-				{
-					foreach (var variant in variants)
-					{
-						if (variant.Dirty == true)
-						{
+					foreach (ShaderVariant variant in variants)
+						if (variant.Dirty)
 							return true;
-						}
-					}
-				}
 
 				return false;
 			}
@@ -110,21 +104,19 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 #if UNITY_EDITOR && AUTO_SWITCH_SHADERS_TO_CURRENT_PIPELINE
 		private static Pipeline lastAutoSetPipe = Pipeline.Invalid;
 #endif
-		public static int GetProjectHash()
-		{
-			return Application.productName.GetHashCode();
-		}
+		public static int GetProjectHash() =>
+			Application.productName.GetHashCode();
 
 		/// <summary>This tells you which rendering pipeline the project is currently using.</summary>
 		public static Pipeline DetectProjectPipeline()
 		{
-			var crp = GraphicsSettings.currentRenderPipeline;
+			RenderPipelineAsset crp = GraphicsSettings.currentRenderPipeline;
 
 			if (crp != null)
 			{
 				var title = crp.GetType().ToString();
 
-				if (title.Contains("HighDefinition") == true)
+				if (title.Contains("HighDefinition"))
 				{
 #if UNITY_2021_2_OR_NEWER
 					return Pipeline.HDRP2021;
@@ -134,44 +126,32 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 					return Pipeline.HDRP2019;
 #endif
 				}
-				else // if (title.Contains("Universal") == true)
-				{
+				// if (title.Contains("Universal") == true)
 #if UNITY_2021_2_OR_NEWER
-					return Pipeline.URP2021;
+				return Pipeline.URP2021;
 #elif UNITY_2020_2_OR_NEWER
 					return Pipeline.URP2020;
 #else
 					return Pipeline.URP2019;
 #endif
-				}
 			}
-			else
-			{
-				return Pipeline.Standard;
-			}
+
+			return Pipeline.Standard;
 
 			//return Pipeline.Invalid;
 		}
 
-		public static bool IsStandard(Pipeline pipe)
-		{
-			return pipe == Pipeline.Standard;
-		}
+		public static bool IsStandard(Pipeline pipe) =>
+			pipe == Pipeline.Standard;
 
-		public static bool IsScriptable(Pipeline pipe)
-		{
-			return IsURP(pipe) || IsHDRP(pipe);
-		}
+		public static bool IsScriptable(Pipeline pipe) =>
+			IsURP(pipe) || IsHDRP(pipe);
 
-		public static bool IsURP(Pipeline pipe)
-		{
-			return pipe == Pipeline.URP2019 || pipe == Pipeline.URP2020 || pipe == Pipeline.URP2021;
-		}
+		public static bool IsURP(Pipeline pipe) =>
+			pipe == Pipeline.URP2019 || pipe == Pipeline.URP2020 || pipe == Pipeline.URP2021;
 
-		public static bool IsHDRP(Pipeline pipe)
-		{
-			return pipe == Pipeline.HDRP2019 || pipe == Pipeline.HDRP2020 || pipe == Pipeline.HDRP2021;
-		}
+		public static bool IsHDRP(Pipeline pipe) =>
+			pipe == Pipeline.HDRP2019 || pipe == Pipeline.HDRP2020 || pipe == Pipeline.HDRP2021;
 
 #if UNITY_EDITOR
 		/// <summary>This will automatically update all shaders when assemblies reload.</summary>
@@ -195,65 +175,48 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 		private static void AutoSwitch()
 		{
 #if AUTO_SWITCH_SHADERS_TO_CURRENT_PIPELINE
-			var pipe = DetectProjectPipeline();
-			var hash = GetProjectHash();
+			Pipeline pipe = DetectProjectPipeline();
+			int hash = GetProjectHash();
 
 			if (lastAutoSetPipe != pipe)
 			{
 				lastAutoSetPipe = pipe;
 
 				var modified = false;
-				var guids = AssetDatabase.FindAssets("t:" + typeof(CwShaderBundle).Name);
+				string[] guids = AssetDatabase.FindAssets("t:" + typeof(CwShaderBundle).Name);
 
-				foreach (var guid in guids)
+				foreach (string guid in guids)
 				{
-					var path = AssetDatabase.GUIDToAssetPath(guid);
+					string path = AssetDatabase.GUIDToAssetPath(guid);
 					var bundle = AssetDatabase.LoadAssetAtPath<CwShaderBundle>(path);
 
 					if (bundle != null && bundle.variantHash != 0)
 					{
 						if (bundle.projectHash != hash)
 						{
-							if (bundle.TrySwitchTo(pipe) == true)
-							{
-								modified = true;
-
-								continue;
-							}
+							if (bundle.TrySwitchTo(pipe)) modified = true;
 						}
 						else
 						{
-							foreach (var variant in bundle.Variants)
-							{
+							foreach (ShaderVariant variant in bundle.Variants)
 								// Correct pipe, but out of sync shader
 								if (variant.Pipe == pipe && variant.Hash != bundle.variantHash)
 								{
-									if (bundle.TrySwitchTo(pipe) == true)
+									if (bundle.TrySwitchTo(pipe))
 									{
 										modified = true;
-
-										continue;
 									}
 								}
 								// Wrong pipe
 								else if (variant.Pipe != pipe && variant.Hash == bundle.variantHash)
 								{
-									if (bundle.TrySwitchTo(pipe) == true)
-									{
-										modified = true;
-
-										continue;
-									}
+									if (bundle.TrySwitchTo(pipe)) modified = true;
 								}
-							}
 						}
 					}
 				}
 
-				if (modified == true)
-				{
-					Debug.Log(typeof(CwShaderBundle).Name + " changed shaders to pipeline: " + pipe);
-				}
+				if (modified) Debug.Log(typeof(CwShaderBundle).Name + " changed shaders to pipeline: " + pipe);
 			}
 
 			EditorApplication.delayCall -= AutoSwitch;
@@ -387,12 +350,10 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 		public bool TrySwitchTo(Pipeline pipe)
 		{
 			if (variants != null && target != null)
-			{
-				foreach (var variant in variants)
-				{
+				foreach (ShaderVariant variant in variants)
 					if (variant.Pipe == pipe)
 					{
-						var path = AssetDatabase.GetAssetPath(target);
+						string path = AssetDatabase.GetAssetPath(target);
 
 						// Already up to date?
 						if (File.ReadAllText(path) != variant.Code)
@@ -413,25 +374,20 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 
 						break;
 					}
-				}
-			}
 
 			return false;
 		}
 
 		public static void TrySwitchAllTo(Pipeline pipe)
 		{
-			var guids = AssetDatabase.FindAssets("t:" + typeof(CwShaderBundle).Name);
+			string[] guids = AssetDatabase.FindAssets("t:" + typeof(CwShaderBundle).Name);
 
-			foreach (var guid in guids)
+			foreach (string guid in guids)
 			{
-				var path = AssetDatabase.GUIDToAssetPath(guid);
+				string path = AssetDatabase.GUIDToAssetPath(guid);
 				var bundle = AssetDatabase.LoadAssetAtPath<CwShaderBundle>(path);
 
-				if (bundle != null)
-				{
-					bundle.TrySwitchTo(pipe);
-				}
+				if (bundle != null) bundle.TrySwitchTo(pipe);
 			}
 		}
 #endif
@@ -464,16 +420,16 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 
 		private void DrawShader()
 		{
-			var pipe = CwShaderBundle.DetectProjectPipeline();
+			CwShaderBundle.Pipeline pipe = CwShaderBundle.DetectProjectPipeline();
 
 			EditorGUILayout.PropertyField(serializedObject.FindProperty("target"));
 
 			EditorGUI.BeginDisabledGroup(true);
 			EditorGUILayout.TextField("Project Pipeline", pipe.ToString());
 
-			foreach (var variant in tgt.Variants)
+			foreach (CwShaderBundle.ShaderVariant variant in tgt.Variants)
 			{
-				var active = variant.Hash == tgt.VariantHash;
+				bool active = variant.Hash == tgt.VariantHash;
 
 				EditorGUILayout.Toggle(variant.Pipe.ToString(), active);
 			}
@@ -482,14 +438,14 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 
 			EditorGUILayout.Separator();
 
-			if (GUILayout.Button("Switch Shader To " + pipe.ToString()) == true)
+			if (GUILayout.Button("Switch Shader To " + pipe))
 			{
 				tgt.TrySwitchTo(pipe);
 
 				serializedObject.Update();
 			}
 
-			if (GUILayout.Button("Switch All Shaders To " + pipe.ToString()) == true)
+			if (GUILayout.Button("Switch All Shaders To " + pipe))
 			{
 				CwShaderBundle.TrySwitchAllTo(pipe);
 
@@ -546,21 +502,21 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 		{
 			EditorGUILayout.LabelField("All Shaders In Project", EditorStyles.boldLabel);
 
-			var guids = AssetDatabase.FindAssets("t:" + typeof(CwShaderBundle).Name);
-			var color = GUI.color;
+			string[] guids = AssetDatabase.FindAssets("t:" + typeof(CwShaderBundle).Name);
+			Color color = GUI.color;
 
 			EditorGUI.BeginDisabledGroup(true);
 
-			foreach (var guid in guids)
+			foreach (string guid in guids)
 			{
-				var path = AssetDatabase.GUIDToAssetPath(guid);
+				string path = AssetDatabase.GUIDToAssetPath(guid);
 				var bundle = AssetDatabase.LoadAssetAtPath<CwShaderBundle>(path);
 
 				if (bundle != null)
 				{
-					var title = bundle.Target != null ? bundle.Target.name : "<MISSING>";
+					string title = bundle.Target != null ? bundle.Target.name : "<MISSING>";
 
-					GUI.color = bundle.Dirty == true ? Color.red : color;
+					GUI.color = bundle.Dirty ? Color.red : color;
 
 					EditorGUILayout.ObjectField(title, bundle, typeof(CwShaderBundle), false);
 

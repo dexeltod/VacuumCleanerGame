@@ -8,9 +8,8 @@ namespace Sources.Utils
 	[RequireComponent(typeof(UIDocument))]
 	public class VisualElementGetter : MonoBehaviour
 	{
-		private UIDocument _uiDocument;
-
 		private UQueryBuilder<VisualElement> _queryBuilder;
+		private UIDocument _uiDocument;
 
 		private void Awake() =>
 			_uiDocument = GetComponent<UIDocument>();
@@ -23,7 +22,7 @@ namespace Sources.Utils
 
 		public List<T> GetChildren<T>(string elementName) where T : VisualElement
 		{
-			VisualElement parentElement = _uiDocument.rootVisualElement.Q<VisualElement>(elementName);
+			var parentElement = _uiDocument.rootVisualElement.Q<VisualElement>(elementName);
 			IEnumerable<VisualElement> children = parentElement.Children();
 
 			return children

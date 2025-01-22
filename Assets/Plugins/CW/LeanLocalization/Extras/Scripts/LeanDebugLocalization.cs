@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,10 +17,7 @@ namespace Plugins.CW.LeanLocalization.Extras.Scripts
 	)]
 	public class LeanDebugLocalization : MonoBehaviour
 	{
-		[Serializable]
-		public class StringEvent : UnityEvent<string>
-		{
-		}
+		[SerializeField] private StringEvent onString;
 
 		public StringEvent OnString
 		{
@@ -30,7 +28,15 @@ namespace Plugins.CW.LeanLocalization.Extras.Scripts
 			}
 		}
 
-		[SerializeField] private StringEvent onString;
+		protected virtual void OnEnable()
+		{
+			Required.Scripts.LeanLocalization.OnLocalizationChanged += HandleLocalizationChanged;
+		}
+
+		protected virtual void OnDisable()
+		{
+			Required.Scripts.LeanLocalization.OnLocalizationChanged -= HandleLocalizationChanged;
+		}
 
 		public void ClearSave()
 		{
@@ -46,23 +52,13 @@ namespace Plugins.CW.LeanLocalization.Extras.Scripts
 			);
 		}
 
-		protected virtual void OnEnable()
-		{
-			Required.Scripts.LeanLocalization.OnLocalizationChanged += HandleLocalizationChanged;
-		}
-
-		protected virtual void OnDisable()
-		{
-			Required.Scripts.LeanLocalization.OnLocalizationChanged -= HandleLocalizationChanged;
-		}
-
 		private void HandleLocalizationChanged()
 		{
 			var text = "";
 
 			if (Required.Scripts.LeanLocalization.Instances.Count > 0)
 			{
-				var first = Required.Scripts.LeanLocalization.Instances[0];
+				Required.Scripts.LeanLocalization first = Required.Scripts.LeanLocalization.Instances[0];
 
 				text += "LOOKING FOR: ";
 
@@ -72,21 +68,15 @@ namespace Plugins.CW.LeanLocalization.Extras.Scripts
 				}
 				else if (first.DetectLanguage == Required.Scripts.LeanLocalization.DetectType.CurrentCulture)
 				{
-					var cultureInfo = CultureInfo.CurrentCulture;
+					CultureInfo cultureInfo = CultureInfo.CurrentCulture;
 
-					if (cultureInfo != null)
-					{
-						text += cultureInfo.Name;
-					}
+					if (cultureInfo != null) text += cultureInfo.Name;
 				}
 				else if (first.DetectLanguage == Required.Scripts.LeanLocalization.DetectType.CurrentCulture)
 				{
-					var cultureInfo = CultureInfo.CurrentUICulture;
+					CultureInfo cultureInfo = CultureInfo.CurrentUICulture;
 
-					if (cultureInfo != null)
-					{
-						text += cultureInfo.Name;
-					}
+					if (cultureInfo != null) text += cultureInfo.Name;
 				}
 
 				text += "\n\n";
@@ -94,42 +84,37 @@ namespace Plugins.CW.LeanLocalization.Extras.Scripts
 				var load = "";
 
 				if (first.SaveLoad == Required.Scripts.LeanLocalization.SaveLoadType.WhenChanged)
-				{
 					load = PlayerPrefs.GetString(
 						"LeanLocalization.CurrentLanguage"
 					);
-				}
 				else if (first.SaveLoad == Required.Scripts.LeanLocalization.SaveLoadType.WhenChanged)
-				{
 					load = PlayerPrefs.GetString(
 						"LeanLocalization.CurrentLanguageAlt"
 					);
-				}
 
 				if (string.IsNullOrEmpty(
 					    load
 				    ) ==
 				    false)
-				{
 					text += "LOADING PREVIOUSLY SAVED: " + load;
-				}
 
 				text += "\n\nALIASES:\n";
 
-				foreach (var alias in Required.Scripts.LeanLocalization.CurrentAliases)
-				{
+				foreach (KeyValuePair<string, string> alias in Required.Scripts.LeanLocalization.CurrentAliases)
 					text += alias.Key + " = " + alias.Value + "\n";
-				}
 
 				text += "\n\nDETECTED: " + first.CurrentLanguage;
 			}
 
 			if (onString != null)
-			{
 				onString.Invoke(
 					text
 				);
-			}
+		}
+
+		[Serializable]
+		public class StringEvent : UnityEvent<string>
+		{
 		}
 	}
 }

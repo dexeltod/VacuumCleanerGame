@@ -6,13 +6,17 @@ namespace Plugins.SerializeInterfaces.Editor.UIElements
 {
 	internal class ToggleGroup
 	{
-		private List<Toggle> _toggles = new List<Toggle>();
+		private readonly List<Toggle> _toggles = new();
 
-		public event EventHandler<Toggle> OnToggleChanged;
-
-		public ToggleGroup()
+		public Toggle GetFirstActiveToggle()
 		{
+			return _toggles.Find(
+				x => x.value
+			);
 		}
+
+		public bool IsAnyOn() =>
+			GetFirstActiveToggle() != null;
 
 		public void RegisterToggle(Toggle toggle)
 		{
@@ -44,7 +48,7 @@ namespace Plugins.SerializeInterfaces.Editor.UIElements
 		{
 			if (_toggles.Count == 0) return;
 
-			var activeToggle = GetFirstActiveToggle();
+			Toggle activeToggle = GetFirstActiveToggle();
 
 			if (activeToggle == null)
 			{
@@ -52,32 +56,11 @@ namespace Plugins.SerializeInterfaces.Editor.UIElements
 				activeToggle.value = true;
 			}
 
-			foreach (var toggle in _toggles)
-			{
+			foreach (Toggle toggle in _toggles)
 				if (toggle.value)
 					toggle.SetValueWithoutNotify(
 						false
 					);
-			}
-		}
-
-		public Toggle GetFirstActiveToggle()
-		{
-			return _toggles.Find(
-				x => x.value == true
-			);
-		}
-
-		public bool IsAnyOn()
-		{
-			return GetFirstActiveToggle() != null;
-		}
-
-		private void ToggleValueChanged(ChangeEvent<bool> evt)
-		{
-			HandleToggleChanged(
-				evt.target as Toggle
-			);
 		}
 
 		private void HandleToggleChanged(Toggle targetToggle)
@@ -86,7 +69,7 @@ namespace Plugins.SerializeInterfaces.Editor.UIElements
 				targetToggle
 			);
 
-			foreach (var toggle in _toggles)
+			foreach (Toggle toggle in _toggles)
 			{
 				if (toggle == targetToggle)
 					continue;
@@ -96,13 +79,20 @@ namespace Plugins.SerializeInterfaces.Editor.UIElements
 				);
 			}
 
-			if (targetToggle.value == true)
+			if (targetToggle.value)
 				OnToggleChanged?.Invoke(
 					this,
 					targetToggle
 				);
 			else
 				targetToggle.value = true;
+		}
+
+		private void ToggleValueChanged(ChangeEvent<bool> evt)
+		{
+			HandleToggleChanged(
+				evt.target as Toggle
+			);
 		}
 
 		private void ValidateToggleIsInGroup(Toggle toggle)
@@ -122,5 +112,7 @@ namespace Plugins.SerializeInterfaces.Editor.UIElements
 					)
 				);
 		}
+
+		public event EventHandler<Toggle> OnToggleChanged;
 	}
 }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Sources.Boot.Scripts.Factories.UpgradeEntitiesConfigs
+namespace Sources.Boot.Scripts.UpgradeEntitiesConfigs
 {
 	[CreateAssetMenu(fileName = "StartStats", menuName = "Data/Shop/Upgrade/StartStats")]
 	public class StartStatsConfig : ScriptableObject

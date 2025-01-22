@@ -16,19 +16,16 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 	{
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
-			var left = position;
+			Rect left = position;
 			left.xMax -= 40;
-			var right = position;
+			Rect right = position;
 			right.xMin = left.xMax + 2;
-			var color = GUI.color;
-			var exists = LeanLocalization.CurrentTranslations.ContainsKey(
+			Color color = GUI.color;
+			bool exists = LeanLocalization.CurrentTranslations.ContainsKey(
 				property.stringValue
 			);
 
-			if (exists == false)
-			{
-				GUI.color = Color.red;
-			}
+			if (exists == false) GUI.color = Color.red;
 
 			EditorGUI.PropertyField(
 				left,
@@ -40,8 +37,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			if (GUI.Button(
 				    right,
 				    "List"
-			    ) ==
-			    true)
+			    ))
 			{
 				var menu = new GenericMenu();
 
@@ -50,19 +46,17 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				    ) ==
 				    false)
 				{
-					if (exists == true)
+					if (exists)
 					{
 						var translation = default(LeanTranslation);
 
 						if (LeanLocalization.CurrentTranslations.TryGetValue(
 							    property.stringValue,
 							    out translation
-						    ) ==
-						    true)
-						{
-							foreach (var entry in translation.Entries)
+						    ))
+							foreach (LeanTranslation.Entry entry in translation.Entries)
 							{
-								var owner = entry.Owner;
+								Object owner = entry.Owner;
 								menu.AddItem(
 									new GUIContent(
 										"Select/" + entry.Language
@@ -77,7 +71,6 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 									}
 								);
 							}
-						}
 					}
 					else
 					{
@@ -92,7 +85,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 							false,
 							() =>
 							{
-								var phrase = LeanLocalization.AddPhraseToFirst(
+								LeanPhrase phrase = LeanLocalization.AddPhraseToFirst(
 									property.stringValue
 								);
 								LeanLocalization.UpdateTranslations();
@@ -111,8 +104,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 					);
 				}
 
-				foreach (var translationName in LeanLocalization.CurrentTranslations.Keys)
-				{
+				foreach (string translationName in LeanLocalization.CurrentTranslations.Keys)
 					menu.AddItem(
 						new GUIContent(
 							translationName
@@ -124,20 +116,15 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 							property.serializedObject.ApplyModifiedProperties();
 						}
 					);
-				}
 
 				if (menu.GetItemCount() > 0)
-				{
 					menu.DropDown(
 						right
 					);
-				}
 				else
-				{
 					Debug.LogWarning(
 						"Your scene doesn't contain any phrases, so the phrase name list couldn't be created."
 					);
-				}
 			}
 		}
 	}

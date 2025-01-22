@@ -4,6 +4,9 @@ namespace Sources.Infrastructure.UI
 {
 	public class VisualElementSwitcher
 	{
+		public void Disable(VisualElement disabledElement) =>
+			disabledElement.style.display = DisplayStyle.None;
+
 		public void Enter(VisualElement from, VisualElement to)
 		{
 			IStyle lastElement = from.style;
@@ -14,8 +17,5 @@ namespace Sources.Infrastructure.UI
 			openedElement.display = DisplayStyle.Flex;
 			openedElement.visibility = Visibility.Visible;
 		}
-
-		public void Disable(VisualElement disabledElement) =>
-			disabledElement.style.display = DisplayStyle.None;
 	}
 }

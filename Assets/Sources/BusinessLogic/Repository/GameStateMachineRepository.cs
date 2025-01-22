@@ -6,17 +6,14 @@ namespace Sources.BusinessLogic.Repository
 {
 	public sealed class GameStateMachineRepository : IGameStateMachineRepository
 	{
-		private readonly Dictionary<Type, IExitableState> _states;
-
-		public GameStateMachineRepository(Dictionary<Type, IExitableState> states)
-		{
-			_states = states ?? throw new ArgumentNullException(nameof(states));
-		}
+		private readonly Dictionary<Type, IExitableState> _states = new();
 
 		public IExitableState Get<TState>() where TState : IExitableState
 		{
+			Type huy = typeof(TState);
+
 			if (_states.ContainsKey(typeof(TState)))
-				return _states[typeof(TState)];
+				return _states[huy];
 
 			throw new ArgumentNullException($"State of type {typeof(TState)} not found");
 		}
@@ -26,7 +23,8 @@ namespace Sources.BusinessLogic.Repository
 			if (state == null)
 				throw new ArgumentNullException(nameof(state));
 
-			_states.Add(typeof(TState), state);
+			Type type = typeof(TState);
+			_states.Add(type, state);
 		}
 	}
 }

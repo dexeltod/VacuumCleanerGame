@@ -8,9 +8,9 @@ namespace Sources.Controllers.Shop
 {
 	public class ShopPurchaseController
 	{
+		private readonly IPlayerModelRepository _playerModelRepository;
 		private readonly IProgressEntityRepository _progressRepository;
 		private readonly IResourcesProgressPresenter _resourcesProgressPresenter;
-		private readonly IPlayerModelRepository _playerModelRepository;
 
 		public ShopPurchaseController(
 			IProgressEntityRepository progressRepository,

@@ -20,16 +20,16 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 {
 	public class ShopViewFactory
 	{
+		private readonly IAssetLoader _assetLoader;
+		private readonly IProgressEntityRepository _entityRepository;
+		private readonly IGameplayInterfacePresenter _gameplayInterfaceProvider;
 		private readonly IPersistentProgressService _persistentProgressServiceProvider;
+		private readonly IPlayerModelRepository _playerModelRepositoryProvider;
+		private readonly IProgressEntityRepository _progressEntityRepository;
+		private readonly IResourcesProgressPresenter _resourcesProgressPresenterProvider;
+		private readonly ISaveLoader _saveLoaderProvider;
 		private readonly TranslatorService _translatorService;
 		private readonly IUpgradeWindowPresenter _upgradeWindowPresenterProvider;
-		private readonly IResourcesProgressPresenter _resourcesProgressPresenterProvider;
-		private readonly IGameplayInterfacePresenter _gameplayInterfaceProvider;
-		private readonly IProgressEntityRepository _progressEntityRepository;
-		private readonly IPlayerModelRepository _playerModelRepositoryProvider;
-		private readonly ISaveLoader _saveLoaderProvider;
-		private readonly IAssetFactory _assetFactory;
-		private readonly IProgressEntityRepository _entityRepository;
 
 		public ShopViewFactory(
 			IPersistentProgressService persistentProgressService,
@@ -40,7 +40,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 			IProgressEntityRepository progressEntityRepository,
 			IPlayerModelRepository playerModelRepositoryProvider,
 			ISaveLoader saveLoaderProvider,
-			IAssetFactory assetFactory,
+			IAssetLoader assetLoader,
 			IProgressEntityRepository entityRepository
 		)
 		{
@@ -55,17 +55,34 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 			_playerModelRepositoryProvider = playerModelRepositoryProvider ??
 			                                 throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
 			_saveLoaderProvider = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetLoader = assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 			_entityRepository = entityRepository ?? throw new ArgumentNullException(nameof(entityRepository));
 			_persistentProgressServiceProvider = persistentProgressService ??
 			                                     throw new ArgumentNullException(nameof(persistentProgressService));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 		}
 
-		public IEnumerable<IUpgradeElementPrefabView> Create(Transform transform, AudioSource audioSource)
-		{
-			return Instantiate(transform, audioSource);
-		}
+		public IEnumerable<IUpgradeElementPrefabView> Create(Transform transform, AudioSource audioSource) =>
+			Instantiate(transform, audioSource);
+
+		private UpgradeElementPresenter CreateUpgradeElementPresenter(AudioSource audioSource,
+			IReadOnlyList<IUpgradeEntityConfig> configs) =>
+			new(
+				configs.ToDictionary(
+					elem => elem.Id,
+					elem2 => (IUpgradeElementChangeableView)elem2.PrefabView.GetComponent<UpgradeElementPrefabView>()
+				),
+				_persistentProgressServiceProvider,
+				_upgradeWindowPresenterProvider,
+				_gameplayInterfaceProvider,
+				_progressEntityRepository,
+				_saveLoaderProvider,
+				_resourcesProgressPresenterProvider,
+				_playerModelRepositoryProvider,
+				_assetLoader.LoadFromResources<AudioClip>(ResourcesAssetPath.SoundNames.SoundBuy),
+				_assetLoader.LoadFromResources<AudioClip>(ResourcesAssetPath.SoundNames.SoundClose),
+				audioSource
+			);
 
 		private IEnumerable<IUpgradeElementPrefabView> Instantiate(
 			Component transform,
@@ -103,25 +120,6 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 				}
 			);
 		}
-
-		private UpgradeElementPresenter CreateUpgradeElementPresenter(AudioSource audioSource,
-			IReadOnlyList<IUpgradeEntityConfig> configs) =>
-			new(
-				configs.ToDictionary(
-					elem => elem.Id,
-					elem2 => (IUpgradeElementChangeableView)elem2.PrefabView.GetComponent<UpgradeElementPrefabView>()
-				),
-				_persistentProgressServiceProvider,
-				_upgradeWindowPresenterProvider,
-				_gameplayInterfaceProvider,
-				_progressEntityRepository,
-				_saveLoaderProvider,
-				_resourcesProgressPresenterProvider,
-				_playerModelRepositoryProvider,
-				_assetFactory.LoadFromResources<AudioClip>(ResourcesAssetPath.SoundNames.SoundBuy),
-				_assetFactory.LoadFromResources<AudioClip>(ResourcesAssetPath.SoundNames.SoundClose),
-				audioSource
-			);
 
 		private string Localize(string phrase) =>
 			_translatorService.GetLocalize(phrase);

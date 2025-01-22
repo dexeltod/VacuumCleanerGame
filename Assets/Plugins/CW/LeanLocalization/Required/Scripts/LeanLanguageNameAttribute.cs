@@ -3,7 +3,10 @@ using UnityEngine;
 
 namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
-	/// <summary>This attribute allows you to modify a normal string field into one that has a dropdown list that allows you to pick a language.</summary>
+	/// <summary>
+	///     This attribute allows you to modify a normal string field into one that has a dropdown list that allows you to
+	///     pick a language.
+	/// </summary>
 	public class LeanLanguageNameAttribute : PropertyAttribute
 	{
 	}
@@ -16,9 +19,9 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 	{
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
-			var rectA = position;
+			Rect rectA = position;
 			rectA.xMax -= 37.0f;
-			var rectB = position;
+			Rect rectB = position;
 			rectB.xMin = rectB.xMax - 35.0f;
 
 			EditorGUI.PropertyField(
@@ -30,13 +33,11 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			if (GUI.Button(
 				    rectB,
 				    "List"
-			    ) ==
-			    true)
+			    ))
 			{
 				var menu = new GenericMenu();
 
-				foreach (var languageName in LeanLocalization.CurrentLanguages.Keys)
-				{
+				foreach (string languageName in LeanLocalization.CurrentLanguages.Keys)
 					menu.AddItem(
 						new GUIContent(
 							languageName
@@ -48,16 +49,13 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 							property.serializedObject.ApplyModifiedProperties();
 						}
 					);
-				}
 
 				if (menu.GetItemCount() == 0)
-				{
 					menu.AddDisabledItem(
 						new GUIContent(
 							"Your scene doesn't contain any languages."
 						)
 					);
-				}
 
 				menu.ShowAsContext();
 			}

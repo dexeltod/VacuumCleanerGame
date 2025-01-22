@@ -6,7 +6,7 @@ namespace Plugins.LinkerGenerator
 {
 	public sealed class LinkerSettings : ScriptableObject
 	{
-		private static readonly string SettingsPath = "Assets/LinkerSettings.asset";
+		private readonly static string SettingsPath = "Assets/LinkerSettings.asset";
 
 		[SerializeField] private List<string> _assembliesToIgnore;
 		[SerializeField] private List<string> _assemblyPatternsToIgnore;
@@ -51,13 +51,13 @@ namespace Plugins.LinkerGenerator
 			return settings;
 		}
 
-		public static SerializedObject GetSerializedSettings() => new SerializedObject(
+		public static SerializedObject GetSerializedSettings() => new(
 			GetOrCreateSettings()
 		);
 
 		[SettingsProvider]
 		public static SettingsProvider CreateSettingsProvider() =>
-			new SettingsProvider(
+			new(
 				"Project/LinkerSettings",
 				SettingsScope.Project
 			)
@@ -65,7 +65,7 @@ namespace Plugins.LinkerGenerator
 				label = "Linker",
 				guiHandler = searchContext =>
 				{
-					var settings = GetSerializedSettings();
+					SerializedObject settings = GetSerializedSettings();
 
 					EditorGUILayout.PropertyField(
 						settings.FindProperty(
@@ -124,7 +124,7 @@ namespace Plugins.LinkerGenerator
 						"Dll",
 						"Linker"
 					}
-				),
+				)
 			};
 	}
 }

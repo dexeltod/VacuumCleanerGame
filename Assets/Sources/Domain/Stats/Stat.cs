@@ -37,7 +37,7 @@ namespace Sources.Domain.Stats
 		public void Increase(float value)
 		{
 			if (value <= 0)
-				throw new ArgumentOutOfRangeException($"to increase stat, value must be > 0", nameof(value));
+				throw new ArgumentOutOfRangeException("to increase stat, value must be > 0", nameof(value));
 
 			_value += value;
 			Changed?.Invoke();
@@ -46,7 +46,7 @@ namespace Sources.Domain.Stats
 		public void Decrease(float value)
 		{
 			if (value <= 0)
-				throw new ArgumentOutOfRangeException($"to increase stat, value must be > 0", nameof(value));
+				throw new ArgumentOutOfRangeException("to increase stat, value must be > 0", nameof(value));
 
 			_value -= value;
 

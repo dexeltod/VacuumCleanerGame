@@ -18,9 +18,23 @@ namespace Plugins.SerializeInterfaces.Editor
 	{
 		private const string _fieldName = "_underlyingValue";
 
+		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+		{
+			SerializedProperty prop = property.FindPropertyRelative(
+				_fieldName
+			);
+			return InterfaceReferenceUtility.GetPropertyHeight(
+				prop,
+				label,
+				GetArguments(
+					fieldInfo
+				)
+			);
+		}
+
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
-			var prop = property.FindPropertyRelative(
+			SerializedProperty prop = property.FindPropertyRelative(
 				_fieldName
 			);
 			InterfaceReferenceUtility.OnGUI(
@@ -33,17 +47,16 @@ namespace Plugins.SerializeInterfaces.Editor
 			);
 		}
 
-		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+		private static InterfaceObjectArguments GetArguments(FieldInfo fieldInfo)
 		{
-			var prop = property.FindPropertyRelative(
-				_fieldName
+			GetObjectAndInterfaceType(
+				fieldInfo.FieldType,
+				out Type objectType,
+				out Type interfaceType
 			);
-			return InterfaceReferenceUtility.GetPropertyHeight(
-				prop,
-				label,
-				GetArguments(
-					fieldInfo
-				)
+			return new InterfaceObjectArguments(
+				objectType,
+				interfaceType
 			);
 		}
 
@@ -65,13 +78,13 @@ namespace Plugins.SerializeInterfaces.Editor
 
 		private static bool TryGetTypesFromInterfaceReference(Type fieldType, out Type objectType, out Type interfaceType)
 		{
-			var fieldBaseType = fieldType;
+			Type fieldBaseType = fieldType;
 			if (fieldType.IsGenericType && fieldType.GetGenericTypeDefinition() == typeof(InterfaceReference<>))
 				fieldBaseType = fieldType.BaseType;
 
 			if (fieldBaseType.IsGenericType && fieldBaseType.GetGenericTypeDefinition() == typeof(InterfaceReference<,>))
 			{
-				var types = fieldBaseType.GetGenericArguments();
+				Type[] types = fieldBaseType.GetGenericArguments();
 				interfaceType = types[0];
 				objectType = types[1];
 				return true;
@@ -94,19 +107,6 @@ namespace Plugins.SerializeInterfaces.Editor
 				listType.GetGenericArguments()[0],
 				out objectType,
 				out interfaceType
-			);
-		}
-
-		private static InterfaceObjectArguments GetArguments(FieldInfo fieldInfo)
-		{
-			GetObjectAndInterfaceType(
-				fieldInfo.FieldType,
-				out var objectType,
-				out var interfaceType
-			);
-			return new InterfaceObjectArguments(
-				objectType,
-				interfaceType
 			);
 		}
 	}

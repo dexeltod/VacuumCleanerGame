@@ -2,8 +2,8 @@ using Sources.BusinessLogic.Services;
 
 namespace Sources.BusinessLogic.Interfaces.Factory
 {
-	public interface IGameStateChangerFactory
+	public interface IStateMachineFactory
 	{
-		IGameStateChanger Create();
+		IStateMachine Create();
 	}
 }

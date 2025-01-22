@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace Sources.Boot.Scripts.Factories
 {
-	public sealed class InjectableAssetFactory : IInjectableAssetFactory
+	public sealed class InjectableAssetLoader : IInjectableAssetLoader
 	{
 		[Inject] private IObjectResolver _objectResolver;
 
@@ -59,7 +59,7 @@ namespace Sources.Boot.Scripts.Factories
 
 		public T InstantiateAndGetComponent<T>(GameObject gameObject) where T : Behaviour
 		{
-			T component = Object.Instantiate(gameObject).GetComponent<T>();
+			var component = Object.Instantiate(gameObject).GetComponent<T>();
 
 			_objectResolver.InjectGameObject(component.gameObject);
 			return component;
@@ -98,7 +98,7 @@ namespace Sources.Boot.Scripts.Factories
 		{
 			ValidatePath(path);
 
-			var loaded = Resources.Load<T>(path) ?? throw new ArgumentNullException(path);
+			T loaded = Resources.Load<T>(path) ?? throw new ArgumentNullException(path);
 
 			T @object = Object.Instantiate(loaded, position) ?? throw new ArgumentNullException(path);
 
@@ -150,16 +150,16 @@ namespace Sources.Boot.Scripts.Factories
 			return gameObject;
 		}
 
-		private void ValidatePath(string path)
-		{
-			if (string.IsNullOrEmpty(path))
-				throw new ArgumentNullException($"File from resource not found:" + nameof(path));
-		}
-
 		private void ValidateObject(object @object)
 		{
 			if (@object == null)
 				throw new ArgumentNullException($"{nameof(@object)} is null.");
+		}
+
+		private void ValidatePath(string path)
+		{
+			if (string.IsNullOrEmpty(path))
+				throw new ArgumentNullException("File from resource not found:" + nameof(path));
 		}
 	}
 }

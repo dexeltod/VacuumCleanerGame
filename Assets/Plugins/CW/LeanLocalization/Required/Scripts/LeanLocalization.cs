@@ -11,8 +11,11 @@ using Object = UnityEngine.Object;
 
 namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
-	/// <summary>This component manages a global list of translations for easy access.
-	/// Translations are gathered from the <b>prefabs</b> list, as well as from any active and enabled <b>LeanSource</b> components in the scene.</summary>
+	/// <summary>
+	///     This component manages a global list of translations for easy access.
+	///     Translations are gathered from the <b>prefabs</b> list, as well as from any active and enabled <b>LeanSource</b>
+	///     components in the scene.
+	/// </summary>
 	[ExecuteInEditMode]
 	[HelpURL(
 		HelpUrlPrefix + "LeanLocalization"
@@ -42,53 +45,63 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		public const string ComponentPathPrefix = "Lean/Localization/Lean ";
 
 		/// <summary>All active and enabled LeanLocalization components.</summary>
-		public static List<LeanLocalization> Instances = new List<LeanLocalization>();
+		public static List<LeanLocalization> Instances = new();
 
-		public static Dictionary<string, LeanToken> CurrentTokens = new Dictionary<string, LeanToken>();
+		public static Dictionary<string, LeanToken> CurrentTokens = new();
 
-		public static Dictionary<string, LeanLanguage> CurrentLanguages = new Dictionary<string, LeanLanguage>();
+		public static Dictionary<string, LeanLanguage> CurrentLanguages = new();
 
-		public static Dictionary<string, string> CurrentAliases = new Dictionary<string, string>();
+		public static Dictionary<string, string> CurrentAliases = new();
 
 		/// <summary>Dictionary of all the phrase names mapped to their current translations.</summary>
-		public static Dictionary<string, LeanTranslation> CurrentTranslations =
-			new Dictionary<string, LeanTranslation>();
+		public static Dictionary<string, LeanTranslation> CurrentTranslations = new();
+
+		private static bool pendingUpdates;
+
+		private readonly static Dictionary<string, LeanTranslation> tempTranslations = new();
+
+		private readonly static List<LeanSource> tempSources = new(
+			1024
+		);
 
 		/// <summary>The language that is currently being used by this instance.</summary>
 		[LeanLanguageName]
 		[SerializeField]
 		private string currentLanguage;
 
+		[SerializeField] private DetectType detectLanguage = DetectType.SystemLanguage;
+
+		[SerializeField] [LeanLanguageName] private string defaultLanguage;
+
+		[SerializeField] private SaveLoadType saveLoad = SaveLoadType.WhenChanged;
+
+		[SerializeField] private List<LeanPrefab> prefabs;
+
 		/// <summary>How should the cultures be used to detect the user's device language?</summary>
 		public DetectType DetectLanguage
 		{
-			set { detectLanguage = value; }
-			get { return detectLanguage; }
+			set => detectLanguage = value;
+			get => detectLanguage;
 		}
-
-		[SerializeField] private DetectType detectLanguage = DetectType.SystemLanguage;
 
 		/// <summary>If the application is started and no language has been loaded or auto detected, this language will be used.</summary>
 		public string DefaultLanguage
 		{
-			set { defaultLanguage = value; }
-			get { return defaultLanguage; }
+			set => defaultLanguage = value;
+			get => defaultLanguage;
 		}
 
-		[SerializeField] [LeanLanguageName] private string defaultLanguage;
-
-		/// <summary>This allows you to control if/how this component's <b>CurrentLanguage</b> setting should save/load.
-		/// None = Only the <b>DetectLanguage</b> and <b>DefaultLanguage</b> settings will be used.
-		/// WhenChanged = If the <b>CurrentLanguage</b> gets manually changed, automatically save/load it to PlayerPrefs?
-		/// 
-		/// NOTE: This save data can be cleared with <b>ClearSave</b> context menu option.</summary>
+		/// <summary>
+		///     This allows you to control if/how this component's <b>CurrentLanguage</b> setting should save/load.
+		///     None = Only the <b>DetectLanguage</b> and <b>DefaultLanguage</b> settings will be used.
+		///     WhenChanged = If the <b>CurrentLanguage</b> gets manually changed, automatically save/load it to PlayerPrefs?
+		///     NOTE: This save data can be cleared with <b>ClearSave</b> context menu option.
+		/// </summary>
 		public SaveLoadType SaveLoad
 		{
-			set { saveLoad = value; }
-			get { return saveLoad; }
+			set => saveLoad = value;
+			get => saveLoad;
 		}
-
-		[SerializeField] private SaveLoadType saveLoad = SaveLoadType.WhenChanged;
 
 		/// <summary>This stores all prefabs and folders managed by this LeanLocalization instance.</summary>
 		public List<LeanPrefab> Prefabs
@@ -100,19 +113,6 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			}
 		}
 
-		[SerializeField] private List<LeanPrefab> prefabs;
-
-		/// <summary>Called when the language or translations change.</summary>
-		public static event Action OnLocalizationChanged;
-
-		private static bool pendingUpdates;
-
-		private static Dictionary<string, LeanTranslation> tempTranslations = new Dictionary<string, LeanTranslation>();
-
-		private static List<LeanSource> tempSources = new List<LeanSource>(
-			1024
-		);
-
 		/// <summary>Change the current language of this instance?</summary>
 		public string CurrentLanguage
 		{
@@ -122,17 +122,52 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				{
 					currentLanguage = value;
 
-					if (saveLoad != SaveLoadType.None)
-					{
-						SaveNow();
-					}
+					if (saveLoad != SaveLoadType.None) SaveNow();
 
 					UpdateTranslations();
 				}
 			}
 
-			get { return currentLanguage; }
+			get => currentLanguage;
 		}
+
+		protected virtual void Update()
+		{
+			UpdateTranslations(
+				false
+			);
+		}
+
+		/// <summary>Set the instance, merge old instance, and update translations.</summary>
+		protected virtual void OnEnable()
+		{
+			Instances.Add(
+				this
+			);
+
+			UpdateTranslations();
+		}
+
+		/// <summary>Unset instance?</summary>
+		protected virtual void OnDisable()
+		{
+			Instances.Remove(
+				this
+			);
+
+			UpdateTranslations();
+		}
+
+#if UNITY_EDITOR
+		// Inspector modified?
+		protected virtual void OnValidate()
+		{
+			UpdateTranslations();
+		}
+#endif
+
+		/// <summary>Called when the language or translations change.</summary>
+		public static event Action OnLocalizationChanged;
 
 		/// <summary>When rebuilding translations this method is called from any <b>LeanSource</b> components that define a token.</summary>
 		public static void RegisterToken(string name, LeanToken token)
@@ -146,15 +181,16 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				    name
 			    ) ==
 			    false)
-			{
 				CurrentTokens.Add(
 					name,
 					token
 				);
-			}
 		}
 
-		/// <summary>When rebuilding translations this method is called from any <b>LeanSource</b> components that define a transition.</summary>
+		/// <summary>
+		///     When rebuilding translations this method is called from any <b>LeanSource</b> components that define a
+		///     transition.
+		/// </summary>
 		public static LeanTranslation RegisterTranslation(string name)
 		{
 			var translation = default(LeanTranslation);
@@ -172,8 +208,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				if (tempTranslations.TryGetValue(
 					    name,
 					    out translation
-				    ) ==
-				    true)
+				    ))
 				{
 					tempTranslations.Remove(
 						name
@@ -227,19 +262,15 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		private void SaveNow()
 		{
 			if (saveLoad == SaveLoadType.WhenChanged)
-			{
 				PlayerPrefs.SetString(
 					"LeanLocalization.CurrentLanguage",
 					currentLanguage
 				);
-			}
 			else if (saveLoad == SaveLoadType.WhenChangedAlt)
-			{
 				PlayerPrefs.SetString(
 					"LeanLocalization.CurrentLanguageAlt",
 					currentLanguage
 				);
-			}
 
 			PlayerPrefs.Save();
 		}
@@ -247,17 +278,13 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		private void LoadNow()
 		{
 			if (saveLoad == SaveLoadType.WhenChanged)
-			{
 				currentLanguage = PlayerPrefs.GetString(
 					"LeanLocalization.CurrentLanguage"
 				);
-			}
 			else if (saveLoad == SaveLoadType.WhenChangedAlt)
-			{
 				currentLanguage = PlayerPrefs.GetString(
 					"LeanLocalization.CurrentLanguageAlt"
 				);
-			}
 		}
 
 		/// <summary>This sets the current language using the specified language name.</summary>
@@ -269,19 +296,16 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		/// <summary>This sets the current language of all instances using the specified language name.</summary>
 		public static void SetCurrentLanguageAll(string newLanguage)
 		{
-			foreach (var instance in Instances)
-			{
-				instance.CurrentLanguage = newLanguage;
-			}
+			foreach (LeanLocalization instance in Instances) instance.CurrentLanguage = newLanguage;
 		}
 
-		/// <summary>This returns the <b>CurrentLanguage</b> value from the first <b>LeanLocalization</b> instance in the scene if it exists, or null.</summary>
+		/// <summary>
+		///     This returns the <b>CurrentLanguage</b> value from the first <b>LeanLocalization</b> instance in the scene if
+		///     it exists, or null.
+		/// </summary>
 		public static string GetFirstCurrentLanguage()
 		{
-			if (Instances.Count > 0)
-			{
-				return Instances[0].CurrentLanguage;
-			}
+			if (Instances.Count > 0) return Instances[0].CurrentLanguage;
 
 			return null;
 		}
@@ -289,25 +313,22 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		public static LeanLocalization GetOrCreateInstance()
 		{
 			if (Instances.Count == 0)
-			{
 				new GameObject(
 					"LeanLocalization"
 				).AddComponent<LeanLocalization>();
-			}
 
 			return Instances[0];
 		}
 
-		/// <summary>This adds the specified UnityEngine.Object to this LeanLocalization instance, allowing it to be registered as a prefab.</summary>
+		/// <summary>
+		///     This adds the specified UnityEngine.Object to this LeanLocalization instance, allowing it to be registered as
+		///     a prefab.
+		/// </summary>
 		public void AddPrefab(Object root)
 		{
-			for (var i = Prefabs.Count - 1; i >= 0; i--) // NOTE: Property
-			{
+			for (int i = Prefabs.Count - 1; i >= 0; i--) // NOTE: Property
 				if (prefabs[i].Root == root)
-				{
 					return;
-				}
-			}
 
 			var prefab = new LeanPrefab();
 
@@ -319,12 +340,10 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		}
 
 		/// <summary>This calls <b>AddLanguage</b> on the first active and enabled LeanLocalization instance, or creates one first.</summary>
-		public static LeanLanguage AddLanguageToFirst(string name)
-		{
-			return GetOrCreateInstance().AddLanguage(
+		public static LeanLanguage AddLanguageToFirst(string name) =>
+			GetOrCreateInstance().AddLanguage(
 				name
 			);
-		}
 
 		/// <summary>This creates a new token with the specified name, and adds it to the current GameObject.</summary>
 		public LeanLanguage AddLanguage(string name)
@@ -351,12 +370,10 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		}
 
 		/// <summary>This calls <b>AddToken</b> on the first active and enabled LeanLocalization instance, or creates one first.</summary>
-		public static LeanToken AddTokenToFirst(string name)
-		{
-			return GetOrCreateInstance().AddToken(
+		public static LeanToken AddTokenToFirst(string name) =>
+			GetOrCreateInstance().AddToken(
 				name
 			);
-		}
 
 		/// <summary>This creates a new token with the specified name, and adds it to the current GameObject.</summary>
 		public LeanToken AddToken(string name)
@@ -382,8 +399,10 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			return null;
 		}
 
-		/// <summary>This allows you to set the value of the token with the specified name.
-		/// If no token exists and allowCreation is enabled, then one will be created for you.</summary>
+		/// <summary>
+		///     This allows you to set the value of the token with the specified name.
+		///     If no token exists and allowCreation is enabled, then one will be created for you.
+		/// </summary>
 		public static void SetToken(string name, string value, bool allowCreation = true)
 		{
 			if (string.IsNullOrEmpty(
@@ -396,12 +415,11 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				if (CurrentTokens.TryGetValue(
 					    name,
 					    out token
-				    ) ==
-				    true)
+				    ))
 				{
 					token.Value = value;
 				}
-				else if (allowCreation == true)
+				else if (allowCreation)
 				{
 					token = AddTokenToFirst(
 						name
@@ -412,8 +430,10 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			}
 		}
 
-		/// <summary>This allows you to get the value of the token with the specified name.
-		/// If no token exists, then the defaultValue will be returned.</summary>
+		/// <summary>
+		///     This allows you to get the value of the token with the specified name.
+		///     If no token exists, then the defaultValue will be returned.
+		/// </summary>
 		public static string GetToken(string name, string defaultValue = null)
 		{
 			var token = default(LeanToken);
@@ -422,27 +442,20 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				    name
 			    ) ==
 			    false)
-			{
 				if (CurrentTokens.TryGetValue(
 					    name,
 					    out token
-				    ) ==
-				    true)
-				{
+				    ))
 					return token.Value;
-				}
-			}
 
 			return defaultValue;
 		}
 
 		/// <summary>This calls <b>AddPhrase</b> on the first active and enabled LeanLocalization instance, or creates one first.</summary>
-		public static LeanPhrase AddPhraseToFirst(string name)
-		{
-			return GetOrCreateInstance().AddPhrase(
+		public static LeanPhrase AddPhraseToFirst(string name) =>
+			GetOrCreateInstance().AddPhrase(
 				name
 			);
-		}
 
 		/// <summary>This creates a new phrase with the specified name, and adds it to the current GameObject.</summary>
 		public LeanPhrase AddPhrase(string name)
@@ -477,12 +490,10 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				    name
 			    ) ==
 			    false)
-			{
 				CurrentTranslations.TryGetValue(
 					name,
 					out translation
 				);
-			}
 
 			return translation;
 		}
@@ -499,19 +510,14 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			    CurrentTranslations.TryGetValue(
 				    name,
 				    out translation
-			    ) ==
-			    true &&
+			    ) &&
 			    translation.Data is string)
-			{
 				fallback = (string)translation.Data;
-			}
 
-			if (replaceTokens == true)
-			{
+			if (replaceTokens)
 				fallback = LeanTranslation.FormatText(
 					fallback
 				);
-			}
 
 			return fallback;
 		}
@@ -529,12 +535,9 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			    CurrentTranslations.TryGetValue(
 				    name,
 				    out translation
-			    ) ==
-			    true &&
+			    ) &&
 			    translation.Data is T)
-			{
 				return (T)translation.Data;
-			}
 
 			return fallback;
 		}
@@ -542,16 +545,16 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		/// <summary>This rebuilds the dictionary used to quickly map phrase names to translations for the current language.</summary>
 		public static void UpdateTranslations(bool forceUpdate = true)
 		{
-			if (pendingUpdates == true || forceUpdate == true)
+			if (pendingUpdates || forceUpdate)
 			{
 				pendingUpdates = false;
 
 				// Copy previous translations to temp dictionary
 				tempTranslations.Clear();
 
-				foreach (var pair in CurrentTranslations)
+				foreach (KeyValuePair<string, LeanTranslation> pair in CurrentTranslations)
 				{
-					var translation = pair.Value;
+					LeanTranslation translation = pair.Value;
 
 					translation.Clear();
 
@@ -568,16 +571,10 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				CurrentTranslations.Clear();
 
 				// Rebuild all currents
-				foreach (var instance in Instances)
-				{
-					instance.RegisterAll();
-				}
+				foreach (LeanLocalization instance in Instances) instance.RegisterAll();
 
 				// Notify changes?
-				if (OnLocalizationChanged != null)
-				{
-					OnLocalizationChanged();
-				}
+				if (OnLocalizationChanged != null) OnLocalizationChanged();
 			}
 		}
 
@@ -595,41 +592,6 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 #endif
 		}
 
-		/// <summary>Set the instance, merge old instance, and update translations.</summary>
-		protected virtual void OnEnable()
-		{
-			Instances.Add(
-				this
-			);
-
-			UpdateTranslations();
-		}
-
-		/// <summary>Unset instance?</summary>
-		protected virtual void OnDisable()
-		{
-			Instances.Remove(
-				this
-			);
-
-			UpdateTranslations();
-		}
-
-		protected virtual void Update()
-		{
-			UpdateTranslations(
-				false
-			);
-		}
-
-#if UNITY_EDITOR
-		// Inspector modified?
-		protected virtual void OnValidate()
-		{
-			UpdateTranslations();
-		}
-#endif
-
 		private void RegisterAll()
 		{
 			GetComponentsInChildren(
@@ -638,46 +600,29 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 			// First pass
 			if (prefabs != null)
-			{
-				foreach (var prefab in prefabs)
-				{
-					foreach (var source in prefab.Sources)
-					{
-						source.Register();
-					}
-				}
-			}
+				foreach (LeanPrefab prefab in prefabs)
+				foreach (LeanSource source in prefab.Sources)
+					source.Register();
 
-			foreach (var source in tempSources)
-			{
-				source.Register();
-			}
+			foreach (LeanSource source in tempSources) source.Register();
 
 			// Update language (depends on first pass)
 			UpdateCurrentLanguage();
 
 			// Second pass
 			if (prefabs != null)
-			{
-				foreach (var prefab in prefabs)
-				{
-					foreach (var source in prefab.Sources)
-					{
-						source.Register(
-							currentLanguage,
-							defaultLanguage
-						);
-					}
-				}
-			}
+				foreach (LeanPrefab prefab in prefabs)
+				foreach (LeanSource source in prefab.Sources)
+					source.Register(
+						currentLanguage,
+						defaultLanguage
+					);
 
-			foreach (var source in tempSources)
-			{
+			foreach (LeanSource source in tempSources)
 				source.Register(
 					currentLanguage,
 					defaultLanguage
 				);
-			}
 
 			tempSources.Clear();
 		}
@@ -685,17 +630,12 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		private void UpdateCurrentLanguage()
 		{
 			// Load saved language?
-			if (saveLoad != SaveLoadType.None)
-			{
-				LoadNow();
-			}
+			if (saveLoad != SaveLoadType.None) LoadNow();
 
 			// Find language by culture?
 			if (string.IsNullOrEmpty(
 				    currentLanguage
-			    ) ==
-			    true)
-			{
+			    ))
 				switch (detectLanguage)
 				{
 					case DetectType.SystemLanguage:
@@ -709,42 +649,34 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 					case DetectType.CurrentCulture:
 					{
-						var cultureInfo = CultureInfo.CurrentCulture;
+						CultureInfo cultureInfo = CultureInfo.CurrentCulture;
 
 						if (cultureInfo != null)
-						{
 							CurrentAliases.TryGetValue(
 								cultureInfo.Name,
 								out currentLanguage
 							);
-						}
 					}
 						break;
 
 					case DetectType.CurrentUICulture:
 					{
-						var cultureInfo = CultureInfo.CurrentUICulture;
+						CultureInfo cultureInfo = CultureInfo.CurrentUICulture;
 
 						if (cultureInfo != null)
-						{
 							CurrentAliases.TryGetValue(
 								cultureInfo.Name,
 								out currentLanguage
 							);
-						}
 					}
 						break;
 				}
-			}
 
 			// Use default language?
 			if (string.IsNullOrEmpty(
 				    currentLanguage
-			    ) ==
-			    true)
-			{
+			    ))
 				currentLanguage = defaultLanguage;
-			}
 		}
 
 #if UNITY_EDITOR
@@ -760,7 +692,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			    false)
 			{
 				// Find where we want to save the file
-				var path = EditorUtility.SaveFilePanelInProject(
+				string path = EditorUtility.SaveFilePanelInProject(
 					"Export Text Asset for " + currentLanguage,
 					currentLanguage,
 					"csv",
@@ -772,11 +704,9 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 					    path
 				    ) ==
 				    false)
-				{
 					DoExportTextAsset(
 						path
 					);
-				}
 			}
 		}
 
@@ -786,14 +716,11 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			var gaps = false;
 
 			// Add all phrase names and existing translations to lines
-			foreach (var pair in CurrentTranslations)
+			foreach (KeyValuePair<string, LeanTranslation> pair in CurrentTranslations)
 			{
-				var translation = pair.Value;
+				LeanTranslation translation = pair.Value;
 
-				if (gaps == true)
-				{
-					data += Environment.NewLine;
-				}
+				if (gaps) data += Environment.NewLine;
 
 				data += pair.Key + ",\"";
 				gaps = true;
@@ -823,12 +750,12 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			}
 
 			// Write text to file
-			using (var file = File.OpenWrite(
+			using (FileStream file = File.OpenWrite(
 				       path
 			       ))
 			{
 				var encoding = new UTF8Encoding();
-				var bytes = encoding.GetBytes(
+				byte[] bytes = encoding.GetBytes(
 					data
 				);
 
@@ -871,13 +798,21 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 	)]
 	public class LeanLocalization_Editor : CwEditor
 	{
-		class PresetLanguage
-		{
-			public string Name;
-			public string[] Cultures;
-		}
+		private readonly static List<PresetLanguage> presetLanguages = new();
 
-		private static List<PresetLanguage> presetLanguages = new List<PresetLanguage>();
+		private static string translationFilter;
+
+		private readonly static List<string> missing = new();
+
+		private readonly static List<string> clashes = new();
+
+		private static string languagesFilter;
+
+		private static string tokensFilter;
+
+		private int expandPrefab = -1;
+
+		private LeanTranslation expandTranslation;
 
 		protected override void OnInspector()
 		{
@@ -893,9 +828,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			if (Draw(
 				    "currentLanguage",
 				    "The language that is currently being used by this instance."
-			    ) ==
-			    true)
-			{
+			    ))
 				Each(
 					tgts,
 					t => t.CurrentLanguage = serializedObject.FindProperty(
@@ -903,7 +836,6 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 					).stringValue,
 					true
 				);
-			}
 
 			Draw(
 				"saveLoad",
@@ -916,9 +848,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				"detectLanguage",
 				"How should the cultures be used to detect the user's device language?"
 			);
-			BeginDisabled(
-				true
-			);
+			BeginDisabled();
 			BeginIndent();
 
 			switch (tgt.DetectLanguage)
@@ -971,18 +901,18 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 		private void DrawPrefabs(LeanLocalization tgt)
 		{
-			var rectA = Reserve();
-			var rectB = rectA;
+			Rect rectA = Reserve();
+			Rect rectB = rectA;
 			rectB.xMin += EditorGUIUtility.labelWidth;
 			EditorGUI.LabelField(
 				rectA,
 				"Prefabs",
 				EditorStyles.boldLabel
 			);
-			var newPrefab = EditorGUI.ObjectField(
+			Object newPrefab = EditorGUI.ObjectField(
 				rectB,
 				"",
-				default(Object),
+				default,
 				typeof(Object),
 				false
 			);
@@ -1004,28 +934,24 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			BeginIndent();
 
 			for (var i = 0; i < tgt.Prefabs.Count; i++)
-			{
 				DrawPrefabs(
 					tgt,
 					i
 				);
-			}
 
 			EndIndent();
 		}
 
-		private int expandPrefab = -1;
-
 		private void DrawPrefabs(LeanLocalization tgt, int index)
 		{
-			var rectA = Reserve();
-			var rectB = rectA;
+			Rect rectA = Reserve();
+			Rect rectB = rectA;
 			rectB.xMax -= 22.0f;
-			var rectC = rectA;
+			Rect rectC = rectA;
 			rectC.xMin = rectC.xMax - 20.0f;
-			var prefab = tgt.Prefabs[index];
+			LeanPrefab prefab = tgt.Prefabs[index];
 			var rebuilt = false;
-			var expand = EditorGUI.Foldout(
+			bool expand = EditorGUI.Foldout(
 				new Rect(
 					rectA.x,
 					rectA.y,
@@ -1036,18 +962,11 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				""
 			);
 
-			if (expand == true)
-			{
+			if (expand)
 				expandPrefab = index;
-			}
-			else if (expandPrefab == index)
-			{
-				expandPrefab = -1;
-			}
+			else if (expandPrefab == index) expandPrefab = -1;
 
-			BeginDisabled(
-				true
-			);
+			BeginDisabled();
 			BeginError(
 				prefab.Root == null
 			);
@@ -1068,21 +987,19 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 				rebuilt |= prefab.RebuildSources();
 
-				if (expand == true)
+				if (expand)
 				{
-					var sources = prefab.Sources;
+					List<LeanSource> sources = prefab.Sources;
 
 					BeginIndent();
 
-					foreach (var source in sources)
-					{
+					foreach (LeanSource source in sources)
 						EditorGUI.ObjectField(
 							Reserve(),
 							source,
 							typeof(LeanSource),
 							false
 						);
-					}
 
 					EndIndent();
 				}
@@ -1090,17 +1007,13 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 			EndDisabled();
 
-			if (rebuilt == true)
-			{
-				DirtyAndUpdate();
-			}
+			if (rebuilt) DirtyAndUpdate();
 
 			if (GUI.Button(
 				    rectC,
 				    "X",
 				    EditorStyles.miniButton
-			    ) ==
-			    true)
+			    ))
 			{
 				Undo.RecordObject(
 					tgt,
@@ -1113,24 +1026,17 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 				DirtyAndUpdate();
 
-				if (expand == true)
-				{
-					expandPrefab = -1;
-				}
+				if (expand) expandPrefab = -1;
 			}
 		}
 
-		private static string translationFilter;
-
-		private LeanTranslation expandTranslation;
-
 		private void DrawTranslations()
 		{
-			var rectA = Reserve();
-			var rectB = rectA;
+			Rect rectA = Reserve();
+			Rect rectB = rectA;
 			rectB.xMin += EditorGUIUtility.labelWidth;
 			rectB.xMax -= 37.0f;
-			var rectC = rectA;
+			Rect rectC = rectA;
 			rectC.xMin = rectC.xMax - 35.0f;
 			EditorGUI.LabelField(
 				rectA,
@@ -1145,22 +1051,19 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			BeginDisabled(
 				string.IsNullOrEmpty(
 					translationFilter
-				) ==
-				true ||
+				) ||
 				LeanLocalization.CurrentTranslations.ContainsKey(
 					translationFilter
-				) ==
-				true
+				)
 			);
 
 			if (GUI.Button(
 				    rectC,
 				    "Add",
 				    EditorStyles.miniButton
-			    ) ==
-			    true)
+			    ))
 			{
-				var phrase = LeanLocalization.AddPhraseToFirst(
+				LeanPhrase phrase = LeanLocalization.AddPhraseToFirst(
 					translationFilter
 				);
 
@@ -1178,8 +1081,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			if (LeanLocalization.CurrentTranslations.Count == 0 &&
 			    string.IsNullOrEmpty(
 				    translationFilter
-			    ) ==
-			    true)
+			    ))
 			{
 				Info(
 					"Type in the name of a translation, and click the 'Add' button. Or, drag and drop a prefab that contains some."
@@ -1191,23 +1093,22 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 				BeginIndent();
 
-				foreach (var pair in LeanLocalization.CurrentTranslations)
+				foreach (KeyValuePair<string, LeanTranslation> pair in LeanLocalization.CurrentTranslations)
 				{
-					var name = pair.Key;
+					string name = pair.Key;
 
 					if (string.IsNullOrEmpty(
 						    translationFilter
-					    ) ==
-					    true ||
+					    ) ||
 					    name.IndexOf(
 						    translationFilter,
 						    StringComparison.InvariantCultureIgnoreCase
 					    ) >=
 					    0)
 					{
-						var translation = pair.Value;
-						var rectT = Reserve();
-						var expand = EditorGUI.Foldout(
+						LeanTranslation translation = pair.Value;
+						Rect rectT = Reserve();
+						bool expand = EditorGUI.Foldout(
 							new Rect(
 								rectT.x,
 								rectT.y,
@@ -1218,32 +1119,24 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 							""
 						);
 
-						if (expand == true)
-						{
+						if (expand)
 							expandTranslation = translation;
-						}
-						else if (expandTranslation == translation)
-						{
-							expandTranslation = null;
-						}
+						else if (expandTranslation == translation) expandTranslation = null;
 
 						CalculateTranslation(
 							pair.Value
 						);
 
-						var data = translation.Data;
+						object data = translation.Data;
 
 						total++;
 
-						BeginDisabled(
-							true
-						);
+						BeginDisabled();
 						BeginError(
 							missing.Count > 0 || clashes.Count > 0
 						);
 
 						if (data is Object)
-						{
 							EditorGUI.ObjectField(
 								rectT,
 								name,
@@ -1251,29 +1144,25 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 								typeof(Object),
 								true
 							);
-						}
 						else
-						{
 							EditorGUI.TextField(
 								rectT,
 								name,
 								data != null ? data.ToString() : ""
 							);
-						}
 
 						EndError();
 
-						if (expand == true)
+						if (expand)
 						{
 							BeginIndent();
 
-							foreach (var entry in translation.Entries)
+							foreach (LeanTranslation.Entry entry in translation.Entries)
 							{
 								BeginError(
 									clashes.Contains(
 										entry.Language
-									) ==
-									true
+									)
 								);
 								EditorGUILayout.ObjectField(
 									entry.Language,
@@ -1289,23 +1178,19 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 						EndDisabled();
 
-						if (expand == true)
+						if (expand)
 						{
-							foreach (var language in missing)
-							{
+							foreach (string language in missing)
 								Warning(
 									"This translation isn't defined for the " + language + " language."
 								);
-							}
 
-							foreach (var language in clashes)
-							{
+							foreach (string language in clashes)
 								Warning(
 									"This translation is defined multiple times for the " +
 									language +
 									" language."
 								);
-							}
 						}
 					}
 				}
@@ -1313,67 +1198,51 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				EndIndent();
 
 				if (total == 0)
-				{
 					Info(
 						"No translation with this name exists, click the 'Add' button to create it."
 					);
-				}
 			}
 		}
-
-		private static List<string> missing = new List<string>();
-
-		private static List<string> clashes = new List<string>();
 
 		private static void CalculateTranslation(LeanTranslation translation)
 		{
 			missing.Clear();
 			clashes.Clear();
 
-			foreach (var language in LeanLocalization.CurrentLanguages.Keys)
-			{
+			foreach (string language in LeanLocalization.CurrentLanguages.Keys)
 				if (translation.Entries.Exists(
 					    e => e.Language == language
 				    ) ==
 				    false)
-				{
 					missing.Add(
 						language
 					);
-				}
-			}
 
-			foreach (var entry in translation.Entries)
+			foreach (LeanTranslation.Entry entry in translation.Entries)
 			{
-				var language = entry.Language;
+				string language = entry.Language;
 
 				if (clashes.Contains(
 					    language
 				    ) ==
 				    false)
-				{
 					if (translation.LanguageCount(
 						    language
 					    ) >
 					    1)
-					{
 						clashes.Add(
 							language
 						);
-					}
-				}
 			}
 		}
 
-		private static string languagesFilter;
-
 		private void DrawLanguages()
 		{
-			var rectA = Reserve();
-			var rectB = rectA;
+			Rect rectA = Reserve();
+			Rect rectB = rectA;
 			rectB.xMin += EditorGUIUtility.labelWidth;
 			rectB.xMax -= 37.0f;
-			var rectC = rectA;
+			Rect rectC = rectA;
 			rectC.xMin = rectC.xMax - 35.0f;
 			EditorGUI.LabelField(
 				rectA,
@@ -1391,21 +1260,19 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				    rectC,
 				    "Add",
 				    EditorStyles.miniButton
-			    ) ==
-			    true)
+			    ))
 			{
 				if (string.IsNullOrEmpty(
 					    languagesFilter
-				    ) ==
-				    true)
+				    ))
 				{
 					var menu = new GenericMenu();
 
-					var languagePrefabs = AssetDatabase.FindAssets(
+					IEnumerable<GameObject> languagePrefabs = AssetDatabase.FindAssets(
 							"t:GameObject"
 						)
 						.Select(
-							(guid) =>
+							guid =>
 								AssetDatabase.LoadAssetAtPath<GameObject>(
 									AssetDatabase.GUIDToAssetPath(
 										guid
@@ -1413,16 +1280,13 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 								)
 						)
 						.Where(
-							(prefab) => prefab.GetComponent<LeanLanguage>() != null
+							prefab => prefab.GetComponent<LeanLanguage>() != null
 						);
 
-					foreach (var languagePrefab in languagePrefabs)
-					{
+					foreach (GameObject languagePrefab in languagePrefabs)
 						if (LeanLocalization.CurrentLanguages.ContainsKey(
 							    languagePrefab.name
-						    ) ==
-						    true)
-						{
+						    ))
 							menu.AddItem(
 								new GUIContent(
 									languagePrefab.name
@@ -1430,9 +1294,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 								true,
 								() => { }
 							);
-						}
 						else
-						{
 							menu.AddItem(
 								new GUIContent(
 									languagePrefab.name
@@ -1442,7 +1304,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 								{
 									if (LeanLocalization.Instances.Count > 0)
 									{
-										var language = PrefabUtility.InstantiatePrefab(
+										Object language = PrefabUtility.InstantiatePrefab(
 											languagePrefab,
 											LeanLocalization.Instances[0].transform
 										);
@@ -1457,14 +1319,12 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 									}
 								}
 							);
-						}
-					}
 
 					menu.ShowAsContext();
 				}
 				else
 				{
-					var language = LeanLocalization.AddLanguageToFirst(
+					LeanLanguage language = LeanLocalization.AddLanguageToFirst(
 						languagesFilter
 					);
 
@@ -1488,16 +1348,12 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				var total = 0;
 
 				BeginIndent();
-				BeginDisabled(
-					true
-				);
+				BeginDisabled();
 
-				foreach (var pair in LeanLocalization.CurrentLanguages)
-				{
+				foreach (KeyValuePair<string, LeanLanguage> pair in LeanLocalization.CurrentLanguages)
 					if (string.IsNullOrEmpty(
 						    languagesFilter
-					    ) ==
-					    true ||
+					    ) ||
 					    pair.Key.IndexOf(
 						    languagesFilter,
 						    StringComparison.InvariantCultureIgnoreCase
@@ -1512,30 +1368,25 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 						);
 						total++;
 					}
-				}
 
 				EndDisabled();
 				EndIndent();
 
 				if (total == 0)
-				{
 					EditorGUILayout.HelpBox(
 						"No language with this name exists, click the 'Add' button to create it.",
 						MessageType.Info
 					);
-				}
 			}
 		}
 
-		private static string tokensFilter;
-
 		private void DrawTokens()
 		{
-			var rectA = Reserve();
-			var rectB = rectA;
+			Rect rectA = Reserve();
+			Rect rectB = rectA;
 			rectB.xMin += EditorGUIUtility.labelWidth;
 			rectB.xMax -= 37.0f;
-			var rectC = rectA;
+			Rect rectC = rectA;
 			rectC.xMin = rectC.xMax - 35.0f;
 			EditorGUI.LabelField(
 				rectA,
@@ -1550,22 +1401,19 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			BeginDisabled(
 				string.IsNullOrEmpty(
 					tokensFilter
-				) ==
-				true ||
+				) ||
 				LeanLocalization.CurrentTokens.ContainsKey(
 					tokensFilter
-				) ==
-				true
+				)
 			);
 
 			if (GUI.Button(
 				    rectC,
 				    "Add",
 				    EditorStyles.miniButton
-			    ) ==
-			    true)
+			    ))
 			{
-				var token = LeanLocalization.AddTokenToFirst(
+				LeanToken token = LeanLocalization.AddTokenToFirst(
 					tokensFilter
 				);
 
@@ -1589,16 +1437,12 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				var total = 0;
 
 				BeginIndent();
-				BeginDisabled(
-					true
-				);
+				BeginDisabled();
 
-				foreach (var pair in LeanLocalization.CurrentTokens)
-				{
+				foreach (KeyValuePair<string, LeanToken> pair in LeanLocalization.CurrentTokens)
 					if (string.IsNullOrEmpty(
 						    tokensFilter
-					    ) ==
-					    true ||
+					    ) ||
 					    pair.Key.IndexOf(
 						    tokensFilter,
 						    StringComparison.InvariantCultureIgnoreCase
@@ -1613,18 +1457,15 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 						);
 						total++;
 					}
-				}
 
 				EndDisabled();
 				EndIndent();
 
 				if (total == 0)
-				{
 					EditorGUILayout.HelpBox(
 						"No token with this name exists, click the 'Add' button to create it.",
 						MessageType.Info
 					);
-				}
 			}
 		}
 
@@ -1673,6 +1514,12 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			gameObject.AddComponent<LeanLocalization>();
 
 			Selection.activeGameObject = gameObject;
+		}
+
+		private class PresetLanguage
+		{
+			public string[] Cultures;
+			public string Name;
 		}
 	}
 

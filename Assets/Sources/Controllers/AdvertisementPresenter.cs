@@ -27,8 +27,12 @@ namespace Sources.Controllers
 			_advertisement.Opened -= OnAdOpened;
 		}
 
-		private void OnRewarded() =>
-			OnClosed();
+		private void OnAdOpened()
+		{
+			Debug.Log("OnAdOpened");
+			AudioListener.volume = 0;
+			Time.timeScale = 0;
+		}
 
 		private void OnClosed()
 		{
@@ -37,11 +41,7 @@ namespace Sources.Controllers
 			Time.timeScale = 1;
 		}
 
-		private void OnAdOpened()
-		{
-			Debug.Log("OnAdOpened");
-			AudioListener.volume = 0;
-			Time.timeScale = 0;
-		}
+		private void OnRewarded() =>
+			OnClosed();
 	}
 }

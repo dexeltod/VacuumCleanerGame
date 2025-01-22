@@ -7,7 +7,6 @@ namespace Sources.Infrastructure.Services.SceneTriggers
 	public class UpgradeTriggerObserver : MonoBehaviour, IUpgradeTriggerObserver
 	{
 		private bool _isCanSave;
-		public event Action<bool> TriggerEntered;
 
 		private void OnTriggerEnter(Collider other)
 		{
@@ -20,5 +19,7 @@ namespace Sources.Infrastructure.Services.SceneTriggers
 			if (other.TryGetComponent(out IPlayer _))
 				TriggerEntered!.Invoke(false);
 		}
+
+		public event Action<bool> TriggerEntered;
 	}
 }

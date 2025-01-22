@@ -15,24 +15,27 @@ using UnityEngine;
 namespace Plugins.Demigiant.DOTween.Modules
 {
 	/// <summary>
-	/// Shortcuts/functions that are not strictly related to specific Modules
-	/// but are available only on some Unity versions
+	///     Shortcuts/functions that are not strictly related to specific Modules
+	///     but are available only on some Unity versions
 	/// </summary>
 	public static class DOTweenModuleUnityVersion
 	{
 		#region Material
 
-		/// <summary>Tweens a Material's color using the given gradient
-		/// (NOTE 1: only uses the colors of the gradient, not the alphas - NOTE 2: creates a Sequence, not a Tweener).
-		/// Also stores the image as the tween's target so it can be used for filtered operations</summary>
-		/// <param name="gradient">The gradient to use</param><param name="duration">The duration of the tween</param>
+		/// <summary>
+		///     Tweens a Material's color using the given gradient
+		///     (NOTE 1: only uses the colors of the gradient, not the alphas - NOTE 2: creates a Sequence, not a Tweener).
+		///     Also stores the image as the tween's target so it can be used for filtered operations
+		/// </summary>
+		/// <param name="gradient">The gradient to use</param>
+		/// <param name="duration">The duration of the tween</param>
 		public static Sequence DOGradientColor(this Material target, Gradient gradient, float duration)
 		{
 			Sequence s = DG.Tweening.DOTween.Sequence();
 			GradientColorKey[] colors = gradient.colorKeys;
 			int len = colors.Length;
 
-			for (int i = 0; i < len; ++i)
+			for (var i = 0; i < len; ++i)
 			{
 				GradientColorKey c = colors[i];
 
@@ -64,9 +67,11 @@ namespace Plugins.Demigiant.DOTween.Modules
 			return s;
 		}
 
-		/// <summary>Tweens a Material's named color property using the given gradient
-		/// (NOTE 1: only uses the colors of the gradient, not the alphas - NOTE 2: creates a Sequence, not a Tweener).
-		/// Also stores the image as the tween's target so it can be used for filtered operations</summary>
+		/// <summary>
+		///     Tweens a Material's named color property using the given gradient
+		///     (NOTE 1: only uses the colors of the gradient, not the alphas - NOTE 2: creates a Sequence, not a Tweener).
+		///     Also stores the image as the tween's target so it can be used for filtered operations
+		/// </summary>
 		/// <param name="gradient">The gradient to use</param>
 		/// <param name="property">The name of the material property to tween (like _Tint or _SpecColor)</param>
 		/// <param name="duration">The duration of the tween</param>
@@ -76,7 +81,7 @@ namespace Plugins.Demigiant.DOTween.Modules
 			GradientColorKey[] colors = gradient.colorKeys;
 			int len = colors.Length;
 
-			for (int i = 0; i < len; ++i)
+			for (var i = 0; i < len; ++i)
 			{
 				GradientColorKey c = colors[i];
 
@@ -117,9 +122,10 @@ namespace Plugins.Demigiant.DOTween.Modules
 		#region CustomYieldInstructions
 
 		/// <summary>
-		/// Returns a <see cref="CustomYieldInstruction"/> that waits until the tween is killed or complete.
-		/// It can be used inside a coroutine as a yield.
-		/// <para>Example usage:</para><code>yield return myTween.WaitForCompletion(true);</code>
+		///     Returns a <see cref="CustomYieldInstruction" /> that waits until the tween is killed or complete.
+		///     It can be used inside a coroutine as a yield.
+		///     <para>Example usage:</para>
+		///     <code>yield return myTween.WaitForCompletion(true);</code>
 		/// </summary>
 		public static CustomYieldInstruction WaitForCompletion(this Tween t, bool returnCustomYieldInstruction)
 		{
@@ -138,9 +144,10 @@ namespace Plugins.Demigiant.DOTween.Modules
 		}
 
 		/// <summary>
-		/// Returns a <see cref="CustomYieldInstruction"/> that waits until the tween is killed or rewinded.
-		/// It can be used inside a coroutine as a yield.
-		/// <para>Example usage:</para><code>yield return myTween.WaitForRewind();</code>
+		///     Returns a <see cref="CustomYieldInstruction" /> that waits until the tween is killed or rewinded.
+		///     It can be used inside a coroutine as a yield.
+		///     <para>Example usage:</para>
+		///     <code>yield return myTween.WaitForRewind();</code>
 		/// </summary>
 		public static CustomYieldInstruction WaitForRewind(this Tween t, bool returnCustomYieldInstruction)
 		{
@@ -159,9 +166,10 @@ namespace Plugins.Demigiant.DOTween.Modules
 		}
 
 		/// <summary>
-		/// Returns a <see cref="CustomYieldInstruction"/> that waits until the tween is killed.
-		/// It can be used inside a coroutine as a yield.
-		/// <para>Example usage:</para><code>yield return myTween.WaitForKill();</code>
+		///     Returns a <see cref="CustomYieldInstruction" /> that waits until the tween is killed.
+		///     It can be used inside a coroutine as a yield.
+		///     <para>Example usage:</para>
+		///     <code>yield return myTween.WaitForKill();</code>
 		/// </summary>
 		public static CustomYieldInstruction WaitForKill(this Tween t, bool returnCustomYieldInstruction)
 		{
@@ -180,9 +188,11 @@ namespace Plugins.Demigiant.DOTween.Modules
 		}
 
 		/// <summary>
-		/// Returns a <see cref="CustomYieldInstruction"/> that waits until the tween is killed or has gone through the given amount of loops.
-		/// It can be used inside a coroutine as a yield.
-		/// <para>Example usage:</para><code>yield return myTween.WaitForElapsedLoops(2);</code>
+		///     Returns a <see cref="CustomYieldInstruction" /> that waits until the tween is killed or has gone through the given
+		///     amount of loops.
+		///     It can be used inside a coroutine as a yield.
+		///     <para>Example usage:</para>
+		///     <code>yield return myTween.WaitForElapsedLoops(2);</code>
 		/// </summary>
 		/// <param name="elapsedLoops">Elapsed loops to wait for</param>
 		public static CustomYieldInstruction WaitForElapsedLoops(
@@ -207,10 +217,11 @@ namespace Plugins.Demigiant.DOTween.Modules
 		}
 
 		/// <summary>
-		/// Returns a <see cref="CustomYieldInstruction"/> that waits until the tween is killed
-		/// or has reached the given time position (loops included, delays excluded).
-		/// It can be used inside a coroutine as a yield.
-		/// <para>Example usage:</para><code>yield return myTween.WaitForPosition(2.5f);</code>
+		///     Returns a <see cref="CustomYieldInstruction" /> that waits until the tween is killed
+		///     or has reached the given time position (loops included, delays excluded).
+		///     It can be used inside a coroutine as a yield.
+		///     <para>Example usage:</para>
+		///     <code>yield return myTween.WaitForPosition(2.5f);</code>
 		/// </summary>
 		/// <param name="position">Position (loops included, delays excluded) to wait for</param>
 		public static CustomYieldInstruction WaitForPosition(
@@ -235,10 +246,11 @@ namespace Plugins.Demigiant.DOTween.Modules
 		}
 
 		/// <summary>
-		/// Returns a <see cref="CustomYieldInstruction"/> that waits until the tween is killed or started
-		/// (meaning when the tween is set in a playing state the first time, after any eventual delay).
-		/// It can be used inside a coroutine as a yield.
-		/// <para>Example usage:</para><code>yield return myTween.WaitForStart();</code>
+		///     Returns a <see cref="CustomYieldInstruction" /> that waits until the tween is killed or started
+		///     (meaning when the tween is set in a playing state the first time, after any eventual delay).
+		///     It can be used inside a coroutine as a yield.
+		///     <para>Example usage:</para>
+		///     <code>yield return myTween.WaitForStart();</code>
 		/// </summary>
 		public static CustomYieldInstruction WaitForStart(this Tween t, bool returnCustomYieldInstruction)
 		{
@@ -264,8 +276,10 @@ namespace Plugins.Demigiant.DOTween.Modules
 
 		#region Material
 
-		/// <summary>Tweens a Material's named texture offset property with the given ID to the given value.
-		/// Also stores the material as the tween's target so it can be used for filtered operations</summary>
+		/// <summary>
+		///     Tweens a Material's named texture offset property with the given ID to the given value.
+		///     Also stores the material as the tween's target so it can be used for filtered operations
+		/// </summary>
 		/// <param name="endValue">The end value to reach</param>
 		/// <param name="propertyID">The ID of the material property to tween (also called nameID in Unity's manual)</param>
 		/// <param name="duration">The duration of the tween</param>
@@ -304,8 +318,10 @@ namespace Plugins.Demigiant.DOTween.Modules
 			return t;
 		}
 
-		/// <summary>Tweens a Material's named texture scale property with the given ID to the given value.
-		/// Also stores the material as the tween's target so it can be used for filtered operations</summary>
+		/// <summary>
+		///     Tweens a Material's named texture scale property with the given ID to the given value.
+		///     Also stores the material as the tween's target so it can be used for filtered operations
+		/// </summary>
 		/// <param name="endValue">The end value to reach</param>
 		/// <param name="propertyID">The ID of the material property to tween (also called nameID in Unity's manual)</param>
 		/// <param name="duration">The duration of the tween</param>
@@ -353,11 +369,12 @@ namespace Plugins.Demigiant.DOTween.Modules
 		#region Async Instructions
 
 		/// <summary>
-		/// Returns an async <see cref="System.Threading.Tasks.Task"/> that waits until the tween is killed or complete.
-		/// It can be used inside an async operation.
-		/// <para>Example usage:</para><code>await myTween.WaitForCompletion();</code>
+		///     Returns an async <see cref="System.Threading.Tasks.Task" /> that waits until the tween is killed or complete.
+		///     It can be used inside an async operation.
+		///     <para>Example usage:</para>
+		///     <code>await myTween.WaitForCompletion();</code>
 		/// </summary>
-		public static async Task AsyncWaitForCompletion(this Tween t)
+		public async static Task AsyncWaitForCompletion(this Tween t)
 		{
 			if (!t.active)
 			{
@@ -372,11 +389,12 @@ namespace Plugins.Demigiant.DOTween.Modules
 		}
 
 		/// <summary>
-		/// Returns an async <see cref="System.Threading.Tasks.Task"/> that waits until the tween is killed or rewinded.
-		/// It can be used inside an async operation.
-		/// <para>Example usage:</para><code>await myTween.AsyncWaitForRewind();</code>
+		///     Returns an async <see cref="System.Threading.Tasks.Task" /> that waits until the tween is killed or rewinded.
+		///     It can be used inside an async operation.
+		///     <para>Example usage:</para>
+		///     <code>await myTween.AsyncWaitForRewind();</code>
 		/// </summary>
-		public static async Task AsyncWaitForRewind(this Tween t)
+		public async static Task AsyncWaitForRewind(this Tween t)
 		{
 			if (!t.active)
 			{
@@ -392,11 +410,12 @@ namespace Plugins.Demigiant.DOTween.Modules
 		}
 
 		/// <summary>
-		/// Returns an async <see cref="System.Threading.Tasks.Task"/> that waits until the tween is killed.
-		/// It can be used inside an async operation.
-		/// <para>Example usage:</para><code>await myTween.AsyncWaitForKill();</code>
+		///     Returns an async <see cref="System.Threading.Tasks.Task" /> that waits until the tween is killed.
+		///     It can be used inside an async operation.
+		///     <para>Example usage:</para>
+		///     <code>await myTween.AsyncWaitForKill();</code>
 		/// </summary>
-		public static async Task AsyncWaitForKill(this Tween t)
+		public async static Task AsyncWaitForKill(this Tween t)
 		{
 			if (!t.active)
 			{
@@ -411,12 +430,14 @@ namespace Plugins.Demigiant.DOTween.Modules
 		}
 
 		/// <summary>
-		/// Returns an async <see cref="System.Threading.Tasks.Task"/> that waits until the tween is killed or has gone through the given amount of loops.
-		/// It can be used inside an async operation.
-		/// <para>Example usage:</para><code>await myTween.AsyncWaitForElapsedLoops();</code>
+		///     Returns an async <see cref="System.Threading.Tasks.Task" /> that waits until the tween is killed or has gone
+		///     through the given amount of loops.
+		///     It can be used inside an async operation.
+		///     <para>Example usage:</para>
+		///     <code>await myTween.AsyncWaitForElapsedLoops();</code>
 		/// </summary>
 		/// <param name="elapsedLoops">Elapsed loops to wait for</param>
-		public static async Task AsyncWaitForElapsedLoops(this Tween t, int elapsedLoops)
+		public async static Task AsyncWaitForElapsedLoops(this Tween t, int elapsedLoops)
 		{
 			if (!t.active)
 			{
@@ -431,13 +452,14 @@ namespace Plugins.Demigiant.DOTween.Modules
 		}
 
 		/// <summary>
-		/// Returns an async <see cref="System.Threading.Tasks.Task"/> that waits until the tween is killed or started
-		/// (meaning when the tween is set in a playing state the first time, after any eventual delay).
-		/// It can be used inside an async operation.
-		/// <para>Example usage:</para><code>await myTween.AsyncWaitForPosition();</code>
+		///     Returns an async <see cref="System.Threading.Tasks.Task" /> that waits until the tween is killed or started
+		///     (meaning when the tween is set in a playing state the first time, after any eventual delay).
+		///     It can be used inside an async operation.
+		///     <para>Example usage:</para>
+		///     <code>await myTween.AsyncWaitForPosition();</code>
 		/// </summary>
 		/// <param name="position">Position (loops included, delays excluded) to wait for</param>
-		public static async Task AsyncWaitForPosition(this Tween t, float position)
+		public async static Task AsyncWaitForPosition(this Tween t, float position)
 		{
 			if (!t.active)
 			{
@@ -453,11 +475,12 @@ namespace Plugins.Demigiant.DOTween.Modules
 		}
 
 		/// <summary>
-		/// Returns an async <see cref="System.Threading.Tasks.Task"/> that waits until the tween is killed.
-		/// It can be used inside an async operation.
-		/// <para>Example usage:</para><code>await myTween.AsyncWaitForKill();</code>
+		///     Returns an async <see cref="System.Threading.Tasks.Task" /> that waits until the tween is killed.
+		///     It can be used inside an async operation.
+		///     <para>Example usage:</para>
+		///     <code>await myTween.AsyncWaitForKill();</code>
 		/// </summary>
-		public static async Task AsyncWaitForStart(this Tween t)
+		public async static Task AsyncWaitForStart(this Tween t)
 		{
 			if (!t.active)
 			{
@@ -490,96 +513,72 @@ namespace Plugins.Demigiant.DOTween.Modules
 	{
 		public class WaitForCompletion : CustomYieldInstruction
 		{
-			public override bool keepWaiting
-			{
-				get { return t.active && !t.IsComplete(); }
-			}
+			private readonly Tween t;
 
-			readonly Tween t;
-
-			public WaitForCompletion(Tween tween)
-			{
+			public WaitForCompletion(Tween tween) =>
 				t = tween;
-			}
+
+			public override bool keepWaiting => t.active && !t.IsComplete();
 		}
 
 		public class WaitForRewind : CustomYieldInstruction
 		{
-			public override bool keepWaiting
-			{
-				get { return t.active && (!t.playedOnce || t.position * (t.CompletedLoops() + 1) > 0); }
-			}
+			private readonly Tween t;
 
-			readonly Tween t;
-
-			public WaitForRewind(Tween tween)
-			{
+			public WaitForRewind(Tween tween) =>
 				t = tween;
-			}
+
+			public override bool keepWaiting => t.active && (!t.playedOnce || t.position * (t.CompletedLoops() + 1) > 0);
 		}
 
 		public class WaitForKill : CustomYieldInstruction
 		{
-			public override bool keepWaiting
-			{
-				get { return t.active; }
-			}
+			private readonly Tween t;
 
-			readonly Tween t;
-
-			public WaitForKill(Tween tween)
-			{
+			public WaitForKill(Tween tween) =>
 				t = tween;
-			}
+
+			public override bool keepWaiting => t.active;
 		}
 
 		public class WaitForElapsedLoops : CustomYieldInstruction
 		{
-			public override bool keepWaiting
-			{
-				get { return t.active && t.CompletedLoops() < elapsedLoops; }
-			}
+			private readonly int elapsedLoops;
 
-			readonly Tween t;
-			readonly int elapsedLoops;
+			private readonly Tween t;
 
 			public WaitForElapsedLoops(Tween tween, int elapsedLoops)
 			{
 				t = tween;
 				this.elapsedLoops = elapsedLoops;
 			}
+
+			public override bool keepWaiting => t.active && t.CompletedLoops() < elapsedLoops;
 		}
 
 		public class WaitForPosition : CustomYieldInstruction
 		{
-			public override bool keepWaiting
-			{
-				get { return t.active && t.position * (t.CompletedLoops() + 1) < position; }
-			}
+			private readonly float position;
 
-			readonly Tween t;
-			readonly float position;
+			private readonly Tween t;
 
 			public WaitForPosition(Tween tween, float position)
 			{
 				t = tween;
 				this.position = position;
 			}
+
+			public override bool keepWaiting => t.active && t.position * (t.CompletedLoops() + 1) < position;
 		}
 
 		public class WaitForStart : CustomYieldInstruction
 		{
-			public override bool keepWaiting
-			{
-				get { return t.active && !t.playedOnce; }
-			}
+			private readonly Tween t;
 
-			readonly Tween t;
-
-			public WaitForStart(Tween tween)
-			{
+			public WaitForStart(Tween tween) =>
 				t = tween;
-			}
+
+			public override bool keepWaiting => t.active && !t.playedOnce;
 		}
 	}
 }

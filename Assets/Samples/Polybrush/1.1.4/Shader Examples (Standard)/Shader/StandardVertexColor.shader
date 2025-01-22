@@ -331,7 +331,7 @@ Shader "Polybrush/Standard Vertex Color"
                 float3 diffuseColor = ((_MainTex_var.rgb * i.vertexColor.rgb) * _Color.rgb);
                 // Need this for specular when using metallic
                 diffuseColor = DiffuseAndSpecularFromMetallic(diffuseColor, specularColor, specularColor,
-specularMonochrome);
+                                                              specularMonochrome);
                 specularMonochrome = 1.0 - specularMonochrome;
                 float NdotV = abs(dot(normalDirection, viewDirection));
                 float NdotH = saturate(dot(normalDirection, halfDirection));
@@ -433,7 +433,7 @@ specularMonochrome);
             {
                 float3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - i.posWorld.xyz);
                 UnityMetaInput o;
-                    UNITY_INITIALIZE_OUTPUT(UnityMetaInput, o);
+                UNITY_INITIALIZE_OUTPUT(UnityMetaInput, o);
 
                 o.Emission = 0;
 

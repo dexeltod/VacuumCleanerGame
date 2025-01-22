@@ -33,6 +33,10 @@ namespace Sources.Presentation.UI
 		private TweenerCore<Vector3, Vector3, VectorOptions> _playButtonTween;
 
 		public TextPhrasesList Translator => _translator;
+
+		public void OnDestroy() =>
+			_playButtonTween.Kill();
+
 		public Button PlayButton => _playButton;
 		public Button DeleteSavesButton => _deleteSavesButton;
 		public Button AddScoreButton => _addScoreButton;
@@ -52,9 +56,6 @@ namespace Sources.Presentation.UI
 		}
 
 		public override void Disable() =>
-			_playButtonTween.Kill();
-
-		public void OnDestroy() =>
 			_playButtonTween.Kill();
 
 		private void OnExit() =>

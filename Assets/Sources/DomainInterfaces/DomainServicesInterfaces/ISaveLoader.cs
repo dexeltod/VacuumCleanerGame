@@ -5,8 +5,8 @@ namespace Sources.DomainInterfaces.DomainServicesInterfaces
 {
 	public interface ISaveLoader
 	{
-		UniTask Save(IGlobalProgress @object, Action succeededCallback = null);
-		UniTask<IGlobalProgress> Load(Action succeededCallback);
 		UniTask Initialize();
+		UniTask<IGlobalProgress> Load(Action succeededCallback);
+		UniTask Save(IGlobalProgress @object, Action succeededCallback = null);
 	}
 }

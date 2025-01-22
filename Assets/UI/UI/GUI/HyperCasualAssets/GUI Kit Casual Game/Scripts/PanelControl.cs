@@ -7,13 +7,13 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Scripts
 {
 	public class PanelControl : MonoBehaviour
 	{
-		private int page = 0;
-		private bool isReady = false;
-		[SerializeField] private List<GameObject> panels = new List<GameObject>();
-		private TextMeshProUGUI textTitle;
+		[SerializeField] private List<GameObject> panels = new();
 		[SerializeField] private Transform panelTransform;
 		[SerializeField] private Button buttonPrev;
 		[SerializeField] private Button buttonNext;
+		private bool isReady;
+		private int page;
+		private TextMeshProUGUI textTitle;
 
 		private void Start()
 		{
@@ -43,7 +43,7 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Scripts
 			CheckControl();
 		}
 
-		void Update()
+		private void Update()
 		{
 			if (panels.Count <= 0 || !isReady) return;
 
@@ -86,7 +86,7 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Scripts
 			CheckControl();
 		}
 
-		void SetArrowActive()
+		private void SetArrowActive()
 		{
 			buttonPrev.gameObject.SetActive(
 				page > 0

@@ -1,21 +1,19 @@
 using System;
-using Sources.Infrastructure.Services;
+using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
 using Sources.Utils;
-using VContainer;
 
 namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 {
 	public class LoadingCurtainFactory
 	{
-		private readonly AssetFactory _factory;
+		private readonly IAssetLoader _loader;
 
-		[Inject]
-		public LoadingCurtainFactory(AssetFactory factory) =>
-			_factory = factory ?? throw new ArgumentNullException(nameof(factory));
+		public LoadingCurtainFactory(IAssetLoader loader) =>
+			_loader = loader ?? throw new ArgumentNullException(nameof(loader));
 
 		public ILoadingCurtain Create() =>
-			_factory.InstantiateAndGetComponent<LoadingCurtain>(ResourcesAssetPath.Scene.UIResources.LoadingCurtain);
+			_loader.InstantiateAndGetComponent<LoadingCurtain>(ResourcesAssetPath.Scene.UIResources.LoadingCurtain);
 	}
 }

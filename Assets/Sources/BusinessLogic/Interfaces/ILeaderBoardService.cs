@@ -5,7 +5,7 @@ namespace Sources.BusinessLogic.Interfaces
 {
 	public interface ILeaderBoardService
 	{
-		UniTask<Dictionary<string, int>> GetLeaders(int playerCount);
 		UniTask AddScore(int score);
+		UniTask<Dictionary<string, int>> GetLeaders(int playerCount);
 	}
 }

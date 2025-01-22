@@ -16,9 +16,8 @@ namespace Sources.Boot.Scripts.Factories.Domain
 		public ResourcesModelFactory(IResourcesRepository resourcesRepository) =>
 			_resourcesRepository = resourcesRepository ?? throw new ArgumentNullException(nameof(resourcesRepository));
 
-		public ResourceModel Create()
-		{
-			return new ResourceModel(
+		public ResourceModel Create() =>
+			new(
 				GetResource((int)CurrencyResourceType.Soft) as IntCurrency,
 				GetResource((int)CurrencyResourceType.Hard) as IntCurrency,
 				GetResource((int)CurrencyResourceType.CashScore) as IntCurrency,
@@ -27,7 +26,6 @@ namespace Sources.Boot.Scripts.Factories.Domain
 				StartCurrencyCount,
 				StartScoreCount
 			);
-		}
 
 		private Resource<int> GetResource(int type) =>
 			_resourcesRepository.GetResource<int>(type) as Resource<int>;

@@ -13,23 +13,23 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 	)]
 	public class CwRotate : MonoBehaviour
 	{
+		[SerializeField] private Vector3 angularVelocity = Vector3.up;
+
+		[SerializeField] private Space relativeTo;
+
 		/// <summary>The speed of the rotation in degrees per second.</summary>
 		public Vector3 AngularVelocity
 		{
-			set { angularVelocity = value; }
-			get { return angularVelocity; }
+			set => angularVelocity = value;
+			get => angularVelocity;
 		}
-
-		[SerializeField] private Vector3 angularVelocity = Vector3.up;
 
 		/// <summary>The rotation space.</summary>
 		public Space RelativeTo
 		{
-			set { relativeTo = value; }
-			get { return relativeTo; }
+			set => relativeTo = value;
+			get => relativeTo;
 		}
-
-		[SerializeField] private Space relativeTo;
 
 		protected virtual void Update()
 		{

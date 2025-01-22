@@ -12,9 +12,8 @@ namespace Sources.Infrastructure.Services.Decorators
 	public class SpeedDecorator : Decorator, ISpeedDecorator
 	{
 		private readonly IAdvertisement _advertisement;
-		private readonly IStat _speed;
 		private readonly float _baseSpeed;
-		private readonly ICoroutineRunner _coroutineRunnerProvider;
+		private readonly IStat _speed;
 
 		private readonly WaitForSeconds _waitForSeconds;
 
@@ -29,15 +28,15 @@ namespace Sources.Infrastructure.Services.Decorators
 		{
 			if (time < 0) throw new ArgumentOutOfRangeException(nameof(time));
 
-			_coroutineRunnerProvider = coroutineRunnerProvider ??
-			                           throw new ArgumentNullException(nameof(coroutineRunnerProvider));
+			CoroutineRunner = coroutineRunnerProvider ??
+			                  throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 			_speed = speed ?? throw new ArgumentNullException(nameof(speed));
 
 			_waitForSeconds = new WaitForSeconds(time);
 		}
 
-		private ICoroutineRunner CoroutineRunner => _coroutineRunnerProvider;
+		private ICoroutineRunner CoroutineRunner { get; }
 
 		public bool IsDecorated { get; private set; }
 

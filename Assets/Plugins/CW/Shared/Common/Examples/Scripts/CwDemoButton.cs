@@ -33,39 +33,11 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			SelectPrevious
 		}
 
-		/// <summary>The action that will be performed when this UI element is clicked.</summary>
-		public LinkType Link
-		{
-			set { link = value; }
-			get { return link; }
-		}
-
 		[SerializeField] private LinkType link;
-
-		/// <summary>The URL that will be opened.</summary>
-		public string UrlTarget
-		{
-			set { urlTarget = value; }
-			get { return urlTarget; }
-		}
 
 		[SerializeField] private string urlTarget;
 
-		/// <summary>If this GameObject is active, then the button will be faded in.</summary>
-		public Transform IsolateTarget
-		{
-			set { isolateTarget = value; }
-			get { return isolateTarget; }
-		}
-
 		[SerializeField] private Transform isolateTarget;
-
-		/// <summary>If this button is already selected and you click/tap it again, what should happen?</summary>
-		public ToggleType IsolateToggle
-		{
-			set { isolateToggle = value; }
-			get { return isolateToggle; }
-		}
 
 		[SerializeField] private ToggleType isolateToggle;
 
@@ -73,9 +45,32 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 
 		[NonSerialized] private Transform previousChild;
 
-		protected virtual void OnEnable()
+		/// <summary>The action that will be performed when this UI element is clicked.</summary>
+		public LinkType Link
 		{
-			cachedCanvasGroup = GetComponent<CanvasGroup>();
+			set => link = value;
+			get => link;
+		}
+
+		/// <summary>The URL that will be opened.</summary>
+		public string UrlTarget
+		{
+			set => urlTarget = value;
+			get => urlTarget;
+		}
+
+		/// <summary>If this GameObject is active, then the button will be faded in.</summary>
+		public Transform IsolateTarget
+		{
+			set => isolateTarget = value;
+			get => isolateTarget;
+		}
+
+		/// <summary>If this button is already selected and you click/tap it again, what should happen?</summary>
+		public ToggleType IsolateToggle
+		{
+			set => isolateToggle = value;
+			get => isolateToggle;
 		}
 
 		protected virtual void Update()
@@ -96,10 +91,7 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 						break;
 					case LinkType.Isolate:
 					{
-						if (isolateTarget != null)
-						{
-							alpha = isolateTarget.gameObject.activeInHierarchy == true ? 1.0f : 0.5f;
-						}
+						if (isolateTarget != null) alpha = isolateTarget.gameObject.activeInHierarchy ? 1.0f : 0.5f;
 					}
 						break;
 				}
@@ -110,20 +102,22 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			}
 		}
 
+		protected virtual void OnEnable()
+		{
+			cachedCanvasGroup = GetComponent<CanvasGroup>();
+		}
+
 		public void OnPointerDown(PointerEventData eventData)
 		{
 			switch (link)
 			{
 				case LinkType.PreviousScene:
 				{
-					var index = GetCurrentLevel();
+					int index = GetCurrentLevel();
 
 					if (index >= 0)
 					{
-						if (--index < 0)
-						{
-							index = GetLevelCount() - 1;
-						}
+						if (--index < 0) index = GetLevelCount() - 1;
 
 						LoadLevel(
 							index
@@ -134,14 +128,11 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 
 				case LinkType.NextScene:
 				{
-					var index = GetCurrentLevel();
+					int index = GetCurrentLevel();
 
 					if (index >= 0)
 					{
-						if (++index >= GetLevelCount())
-						{
-							index = 0;
-						}
+						if (++index >= GetLevelCount()) index = 0;
 
 						LoadLevel(
 							index
@@ -164,11 +155,9 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 						    urlTarget
 					    ) ==
 					    false)
-					{
 						Application.OpenURL(
 							urlTarget
 						);
-					}
 				}
 					break;
 
@@ -176,23 +165,18 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 				{
 					if (isolateTarget != null)
 					{
-						var parent = isolateTarget.transform.parent;
-						var active = isolateTarget.gameObject.activeSelf;
+						Transform parent = isolateTarget.transform.parent;
+						bool active = isolateTarget.gameObject.activeSelf;
 
 						foreach (Transform child in parent.transform)
-						{
-							if (child.gameObject.activeSelf == true)
+							if (child.gameObject.activeSelf)
 							{
-								if (child != isolateTarget)
-								{
-									previousChild = child;
-								}
+								if (child != isolateTarget) previousChild = child;
 
 								child.gameObject.SetActive(
 									false
 								);
 							}
-						}
 
 						switch (isolateToggle)
 						{
@@ -214,18 +198,14 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 
 							case ToggleType.SelectPrevious:
 							{
-								if (active == true && previousChild != null)
-								{
+								if (active && previousChild != null)
 									previousChild.gameObject.SetActive(
 										true
 									);
-								}
 								else
-								{
 									isolateTarget.gameObject.SetActive(
 										true
 									);
-								}
 							}
 								break;
 						}
@@ -237,27 +217,21 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 
 		private static int GetCurrentLevel()
 		{
-			var scene = SceneManager.GetActiveScene();
-			var index = scene.buildIndex;
+			Scene scene = SceneManager.GetActiveScene();
+			int index = scene.buildIndex;
 
 			if (index >= 0)
-			{
 				if (SceneManager.GetSceneByBuildIndex(
 					    index
 				    ).handle !=
 				    scene.handle)
-				{
 					return -1;
-				}
-			}
 
 			return index;
 		}
 
-		private static int GetLevelCount()
-		{
-			return SceneManager.sceneCountInBuildSettings;
-		}
+		private static int GetLevelCount() =>
+			SceneManager.sceneCountInBuildSettings;
 
 		private static void LoadLevel(int index)
 		{
@@ -294,13 +268,11 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 				    tgts,
 				    t => t.Link == CwDemoButton.LinkType.URL
 			    ))
-			{
 				Draw(
 					"urlTarget",
 					"The URL that will be opened.",
 					"Target"
 				);
-			}
 
 			if (Any(
 				    tgts,

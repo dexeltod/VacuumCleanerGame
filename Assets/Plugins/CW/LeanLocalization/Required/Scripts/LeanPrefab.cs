@@ -7,10 +7,14 @@ using Object = UnityEngine.Object;
 
 namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
-	/// <summary>This class stores a reference to an object (e.g. folder) in your project that contains LeanSource components so they can be registered.</summary>
+	/// <summary>
+	///     This class stores a reference to an object (e.g. folder) in your project that contains LeanSource components
+	///     so they can be registered.
+	/// </summary>
 	[Serializable]
 	public class LeanPrefab
 	{
+		private static List<LeanSource> tempSources = new();
 		public Object Root;
 
 		[SerializeField] private List<LeanSource> sources;
@@ -19,16 +23,11 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 		[NonSerialized] private bool buildingModified;
 
-		private static List<LeanSource> tempSources = new List<LeanSource>();
-
 		public List<LeanSource> Sources
 		{
 			get
 			{
-				if (sources == null)
-				{
-					sources = new List<LeanSource>();
-				}
+				if (sources == null) sources = new List<LeanSource>();
 
 				return sources;
 			}
@@ -36,10 +35,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 		public bool RebuildSources()
 		{
-			if (sources == null)
-			{
-				sources = new List<LeanSource>();
-			}
+			if (sources == null) sources = new List<LeanSource>();
 
 			if (Root != null)
 			{
@@ -54,7 +50,8 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 					return FinalizeBuild();
 				}
-				else if (Root is GameObject)
+
+				if (Root is GameObject)
 				{
 					buildingCount = 0;
 					buildingModified = false;
@@ -66,41 +63,37 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 					return FinalizeBuild();
 				}
 #if UNITY_EDITOR
-				else // Folder
+
+				// Folder
+				string rootPath = AssetDatabase.GetAssetPath(
+					Root
+				);
+
+				if (string.IsNullOrEmpty(
+					    rootPath
+				    ) ==
+				    false)
 				{
-					var rootPath = AssetDatabase.GetAssetPath(
-						Root
-					);
+					buildingCount = 0;
+					buildingModified = false;
 
-					if (string.IsNullOrEmpty(
-						    rootPath
-					    ) ==
-					    false)
-					{
-						buildingCount = 0;
-						buildingModified = false;
+					string basePath = Application.dataPath;
+					var baseTail = "Assets";
 
-						var basePath = Application.dataPath;
-						var baseTail = "Assets";
-
-						if (basePath.EndsWith(
-							    baseTail
-						    ) ==
-						    true)
-						{
-							basePath = basePath.Substring(
-								0,
-								basePath.Length - baseTail.Length
-							);
-						}
-
-						FindFromFolder(
-							basePath,
-							rootPath
+					if (basePath.EndsWith(
+						    baseTail
+					    ))
+						basePath = basePath.Substring(
+							0,
+							basePath.Length - baseTail.Length
 						);
 
-						return FinalizeBuild();
-					}
+					FindFromFolder(
+						basePath,
+						rootPath
+					);
+
+					return FinalizeBuild();
 				}
 #endif
 			}
@@ -110,7 +103,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 
 		private bool FinalizeBuild()
 		{
-			for (var i = sources.Count - 1; i >= buildingCount; i--)
+			for (int i = sources.Count - 1; i >= buildingCount; i--)
 			{
 				sources.RemoveAt(
 					i
@@ -151,64 +144,51 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			);
 
 			if (tempSources.Count > 0)
-			{
 				for (var i = 0; i < tempSources.Count; i++)
-				{
 					AddSource(
 						tempSources[i]
 					);
-				}
-			}
 			else
-			{
 				for (var i = 0; i < prefab.childCount; i++)
-				{
 					FindFromGameObject(
 						prefab.GetChild(
 							i
 						)
 					);
-				}
-			}
 		}
 #if UNITY_EDITOR
 		private void FindFromFolder(string basePath, string rootPath)
 		{
-			var fullPath = basePath + rootPath;
+			string fullPath = basePath + rootPath;
 
 			if (Directory.Exists(
 				    fullPath
-			    ) ==
-			    true)
+			    ))
 			{
-				var subFolders = Directory.GetDirectories(
+				string[] subFolders = Directory.GetDirectories(
 					fullPath
 				);
 
 				for (var i = 0; i < subFolders.Length; i++)
-				{
 					FindFromFolder(
 						basePath,
 						subFolders[i].Substring(
 							basePath.Length
 						)
 					);
-				}
 
-				var subAssets = Directory.GetFiles(
+				string[] subAssets = Directory.GetFiles(
 					fullPath,
 					"*.prefab"
 				);
 
 				for (var i = 0; i < subAssets.Length; i++)
-				{
 					FindFromFolder(
 						basePath,
 						subAssets[i].Substring(
 							basePath.Length
 						)
 					);
-				}
 			}
 			// File
 			else
@@ -218,11 +198,9 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				);
 
 				if (subGameObject != null)
-				{
 					FindFromGameObject(
 						subGameObject.transform
 					);
-				}
 			}
 		}
 #endif

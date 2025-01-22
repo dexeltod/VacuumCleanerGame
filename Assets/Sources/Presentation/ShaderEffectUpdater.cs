@@ -4,12 +4,11 @@ namespace Sources.Presentation
 {
 	public class ShaderEffectUpdater : MonoBehaviour
 	{
+		private readonly static int GlobalEffectRT = Shader.PropertyToID("_GlobalEffectRT");
+		private readonly static int OrthographicCamSize = Shader.PropertyToID("_OrthographicCamSize");
+		private readonly static int Position = Shader.PropertyToID("_Position");
 		[SerializeField] private RenderTexture _renderTexture;
 		[SerializeField] private Transform _target;
-
-		private static readonly int GlobalEffectRT = Shader.PropertyToID("_GlobalEffectRT");
-		private static readonly int OrthographicCamSize = Shader.PropertyToID("_OrthographicCamSize");
-		private static readonly int Position = Shader.PropertyToID("_Position");
 
 		// Start is called before the first frame update
 		private void Awake()

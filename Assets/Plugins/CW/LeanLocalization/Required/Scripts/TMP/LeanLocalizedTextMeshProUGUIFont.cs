@@ -3,7 +3,10 @@ using UnityEngine;
 
 namespace Plugins.CW.LeanLocalization.Required.Scripts.TMP
 {
-	/// <summary>This component will update a TextMeshProUGUI component's Font with a localized font, or use a fallback if none is found.</summary>
+	/// <summary>
+	///     This component will update a TextMeshProUGUI component's Font with a localized font, or use a fallback if none
+	///     is found.
+	/// </summary>
 	[ExecuteInEditMode]
 	[DisallowMultipleComponent]
 	[RequireComponent(
@@ -19,24 +22,6 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.TMP
 		)]
 		public TMP_FontAsset FallbackFont;
 
-		// This gets called every time the translation needs updating
-		public override void UpdateTranslation(LeanTranslation translation)
-		{
-			// Get the TextMeshProUGUI component attached to this GameObject
-			var text = GetComponent<TextMeshProUGUI>();
-
-			// Use translation?
-			if (translation != null && translation.Data is TMP_FontAsset)
-			{
-				text.font = (TMP_FontAsset)translation.Data;
-			}
-			// Use fallback?
-			else
-			{
-				text.font = FallbackFont;
-			}
-		}
-
 		protected virtual void Awake()
 		{
 			// Should we set FallbackFont?
@@ -48,6 +33,20 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.TMP
 				// Copy current text to fallback
 				FallbackFont = text.font;
 			}
+		}
+
+		// This gets called every time the translation needs updating
+		public override void UpdateTranslation(LeanTranslation translation)
+		{
+			// Get the TextMeshProUGUI component attached to this GameObject
+			var text = GetComponent<TextMeshProUGUI>();
+
+			// Use translation?
+			if (translation != null && translation.Data is TMP_FontAsset)
+				text.font = (TMP_FontAsset)translation.Data;
+			// Use fallback?
+			else
+				text.font = FallbackFont;
 		}
 	}
 }

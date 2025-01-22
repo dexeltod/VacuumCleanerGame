@@ -2,7 +2,10 @@
 
 namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 {
-	/// <summary>This component will update a Renderer component's sharedMaterial with a localized material, or use a fallback if none is found.</summary>
+	/// <summary>
+	///     This component will update a Renderer component's sharedMaterial with a localized material, or use a fallback
+	///     if none is found.
+	/// </summary>
 	[ExecuteInEditMode]
 	[DisallowMultipleComponent]
 	[RequireComponent(
@@ -26,29 +29,6 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 		)]
 		public int Index;
 
-		// This gets called every time the translation needs updating
-		public override void UpdateTranslation(LeanTranslation translation)
-		{
-			// Get the Renderer component attached to this GameObject
-			var renderer = GetComponent<Renderer>();
-
-			// Get the shared materials of this component
-			var sharedMaterials = renderer.sharedMaterials;
-
-			// Use translation?
-			if (translation != null && translation.Data is Material)
-			{
-				sharedMaterials[Index] = (Material)translation.Data;
-			}
-			// Use fallback?
-			else
-			{
-				sharedMaterials[Index] = FallbackMaterial;
-			}
-
-			renderer.sharedMaterials = sharedMaterials;
-		}
-
 		protected virtual void Awake()
 		{
 			// Should we set FallbackFont?
@@ -60,6 +40,25 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 				// Copy current material to fallback
 				FallbackMaterial = renderer.sharedMaterials[Index];
 			}
+		}
+
+		// This gets called every time the translation needs updating
+		public override void UpdateTranslation(LeanTranslation translation)
+		{
+			// Get the Renderer component attached to this GameObject
+			var renderer = GetComponent<Renderer>();
+
+			// Get the shared materials of this component
+			Material[] sharedMaterials = renderer.sharedMaterials;
+
+			// Use translation?
+			if (translation != null && translation.Data is Material)
+				sharedMaterials[Index] = (Material)translation.Data;
+			// Use fallback?
+			else
+				sharedMaterials[Index] = FallbackMaterial;
+
+			renderer.sharedMaterials = sharedMaterials;
 		}
 	}
 }

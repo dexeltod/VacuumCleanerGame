@@ -12,18 +12,19 @@ namespace Plugins.Joystick_Pack.Scripts.Editor
 	)]
 	public class JoystickEditor : UnityEditor.Editor
 	{
-		private SerializedProperty handleRange;
-		private SerializedProperty deadZone;
 		private SerializedProperty axisOptions;
-		private SerializedProperty snapX;
-		private SerializedProperty snapY;
 		protected SerializedProperty background;
-		private SerializedProperty handle;
 
-		protected Vector2 center = new Vector2(
+		protected Vector2 center = new(
 			0.5f,
 			0.5f
 		);
+
+		private SerializedProperty deadZone;
+		private SerializedProperty handle;
+		private SerializedProperty handleRange;
+		private SerializedProperty snapX;
+		private SerializedProperty snapY;
 
 		protected virtual void OnEnable()
 		{
@@ -62,7 +63,7 @@ namespace Plugins.Joystick_Pack.Scripts.Editor
 
 			if (handle != null)
 			{
-				RectTransform handleRect = (RectTransform)handle.objectReferenceValue;
+				var handleRect = (RectTransform)handle.objectReferenceValue;
 				handleRect.anchorMax = center;
 				handleRect.anchorMin = center;
 				handleRect.pivot = center;

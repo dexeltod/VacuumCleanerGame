@@ -21,37 +21,41 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			Manually
 		}
 
-		/// <summary>This allows you to control when the <b>Target</b> GameObject will be destroyed.
-		/// OnFirstFrame = As soon as Update runs (this component must be enabled).
-		/// AfterDelay = After the specified amount of <b>Seconds</b> has elapsed.
-		/// AfterDelayUnscaled = The same as AfterDelay, but using unscaledDeltaTime.
-		/// Manually = You must manually call the <b>DestroyNow</b> method.</summary>
-		public ExecuteType Execute
-		{
-			set { execute = value; }
-			get { return execute; }
-		}
-
 		[SerializeField] private ExecuteType execute = ExecuteType.Manually;
 
-		/// <summary>The GameObject that will be destroyed.
-		/// None/null = This GameObject.</summary>
-		public GameObject Target
+		[SerializeField] private GameObject target;
+
+		[SerializeField] private float seconds = -1.0f;
+
+		/// <summary>
+		///     This allows you to control when the <b>Target</b> GameObject will be destroyed.
+		///     OnFirstFrame = As soon as Update runs (this component must be enabled).
+		///     AfterDelay = After the specified amount of <b>Seconds</b> has elapsed.
+		///     AfterDelayUnscaled = The same as AfterDelay, but using unscaledDeltaTime.
+		///     Manually = You must manually call the <b>DestroyNow</b> method.
+		/// </summary>
+		public ExecuteType Execute
 		{
-			set { target = value; }
-			get { return target; }
+			set => execute = value;
+			get => execute;
 		}
 
-		[SerializeField] private GameObject target;
+		/// <summary>
+		///     The GameObject that will be destroyed.
+		///     None/null = This GameObject.
+		/// </summary>
+		public GameObject Target
+		{
+			set => target = value;
+			get => target;
+		}
 
 		/// <summary>The amount of seconds remaining until the GameObject is destroyed.</summary>
 		public float Seconds
 		{
-			set { seconds = value; }
-			get { return seconds; }
+			set => seconds = value;
+			get => seconds;
 		}
-
-		[SerializeField] private float seconds = -1.0f;
 
 		protected virtual void Update()
 		{
@@ -67,10 +71,7 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 				{
 					seconds -= Time.deltaTime;
 
-					if (seconds <= 0.0f)
-					{
-						DestroyNow();
-					}
+					if (seconds <= 0.0f) DestroyNow();
 				}
 					break;
 
@@ -78,10 +79,7 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 				{
 					seconds -= Time.unscaledDeltaTime;
 
-					if (seconds <= 0.0f)
-					{
-						DestroyNow();
-					}
+					if (seconds <= 0.0f) DestroyNow();
 				}
 					break;
 			}

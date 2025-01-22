@@ -14,11 +14,11 @@ namespace Sources.Presentation.SceneEntity
 
 		[SerializeField] private GameObject _sand;
 
-		[SerializeField, Range(0, 1)] private float _sandValueSliderTest;
+		[SerializeField] [Range(0, 1)] private float _sandValueSliderTest;
 
 		[SerializeField] private bool _isDebug;
 
-		private float _normalizedCount = 0;
+		private float _normalizedCount;
 
 		private void OnValidate()
 		{

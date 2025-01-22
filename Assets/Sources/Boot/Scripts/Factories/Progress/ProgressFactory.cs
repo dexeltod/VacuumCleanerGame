@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using Sources.BusinessLogic.Interfaces.Factory;
 using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.Services;
 using Sources.DomainInterfaces;
@@ -10,10 +11,10 @@ using VContainer;
 
 namespace Sources.Boot.Scripts.Factories.Progress
 {
-	public class ProgressFactory
+	public class ProgressFactory : IProgressFactory
 	{
-		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IClearProgressFactory _clearProgressFactory;
+		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 
 		private readonly ISaveLoader _saveLoader;
 

@@ -14,28 +14,22 @@ namespace Sources.Boot
 	[RequireComponent(typeof(UIElementGetterFacade))]
 	public class StartMenuViewModel : MonoBehaviour, IPostStartable
 	{
+		private const string MainMenu = "MainMenu";
+		private const string Settings = "Settings";
 		[SerializeField] private AudioMixer _audioMixer;
 		[SerializeField] private AudioSource _buttonSound;
 
-		private const string MainMenu = "MainMenu";
-		private const string Settings = "Settings";
+		private List<Button> _allButtons = new();
+		private ILevelConfigGetter _levelConfigGetter;
+		private ILocalizationService _localization;
 
 		private VisualElement _startMenu;
 		private UIElementGetterFacade _uiElementGetter;
 
 		private VisualElementSwitcher _visualElementSwitcher;
 
-		private List<Button> _allButtons = new();
-		private ILevelConfigGetter _levelConfigGetter;
-		private ILocalizationService _localization;
-
-		private void Construct(
-			ILevelConfigGetter levelConfigGetter,
-			ILocalizationService localization
-		)
-		{
-			_visualElementSwitcher = new VisualElementSwitcher();
-		}
+		private void OnDestroy() =>
+			UnsubscribeFromButtons();
 
 		public void PostStart()
 		{
@@ -46,8 +40,13 @@ namespace Sources.Boot
 			SubscribeOnButtons();
 		}
 
-		private void OnDestroy() =>
-			UnsubscribeFromButtons();
+		private void Construct(
+			ILevelConfigGetter levelConfigGetter,
+			ILocalizationService localization
+		)
+		{
+			_visualElementSwitcher = new VisualElementSwitcher();
+		}
 
 		private void CreateMenuWindows()
 		{
@@ -62,13 +61,13 @@ namespace Sources.Boot
 
 		private void SubscribeOnButtons()
 		{
-			foreach (var button in _allButtons)
+			foreach (Button button in _allButtons)
 				button.clicked += PlayButtonSound;
 		}
 
 		private void UnsubscribeFromButtons()
 		{
-			foreach (var button in _allButtons)
+			foreach (Button button in _allButtons)
 				button.clicked -= PlayButtonSound;
 		}
 

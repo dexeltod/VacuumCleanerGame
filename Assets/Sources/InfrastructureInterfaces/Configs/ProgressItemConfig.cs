@@ -15,7 +15,7 @@ namespace Sources.InfrastructureInterfaces.Configs
 		[SerializeField] private string _description;
 
 		[SerializeField] private ProgressType _type;
-		[SerializeField] private bool _isModifiable = false;
+		[SerializeField] private bool _isModifiable;
 
 		public ProgressType Type => _type;
 		public int Id => (int)_type;

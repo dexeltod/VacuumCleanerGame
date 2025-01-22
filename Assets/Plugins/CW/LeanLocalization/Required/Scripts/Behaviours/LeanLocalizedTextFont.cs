@@ -22,24 +22,6 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 		)]
 		public Font FallbackFont;
 
-		// This gets called every time the translation needs updating
-		public override void UpdateTranslation(LeanTranslation translation)
-		{
-			// Get the Text component attached to this GameObject
-			var text = GetComponent<Text>();
-
-			// Use translation?
-			if (translation != null && translation.Data is Font)
-			{
-				text.font = (Font)translation.Data;
-			}
-			// Use fallback?
-			else
-			{
-				text.font = FallbackFont;
-			}
-		}
-
 		protected virtual void Awake()
 		{
 			// Should we set FallbackFont?
@@ -51,6 +33,20 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 				// Copy current font to fallback
 				FallbackFont = text.font;
 			}
+		}
+
+		// This gets called every time the translation needs updating
+		public override void UpdateTranslation(LeanTranslation translation)
+		{
+			// Get the Text component attached to this GameObject
+			var text = GetComponent<Text>();
+
+			// Use translation?
+			if (translation != null && translation.Data is Font)
+				text.font = (Font)translation.Data;
+			// Use fallback?
+			else
+				text.font = FallbackFont;
 		}
 	}
 }

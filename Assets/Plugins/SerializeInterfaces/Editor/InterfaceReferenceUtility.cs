@@ -12,7 +12,23 @@ namespace Plugins.SerializeInterfaces.Editor
 		private const float _helpBoxHeight = 24;
 
 		private static GUIStyle _normalInterfaceLabelStyle;
-		private static bool _isOpeningQueued = false;
+		private static bool _isOpeningQueued;
+
+		public static float GetPropertyHeight(SerializedProperty property,
+			GUIContent label,
+			InterfaceObjectArguments args)
+		{
+			if (IsAssignedAndHasWrongInterface(
+				    property.objectReferenceValue,
+				    args
+			    ))
+				return EditorGUIUtility.singleLineHeight + _helpBoxHeight;
+
+			return EditorGUIUtility.singleLineHeight;
+		}
+
+		public static bool IsAsset(Type type) =>
+			!(type == typeof(GameObject) || type == typeof(Component));
 
 		public static void OnGUI(Rect position,
 			SerializedProperty property,
@@ -21,9 +37,9 @@ namespace Plugins.SerializeInterfaces.Editor
 		{
 			InitializeStyleIfNeeded();
 
-			var prevValue = property.objectReferenceValue;
+			Object prevValue = property.objectReferenceValue;
 			position.height = EditorGUIUtility.singleLineHeight;
-			var prevColor = GUI.backgroundColor;
+			Color prevColor = GUI.backgroundColor;
 
 			// change visuals if the assigned value doesn't implement the interface (e.g. after removing the interface from the target)
 			if (IsAssignedAndHasWrongInterface(
@@ -40,7 +56,7 @@ namespace Plugins.SerializeInterfaces.Editor
 			}
 
 			// disable if not assignable from drag and drop
-			var prevEnabledState = GUI.enabled;
+			bool prevEnabledState = GUI.enabled;
 			if (Event.current.type == EventType.DragUpdated &&
 			    position.Contains(
 				    Event.current.mousePosition
@@ -64,7 +80,7 @@ namespace Plugins.SerializeInterfaces.Editor
 			if (EditorGUI.EndChangeCheck())
 			{
 				// assign the value from the GameObject if it's dragged in, or reset if the value isn't assignable
-				var newVal = GetClosestAssignableComponent(
+				Object newVal = GetClosestAssignableComponent(
 					property.objectReferenceValue,
 					args
 				);
@@ -80,7 +96,7 @@ namespace Plugins.SerializeInterfaces.Editor
 			GUI.backgroundColor = prevColor;
 			GUI.enabled = prevEnabledState;
 
-			var controlID = GUIUtility.GetControlID(
+			int controlID = GUIUtility.GetControlID(
 				                FocusType.Passive
 			                ) -
 			                1;
@@ -99,35 +115,39 @@ namespace Plugins.SerializeInterfaces.Editor
 			);
 		}
 
-		private static void ShowWrongInterfaceErrorBox(Rect position, Object prevValue, InterfaceObjectArguments args)
-		{
-			var helpBoxPosition = position;
-			helpBoxPosition.y += position.height;
-			helpBoxPosition.height = _helpBoxHeight;
-			EditorGUI.HelpBox(
-				helpBoxPosition,
-				$"Object {prevValue.name} needs to implement the required interface {args.InterfaceType}.",
-				MessageType.Error
+		private static bool
+			CanAssign(Object[] objects, InterfaceObjectArguments args, bool lookIntoGameObject = false) =>
+			objects.All(
+				obj => CanAssign(
+					obj,
+					args,
+					lookIntoGameObject
+				)
 			);
-		}
 
-		private static void ReplaceObjectPickerForControl(SerializedProperty property,
-			InterfaceObjectArguments args,
-			int controlID)
+		private static bool CanAssign(Object obj, InterfaceObjectArguments args, bool lookIntoGameObject = false)
 		{
-			var currentObjectPickerID = EditorGUIUtility.GetObjectPickerControlID();
+			// We should never pass null, but this catches cases where scripts are broken (deleted/not compiled but still on the GameObject)
+			if (obj == null)
+				return false;
 
-			if (controlID == currentObjectPickerID && _isOpeningQueued == false)
-			{
-				if (EditorWindow.focusedWindow != null)
-				{
-					_isOpeningQueued = true;
-					EditorApplication.delayCall += () => OpenDelayed(
-						property,
+			if (args.InterfaceType.IsAssignableFrom(
+				    obj.GetType()
+			    ) &&
+			    args.ObjectType.IsAssignableFrom(
+				    obj.GetType()
+			    ))
+				return true;
+			if (lookIntoGameObject)
+				return CanAssign(
+					GetClosestAssignableComponent(
+						obj,
 						args
-					);
-				}
-			}
+					),
+					args
+				);
+
+			return false;
 		}
 
 		private static void DrawInterfaceNameLabel(Rect position, string displayString, int controlID)
@@ -136,13 +156,13 @@ namespace Plugins.SerializeInterfaces.Editor
 			{
 				const int additionalLeftWidth = 3;
 				const int verticalIndent = 1;
-				var content = EditorGUIUtility.TrTextContent(
+				GUIContent content = EditorGUIUtility.TrTextContent(
 					displayString
 				);
-				var size = _normalInterfaceLabelStyle.CalcSize(
+				Vector2 size = _normalInterfaceLabelStyle.CalcSize(
 					content
 				);
-				var interfaceLabelPosition = position;
+				Rect interfaceLabelPosition = position;
 				interfaceLabelPosition.width = size.x + additionalLeftWidth;
 				interfaceLabelPosition.x += position.width - interfaceLabelPosition.width - 18;
 				interfaceLabelPosition.height = interfaceLabelPosition.height - verticalIndent * 2;
@@ -159,116 +179,9 @@ namespace Plugins.SerializeInterfaces.Editor
 			}
 		}
 
-		private static void InitializeStyleIfNeeded()
-		{
-			if (_normalInterfaceLabelStyle != null)
-				return;
-
-			_normalInterfaceLabelStyle = new GUIStyle(
-				EditorStyles.label
-			);
-			var objectFieldStyle = EditorStyles.objectField;
-			_normalInterfaceLabelStyle.font = objectFieldStyle.font;
-			_normalInterfaceLabelStyle.fontSize = objectFieldStyle.fontSize;
-			_normalInterfaceLabelStyle.fontStyle = objectFieldStyle.fontStyle;
-			_normalInterfaceLabelStyle.alignment = TextAnchor.MiddleRight;
-			_normalInterfaceLabelStyle.padding = new RectOffset(
-				0,
-				2,
-				0,
-				0
-			);
-			var texture = new Texture2D(
-				1,
-				1
-			);
-			texture.SetPixel(
-				0,
-				0,
-				new Color(
-					40 / 255f,
-					40 / 255f,
-					40 / 255f
-				)
-			);
-			texture.Apply();
-			_normalInterfaceLabelStyle.normal.background = texture;
-		}
-
-		public static float GetPropertyHeight(SerializedProperty property,
-			GUIContent label,
-			InterfaceObjectArguments args)
-		{
-			if (IsAssignedAndHasWrongInterface(
-				    property.objectReferenceValue,
-				    args
-			    ))
-				return EditorGUIUtility.singleLineHeight + _helpBoxHeight;
-
-			return EditorGUIUtility.singleLineHeight;
-		}
-
-		public static bool IsAsset(Type type)
-		{
-			return !(type == typeof(GameObject) || type == typeof(Component));
-		}
-
-		private static void OpenDelayed(SerializedProperty property, InterfaceObjectArguments args)
-		{
-			var win = EditorWindow.focusedWindow;
-			win.Close();
-
-			var derivedTypes = TypeCache.GetTypesDerivedFrom(
-				args.InterfaceType
-			);
-			var sb = new StringBuilder();
-
-			foreach (var type in derivedTypes)
-			{
-				if (args.ObjectType.IsAssignableFrom(
-					    type
-				    ))
-					sb.Append(
-						"t:" + type.FullName + " "
-					);
-			}
-
-			// this makes sure we don't find anything if there's no type supplied
-			if (sb.Length == 0)
-				sb.Append(
-					"t:"
-				);
-
-			var filter = new ObjectSelectorFilter(
-				sb.ToString(),
-				obj => CanAssign(
-					obj,
-					args
-				)
-			);
-			ObjectSelectorWindow.Show(
-				property,
-				obj =>
-				{
-					property.objectReferenceValue = obj;
-					property.serializedObject.ApplyModifiedProperties();
-				},
-				(obj, success) =>
-				{
-					if (success) property.objectReferenceValue = obj;
-				},
-				filter
-			);
-			ObjectSelectorWindow.Instance.position = win.position;
-			var content = new GUIContent(
-				$"Select {args.ObjectType.Name} ({args.InterfaceType.Name})"
-			);
-			ObjectSelectorWindow.Instance.titleContent = content;
-			_isOpeningQueued = false;
-		}
-
 		/// <summary>
-		/// Gets itself if assignable, otherwise will get the root gameobject if it belongs to one, and return the first possible component
+		///     Gets itself if assignable, otherwise will get the root gameobject if it belongs to one, and return the first
+		///     possible component
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <param name="args"></param>
@@ -304,26 +217,40 @@ namespace Plugins.SerializeInterfaces.Editor
 			return null;
 		}
 
-		private static bool TryFindSuitableComponent(GameObject go,
-			InterfaceObjectArguments args,
-			out Component component)
+		private static void InitializeStyleIfNeeded()
 		{
-			foreach (var comp in go.GetComponents(
-				         args.ObjectType
-			         ))
-			{
-				if (CanAssign(
-					    comp,
-					    args
-				    ))
-				{
-					component = comp;
-					return true;
-				}
-			}
+			if (_normalInterfaceLabelStyle != null)
+				return;
 
-			component = null;
-			return false;
+			_normalInterfaceLabelStyle = new GUIStyle(
+				EditorStyles.label
+			);
+			GUIStyle objectFieldStyle = EditorStyles.objectField;
+			_normalInterfaceLabelStyle.font = objectFieldStyle.font;
+			_normalInterfaceLabelStyle.fontSize = objectFieldStyle.fontSize;
+			_normalInterfaceLabelStyle.fontStyle = objectFieldStyle.fontStyle;
+			_normalInterfaceLabelStyle.alignment = TextAnchor.MiddleRight;
+			_normalInterfaceLabelStyle.padding = new RectOffset(
+				0,
+				2,
+				0,
+				0
+			);
+			var texture = new Texture2D(
+				1,
+				1
+			);
+			texture.SetPixel(
+				0,
+				0,
+				new Color(
+					40 / 255f,
+					40 / 255f,
+					40 / 255f
+				)
+			);
+			texture.Apply();
+			_normalInterfaceLabelStyle.normal.background = texture;
 		}
 
 		private static bool IsAssignedAndHasWrongInterface(Object obj, InterfaceObjectArguments args) =>
@@ -332,38 +259,104 @@ namespace Plugins.SerializeInterfaces.Editor
 				obj.GetType()
 			);
 
-		private static bool
-			CanAssign(Object[] objects, InterfaceObjectArguments args, bool lookIntoGameObject = false) =>
-			objects.All(
-				obj => CanAssign(
-					obj,
-					args,
-					lookIntoGameObject
-				)
-			);
-
-		private static bool CanAssign(Object obj, InterfaceObjectArguments args, bool lookIntoGameObject = false)
+		private static void OpenDelayed(SerializedProperty property, InterfaceObjectArguments args)
 		{
-			// We should never pass null, but this catches cases where scripts are broken (deleted/not compiled but still on the GameObject)
-			if (obj == null)
-				return false;
+			EditorWindow win = EditorWindow.focusedWindow;
+			win.Close();
 
-			if (args.InterfaceType.IsAssignableFrom(
-				    obj.GetType()
-			    ) &&
-			    args.ObjectType.IsAssignableFrom(
-				    obj.GetType()
-			    ))
-				return true;
-			if (lookIntoGameObject)
-				return CanAssign(
-					GetClosestAssignableComponent(
-						obj,
-						args
-					),
-					args
+			TypeCache.TypeCollection derivedTypes = TypeCache.GetTypesDerivedFrom(
+				args.InterfaceType
+			);
+			var sb = new StringBuilder();
+
+			foreach (Type type in derivedTypes)
+				if (args.ObjectType.IsAssignableFrom(
+					    type
+				    ))
+					sb.Append(
+						"t:" + type.FullName + " "
+					);
+
+			// this makes sure we don't find anything if there's no type supplied
+			if (sb.Length == 0)
+				sb.Append(
+					"t:"
 				);
 
+			var filter = new ObjectSelectorFilter(
+				sb.ToString(),
+				obj => CanAssign(
+					obj,
+					args
+				)
+			);
+			ObjectSelectorWindow.Show(
+				property,
+				obj =>
+				{
+					property.objectReferenceValue = obj;
+					property.serializedObject.ApplyModifiedProperties();
+				},
+				(obj, success) =>
+				{
+					if (success) property.objectReferenceValue = obj;
+				},
+				filter
+			);
+			ObjectSelectorWindow.Instance.position = win.position;
+			var content = new GUIContent(
+				$"Select {args.ObjectType.Name} ({args.InterfaceType.Name})"
+			);
+			ObjectSelectorWindow.Instance.titleContent = content;
+			_isOpeningQueued = false;
+		}
+
+		private static void ReplaceObjectPickerForControl(SerializedProperty property,
+			InterfaceObjectArguments args,
+			int controlID)
+		{
+			int currentObjectPickerID = EditorGUIUtility.GetObjectPickerControlID();
+
+			if (controlID == currentObjectPickerID && _isOpeningQueued == false)
+				if (EditorWindow.focusedWindow != null)
+				{
+					_isOpeningQueued = true;
+					EditorApplication.delayCall += () => OpenDelayed(
+						property,
+						args
+					);
+				}
+		}
+
+		private static void ShowWrongInterfaceErrorBox(Rect position, Object prevValue, InterfaceObjectArguments args)
+		{
+			Rect helpBoxPosition = position;
+			helpBoxPosition.y += position.height;
+			helpBoxPosition.height = _helpBoxHeight;
+			EditorGUI.HelpBox(
+				helpBoxPosition,
+				$"Object {prevValue.name} needs to implement the required interface {args.InterfaceType}.",
+				MessageType.Error
+			);
+		}
+
+		private static bool TryFindSuitableComponent(GameObject go,
+			InterfaceObjectArguments args,
+			out Component component)
+		{
+			foreach (Component comp in go.GetComponents(
+				         args.ObjectType
+			         ))
+				if (CanAssign(
+					    comp,
+					    args
+				    ))
+				{
+					component = comp;
+					return true;
+				}
+
+			component = null;
 			return false;
 		}
 	}

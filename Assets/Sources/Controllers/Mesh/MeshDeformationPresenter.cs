@@ -6,12 +6,12 @@ namespace Sources.Controllers.Mesh
 {
 	public class MeshDeformationPresenter : IMeshDeformationController
 	{
+		private readonly MeshCollider _meshCollider;
 		private readonly UnityEngine.Mesh _meshModifiable;
 
 		private readonly float _meshModificatorRadiusDeformation;
 
 		private readonly IResourcesProgressPresenter _resourceMaxScore;
-		private readonly MeshCollider _meshCollider;
 
 		public MeshDeformationPresenter(
 			UnityEngine.Mesh meshModifiable,
@@ -34,11 +34,10 @@ namespace Sources.Controllers.Mesh
 			if (_resourceMaxScore.IsMaxScoreReached == false)
 				return;
 
-			bool isDeforming = false;
+			var isDeforming = false;
 			Vector3[] vertices = _meshModifiable.vertices;
 
-			for (int i = 0; i < _meshModifiable.vertexCount; i++)
-			{
+			for (var i = 0; i < _meshModifiable.vertexCount; i++)
 				foreach (ContactPoint contact in collision.contacts)
 				{
 					Vector3 point = transform.InverseTransformPoint(contact.point);
@@ -50,7 +49,6 @@ namespace Sources.Controllers.Mesh
 					vertices[i] += newVertex;
 					isDeforming = true;
 				}
-			}
 
 			if (!isDeforming)
 				return;

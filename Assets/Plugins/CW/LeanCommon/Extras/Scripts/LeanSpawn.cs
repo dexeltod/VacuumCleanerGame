@@ -4,8 +4,10 @@ using UnityEngine;
 
 namespace Plugins.CW.LeanCommon.Extras.Scripts
 {
-	/// <summary>This component allows you to spawn a prefab at the specified world point.
-	/// NOTE: For this component to work you must manually call the <b>Spawn</b> method from somewhere.</summary>
+	/// <summary>
+	///     This component allows you to spawn a prefab at the specified world point.
+	///     NOTE: For this component to work you must manually call the <b>Spawn</b> method from somewhere.
+	/// </summary>
 	[HelpURL(
 		Required.Scripts.LeanCommon.HelpUrlPrefix + "LeanSpawn"
 	)]
@@ -20,41 +22,41 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			Prefab
 		}
 
+		[SerializeField] private Transform prefab;
+
+		[SerializeField] private SourceType defaultPosition;
+
+		[SerializeField] private SourceType defaultRotation;
+
 		/// <summary>The prefab that this component can spawn.</summary>
 		public Transform Prefab
 		{
-			set { prefab = value; }
-			get { return prefab; }
+			set => prefab = value;
+			get => prefab;
 		}
-
-		[SerializeField] private Transform prefab;
 
 		/// <summary>If you call <b>Spawn()</b>, where should the position come from?</summary>
 		public SourceType DefaultPosition
 		{
-			set { defaultPosition = value; }
-			get { return defaultPosition; }
+			set => defaultPosition = value;
+			get => defaultPosition;
 		}
-
-		[SerializeField] private SourceType defaultPosition;
 
 		/// <summary>If you call <b>Spawn()</b>, where should the rotation come from?</summary>
 		public SourceType DefaultRotation
 		{
-			set { defaultRotation = value; }
-			get { return defaultRotation; }
+			set => defaultRotation = value;
+			get => defaultRotation;
 		}
-
-		[SerializeField] private SourceType defaultRotation;
 
 		/// <summary>This will spawn <b>Prefab</b> at the current <b>Transform.position</b>.</summary>
 		public void Spawn()
 		{
 			if (prefab != null)
 			{
-				var position = defaultPosition == SourceType.Prefab ? prefab.position : transform.position;
-				var rotation = defaultRotation == SourceType.Prefab ? prefab.rotation : transform.rotation;
-				var clone = Instantiate(
+				Vector3 position = defaultPosition == SourceType.Prefab ? prefab.position : transform.position;
+				Quaternion rotation = defaultRotation == SourceType.Prefab ? prefab.rotation : transform.rotation;
+				Transform clone = Instantiate(
 					prefab,
 					position,
 					rotation
@@ -71,8 +73,8 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 		{
 			if (prefab != null)
 			{
-				var rotation = defaultRotation == SourceType.Prefab ? prefab.rotation : transform.rotation;
-				var clone = Instantiate(
+				Quaternion rotation = defaultRotation == SourceType.Prefab ? prefab.rotation : transform.rotation;
+				Transform clone = Instantiate(
 					prefab,
 					position,
 					rotation

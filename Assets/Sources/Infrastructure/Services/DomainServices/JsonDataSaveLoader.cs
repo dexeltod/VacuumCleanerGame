@@ -6,12 +6,25 @@ namespace Sources.Infrastructure.Services.DomainServices
 	public class JsonDataSaveLoader
 	{
 		private readonly string _fileFormat;
-		private string _directoryPath => Application.persistentDataPath + "/Data/";
 
 		public JsonDataSaveLoader()
 		{
 			_fileFormat = ".json";
 			Directory.CreateDirectory(_directoryPath);
+		}
+
+		private string _directoryPath => Application.persistentDataPath + "/Data/";
+
+		public T Load<T>(string file)
+		{
+			string json = GetJson(file);
+			return JsonUtility.FromJson<T>(json);
+		}
+
+		public string Load(string file)
+		{
+			string json = GetJson(file);
+			return JsonUtility.FromJson<string>(json);
 		}
 
 		public void Save(string fileName, object data)
@@ -25,23 +38,24 @@ namespace Sources.Infrastructure.Services.DomainServices
 			}
 		}
 
-		public T Load<T>(string file)
+		private void CreateNewFileIfNull(string filePath)
 		{
-			var json = GetJson(file);
-			return JsonUtility.FromJson<T>(json);
-		}
+			if (File.Exists(filePath) == false)
+			{
+				FileStream file = File.Create(filePath);
 
-		public string Load(string file)
-		{
-			var json = GetJson(file);
-			return JsonUtility.FromJson<string>(json);
+				using (var writer = new StreamWriter(file))
+				{
+					writer.WriteLine("");
+				}
+			}
 		}
 
 		private string GetJson(string fileName)
 		{
 			string path = _directoryPath + fileName + _fileFormat;
 
-			string json = "";
+			var json = "";
 			json = ReadFile(path, json);
 			return json;
 		}
@@ -59,19 +73,6 @@ namespace Sources.Infrastructure.Services.DomainServices
 			}
 
 			return json;
-		}
-
-		private void CreateNewFileIfNull(string filePath)
-		{
-			if (File.Exists(filePath) == false)
-			{
-				var file = File.Create(filePath);
-
-				using (var writer = new StreamWriter(file))
-				{
-					writer.WriteLine("");
-				}
-			}
 		}
 	}
 }

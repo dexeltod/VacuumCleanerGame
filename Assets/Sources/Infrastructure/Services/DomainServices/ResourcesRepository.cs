@@ -6,15 +6,13 @@ namespace Sources.Infrastructure.Services.DomainServices
 {
 	public class ResourcesRepository : IResourcesRepository
 	{
-		private readonly Dictionary<int, IResource<int>> _intResources;
 		private readonly Dictionary<int, IResource<float>> _floatResources;
+		private readonly Dictionary<int, IResource<int>> _intResources;
 
 		public ResourcesRepository(
 			Dictionary<int, IResource<int>> intResources
-		)
-		{
+		) =>
 			_intResources = intResources;
-		}
 
 		public IResource<T> GetResource<T>(int id) =>
 			FindResource<T>(id);

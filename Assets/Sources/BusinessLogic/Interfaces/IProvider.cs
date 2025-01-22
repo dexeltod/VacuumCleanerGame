@@ -4,12 +4,12 @@ namespace Sources.BusinessLogic.Interfaces
 	{
 		public T Self { get; }
 
+		TI GetContract<TI>() where TI : class;
+
 		public T Register(T instance);
 
 		T Register<TI>(T instance);
 
 		void Unregister();
-
-		TI GetContract<TI>() where TI : class;
 	}
 }

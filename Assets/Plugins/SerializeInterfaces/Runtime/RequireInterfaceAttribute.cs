@@ -4,8 +4,7 @@ using UnityEngine;
 namespace Plugins.SerializeInterfaces.Runtime
 {
 	[AttributeUsage(
-		AttributeTargets.Field,
-		AllowMultiple = false
+		AttributeTargets.Field
 	)]
 	public class RequireInterfaceAttribute : PropertyAttribute
 	{

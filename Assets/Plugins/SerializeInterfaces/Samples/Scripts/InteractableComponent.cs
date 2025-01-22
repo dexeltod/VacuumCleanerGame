@@ -9,7 +9,7 @@ namespace Plugins.SerializeInterfaces.Samples.Scripts
 		public void Interact()
 		{
 			Debug.Log(
-				$"Interacted with component: {this.name}"
+				$"Interacted with component: {name}"
 			);
 		}
 	}

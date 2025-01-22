@@ -16,12 +16,15 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 	)]
 	public class LeanSelectable : MonoBehaviour
 	{
-		[Serializable]
-		public class LeanSelectEvent : UnityEvent<LeanSelect>
-		{
-		}
+		public static LinkedList<LeanSelectable> Instances = new();
 
-		public static LinkedList<LeanSelectable> Instances = new LinkedList<LeanSelectable>();
+		protected static List<LeanSelectable> tempSelectables = new();
+
+		[SerializeField] private bool selfSelected;
+
+		[SerializeField] private LeanSelectEvent onSelected;
+
+		[SerializeField] private LeanSelectEvent onDeselected;
 		[NonSerialized] private LinkedListNode<LeanSelectable> instancesNode;
 
 		public bool SelfSelected
@@ -31,7 +34,7 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 				if (selfSelected != value)
 				{
 					selfSelected = value;
-					if (value == true)
+					if (value)
 						InvokeOnSelected(
 							null
 						);
@@ -41,14 +44,14 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 						);
 				}
 			}
-			get { return selfSelected; }
+			get => selfSelected;
 		}
 
-		[SerializeField] private bool selfSelected;
-
-		/// <summary>This is invoked every time this object is selected.
-		/// LeanSelect = The component that caused the selection (null = self selection).
-		/// NOTE: This may occur multiple times.</summary>
+		/// <summary>
+		///     This is invoked every time this object is selected.
+		///     LeanSelect = The component that caused the selection (null = self selection).
+		///     NOTE: This may occur multiple times.
+		/// </summary>
 		public LeanSelectEvent OnSelected
 		{
 			get
@@ -58,11 +61,11 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			}
 		}
 
-		[SerializeField] private LeanSelectEvent onSelected;
-
-		/// <summary>This is invoked every time this object is deselected.
-		/// LeanSelect = The component that caused the deselection (null = self deselection).
-		/// NOTE: This may occur multiple times.</summary>
+		/// <summary>
+		///     This is invoked every time this object is deselected.
+		///     LeanSelect = The component that caused the deselection (null = self deselection).
+		///     NOTE: This may occur multiple times.
+		/// </summary>
 		public LeanSelectEvent OnDeselected
 		{
 			get
@@ -72,18 +75,6 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			}
 		}
 
-		[SerializeField] private LeanSelectEvent onDeselected;
-
-		public static event Action<LeanSelectable> OnAnyEnabled;
-
-		public static event Action<LeanSelectable> OnAnyDisabled;
-
-		public static event Action<LeanSelect, LeanSelectable> OnAnySelected;
-
-		public static event Action<LeanSelect, LeanSelectable> OnAnyDeselected;
-
-		protected static List<LeanSelectable> tempSelectables = new List<LeanSelectable>();
-
 		/// <summary>This will tell you how many <b>LeanSelect</b> components in the scene currently have this object selected.</summary>
 		public int SelectedCount
 		{
@@ -91,46 +82,33 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			{
 				var count = 0;
 
-				if (selfSelected == true)
-				{
-					count += 1;
-				}
+				if (selfSelected) count += 1;
 
-				foreach (var select in LeanSelect.Instances)
-				{
+				foreach (LeanSelect select in LeanSelect.Instances)
 					if (select.IsSelected(
 						    this
-					    ) ==
-					    true)
-					{
+					    ))
 						count += 1;
-					}
-				}
 
 				return count;
 			}
 		}
 
-		/// <summary>This will tell you if this object is self selected, or selected by any <b>LeanSelect</b> components in the scene.</summary>
+		/// <summary>
+		///     This will tell you if this object is self selected, or selected by any <b>LeanSelect</b> components in the
+		///     scene.
+		/// </summary>
 		public bool IsSelected
 		{
 			get
 			{
-				if (selfSelected == true)
-				{
-					return true;
-				}
+				if (selfSelected) return true;
 
-				foreach (var select in LeanSelect.Instances)
-				{
+				foreach (LeanSelect select in LeanSelect.Instances)
 					if (select.IsSelected(
 						    this
-					    ) ==
-					    true)
-					{
+					    ))
 						return true;
-					}
-				}
 
 				return false;
 			}
@@ -142,80 +120,11 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			{
 				var count = 0;
 
-				foreach (var selectable in Instances)
-				{
-					if (selectable.IsSelected == true)
-					{
+				foreach (LeanSelectable selectable in Instances)
+					if (selectable.IsSelected)
 						count += 1;
-					}
-				}
 
 				return count;
-			}
-		}
-
-		[ContextMenu(
-			"Deselect"
-		)]
-		public void Deselect()
-		{
-			SelfSelected = false;
-
-			foreach (var select in LeanSelect.Instances)
-			{
-				select.Deselect(
-					this
-				);
-			}
-		}
-
-		/// <summary>This deselects all objects in the scene.</summary>
-		public static void DeselectAll()
-		{
-			foreach (var select in LeanSelect.Instances)
-			{
-				select.DeselectAll();
-			}
-
-			foreach (var selectable in Instances)
-			{
-				selectable.SelfSelected = false;
-			}
-		}
-
-		public void InvokeOnSelected(LeanSelect select)
-		{
-			if (onSelected != null)
-			{
-				onSelected.Invoke(
-					select
-				);
-			}
-
-			if (OnAnySelected != null)
-			{
-				OnAnySelected.Invoke(
-					select,
-					this
-				);
-			}
-		}
-
-		public void InvokeOnDeslected(LeanSelect select)
-		{
-			if (onDeselected != null)
-			{
-				onDeselected.Invoke(
-					select
-				);
-			}
-
-			if (OnAnyDeselected != null)
-			{
-				OnAnyDeselected.Invoke(
-					select,
-					this
-				);
 			}
 		}
 
@@ -226,11 +135,9 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			);
 
 			if (OnAnyEnabled != null)
-			{
 				OnAnyEnabled.Invoke(
 					this
 				);
-			}
 		}
 
 		protected virtual void OnDisable()
@@ -241,16 +148,76 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			instancesNode = null;
 
 			if (OnAnyDisabled != null)
-			{
 				OnAnyDisabled.Invoke(
 					this
 				);
-			}
 		}
 
 		protected virtual void OnDestroy()
 		{
 			Deselect();
+		}
+
+		public static event Action<LeanSelectable> OnAnyEnabled;
+
+		public static event Action<LeanSelectable> OnAnyDisabled;
+
+		public static event Action<LeanSelect, LeanSelectable> OnAnySelected;
+
+		public static event Action<LeanSelect, LeanSelectable> OnAnyDeselected;
+
+		[ContextMenu(
+			"Deselect"
+		)]
+		public void Deselect()
+		{
+			SelfSelected = false;
+
+			foreach (LeanSelect select in LeanSelect.Instances)
+				select.Deselect(
+					this
+				);
+		}
+
+		/// <summary>This deselects all objects in the scene.</summary>
+		public static void DeselectAll()
+		{
+			foreach (LeanSelect select in LeanSelect.Instances) select.DeselectAll();
+
+			foreach (LeanSelectable selectable in Instances) selectable.SelfSelected = false;
+		}
+
+		public void InvokeOnSelected(LeanSelect select)
+		{
+			if (onSelected != null)
+				onSelected.Invoke(
+					select
+				);
+
+			if (OnAnySelected != null)
+				OnAnySelected.Invoke(
+					select,
+					this
+				);
+		}
+
+		public void InvokeOnDeslected(LeanSelect select)
+		{
+			if (onDeselected != null)
+				onDeselected.Invoke(
+					select
+				);
+
+			if (OnAnyDeselected != null)
+				OnAnyDeselected.Invoke(
+					select,
+					this
+				);
+		}
+
+		[Serializable]
+		public class LeanSelectEvent : UnityEvent<LeanSelect>
+		{
 		}
 	}
 
@@ -261,8 +228,8 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 	)]
 	public class LeanSelectable_Editor : CwEditor
 	{
-		[NonSerialized] LeanSelectable tgt;
-		[NonSerialized] LeanSelectable[] tgts;
+		[NonSerialized] private LeanSelectable tgt;
+		[NonSerialized] private LeanSelectable[] tgts;
 
 		protected override void OnInspector()
 		{
@@ -275,7 +242,7 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 
 			Separator();
 
-			var showUnusedEvents = DrawFoldout(
+			bool showUnusedEvents = DrawFoldout(
 				"Show Unused Events",
 				"Show all events?"
 			);
@@ -300,9 +267,7 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 
 			if (Draw(
 				    "selfSelected"
-			    ) ==
-			    true)
-			{
+			    ))
 				Each(
 					tgts,
 					t => t.SelfSelected = serializedObject.FindProperty(
@@ -310,17 +275,13 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 					).boolValue,
 					true
 				);
-			}
 
 			BeginDisabled();
 
-			foreach (var select in LeanSelect.Instances)
-			{
+			foreach (LeanSelect select in LeanSelect.Instances)
 				if (IsSelectedByAnyTgt(
 					    select
-				    ) ==
-				    true)
-				{
+				    ))
 					EditorGUILayout.ObjectField(
 						new GUIContent(
 							"selectedBy"
@@ -329,8 +290,6 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 						typeof(LeanSelect),
 						true
 					);
-				}
-			}
 
 			EndDisabled();
 			EndIndent();
@@ -338,43 +297,34 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 
 		private bool IsSelectedByAnyTgt(LeanSelect select)
 		{
-			foreach (var tgt in tgts)
-			{
+			foreach (LeanSelectable tgt in tgts)
 				if (select.IsSelected(
 					    tgt
-				    ) ==
-				    true)
-				{
+				    ))
 					return true;
-				}
-			}
 
 			return false;
 		}
 
 		protected virtual void DrawEvents(bool showUnusedEvents)
 		{
-			if (showUnusedEvents == true ||
+			if (showUnusedEvents ||
 			    Any(
 				    tgts,
 				    t => t.OnSelected.GetPersistentEventCount() > 0
 			    ))
-			{
 				Draw(
 					"onSelected"
 				);
-			}
 
-			if (showUnusedEvents == true ||
+			if (showUnusedEvents ||
 			    Any(
 				    tgts,
 				    t => t.OnDeselected.GetPersistentEventCount() > 0
 			    ))
-			{
 				Draw(
 					"onDeselected"
 				);
-			}
 		}
 	}
 

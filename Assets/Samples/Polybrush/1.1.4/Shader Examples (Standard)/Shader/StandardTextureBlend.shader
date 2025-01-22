@@ -133,7 +133,7 @@ Shader "Polybrush/Standard Texture Blend Bump"
                 float3 _Texture3Bump_var = UnpackNormal(tex2D(_Texture3Bump,TRANSFORM_TEX(i.uv0, _Texture3Bump)));
                 float3 normalLocal = (lerp(
                     lerp(lerp(lerp(_BaseBump_var.rgb, _BaseBump_var.rgb, node_6660.r), _Texture1Bump_var.rgb,
-             node_6660.g), _Texture2Bump_var.rgb, node_6660.b),
+                              node_6660.g), _Texture2Bump_var.rgb, node_6660.b),
                     _Texture3Bump_var.rgb,
                     node_6660.a));
                 float3 normalDirection = normalize(mul(normalLocal, tangentTransform)); // Perturbed normals
@@ -190,10 +190,10 @@ Shader "Polybrush/Standard Texture Blend Bump"
                 float4 _Texture3_var = tex2D(_Texture3,TRANSFORM_TEX(i.uv0, _Texture3));
                 float3 diffuseColor = (lerp(
                     lerp(lerp(lerp(_MainTex_var.rgb, _MainTex_var.rgb, node_6660.r), _Texture1_var.rgb, node_6660.g),
-              _Texture2_var.rgb, node_6660.b), _Texture3_var.rgb,
+                         _Texture2_var.rgb, node_6660.b), _Texture3_var.rgb,
                     node_6660.a)); // Need this for specular when using metallic
                 diffuseColor = DiffuseAndSpecularFromMetallic(diffuseColor, specularColor, specularColor,
-                                                                      specularMonochrome);
+                                                              specularMonochrome);
                 specularMonochrome = 1.0 - specularMonochrome;
                 float NdotV = abs(dot(normalDirection, viewDirection));
                 float NdotH = saturate(dot(normalDirection, halfDirection));
@@ -329,11 +329,12 @@ Shader "Polybrush/Standard Texture Blend Bump"
                 float3 _Texture3Bump_var = UnpackNormal(tex2D(_Texture3Bump,TRANSFORM_TEX(i.uv0, _Texture3Bump)));
                 float3 normalLocal = (lerp(
                     lerp(lerp(lerp(_BaseBump_var.rgb, _BaseBump_var.rgb, node_6660.r), _Texture1Bump_var.rgb,
-         node_6660.g), _Texture2Bump_var.rgb, node_6660.b),
+                              node_6660.g), _Texture2Bump_var.rgb, node_6660.b),
                     _Texture3Bump_var.rgb, node_6660.a));
                 float3 normalDirection = normalize(mul(normalLocal, tangentTransform)); // Perturbed normals
                 float3 lightDirection = normalize(lerp(_WorldSpaceLightPos0.xyz,
-                    _WorldSpaceLightPos0.xyz - i.posWorld.xyz, _WorldSpaceLightPos0.w));
+                                                       _WorldSpaceLightPos0.xyz - i.posWorld.xyz,
+                                                       _WorldSpaceLightPos0.w));
                 float3 lightColor = _LightColor0.rgb;
                 float3 halfDirection = normalize(viewDirection + lightDirection);
                 ////// Lighting:
@@ -357,10 +358,10 @@ Shader "Polybrush/Standard Texture Blend Bump"
                 float4 _Texture3_var = tex2D(_Texture3,TRANSFORM_TEX(i.uv0, _Texture3));
                 float3 diffuseColor = (lerp(
                     lerp(lerp(lerp(_MainTex_var.rgb, _MainTex_var.rgb, node_6660.r), _Texture1_var.rgb, node_6660.g),
-              _Texture2_var.rgb, node_6660.b), _Texture3_var.rgb,
+                         _Texture2_var.rgb, node_6660.b), _Texture3_var.rgb,
                     node_6660.a)); // Need this for specular when using metallic
                 diffuseColor = DiffuseAndSpecularFromMetallic(diffuseColor, specularColor, specularColor,
-                                                                 specularMonochrome);
+                                                              specularMonochrome);
                 specularMonochrome = 1.0 - specularMonochrome;
                 float NdotV = abs(dot(normalDirection, viewDirection));
                 float NdotH = saturate(dot(normalDirection, halfDirection));
@@ -466,19 +467,19 @@ Shader "Polybrush/Standard Texture Blend Bump"
             {
                 float3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - i.posWorld.xyz);
                 UnityMetaInput o;
-                    UNITY_INITIALIZE_OUTPUT(UnityMetaInput, o);
+                UNITY_INITIALIZE_OUTPUT(UnityMetaInput, o);
 
                 o.Emission = 0;
 
                 float4 node_6660 = normalize(float4(i.vertexColor.r, i.vertexColor.g, i.vertexColor.b,
-                    i.vertexColor.a));
+                                                    i.vertexColor.a));
                 float4 _MainTex_var = tex2D(_MainTex,TRANSFORM_TEX(i.uv0, _MainTex));
                 float4 _Texture1_var = tex2D(_Texture1,TRANSFORM_TEX(i.uv0, _Texture1));
                 float4 _Texture2_var = tex2D(_Texture2,TRANSFORM_TEX(i.uv0, _Texture2));
                 float4 _Texture3_var = tex2D(_Texture3,TRANSFORM_TEX(i.uv0, _Texture3));
                 float3 diffColor = (lerp(
                     lerp(lerp(lerp(_MainTex_var.rgb, _MainTex_var.rgb, node_6660.r), _Texture1_var.rgb, node_6660.g),
-                    _Texture2_var.rgb, node_6660.b), _Texture3_var.rgb, node_6660.a));
+                         _Texture2_var.rgb, node_6660.b), _Texture3_var.rgb, node_6660.a));
                 float specularMonochrome;
                 float3 specColor;
                 diffColor = DiffuseAndSpecularFromMetallic(diffColor, _Metallic, specColor, specularMonochrome);

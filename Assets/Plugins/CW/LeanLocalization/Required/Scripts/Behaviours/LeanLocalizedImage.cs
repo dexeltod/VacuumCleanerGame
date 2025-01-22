@@ -22,24 +22,6 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 		)]
 		public Sprite FallbackSprite;
 
-		// This gets called every time the translation needs updating
-		public override void UpdateTranslation(LeanTranslation translation)
-		{
-			// Get the Image component attached to this GameObject
-			var image = GetComponent<Image>();
-
-			// Use translation?
-			if (translation != null && translation.Data is Sprite)
-			{
-				image.sprite = (Sprite)translation.Data;
-			}
-			// Use fallback?
-			else
-			{
-				image.sprite = FallbackSprite;
-			}
-		}
-
 		protected virtual void Awake()
 		{
 			// Should we set FallbackSprite?
@@ -51,6 +33,20 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 				// Copy current sprite to fallback
 				FallbackSprite = spriteRenderer.sprite;
 			}
+		}
+
+		// This gets called every time the translation needs updating
+		public override void UpdateTranslation(LeanTranslation translation)
+		{
+			// Get the Image component attached to this GameObject
+			var image = GetComponent<Image>();
+
+			// Use translation?
+			if (translation != null && translation.Data is Sprite)
+				image.sprite = (Sprite)translation.Data;
+			// Use fallback?
+			else
+				image.sprite = FallbackSprite;
 		}
 	}
 }

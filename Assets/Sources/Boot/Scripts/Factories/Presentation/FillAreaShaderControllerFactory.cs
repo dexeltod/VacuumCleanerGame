@@ -13,11 +13,11 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 		public FillAreaShaderControllerFactory(GameObject player) =>
 			_player = player ? player : throw new ArgumentNullException(nameof(player));
 
-		public FillMeshShaderController Create()
+		public FillMeshShader Create()
 		{
-			FillMeshShaderView meshShaderView = _player.GetComponent<FillMeshShaderView>();
+			var meshShaderView = _player.GetComponent<FillMeshShaderView>();
 
-			return new FillMeshShaderController(meshShaderView.MeshRenderer);
+			return new FillMeshShader(meshShaderView.MeshRenderer);
 		}
 	}
 }

@@ -16,6 +16,10 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 	)]
 	public class CwDepthTextureMode : MonoBehaviour
 	{
+		[SerializeField] private DepthTextureMode depthMode = DepthTextureMode.None;
+
+		[NonSerialized] private Camera cachedCamera;
+
 		/// <summary>The depth mode that will be applied to the camera.</summary>
 		public DepthTextureMode DepthMode
 		{
@@ -24,23 +28,19 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 				depthMode = value;
 				UpdateDepthMode();
 			}
-			get { return depthMode; }
+			get => depthMode;
 		}
 
-		[SerializeField] private DepthTextureMode depthMode = DepthTextureMode.None;
-
-		[NonSerialized] private Camera cachedCamera;
+		protected virtual void Update()
+		{
+			UpdateDepthMode();
+		}
 
 		public void UpdateDepthMode()
 		{
 			if (cachedCamera == null) cachedCamera = GetComponent<Camera>();
 
 			cachedCamera.depthTextureMode = depthMode;
-		}
-
-		protected virtual void Update()
-		{
-			UpdateDepthMode();
 		}
 	}
 
@@ -70,9 +70,9 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 		{
 			var found = false;
 
-			foreach (var camera in Camera.allCameras)
+			foreach (Camera camera in Camera.allCameras)
 			{
-				var mask = camera.depthTextureMode;
+				DepthTextureMode mask = camera.depthTextureMode;
 
 				if (mask == DepthTextureMode.DepthNormals || ((int)mask & 1) != 0)
 				{
@@ -91,14 +91,12 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 						    Camera.main
 					    ) ==
 					    false)
-					{
 						if (HelpButton(
 							    "This component requires your camera to render a Depth Texture, but it doesn't.",
 							    MessageType.Error,
 							    "Fix",
 							    50.0f
-						    ) ==
-						    true)
+						    ))
 						{
 							CwHelper.GetOrAddComponent<CwDepthTextureMode>(
 									Camera.main.gameObject
@@ -109,7 +107,6 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 								Camera.main
 							);
 						}
-					}
 				}
 				else
 				{
@@ -117,12 +114,10 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 						"This component requires your camera to render a Depth Texture, but none of the cameras in your scene do. This can be fixed with the SgtDepthTextureMode component."
 					);
 
-					foreach (var camera in Camera.allCameras)
-					{
+					foreach (Camera camera in Camera.allCameras)
 						if (CwHelper.Enabled(
 							    camera
-						    ) ==
-						    true)
+						    ))
 						{
 							CwHelper.GetOrAddComponent<CwDepthTextureMode>(
 									camera.gameObject
@@ -133,16 +128,13 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 								camera
 							);
 						}
-					}
 				}
 			}
 		}
 
-		private static bool WritesDepth(Camera camera)
-		{
-			return camera != null && camera.depthTextureMode == DepthTextureMode.DepthNormals ||
-			       ((int)camera.depthTextureMode & 1) != 0;
-		}
+		private static bool WritesDepth(Camera camera) =>
+			camera != null && camera.depthTextureMode == DepthTextureMode.DepthNormals ||
+			((int)camera.depthTextureMode & 1) != 0;
 	}
 
 #endif

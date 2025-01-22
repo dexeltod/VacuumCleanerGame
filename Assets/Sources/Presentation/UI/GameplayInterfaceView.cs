@@ -5,6 +5,7 @@ using DG.Tweening.Plugins.Options;
 using Plugins.Joystick_Pack.Scripts.Base;
 using Sources.ControllersInterfaces;
 using Sources.Domain.Interfaces;
+using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Frameworks.DOTween.Tweeners;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
@@ -70,20 +71,17 @@ namespace Sources.Presentation.UI
 		public ITextPhrases PhrasesList => _phrasesList;
 		public Button GoToNextLevelButton => _goToNextLevelButton;
 		public Button IncreaseSpeedButton => _increaseSpeedButton;
-		public GameObject InterfaceGameObject { get; private set; }
 		public Image IncreaseSpeedButtonImage => _increaseSpeedButtonImage;
 		public Joystick Joystick => _joystick;
 
-		public void Construct(
-			IGameplayInterfacePresenter gameplayInterfacePresenter,
+		public void Construct(IGameplayInterfacePresenter gameplayInterfacePresenter,
 			int cashScore,
 			int globalScore,
 			int maxCashScore,
 			int maxGlobalScore,
 			int moneyCount,
 			bool isHalfScoreReached,
-			bool isScoresViewed
-		)
+			bool isScoresViewed)
 		{
 			_isScoresViewed = isScoresViewed;
 			if (gameplayInterfacePresenter == null)
@@ -114,58 +112,30 @@ namespace Sources.Presentation.UI
 			_maxCashScore = maxCashScore;
 			_maxGlobalScore = maxGlobalScore;
 
-			SetTotalResourceScore(
-				globalScore
-			);
-			SetCashScore(
-				cashScore
-			);
+			SetTotalResourceScore(globalScore);
+			SetCashScore(cashScore);
 
-			SetMaxGlobalScore(
-				maxGlobalScore
-			);
-
-			InterfaceGameObject = gameObject;
+			SetMaxGlobalScore(maxGlobalScore);
 		}
 
 		public override void Enable()
 		{
-			gameObject.SetActive(
-				true
-			);
-			_goToNextLevelButtonTween ??= CustomTweeners.StartPulseLocal(
-				_goToNextLevelButton.transform,
-				1.15f
-			);
-			_increaseSpeedButtonTween ??= CustomTweeners.StartPulseLocal(
-				_increaseSpeedButton.transform
-			);
+			gameObject.SetActive(true);
+
+			_goToNextLevelButtonTween ??= SetGoToNextLevelButtonTween();
+			_increaseSpeedButtonTween ??= SetIncreaseSpeedButtonTween();
 
 			SetActiveGlobalScores();
 		}
 
-		protected override void DestroySelf()
-		{
-			_goToNextLevelButtonTween!.Kill(
-				true
-			);
-			_increaseSpeedButtonTween!.Kill(
-				true
-			);
-			base.DestroySelf();
-		}
+		private TweenerCore<Vector3, Vector3, VectorOptions> SetGoToNextLevelButtonTween() =>
+			CustomTweeners.StartPulseLocal(_goToNextLevelButton.transform, 1.15f);
 
 		public override void Disable()
 		{
-			_goToNextLevelButtonTween!.Kill(
-				true
-			);
-			_increaseSpeedButtonTween!.Kill(
-				true
-			);
-			gameObject.SetActive(
-				false
-			);
+			_goToNextLevelButtonTween!.Kill(true);
+			_increaseSpeedButtonTween!.Kill(true);
+			gameObject.SetActive(false);
 		}
 
 		public void SetActiveGoToNextLevelButton(bool isActive) =>
@@ -175,12 +145,8 @@ namespace Sources.Presentation.UI
 
 		public void SetCashScore(int newScore)
 		{
-			SetScoreBarValue(
-				newScore
-			);
-			SetCashScoreText(
-				newScore
-			);
+			SetScoreBarValue(newScore);
+			SetCashScoreText(newScore);
 		}
 
 		public void SetTotalResourceScore(int newScore)
@@ -234,6 +200,14 @@ namespace Sources.Presentation.UI
 		public void FillSpeedButtonImage(float fillAmount) =>
 			_increaseSpeedButtonImage.fillAmount = fillAmount;
 
+		protected override void DestroySelf()
+		{
+			_goToNextLevelButtonTween!.Kill(true);
+			_increaseSpeedButtonTween!.Kill(true);
+
+			base.DestroySelf();
+		}
+
 		public void SetMaxGlobalScore(int newMaxScore)
 		{
 			if (newMaxScore < 0)
@@ -259,11 +233,9 @@ namespace Sources.Presentation.UI
 
 		private void SetScoreBarValue(int newScore)
 		{
-			_cashScore = newScore;
-
 			float value = NormalizeValue(
 				MaxNormalizeThreshold,
-				_cashScore,
+				newScore,
 				_maxCashScore
 			);
 
@@ -277,9 +249,9 @@ namespace Sources.Presentation.UI
 		) =>
 			topValue / currentMaxScore * newScore;
 
-		private void SetCashScoreText(int newScore) =>
-			_scoreCash.SetText(
-				$"{newScore}"
-			);
+		private TweenerCore<Vector3, Vector3, VectorOptions> SetIncreaseSpeedButtonTween() =>
+			CustomTweeners.StartPulseLocal(_increaseSpeedButton.transform);
+
+		private void SetCashScoreText(int newScore) => _scoreCash.SetText($"{newScore}");
 	}
 }

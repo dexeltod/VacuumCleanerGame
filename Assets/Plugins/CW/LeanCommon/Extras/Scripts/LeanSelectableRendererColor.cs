@@ -5,7 +5,10 @@ using UnityEngine;
 
 namespace Plugins.CW.LeanCommon.Extras.Scripts
 {
-	/// <summary>This component allows you to change the color of the Renderer (e.g. MeshRenderer) attached to the current GameObject when selected.</summary>
+	/// <summary>
+	///     This component allows you to change the color of the Renderer (e.g. MeshRenderer) attached to the current
+	///     GameObject when selected.
+	/// </summary>
 	[ExecuteInEditMode]
 	[RequireComponent(
 		typeof(Renderer)
@@ -18,6 +21,14 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 	)]
 	public class LeanSelectableRendererColor : LeanSelectableBehaviour
 	{
+		[SerializeField] private Color defaultColor = Color.white;
+
+		[SerializeField] private Color selectedColor = Color.green;
+
+		[NonSerialized] private Renderer cachedRenderer;
+
+		[NonSerialized] private MaterialPropertyBlock properties;
+
 		/// <summary>The default color given to the SpriteRenderer.</summary>
 		public Color DefaultColor
 		{
@@ -26,10 +37,8 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 				defaultColor = value;
 				UpdateColor();
 			}
-			get { return defaultColor; }
+			get => defaultColor;
 		}
-
-		[SerializeField] private Color defaultColor = Color.white;
 
 		/// <summary>The color given to the SpriteRenderer when selected.</summary>
 		public Color SelectedColor
@@ -39,14 +48,15 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 				selectedColor = value;
 				UpdateColor();
 			}
-			get { return selectedColor; }
+			get => selectedColor;
 		}
 
-		[SerializeField] private Color selectedColor = Color.green;
+		protected override void Start()
+		{
+			base.Start();
 
-		[NonSerialized] private Renderer cachedRenderer;
-
-		[NonSerialized] private MaterialPropertyBlock properties;
+			UpdateColor();
+		}
 
 		protected override void OnSelected(LeanSelect select)
 		{
@@ -58,23 +68,13 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 			UpdateColor();
 		}
 
-		protected override void Start()
-		{
-			base.Start();
-
-			UpdateColor();
-		}
-
 		public void UpdateColor()
 		{
 			if (cachedRenderer == null) cachedRenderer = GetComponent<Renderer>();
 
-			var color = Selectable != null && Selectable.IsSelected == true ? selectedColor : defaultColor;
+			Color color = Selectable != null && Selectable.IsSelected ? selectedColor : defaultColor;
 
-			if (properties == null)
-			{
-				properties = new MaterialPropertyBlock();
-			}
+			if (properties == null) properties = new MaterialPropertyBlock();
 
 			cachedRenderer.GetPropertyBlock(
 				properties
@@ -120,14 +120,12 @@ namespace Plugins.CW.LeanCommon.Extras.Scripts
 				"The color given to the SpriteRenderer when selected."
 			);
 
-			if (updateColor == true)
-			{
+			if (updateColor)
 				Each(
 					tgts,
 					t => t.UpdateColor(),
 					true
 				);
-			}
 		}
 	}
 

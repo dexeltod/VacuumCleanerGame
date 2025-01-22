@@ -20,8 +20,6 @@ namespace Sources.Domain.Progress.ResourcesData
 			_value = value;
 		}
 
-		public int ID { get; set; }
-
 		public T Value
 		{
 			get => _value;

@@ -1,6 +1,6 @@
 namespace Sources.Domain
 {
-	public record TestModel()
+	public record TestModel
 	{
 	}
 }

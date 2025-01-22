@@ -2,10 +2,10 @@ namespace Sources.Utils.ConstantNames
 {
 	public static class ConstantNames
 	{
-		public static readonly UiElementNames UIElementNames = new();
-		public static readonly MusicNames MusicNames = new();
 		public const string MenuScene = "MainMenu";
+		public readonly static UiElementNames UIElementNames = new();
+		public readonly static MusicNames MusicNames = new();
 
-		public static readonly Sound Sound = new();
+		public readonly static Sound Sound = new();
 	}
 }

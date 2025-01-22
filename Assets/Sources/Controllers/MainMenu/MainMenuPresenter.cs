@@ -16,27 +16,24 @@ namespace Sources.Controllers.MainMenu
 {
 	public class MainMenuPresenter : Presenter, IMainMenuPresenter
 	{
-		private readonly IMainMenuView _mainMenuView;
-		private readonly ILevelProgressFacade _levelProgress;
-		private readonly IGameStateChanger _stateMachine;
-		private readonly ILevelConfigGetter _levelConfigGetter;
-		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly IAuthorizationPresenter _authorizationPresenter;
-		private readonly ILeaderBoardView _leaderBoardView;
-		private readonly ILeaderBoardService _leaderBoardService;
-		private readonly ISettingsView _settingsView;
 		private readonly ILeaderBoardPlayersFactory _leaderBoardPlayersFactory;
-		private readonly ISoundSettings _soundSettings;
+		private readonly ILeaderBoardService _leaderBoardService;
+		private readonly ILeaderBoardView _leaderBoardView;
+		private readonly ILevelConfigGetter _levelConfigGetter;
+		private readonly ILevelProgressFacade _levelProgress;
+		private readonly IMainMenuView _mainMenuView;
+		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly SettingsPresenter _settingsPresenter;
+		private readonly ISettingsView _settingsView;
+		private readonly ISoundSettings _soundSettings;
+		private readonly IStateMachine _stateMachine;
 
 		private bool _leaderboardInitialized;
 
-		private int CurrentNumber => _levelProgress.CurrentLevel;
-
-		public MainMenuPresenter(
+		public MainMenuPresenter(IStateMachine stateMachine,
 			IMainMenuView mainMenu,
 			ILevelProgressFacade levelProgress,
-			IGameStateChanger stateMachine,
 			ILevelConfigGetter levelConfigGetter,
 			IProgressSaveLoadDataService progressSaveLoadDataService,
 			IAuthorizationPresenter authorizationPresenter,
@@ -45,8 +42,7 @@ namespace Sources.Controllers.MainMenu
 			ISettingsView settingsView,
 			AudioMixer mixer,
 			ILeaderBoardPlayersFactory leaderBoardPlayersFactory,
-			ISoundSettings soundSettings
-		)
+			ISoundSettings soundSettings)
 		{
 			_mainMenuView = mainMenu ?? throw new ArgumentNullException(nameof(mainMenu));
 			_levelProgress = levelProgress ?? throw new ArgumentNullException(nameof(levelProgress));
@@ -65,6 +61,8 @@ namespace Sources.Controllers.MainMenu
 
 			_settingsPresenter = new SettingsPresenter(mixer, soundSettings);
 		}
+
+		private int CurrentNumber => _levelProgress.CurrentLevel;
 
 		public override void Enable()
 		{
@@ -87,9 +85,6 @@ namespace Sources.Controllers.MainMenu
 			_settingsView.MasterVolumeSlider.value = _soundSettings.MasterVolume;
 		}
 
-		private void OnSoundChanged(float masterVolume) =>
-			_settingsPresenter.SetSoundVolume(masterVolume);
-
 		public override void Disable()
 		{
 			Debug.Log("Disable MainMenuPresenter");
@@ -104,6 +99,16 @@ namespace Sources.Controllers.MainMenu
 			_mainMenuView.SettingsButton.onClick.RemoveListener(OnSettings);
 			_mainMenuView.Disable();
 		}
+#if DEV
+		private async void OnAddLeader() =>
+			await _leaderBoardService.AddScore(200);
+#endif
+
+		private async void OnDeleteSaves() =>
+			await _progressSaveLoadDataService.ClearSaves();
+
+		private void OnPlay() =>
+			_stateMachine.Enter<IBuildSceneState, ILevelConfig>(_levelConfigGetter.GetOrDefault(CurrentNumber));
 
 		private void OnSettings() =>
 			_settingsView.Enable();
@@ -130,14 +135,7 @@ namespace Sources.Controllers.MainMenu
 			_leaderBoardView.Enable();
 		}
 
-		private async void OnDeleteSaves() =>
-			await _progressSaveLoadDataService.ClearSaves();
-
-		private void OnPlay() =>
-			_stateMachine.Enter<IBuildSceneState, ILevelConfig>(_levelConfigGetter.GetOrDefault(CurrentNumber));
-#if DEV
-		private async void OnAddLeader() =>
-			await _leaderBoardService.AddScore(200);
-#endif
+		private void OnSoundChanged(float masterVolume) =>
+			_settingsPresenter.SetSoundVolume(masterVolume);
 	}
 }

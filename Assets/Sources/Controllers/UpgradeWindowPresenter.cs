@@ -8,10 +8,10 @@ namespace Sources.Controllers
 {
 	public class UpgradeWindowPresenter : Presenter, IDisposable, IUpgradeWindowPresenter
 	{
-		private readonly IUpgradeWindowPresentation _upgradeWindowPresentation;
-		private readonly IProgressSaveLoadDataService _progressSaveLoadService;
 		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenter;
+		private readonly IProgressSaveLoadDataService _progressSaveLoadService;
 		private readonly IResourcesProgressPresenter _resourcesProgressPresenterProvider;
+		private readonly IUpgradeWindowPresentation _upgradeWindowPresentation;
 
 		private bool _isCanSave;
 

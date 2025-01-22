@@ -1,4 +1,3 @@
-using Sources.BusinessLogic.Interfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Services;
 using Sources.Infrastructure.Services.DomainServices;
@@ -8,13 +7,15 @@ namespace Sources.Boot.Scripts.Factories.Domain
 {
 	public class SaveLoaderFactory
 	{
-		private readonly ICloudSaveLoader _cloudSaveLoader;
-
 		public ISaveLoader Create()
 		{
 #if !YANDEX_CODE
-			var cloudSaveLoader = new UnityCloudSaveLoaderLoader();
-			return GetEditorSaveLoader();
+
+			var saveLoader = new UnitySaveLoader(
+				new UnityServicesOptions(new InitializationOptions()),
+				new UnityCloudSaveLoaderLoader()
+			);
+			return saveLoader;
 #endif
 #if YANDEX_CODE
 				new YandexCloudSaveLoader();
@@ -24,8 +25,5 @@ namespace Sources.Boot.Scripts.Factories.Domain
 			return new YandexSaveLoader(_cloudSave);
 #endif
 		}
-
-		private UnitySaveLoader GetEditorSaveLoader() =>
-			new(new UnityServicesOptions(new InitializationOptions()), _cloudSaveLoader);
 	}
 }

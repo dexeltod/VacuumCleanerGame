@@ -11,9 +11,9 @@ namespace Sources.Infrastructure.Services.DomainServices
 	public class UnitySaveLoader : ISaveLoader
 	{
 		private const string GameProgressKey = "GameProgress";
+		private readonly ICloudSaveLoader _unityCloudSaveLoaderLoader;
 
 		private readonly UnityServicesOptions _unityServicesOptions;
-		private readonly ICloudSaveLoader _unityCloudSaveLoaderLoader;
 		private UnityServicesOptions _controller;
 
 		public UnitySaveLoader(
@@ -36,7 +36,7 @@ namespace Sources.Infrastructure.Services.DomainServices
 
 		public async UniTask<IGlobalProgress> Load(Action callback)
 		{
-			var json = await _unityCloudSaveLoaderLoader.Load();
+			string json = await _unityCloudSaveLoaderLoader.Load();
 			callback.Invoke();
 			return DeserializeJson(json);
 		}
@@ -48,7 +48,7 @@ namespace Sources.Infrastructure.Services.DomainServices
 		{
 			try
 			{
-				GlobalProgress provider = JsonUtility.FromJson<GlobalProgress>(jsonSave);
+				var provider = JsonUtility.FromJson<GlobalProgress>(jsonSave);
 
 				return provider;
 			}

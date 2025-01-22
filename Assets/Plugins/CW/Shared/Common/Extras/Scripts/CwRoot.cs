@@ -5,7 +5,10 @@ using UnityEngine;
 
 namespace Plugins.CW.Shared.Common.Extras.Scripts
 {
-	/// <summary>If this component is added to your scene, then any GmaeObjects that get spawned at runtime from CW code will be placed as children of this, rather than being placed in the scene root.</summary>
+	/// <summary>
+	///     If this component is added to your scene, then any GmaeObjects that get spawned at runtime from CW code will
+	///     be placed as children of this, rather than being placed in the scene root.
+	/// </summary>
 	[ExecuteInEditMode]
 	[DefaultExecutionOrder(
 		-100
@@ -18,47 +21,27 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 	)]
 	public class CwRoot : MonoBehaviour
 	{
-		private static List<CwRoot> instances = new List<CwRoot>();
+		private readonly static List<CwRoot> instances = new();
 
-		public static bool Exists
-		{
-			get { return instances.Count > 0; }
-		}
+		public static bool Exists => instances.Count > 0;
 
 		public static Transform Root
 		{
 			get
 			{
-				if (instances.Count > 0)
-				{
-					return instances[0].transform;
-				}
+				if (instances.Count > 0) return instances[0].transform;
 
 				return null;
 			}
 		}
 
-		public static Transform GetRoot()
-		{
-			if (instances.Count == 0)
-			{
-				new GameObject(
-					"CwRoot"
-				).AddComponent<CwRoot>();
-			}
-
-			return instances[0].transform;
-		}
-
 		protected virtual void OnEnable()
 		{
 			if (instances.Count > 0)
-			{
 				Debug.LogWarning(
 					"Your scene already contains an instance of CwRoot!",
 					instances[0]
 				);
-			}
 
 			instances.Add(
 				this
@@ -70,6 +53,16 @@ namespace Plugins.CW.Shared.Common.Extras.Scripts
 			instances.Remove(
 				this
 			);
+		}
+
+		public static Transform GetRoot()
+		{
+			if (instances.Count == 0)
+				new GameObject(
+					"CwRoot"
+				).AddComponent<CwRoot>();
+
+			return instances[0].transform;
 		}
 	}
 

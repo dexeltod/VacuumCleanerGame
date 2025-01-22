@@ -15,7 +15,7 @@ namespace Sources.Presentation.UI
 			get => _phrases.Select(phrase => phrase.text).ToList();
 			set
 			{
-				for (int i = 0; i < _phrases.Length; i++)
+				for (var i = 0; i < _phrases.Length; i++)
 					_phrases[i].SetText(value[i]);
 			}
 		}

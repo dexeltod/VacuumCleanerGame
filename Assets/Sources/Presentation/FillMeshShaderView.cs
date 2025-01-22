@@ -7,8 +7,8 @@ namespace Sources.Presentation
 	{
 		[SerializeField] private MeshRenderer _meshRenderer;
 
-		[SerializeField, Range(-1, 2)] private float _minFillArea = 0;
-		[SerializeField, Range(-1, 2)] private float _maxFillArea = 1;
+		[SerializeField] [Range(-1, 2)] private float _minFillArea;
+		[SerializeField] [Range(-1, 2)] private float _maxFillArea = 1;
 
 		public MeshRenderer MeshRenderer => _meshRenderer;
 		public float MaxFillArea => _maxFillArea;

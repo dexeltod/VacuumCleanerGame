@@ -46,21 +46,19 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 			{
 				if (version == null && Documentation != null)
 				{
-					var text = Documentation.text;
-					var a = text.IndexOf(
+					string text = Documentation.text;
+					int a = text.IndexOf(
 						"Documentation - "
 					);
-					var b = text.IndexOf(
+					int b = text.IndexOf(
 						"</title>"
 					);
 
 					if (a > 0 && b > 0)
-					{
 						version = text.Substring(
 							a + 16,
 							b - a - 16
 						);
-					}
 				}
 
 				return version;
@@ -131,9 +129,7 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 					    "Local Documentation",
 					    "Open In Web Browser"
 				    )
-			    ) ==
-			    true)
-			{
+			    ))
 				Process.Start(
 					Application.dataPath +
 					AssetDatabase.GetAssetPath(
@@ -143,20 +139,16 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 						"Assets".Length
 					)
 				);
-			}
 
 			if (GUILayout.Button(
 				    new GUIContent(
 					    "Online Documentation",
 					    "Open In Web Browser"
 				    )
-			    ) ==
-			    true)
-			{
+			    ))
 				Application.OpenURL(
 					"http://CarlosWilkes.com/Documentation/" + tgt.ShortName
 				);
-			}
 
 			EditorGUILayout.Separator();
 			EditorGUILayout.Separator();
@@ -175,39 +167,30 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 					    "Forum Thread",
 					    "Unity Forums"
 				    )
-			    ) ==
-			    true)
-			{
+			    ))
 				Application.OpenURL(
 					"http://CarlosWilkes.com/Forum/" + tgt.ShortName
 				);
-			}
 
 			if (GUILayout.Button(
 				    new GUIContent(
 					    "E-Mail Me",
 					    "carlos.wilkes@gmail.com"
 				    )
-			    ) ==
-			    true)
-			{
+			    ))
 				Application.OpenURL(
 					"mailto:carlos.wilkes@gmail.com"
 				);
-			}
 
 			if (GUILayout.Button(
 				    new GUIContent(
 					    "Private Message",
 					    "Unity Forum Profile"
 				    )
-			    ) ==
-			    true)
-			{
+			    ))
 				Application.OpenURL(
 					"http://forum.unity.com/members/41960"
 				);
-			}
 
 			EditorGUILayout.Separator();
 			EditorGUILayout.Separator();
@@ -226,13 +209,10 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 					    "Rate This Asset",
 					    tgt.LongName + " Asset Page"
 				    )
-			    ) ==
-			    true)
-			{
+			    ))
 				Application.OpenURL(
 					"http://CarlosWilkes.com/Get/" + tgt.ShortName
 				);
-			}
 
 			EditorGUILayout.Separator();
 			EditorGUILayout.Separator();
@@ -251,13 +231,10 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 					    "E-Mail Me",
 					    "carlos.wilkes@gmail.com"
 				    )
-			    ) ==
-			    true)
-			{
+			    ))
 				Application.OpenURL(
 					"mailto:carlos.wilkes@gmail.com"
 				);
-			}
 
 			EditorGUILayout.Separator();
 			EditorGUILayout.Separator();
@@ -276,13 +253,10 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 					    "My Website",
 					    "CarlosWilkes.com"
 				    )
-			    ) ==
-			    true)
-			{
+			    ))
 				Application.OpenURL(
 					"http://CarlosWilkes.com"
 				);
-			}
 		}
 
 		protected override void OnHeaderGUI()
@@ -295,14 +269,14 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 				"In BigTitle"
 			);
 			{
-				var iconWidth = Mathf.Min(
+				float iconWidth = Mathf.Min(
 					EditorGUIUtility.currentViewWidth / 3f - 20f,
 					128f
 				);
 				var content = new GUIContent(
 					"Version\n" + tgt.Version
 				);
-				var height = Mathf.Max(
+				float height = Mathf.Max(
 					titleStyle.CalcHeight(
 						content,
 						EditorGUIUtility.currentViewWidth - iconWidth
@@ -311,7 +285,6 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 				);
 
 				if (tgt.Icon != null)
-				{
 					GUILayout.Label(
 						tgt.Icon,
 						EditorStyles.centeredGreyMiniLabel,
@@ -322,7 +295,6 @@ namespace Plugins.CW.Shared.Common.Required.Scripts
 							iconWidth
 						)
 					);
-				}
 
 				GUILayout.Label(
 					content,

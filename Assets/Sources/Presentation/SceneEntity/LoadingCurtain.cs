@@ -33,7 +33,7 @@ namespace Sources.Presentation.SceneEntity
 
 		private IEnumerator StartHiding()
 		{
-			WaitForSeconds waitForSeconds = new WaitForSeconds(0.01F);
+			var waitForSeconds = new WaitForSeconds(0.01F);
 
 			while (_curtain.alpha > 0)
 			{

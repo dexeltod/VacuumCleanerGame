@@ -10,7 +10,7 @@ namespace Sources.Infrastructure.Services.DomainServices
 	{
 		public async UniTask Save(string json)
 		{
-			bool isCallbackReceived = false;
+			var isCallbackReceived = false;
 
 			PlayerAccount.SetCloudSaveData(json, () => isCallbackReceived = true);
 
@@ -20,8 +20,8 @@ namespace Sources.Infrastructure.Services.DomainServices
 
 		public async UniTask<string> Load()
 		{
-			bool isCallbackReceived = false;
-			string json = "";
+			var isCallbackReceived = false;
+			var json = "";
 
 			PlayerAccount.GetCloudSaveData(
 				successCallback =>
@@ -45,7 +45,7 @@ namespace Sources.Infrastructure.Services.DomainServices
 
 		public async UniTask DeleteSaves(IGlobalProgress globalProgress)
 		{
-			bool isCallbackReceived = false;
+			var isCallbackReceived = false;
 			PlayerAccount.SetCloudSaveData("{}", () => isCallbackReceived = true);
 
 			await UniTask.WaitWhile(() => isCallbackReceived == false);

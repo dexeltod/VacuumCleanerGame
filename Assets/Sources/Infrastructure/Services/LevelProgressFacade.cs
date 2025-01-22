@@ -7,19 +7,14 @@ namespace Sources.Infrastructure.Services
 {
 	public class LevelProgressFacade : ILevelProgressFacade
 	{
-		private readonly IPersistentProgressService _progressService;
 		private const int OnePoint = 1;
 		private const int MaxScoreDelta = 50;
 		private const int MaxScore = 500;
+		private readonly IPersistentProgressService _progressService;
 
 		[Inject]
 		public LevelProgressFacade(IPersistentProgressService progressService) =>
 			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
-
-		public int CurrentLevel => _progressService.GlobalProgress.LevelProgress.CurrentLevel;
-
-		public int MaxTotalResourceCount =>
-			_progressService.GlobalProgress.ResourceModelReadOnly.MaxTotalResourceCount;
 
 		private ILevelProgress LevelProgress => _progressService.GlobalProgress.LevelProgress;
 
@@ -28,6 +23,11 @@ namespace Sources.Infrastructure.Services
 
 		private IResourceModelReadOnly ResourceModelReadOnly =>
 			_progressService.GlobalProgress.ResourceModelReadOnly;
+
+		public int CurrentLevel => _progressService.GlobalProgress.LevelProgress.CurrentLevel;
+
+		public int MaxTotalResourceCount =>
+			_progressService.GlobalProgress.ResourceModelReadOnly.MaxTotalResourceCount;
 
 		public void SetNextLevel()
 		{

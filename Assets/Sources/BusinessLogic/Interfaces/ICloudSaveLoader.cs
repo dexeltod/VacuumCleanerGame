@@ -5,8 +5,8 @@ namespace Sources.BusinessLogic.Interfaces
 {
 	public interface ICloudSaveLoader
 	{
-		UniTask Save(string json);
-		UniTask<string> Load();
 		UniTask DeleteSaves(IGlobalProgress globalProgress);
+		UniTask<string> Load();
+		UniTask Save(string json);
 	}
 }

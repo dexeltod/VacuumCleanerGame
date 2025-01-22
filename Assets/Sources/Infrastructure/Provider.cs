@@ -7,9 +7,8 @@ namespace Sources.Infrastructure
 		// : IProvider<TImplementation>
 		where TImplementation : class
 	{
-		private TImplementation _implementation;
-
 		private Type[] _contracts;
+		private TImplementation _implementation;
 
 		public TImplementation Self
 		{
@@ -45,6 +44,12 @@ namespace Sources.Infrastructure
 			throw new ArgumentNullException(nameof(TI), $"Contract {typeof(TI)} not found");
 		}
 
+		public virtual void Unregister()
+		{
+			_implementation = null;
+			_contracts = null;
+		}
+
 		#region Registration
 
 		public virtual TImplementation Register<TI>(TImplementation instance)
@@ -52,7 +57,7 @@ namespace Sources.Infrastructure
 			Unregister();
 			_implementation = instance;
 
-			var a = instance.GetType().GetInterfaces();
+			Type[] a = instance.GetType().GetInterfaces();
 
 			_contracts = instance.GetType().GetInterfaces();
 			return _implementation;
@@ -62,11 +67,5 @@ namespace Sources.Infrastructure
 			_implementation = instance;
 
 		#endregion
-
-		public virtual void Unregister()
-		{
-			_implementation = null;
-			_contracts = null;
-		}
 	}
 }

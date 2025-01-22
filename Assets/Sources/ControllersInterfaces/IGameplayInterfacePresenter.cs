@@ -9,8 +9,8 @@ namespace Sources.ControllersInterfaces
 		public void OnGoToNextLevel();
 		public void OnIncreaseSpeed();
 		public void SetActiveGoToNextLevelButton(bool isActive);
-		public void SetTotalResourceCount(int globalScore);
 		public void SetCashScore(int cashScore);
 		public void SetSoftCurrency(int soft);
+		public void SetTotalResourceCount(int globalScore);
 	}
 }

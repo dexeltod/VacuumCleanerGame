@@ -2,7 +2,10 @@
 
 namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 {
-	/// <summary>This component will update a SpriteRenderer component with a localized sprite, or use a fallback if none is found</summary>
+	/// <summary>
+	///     This component will update a SpriteRenderer component with a localized sprite, or use a fallback if none is
+	///     found
+	/// </summary>
 	[ExecuteInEditMode]
 	[DisallowMultipleComponent]
 	[RequireComponent(
@@ -21,24 +24,6 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 		)]
 		public Sprite FallbackSprite;
 
-		// This gets called every time the translation needs updating
-		public override void UpdateTranslation(LeanTranslation translation)
-		{
-			// Get the SpriteRenderer component attached to this GameObject
-			var spriteRenderer = GetComponent<SpriteRenderer>();
-
-			// Use translation?
-			if (translation != null && translation.Data is Sprite)
-			{
-				spriteRenderer.sprite = (Sprite)translation.Data;
-			}
-			// Use fallback?
-			else
-			{
-				spriteRenderer.sprite = FallbackSprite;
-			}
-		}
-
 		protected virtual void Awake()
 		{
 			// Should we set FallbackSprite?
@@ -50,6 +35,20 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 				// Copy current sprite to fallback
 				FallbackSprite = spriteRenderer.sprite;
 			}
+		}
+
+		// This gets called every time the translation needs updating
+		public override void UpdateTranslation(LeanTranslation translation)
+		{
+			// Get the SpriteRenderer component attached to this GameObject
+			var spriteRenderer = GetComponent<SpriteRenderer>();
+
+			// Use translation?
+			if (translation != null && translation.Data is Sprite)
+				spriteRenderer.sprite = (Sprite)translation.Data;
+			// Use fallback?
+			else
+				spriteRenderer.sprite = FallbackSprite;
 		}
 	}
 }

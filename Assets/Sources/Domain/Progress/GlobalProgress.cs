@@ -21,18 +21,6 @@ namespace Sources.Domain.Progress
 		[SerializeField]
 		private PlayerStatsModel _playerStatsModel;
 
-		public ILevelProgress LevelProgress => _levelProgress;
-		public IResourceModel ResourceModelReadOnly => _resource;
-		public IShopModel ShopModel => _shopModel;
-		public IPlayerStatsModel PlayerStatsModel => _playerStatsModel;
-
-		public bool Validate() =>
-			_resource != null &&
-			_levelProgress != null &&
-			_shopModel != null &&
-			_playerStatsModel != null &&
-			_shopModel.ProgressEntities != null;
-
 		public GlobalProgress(ResourceModel resourceModel,
 			LevelProgress levelProgress,
 			ShopModel shopModel,
@@ -50,5 +38,17 @@ namespace Sources.Domain.Progress
 
 			_playerStatsModel = playerStatsModel ?? throw new ArgumentNullException(nameof(playerStatsModel));
 		}
+
+		public ILevelProgress LevelProgress => _levelProgress;
+		public IResourceModel ResourceModelReadOnly => _resource;
+		public IShopModel ShopModel => _shopModel;
+		public IPlayerStatsModel PlayerStatsModel => _playerStatsModel;
+
+		public bool Validate() =>
+			_resource != null &&
+			_levelProgress != null &&
+			_shopModel != null &&
+			_playerStatsModel != null &&
+			_shopModel.ProgressEntities != null;
 	}
 }

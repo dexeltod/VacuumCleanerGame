@@ -12,9 +12,9 @@ namespace Sources.Controllers
 	{
 		private const float NormalizedDissolvingValue = 0;
 		private const float Delta = 0.01f;
+		private readonly ICoroutineRunner _coroutineRunnerProvider;
 
 		private readonly IDissolveShaderView _dissolveShaderView;
-		private readonly ICoroutineRunner _coroutineRunnerProvider;
 		private readonly WaitForSeconds _waitForSeconds;
 
 		public DissolveShaderViewController(
@@ -32,7 +32,7 @@ namespace Sources.Controllers
 
 		private IEnumerator DissolvingRoutine()
 		{
-			float towards = 1f;
+			var towards = 1f;
 
 			while (towards > NormalizedDissolvingValue)
 			{

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sources.Boot.Scripts.Factories.UpgradeEntitiesConfigs;
+using Sources.Boot.Scripts.UpgradeEntitiesConfigs;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Domain.Player;
 using Sources.Domain.Progress;
@@ -14,28 +14,26 @@ namespace Sources.Boot.Scripts.Factories.Domain
 {
 	public class PlayerModelFactory
 	{
-		private readonly IAssetFactory _assetFactory;
+		private readonly IAssetLoader _assetLoader;
 		private readonly ShopModel _shopModelFactory;
 
-		public PlayerModelFactory(IAssetFactory assetFactory, ShopModel shopModelFactory)
+		public PlayerModelFactory(IAssetLoader assetLoader, ShopModel shopModelFactory)
 		{
-			_assetFactory
-				= assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetLoader
+				= assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 			_shopModelFactory = shopModelFactory ?? throw new ArgumentNullException(nameof(shopModelFactory));
 		}
 
 		private string ShopItems => ResourcesAssetPath.Configs.ShopItems;
 		private string StartStats => ResourcesAssetPath.Configs.StartStats;
 
-		public PlayerStatsModel Create()
-		{
-			return new PlayerStatsModel(
+		public PlayerStatsModel Create() =>
+			new(
 				InitStats(
-					_assetFactory.LoadFromResources<UpgradesListConfig>(ShopItems).ReadOnlyItems,
-					_assetFactory.LoadFromResources<StartStatsConfig>(StartStats).Stats
+					_assetLoader.LoadFromResources<UpgradesListConfig>(ShopItems).ReadOnlyItems,
+					_assetLoader.LoadFromResources<StartStatsConfig>(StartStats).Stats
 				)
 			);
-		}
 
 		private List<Stat> InitStats(
 			IReadOnlyCollection<PlayerUpgradeShopConfig> items,

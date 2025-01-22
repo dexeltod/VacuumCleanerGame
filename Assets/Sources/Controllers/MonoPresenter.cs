@@ -9,13 +9,33 @@ namespace Sources.Controllers
 	[RequireComponent(typeof(Rigidbody))]
 	public abstract class MonoPresenter : MonoBehaviour, IMonoPresenter
 	{
-		private ITransformable _transformable;
-		private Animator _animator;
-
-		private IUpdatable _updatable = null;
-		private bool _isMove = true;
 		private AnimationHasher _animationHasher;
+		private Animator _animator;
+		private bool _isMove = true;
 		private ParticleSystem _particleSystem;
+		private ITransformable _transformable;
+
+		private IUpdatable _updatable;
+
+		private void Update()
+		{
+			_updatable?.Update(Time.deltaTime);
+			_animator.Play(_isMove ? _animationHasher.Run : _animationHasher.Idle);
+		}
+
+		private void OnEnable()
+		{
+			_transformable.Looked += OnLookAt;
+			_transformable.Moved += OnMoved;
+			_transformable.Destroying += OnDestroying;
+		}
+
+		private void OnDisable()
+		{
+			_transformable.Looked -= OnLookAt;
+			_transformable.Moved -= OnMoved;
+			_transformable.Destroying -= OnDestroying;
+		}
 
 		public GameObject GameObject => gameObject;
 
@@ -37,28 +57,8 @@ namespace Sources.Controllers
 			OnMoved(model.Transform.position);
 		}
 
-		private void OnEnable()
-		{
-			_transformable.Looked += OnLookAt;
-			_transformable.Moved += OnMoved;
-			_transformable.Destroying += OnDestroying;
-		}
-
 		protected void DestroyCompose() =>
 			_transformable.Destroy();
-
-		private void OnDisable()
-		{
-			_transformable.Looked -= OnLookAt;
-			_transformable.Moved -= OnMoved;
-			_transformable.Destroying -= OnDestroying;
-		}
-
-		private void Update()
-		{
-			_updatable?.Update(Time.deltaTime);
-			_animator.Play(_isMove ? _animationHasher.Run : _animationHasher.Idle);
-		}
 
 		private void OnLookAt(Vector3 direction)
 		{

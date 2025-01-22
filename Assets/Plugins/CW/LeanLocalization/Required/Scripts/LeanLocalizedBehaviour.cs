@@ -5,7 +5,10 @@ using UnityEngine.Serialization;
 
 namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
-	/// <summary>This component simplifies the updating process, extend it if you want to cause a specific object to get localized</summary>
+	/// <summary>
+	///     This component simplifies the updating process, extend it if you want to cause a specific object to get
+	///     localized
+	/// </summary>
 	public abstract class LeanLocalizedBehaviour : MonoBehaviour, ILocalizationHandler
 	{
 		[Tooltip(
@@ -36,64 +39,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				}
 			}
 
-			get { return translationName; }
-		}
-
-		public void Register(LeanToken token)
-		{
-			if (token != null)
-			{
-				if (tokens == null)
-				{
-					tokens = new HashSet<LeanToken>();
-				}
-
-				tokens.Add(
-					token
-				);
-			}
-		}
-
-		public void Unregister(LeanToken token)
-		{
-			if (tokens != null)
-			{
-				tokens.Remove(
-					token
-				);
-			}
-		}
-
-		public void UnregisterAll()
-		{
-			if (tokens != null)
-			{
-				foreach (var token in tokens)
-				{
-					token.Unregister(
-						this
-					);
-				}
-
-				tokens.Clear();
-			}
-		}
-
-		// This gets called every time the translation needs updating
-		// NOTE: translation may be null if it can't be found
-		public abstract void UpdateTranslation(LeanTranslation translation);
-
-		/// <summary>If you call this then this component will update using the translation for the specified phrase.</summary>
-		[ContextMenu(
-			"Update Localization"
-		)]
-		public void UpdateLocalization()
-		{
-			UpdateTranslation(
-				LeanLocalization.GetTranslation(
-					translationName
-				)
-			);
+			get => translationName;
 		}
 
 		protected virtual void OnEnable()
@@ -113,11 +59,58 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 #if UNITY_EDITOR
 		protected virtual void OnValidate()
 		{
-			if (isActiveAndEnabled == true)
-			{
-				UpdateLocalization();
-			}
+			if (isActiveAndEnabled) UpdateLocalization();
 		}
 #endif
+
+		public void Register(LeanToken token)
+		{
+			if (token != null)
+			{
+				if (tokens == null) tokens = new HashSet<LeanToken>();
+
+				tokens.Add(
+					token
+				);
+			}
+		}
+
+		public void Unregister(LeanToken token)
+		{
+			if (tokens != null)
+				tokens.Remove(
+					token
+				);
+		}
+
+		public void UnregisterAll()
+		{
+			if (tokens != null)
+			{
+				foreach (LeanToken token in tokens)
+					token.Unregister(
+						this
+					);
+
+				tokens.Clear();
+			}
+		}
+
+		/// <summary>If you call this then this component will update using the translation for the specified phrase.</summary>
+		[ContextMenu(
+			"Update Localization"
+		)]
+		public void UpdateLocalization()
+		{
+			UpdateTranslation(
+				LeanLocalization.GetTranslation(
+					translationName
+				)
+			);
+		}
+
+		// This gets called every time the translation needs updating
+		// NOTE: translation may be null if it can't be found
+		public abstract void UpdateTranslation(LeanTranslation translation);
 	}
 }

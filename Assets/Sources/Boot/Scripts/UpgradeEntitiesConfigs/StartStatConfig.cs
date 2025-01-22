@@ -2,7 +2,7 @@ using System;
 using Sources.Utils.Enums;
 using UnityEngine;
 
-namespace Sources.Boot.Scripts.Factories.UpgradeEntitiesConfigs
+namespace Sources.Boot.Scripts.UpgradeEntitiesConfigs
 {
 	[Serializable]
 	public class StartStatConfig

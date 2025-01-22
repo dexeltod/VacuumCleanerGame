@@ -9,13 +9,13 @@ namespace Sources.Presentation.SceneEntity
 
 		public void DisableColliders()
 		{
-			foreach (var collider in _colliders)
+			foreach (Collider collider in _colliders)
 				collider.enabled = false;
 		}
 
 		public void EnableColliders()
 		{
-			foreach (var collider in _colliders)
+			foreach (Collider collider in _colliders)
 				collider.enabled = true;
 		}
 	}

@@ -26,56 +26,113 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 		[Tooltip(
 			"Enables 3d rotation for the particles"
 		)]
-		public bool use3dRotation = false;
+		public bool use3dRotation;
+
+		private readonly UIVertex[] _quad = new UIVertex[4];
 
 		private Transform _transform;
-		private ParticleSystem pSystem;
-		private ParticleSystem.Particle[] particles;
-		private UIVertex[] _quad = new UIVertex[4];
-		private Vector4 imageUV = Vector4.zero;
-		private ParticleSystem.TextureSheetAnimationModule textureSheetAnimation;
-		private int textureSheetAnimationFrames;
-		private Vector2 textureSheetAnimationFrameSize;
-		private ParticleSystemRenderer pRenderer;
-		private bool isInitialised = false;
 
 		private Material currentMaterial;
 
 		private Texture currentTexture;
+		private Vector4 imageUV = Vector4.zero;
+		private bool isInitialised;
 
 #if UNITY_5_5_OR_NEWER
 		private ParticleSystem.MainModule mainModule;
 #endif
+		private ParticleSystem.Particle[] particles;
+		private ParticleSystemRenderer pRenderer;
+		private ParticleSystem pSystem;
+		private ParticleSystem.TextureSheetAnimationModule textureSheetAnimation;
+		private int textureSheetAnimationFrames;
+		private Vector2 textureSheetAnimationFrameSize;
 
-		public override Texture mainTexture
+		public override Texture mainTexture => currentTexture;
+
+		protected override void Awake()
 		{
-			get { return currentTexture; }
+			base.Awake();
+			if (!Initialize())
+				enabled = false;
+		}
+
+		private void Update()
+		{
+			if (!fixedTime && Application.isPlaying)
+			{
+				pSystem.Simulate(
+					Time.unscaledDeltaTime,
+					false,
+					false,
+					true
+				);
+				SetAllDirty();
+
+				if (currentMaterial != null && currentTexture != currentMaterial.mainTexture ||
+				    material != null && currentMaterial != null && material.shader != currentMaterial.shader)
+				{
+					pSystem = null;
+					Initialize();
+				}
+			}
+		}
+
+		private void LateUpdate()
+		{
+			if (!Application.isPlaying)
+			{
+				SetAllDirty();
+			}
+			else
+			{
+				if (fixedTime)
+				{
+					pSystem.Simulate(
+						Time.unscaledDeltaTime,
+						false,
+						false,
+						true
+					);
+					SetAllDirty();
+
+					if (currentMaterial != null && currentTexture != currentMaterial.mainTexture ||
+					    material != null && currentMaterial != null && material.shader != currentMaterial.shader)
+					{
+						pSystem = null;
+						Initialize();
+					}
+				}
+			}
+
+			if (material == currentMaterial)
+				return;
+
+			pSystem = null;
+			Initialize();
+		}
+
+		protected override void OnDestroy()
+		{
+			currentMaterial = null;
+			currentTexture = null;
 		}
 
 		protected bool Initialize()
 		{
 			// initialize members
-			if (_transform == null)
-			{
-				_transform = transform;
-			}
+			if (_transform == null) _transform = transform;
 
 			if (pSystem == null)
 			{
 				pSystem = GetComponent<ParticleSystem>();
 
-				if (pSystem == null)
-				{
-					return false;
-				}
+				if (pSystem == null) return false;
 
 #if UNITY_5_5_OR_NEWER
 				mainModule = pSystem.main;
 
-				if (pSystem.main.maxParticles > 14000)
-				{
-					mainModule.maxParticles = 14000;
-				}
+				if (pSystem.main.maxParticles > 14000) mainModule.maxParticles = 14000;
 #else
                     if (pSystem.maxParticles > 14000)
                         pSystem.maxParticles = 14000;
@@ -87,16 +144,14 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 
 				if (material == null)
 				{
-					var foundShader = Shader.Find(
+					Shader foundShader = Shader.Find(
 						"UI Extensions/Particles/Additive"
 					);
 
 					if (foundShader)
-					{
 						material = new Material(
 							foundShader
 						);
-					}
 				}
 
 				currentMaterial = material;
@@ -153,31 +208,17 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 			return true;
 		}
 
-		protected override void Awake()
-		{
-			base.Awake();
-			if (!Initialize())
-				enabled = false;
-		}
-
 		protected override void OnPopulateMesh(VertexHelper vh)
 		{
 #if UNITY_EDITOR
 			if (!Application.isPlaying)
-			{
 				if (!Initialize())
-				{
 					return;
-				}
-			}
 #endif
 			// prepare vertices
 			vh.Clear();
 
-			if (!gameObject.activeInHierarchy)
-			{
-				return;
-			}
+			if (!gameObject.activeInHierarchy) return;
 
 			if (!isInitialised && !pSystem.main.playOnAwake)
 			{
@@ -196,17 +237,17 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 				particles
 			);
 
-			for (int i = 0; i < count; ++i)
+			for (var i = 0; i < count; ++i)
 			{
 				ParticleSystem.Particle particle = particles[i];
 
 				// get particle properties
 #if UNITY_5_5_OR_NEWER
-				Vector2 position = (mainModule.simulationSpace == ParticleSystemSimulationSpace.Local
+				Vector2 position = mainModule.simulationSpace == ParticleSystemSimulationSpace.Local
 					? particle.position
 					: _transform.InverseTransformPoint(
 						particle.position
-					));
+					);
 #else
                     Vector2 position =
  (pSystem.simulationSpace == ParticleSystemSimulationSpace.Local ? particle.position : _transform.InverseTransformPoint(particle.position));
@@ -236,25 +277,19 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 				if (textureSheetAnimation.enabled)
 				{
 #if UNITY_5_5_OR_NEWER
-					float frameProgress = 1 - (particle.remainingLifetime / particle.startLifetime);
+					float frameProgress = 1 - particle.remainingLifetime / particle.startLifetime;
 
 					if (textureSheetAnimation.frameOverTime.curveMin != null)
-					{
 						frameProgress = textureSheetAnimation.frameOverTime.curveMin.Evaluate(
-							1 - (particle.remainingLifetime / particle.startLifetime)
+							1 - particle.remainingLifetime / particle.startLifetime
 						);
-					}
 					else if (textureSheetAnimation.frameOverTime.curve != null)
-					{
 						frameProgress = textureSheetAnimation.frameOverTime.curve.Evaluate(
-							1 - (particle.remainingLifetime / particle.startLifetime)
+							1 - particle.remainingLifetime / particle.startLifetime
 						);
-					}
 					else if (textureSheetAnimation.frameOverTime.constant > 0)
-					{
 						frameProgress = textureSheetAnimation.frameOverTime.constant -
-						                (particle.remainingLifetime / particle.startLifetime);
-					}
+						                particle.remainingLifetime / particle.startLifetime;
 #else
                     float frameProgress = 1 - (particle.lifetime / particle.startLifetime);
 #endif
@@ -263,7 +298,7 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 						frameProgress * textureSheetAnimation.cycleCount,
 						1
 					);
-					int frame = 0;
+					var frame = 0;
 
 					switch (textureSheetAnimation.animation)
 					{
@@ -288,7 +323,7 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 
 					frame %= textureSheetAnimationFrames;
 
-					particleUV.x = (frame % textureSheetAnimation.numTilesX) * textureSheetAnimationFrameSize.x;
+					particleUV.x = frame % textureSheetAnimation.numTilesX * textureSheetAnimationFrameSize.x;
 					particleUV.y = 1.0f -
 					               Mathf.FloorToInt(
 						               frame / textureSheetAnimation.numTilesX
@@ -350,11 +385,11 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 					{
 						// get particle properties
 #if UNITY_5_5_OR_NEWER
-						Vector3 pos3d = (mainModule.simulationSpace == ParticleSystemSimulationSpace.Local
+						Vector3 pos3d = mainModule.simulationSpace == ParticleSystemSimulationSpace.Local
 							? particle.position
 							: _transform.InverseTransformPoint(
 								particle.position
-							));
+							);
 #else
                         Vector3 pos3d =
  (pSystem.simulationSpace == ParticleSystemSimulationSpace.Local ? particle.position : _transform.InverseTransformPoint(particle.position));
@@ -369,24 +404,24 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
                             position /= canvas.scaleFactor;
 #endif
 
-						Vector3[] verts = new Vector3[4]
+						var verts = new Vector3[4]
 						{
-							new Vector3(
+							new(
 								-size,
 								-size,
 								0
 							),
-							new Vector3(
+							new(
 								-size,
 								size,
 								0
 							),
-							new Vector3(
+							new(
 								size,
 								size,
 								0
 							),
-							new Vector3(
+							new(
 								size,
 								-size,
 								0
@@ -435,67 +470,6 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 					_quad
 				);
 			}
-		}
-
-		private void Update()
-		{
-			if (!fixedTime && Application.isPlaying)
-			{
-				pSystem.Simulate(
-					Time.unscaledDeltaTime,
-					false,
-					false,
-					true
-				);
-				SetAllDirty();
-
-				if ((currentMaterial != null && currentTexture != currentMaterial.mainTexture) ||
-				    (material != null && currentMaterial != null && material.shader != currentMaterial.shader))
-				{
-					pSystem = null;
-					Initialize();
-				}
-			}
-		}
-
-		private void LateUpdate()
-		{
-			if (!Application.isPlaying)
-			{
-				SetAllDirty();
-			}
-			else
-			{
-				if (fixedTime)
-				{
-					pSystem.Simulate(
-						Time.unscaledDeltaTime,
-						false,
-						false,
-						true
-					);
-					SetAllDirty();
-
-					if ((currentMaterial != null && currentTexture != currentMaterial.mainTexture) ||
-					    (material != null && currentMaterial != null && material.shader != currentMaterial.shader))
-					{
-						pSystem = null;
-						Initialize();
-					}
-				}
-			}
-
-			if (material == currentMaterial)
-				return;
-
-			pSystem = null;
-			Initialize();
-		}
-
-		protected override void OnDestroy()
-		{
-			currentMaterial = null;
-			currentTexture = null;
 		}
 
 		public void StartParticleEmission()

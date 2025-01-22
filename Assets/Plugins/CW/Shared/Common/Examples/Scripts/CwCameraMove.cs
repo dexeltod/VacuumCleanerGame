@@ -15,42 +15,14 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 	)]
 	public class CwCameraMove : MonoBehaviour
 	{
-		/// <summary>Is this component currently listening for inputs?</summary>
-		public bool Listen
-		{
-			set { listen = value; }
-			get { return listen; }
-		}
-
 		[SerializeField] private bool listen = true;
-
-		/// <summary>How quickly the position transitions from the current to the target value (-1 = instant).</summary>
-		public float Damping
-		{
-			set { damping = value; }
-			get { return damping; }
-		}
 
 		[SerializeField] private float damping = 10.0f;
 
-		/// <summary>The movement speed will be multiplied by this.</summary>
-		public float Sensitivity
-		{
-			set { sensitivity = value; }
-			get { return sensitivity; }
-		}
-
 		[SerializeField] private float sensitivity = 1.0f;
 
-		/// <summary>The keys/fingers required to move left/right.</summary>
-		public CwInputManager.Axis HorizontalControls
-		{
-			set { horizontalControls = value; }
-			get { return horizontalControls; }
-		}
-
 		[SerializeField]
-		private CwInputManager.Axis horizontalControls = new CwInputManager.Axis(
+		private CwInputManager.Axis horizontalControls = new(
 			2,
 			false,
 			CwInputManager.AxisGesture.HorizontalDrag,
@@ -62,15 +34,8 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			100.0f
 		);
 
-		/// <summary>The keys/fingers required to move backward/forward.</summary>
-		public CwInputManager.Axis DepthControls
-		{
-			set { depthControls = value; }
-			get { return depthControls; }
-		}
-
 		[SerializeField]
-		private CwInputManager.Axis depthControls = new CwInputManager.Axis(
+		private CwInputManager.Axis depthControls = new(
 			2,
 			false,
 			CwInputManager.AxisGesture.HorizontalDrag,
@@ -82,15 +47,8 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			100.0f
 		);
 
-		/// <summary>The keys/fingers required to move down/up.</summary>
-		public CwInputManager.Axis VerticalControls
-		{
-			set { verticalControls = value; }
-			get { return verticalControls; }
-		}
-
 		[SerializeField]
-		private CwInputManager.Axis verticalControls = new CwInputManager.Axis(
+		private CwInputManager.Axis verticalControls = new(
 			3,
 			false,
 			CwInputManager.AxisGesture.HorizontalDrag,
@@ -104,6 +62,48 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 
 		[NonSerialized] private Vector3 remainingDelta;
 
+		/// <summary>Is this component currently listening for inputs?</summary>
+		public bool Listen
+		{
+			set => listen = value;
+			get => listen;
+		}
+
+		/// <summary>How quickly the position transitions from the current to the target value (-1 = instant).</summary>
+		public float Damping
+		{
+			set => damping = value;
+			get => damping;
+		}
+
+		/// <summary>The movement speed will be multiplied by this.</summary>
+		public float Sensitivity
+		{
+			set => sensitivity = value;
+			get => sensitivity;
+		}
+
+		/// <summary>The keys/fingers required to move left/right.</summary>
+		public CwInputManager.Axis HorizontalControls
+		{
+			set => horizontalControls = value;
+			get => horizontalControls;
+		}
+
+		/// <summary>The keys/fingers required to move backward/forward.</summary>
+		public CwInputManager.Axis DepthControls
+		{
+			set => depthControls = value;
+			get => depthControls;
+		}
+
+		/// <summary>The keys/fingers required to move down/up.</summary>
+		public CwInputManager.Axis VerticalControls
+		{
+			set => verticalControls = value;
+			get => verticalControls;
+		}
+
 		protected virtual void Start()
 		{
 			CwInputManager.EnsureThisComponentExists();
@@ -111,10 +111,7 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 
 		protected virtual void Update()
 		{
-			if (listen == true)
-			{
-				AddToDelta();
-			}
+			if (listen) AddToDelta();
 
 			DampenDelta();
 		}
@@ -135,7 +132,7 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			);
 
 			// Store old position
-			var oldPosition = transform.position;
+			Vector3 oldPosition = transform.position;
 
 			// Translate
 			transform.Translate(
@@ -144,7 +141,7 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			);
 
 			// Add to remaining
-			var acceleration = transform.position - oldPosition;
+			Vector3 acceleration = transform.position - oldPosition;
 
 			remainingDelta += acceleration;
 
@@ -155,11 +152,11 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 		private void DampenDelta()
 		{
 			// Dampen remaining delta
-			var factor = CwHelper.DampenFactor(
+			float factor = CwHelper.DampenFactor(
 				damping,
 				Time.deltaTime
 			);
-			var newDelta = Vector3.Lerp(
+			Vector3 newDelta = Vector3.Lerp(
 				remainingDelta,
 				Vector3.zero,
 				factor

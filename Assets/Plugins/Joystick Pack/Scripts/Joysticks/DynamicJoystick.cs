@@ -6,18 +6,16 @@ namespace Plugins.Joystick_Pack.Scripts.Joysticks
 {
 	public class DynamicJoystick : Joystick
 	{
+		[SerializeField] private float moveThreshold = 1;
+
 		public float MoveThreshold
 		{
-			get { return moveThreshold; }
-			set
-			{
+			get => moveThreshold;
+			set =>
 				moveThreshold = Mathf.Abs(
 					value
 				);
-			}
 		}
-
-		[SerializeField] private float moveThreshold = 1;
 
 		protected override void Start()
 		{

@@ -9,8 +9,8 @@ namespace Sources.Infrastructure.Services
 {
 	public class SandParticlePlayerSystem : ISandParticlePlayerSystem
 	{
-		private readonly ISandParticleView _sandParticleView;
 		private readonly ICoroutineRunner _coroutineRunner;
+		private readonly ISandParticleView _sandParticleView;
 		private readonly WaitForSeconds _waitForSeconds;
 		private ISandParticleView _particleView;
 

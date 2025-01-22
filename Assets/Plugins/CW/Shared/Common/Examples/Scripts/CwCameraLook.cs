@@ -15,42 +15,14 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 	)]
 	public class CwCameraLook : MonoBehaviour
 	{
-		/// <summary>Is this component currently listening for inputs?</summary>
-		public bool Listen
-		{
-			set { listen = value; }
-			get { return listen; }
-		}
-
 		[SerializeField] private bool listen = true;
-
-		/// <summary>How quickly the rotation transitions from the current to the target value (-1 = instant).</summary>
-		public float Damping
-		{
-			set { damping = value; }
-			get { return damping; }
-		}
 
 		[SerializeField] private float damping = 10.0f;
 
-		/// <summary>How quickly the mouse/finger movements rotate the camera.</summary>
-		public float Sensitivity
-		{
-			set { sensitivity = value; }
-			get { return sensitivity; }
-		}
-
 		[SerializeField] private float sensitivity = 1.0f;
 
-		/// <summary>The keys/fingers required to pitch down/up.</summary>
-		public CwInputManager.Axis PitchControls
-		{
-			set { pitchControls = value; }
-			get { return pitchControls; }
-		}
-
 		[SerializeField]
-		private CwInputManager.Axis pitchControls = new CwInputManager.Axis(
+		private CwInputManager.Axis pitchControls = new(
 			1,
 			true,
 			CwInputManager.AxisGesture.VerticalDrag,
@@ -62,15 +34,8 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			45.0f
 		);
 
-		/// <summary>The keys/fingers required to yaw left/right.</summary>
-		public CwInputManager.Axis YawControls
-		{
-			set { yawControls = value; }
-			get { return yawControls; }
-		}
-
 		[SerializeField]
-		private CwInputManager.Axis yawControls = new CwInputManager.Axis(
+		private CwInputManager.Axis yawControls = new(
 			1,
 			true,
 			CwInputManager.AxisGesture.HorizontalDrag,
@@ -82,15 +47,8 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			45.0f
 		);
 
-		/// <summary>The keys/fingers required to roll left/right.</summary>
-		public CwInputManager.Axis RollControls
-		{
-			set { rollControls = value; }
-			get { return rollControls; }
-		}
-
 		[SerializeField]
-		private CwInputManager.Axis rollControls = new CwInputManager.Axis(
+		private CwInputManager.Axis rollControls = new(
 			2,
 			true,
 			CwInputManager.AxisGesture.Twist,
@@ -104,24 +62,63 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 
 		[NonSerialized] private Quaternion remainingDelta = Quaternion.identity;
 
+		/// <summary>Is this component currently listening for inputs?</summary>
+		public bool Listen
+		{
+			set => listen = value;
+			get => listen;
+		}
+
+		/// <summary>How quickly the rotation transitions from the current to the target value (-1 = instant).</summary>
+		public float Damping
+		{
+			set => damping = value;
+			get => damping;
+		}
+
+		/// <summary>How quickly the mouse/finger movements rotate the camera.</summary>
+		public float Sensitivity
+		{
+			set => sensitivity = value;
+			get => sensitivity;
+		}
+
+		/// <summary>The keys/fingers required to pitch down/up.</summary>
+		public CwInputManager.Axis PitchControls
+		{
+			set => pitchControls = value;
+			get => pitchControls;
+		}
+
+		/// <summary>The keys/fingers required to yaw left/right.</summary>
+		public CwInputManager.Axis YawControls
+		{
+			set => yawControls = value;
+			get => yawControls;
+		}
+
+		/// <summary>The keys/fingers required to roll left/right.</summary>
+		public CwInputManager.Axis RollControls
+		{
+			set => rollControls = value;
+			get => rollControls;
+		}
+
 		protected virtual void Start()
 		{
 			CwInputManager.EnsureThisComponentExists();
 		}
 
+		protected virtual void Update()
+		{
+			if (listen) AddToDelta();
+
+			DampenDelta();
+		}
+
 		protected virtual void OnDisable()
 		{
 			//oldMousePositionSet = false;
-		}
-
-		protected virtual void Update()
-		{
-			if (listen == true)
-			{
-				AddToDelta();
-			}
-
-			DampenDelta();
 		}
 
 		protected virtual void OnApplicationFocus(bool focus)
@@ -147,7 +144,7 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			delta *= sensitivity;
 
 			// Store old rotation
-			var oldRotation = transform.localRotation;
+			Quaternion oldRotation = transform.localRotation;
 
 			// Rotate
 			transform.Rotate(
@@ -177,11 +174,11 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 		private void DampenDelta()
 		{
 			// Dampen remaining delta
-			var factor = CwHelper.DampenFactor(
+			float factor = CwHelper.DampenFactor(
 				damping,
 				Time.deltaTime
 			);
-			var newDelta = Quaternion.Slerp(
+			Quaternion newDelta = Quaternion.Slerp(
 				remainingDelta,
 				Quaternion.identity,
 				factor

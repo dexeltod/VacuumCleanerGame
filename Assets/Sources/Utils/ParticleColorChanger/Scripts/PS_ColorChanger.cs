@@ -26,37 +26,37 @@ namespace Sources.Utils.ParticleColorChanger.Scripts
 		*/
 		public void ChangeColor()
 		{
-			var systems = this.GetComponentsInChildren<ParticleSystem>();
+			ParticleSystem[] systems = GetComponentsInChildren<ParticleSystem>();
 
-			Color.RGBToHSV(this.currentColor, out this.currentHSV.r, out this.currentHSV.g, out this.currentHSV.b);
-			Color.RGBToHSV(this.newColor, out this.newHSV.r, out this.newHSV.g, out this.newHSV.b);
+			Color.RGBToHSV(currentColor, out currentHSV.r, out currentHSV.g, out currentHSV.b);
+			Color.RGBToHSV(newColor, out newHSV.r, out newHSV.g, out newHSV.b);
 
-			foreach (var system in systems)
+			foreach (ParticleSystem system in systems)
 			{
-				var main = system.main;
+				ParticleSystem.MainModule main = system.main;
 
 				switch (main.startColor.mode)
 				{
 					case ParticleSystemGradientMode.Color:
 						main.startColor = new ParticleSystem.MinMaxGradient(
-							this.ConvertCurrentToNew(main.startColor.color)
+							ConvertCurrentToNew(main.startColor.color)
 						);
 						break;
 					case ParticleSystemGradientMode.TwoColors:
 						main.startColor = new ParticleSystem.MinMaxGradient(
-							this.ConvertCurrentToNew(main.startColor.colorMin),
-							this.ConvertCurrentToNew(main.startColor.colorMax)
+							ConvertCurrentToNew(main.startColor.colorMin),
+							ConvertCurrentToNew(main.startColor.colorMax)
 						);
 						break;
 					case ParticleSystemGradientMode.Gradient:
 						main.startColor = new ParticleSystem.MinMaxGradient(
-							this.ConvertCurrentToNew(main.startColor.gradient)
+							ConvertCurrentToNew(main.startColor.gradient)
 						);
 						break;
 					case ParticleSystemGradientMode.TwoGradients:
 						main.startColor = new ParticleSystem.MinMaxGradient(
-							this.ConvertCurrentToNew(main.startColor.gradientMin),
-							this.ConvertCurrentToNew(main.startColor.gradientMax)
+							ConvertCurrentToNew(main.startColor.gradientMin),
+							ConvertCurrentToNew(main.startColor.gradientMax)
 						);
 						break;
 				}
@@ -68,9 +68,9 @@ namespace Sources.Utils.ParticleColorChanger.Scripts
 		*/
 		public void SwapCurrentWithNewColors()
 		{
-			Color temp = this.currentColor;
-			this.currentColor = this.newColor;
-			this.newColor = temp;
+			Color temp = currentColor;
+			currentColor = newColor;
+			newColor = temp;
 		}
 
 		/**
@@ -78,15 +78,15 @@ namespace Sources.Utils.ParticleColorChanger.Scripts
 		*/
 		public Gradient ConvertCurrentToNew(Gradient gradient)
 		{
-			Gradient g = new Gradient();
+			var g = new Gradient();
 			g.mode = gradient.mode;
 
 			var alphaKeys = new GradientAlphaKey[gradient.alphaKeys.Length];
 			var colorKeys = new GradientColorKey[gradient.colorKeys.Length];
 
-			for (int i = 0; i < g.colorKeys.Length; ++i)
+			for (var i = 0; i < g.colorKeys.Length; ++i)
 				colorKeys[i] = new GradientColorKey(
-					this.ConvertCurrentToNew(gradient.colorKeys[i].color),
+					ConvertCurrentToNew(gradient.colorKeys[i].color),
 					gradient.colorKeys[i].time
 				);
 
@@ -104,7 +104,7 @@ namespace Sources.Utils.ParticleColorChanger.Scripts
 			Color hsv;
 			Color.RGBToHSV(color, out hsv.r, out hsv.g, out hsv.b);
 			Color endRes = Color.HSVToRGB(
-				Mathf.Clamp01(Mathf.Abs(this.newHSV.r + (this.currentHSV.r - hsv.r))),
+				Mathf.Clamp01(Mathf.Abs(newHSV.r + (currentHSV.r - hsv.r))),
 				hsv.g,
 				hsv.b
 			);

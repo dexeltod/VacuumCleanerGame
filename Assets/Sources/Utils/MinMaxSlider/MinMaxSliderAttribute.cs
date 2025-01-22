@@ -4,8 +4,8 @@ namespace Sources.Utils.MinMaxSlider
 {
 	public class MinMaxSliderAttribute : PropertyAttribute
 	{
-		public float min;
 		public float max;
+		public float min;
 
 		public MinMaxSliderAttribute(float min, float max)
 		{

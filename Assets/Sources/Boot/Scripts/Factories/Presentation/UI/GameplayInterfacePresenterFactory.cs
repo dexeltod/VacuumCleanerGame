@@ -25,40 +25,43 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 		IGameplayInterfacePresenterFactory
 	{
 		private const float Time = 10f;
-
-		private readonly IAssetFactory _assetFactory;
-		private readonly GameplayInterfaceViewFactory _gameplayInterfaceViewFactory;
-		private readonly IResourcesProgressPresenter _resourceProgressProgressPresenter;
-		private readonly IPersistentProgressService _persistentProgressService;
-		private readonly TranslatorService _translatorService;
-		private readonly ILevelChangerService _levelChangerService;
-		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenter;
-		private readonly IGameStateChanger _gameStateChanger;
-		private readonly ICoroutineRunner _coroutineRunner;
 		private readonly IAdvertisement _advertisement;
+
+		private readonly IAssetLoader _assetLoader;
+		private readonly ICoroutineRunner _coroutineRunner;
+		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenter;
+		private readonly GameplayInterfaceViewFactory _gameplayInterfaceViewFactory;
+		private readonly ILevelChangerService _levelChangerService;
+		private readonly IPersistentProgressService _persistentProgressService;
 		private readonly IPlayerModelRepository _playerModelRepository;
+		private readonly GameplayInterfaceView _gameplayInterfaceView;
+		private readonly IResourcesProgressPresenter _resourceProgressProgressPresenter;
+		private readonly IStateMachine _stateMachine;
+		private readonly TranslatorService _translatorService;
 
 		public GameplayInterfacePresenterFactory(TranslatorService translatorService,
-			IAssetFactory assetFactory,
+			IAssetLoader assetLoader,
 			IPersistentProgressService persistentProgressService,
 			ILevelChangerService levelChangerService,
-			IGameStateChanger gameStateChanger,
+			IStateMachine stateMachine,
 			ICoroutineRunner coroutineRunner,
 			IAdvertisement advertisement,
-			IPlayerModelRepository playerModelRepository)
+			IPlayerModelRepository playerModelRepository,
+			GameplayInterfaceView gameplayInterfaceView)
 
 		{
-			_assetFactory = assetFactory ?? throw new ArgumentNullException(nameof(assetFactory));
+			_assetLoader = assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 			_persistentProgressService =
 				persistentProgressService ?? throw new ArgumentNullException(nameof(persistentProgressService));
 
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 			_levelChangerService = levelChangerService ?? throw new ArgumentNullException(nameof(levelChangerService));
 
-			_gameStateChanger = gameStateChanger ?? throw new ArgumentNullException(nameof(gameStateChanger));
+			_stateMachine = stateMachine ?? throw new ArgumentNullException(nameof(stateMachine));
 			_coroutineRunner = coroutineRunner ?? throw new ArgumentNullException(nameof(coroutineRunner));
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 			_playerModelRepository = playerModelRepository ?? throw new ArgumentNullException(nameof(playerModelRepository));
+			_gameplayInterfaceView = gameplayInterfaceView ?? throw new ArgumentNullException(nameof(gameplayInterfaceView));
 		}
 
 		private string UIResourcesUI => ResourcesAssetPath.Scene.UIResources.UI;
@@ -71,15 +74,14 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 
 		public override IGameplayInterfacePresenter Create()
 		{
-			GameplayInterfaceView gameplayInterfaceView =
-				_assetFactory.Instantiate(UIResourcesUI).GetComponent<GameplayInterfaceView>();
+			GameplayInterfacePresenter presenter = CreateGameplayInterfacePresenter(
+				_gameplayInterfaceView,
+				CreateSpeedDecorator()
+			);
 
-			GameplayInterfacePresenter presenter = CreateGameplayInterfacePresenter(gameplayInterfaceView, CreateSpeedDecorator());
-
-			GameMenuView gameMenuView = gameplayInterfaceView.GetComponent<GameMenuView>();
-
-			IGameMenuPresenter gameMenuPresenter = CreateGameMenuPresenter(gameplayInterfaceView);
-			gameMenuView.Construct(gameMenuPresenter);
+			_gameplayInterfaceView
+				.GetComponent<GameMenuView>()
+				.Construct(CreateGameMenuPresenter(_gameplayInterfaceView));
 
 			return presenter;
 		}
@@ -87,7 +89,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 		private IGameMenuPresenter CreateGameMenuPresenter(GameplayInterfaceView gameplayInterfaceView) =>
 			new GameplayInterfaceViewFactory(
 				_gameplayInterfacePresenter,
-				_gameStateChanger,
+				_stateMachine,
 				_translatorService,
 				ResourceModelReadOnly,
 				gameplayInterfaceView,
@@ -97,12 +99,12 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 		private GameplayInterfacePresenter CreateGameplayInterfacePresenter(GameplayInterfaceView gameplayInterfaceView,
 			SpeedDecorator speedDecorator) =>
 			new(
-				_levelChangerService,
 				gameplayInterfaceView,
 				speedDecorator,
-				_coroutineRunner,
+				_levelChangerService,
 				Time,
 				CashScore,
+				_coroutineRunner,
 				_playerModelRepository.Get(ProgressType.MaxCashScore)
 			);
 

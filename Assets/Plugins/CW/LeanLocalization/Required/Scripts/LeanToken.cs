@@ -6,8 +6,10 @@ using UnityEngine;
 
 namespace Plugins.CW.LeanLocalization.Required.Scripts
 {
-	/// <summary>The class stores a token name (e.g. "AGE"), allowing it to be replaced with the token value (e.g. "20").
-	/// To use the token in your text, simply include the token name surrounded by braces (e.g. "I am {AGE} years old!")</summary>
+	/// <summary>
+	///     The class stores a token name (e.g. "AGE"), allowing it to be replaced with the token value (e.g. "20").
+	///     To use the token in your text, simply include the token name surrounded by braces (e.g. "I am {AGE} years old!")
+	/// </summary>
 	[ExecuteInEditMode]
 	[HelpURL(
 		LeanLocalization.HelpUrlPrefix + "LeanToken"
@@ -17,13 +19,15 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 	)]
 	public class LeanToken : LeanSource
 	{
+		[NonSerialized] private readonly static HashSet<ILocalizationHandler> tempHandlers = new();
 		[SerializeField] private string value;
 
 		[NonSerialized] private HashSet<ILocalizationHandler> handlers;
 
-		[NonSerialized] private static HashSet<ILocalizationHandler> tempHandlers = new HashSet<ILocalizationHandler>();
-
-		/// <summary>This is the current value/text for this token. When this changes, it will automatically update all localizations that use this token.</summary>
+		/// <summary>
+		///     This is the current value/text for this token. When this changes, it will automatically update all
+		///     localizations that use this token.
+		/// </summary>
 		public string Value
 		{
 			set
@@ -40,15 +44,19 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 							handlers
 						);
 
-						foreach (var handler in tempHandlers)
-						{
-							handler.UpdateLocalization();
-						}
+						foreach (ILocalizationHandler handler in tempHandlers) handler.UpdateLocalization();
 					}
 				}
 			}
 
-			get { return value; }
+			get => value;
+		}
+
+		protected override void OnDisable()
+		{
+			base.OnDisable();
+
+			UnregisterAll();
 		}
 
 		/// <summary>This method allows you to set <b>Value</b> from an inspector event using a <b>float</b> value.</summary>
@@ -73,10 +81,7 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		{
 			if (handler != null)
 			{
-				if (handlers == null)
-				{
-					handlers = new HashSet<ILocalizationHandler>();
-				}
+				if (handlers == null) handlers = new HashSet<ILocalizationHandler>();
 
 				handlers.Add(
 					handler
@@ -87,23 +92,19 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 		public void Unregister(ILocalizationHandler handler)
 		{
 			if (handlers != null)
-			{
 				handlers.Remove(
 					handler
 				);
-			}
 		}
 
 		public void UnregisterAll()
 		{
 			if (handlers != null)
 			{
-				foreach (var handler in handlers)
-				{
+				foreach (ILocalizationHandler handler in handlers)
 					handler.Unregister(
 						this
 					);
-				}
 
 				handlers.Clear();
 			}
@@ -115,13 +116,6 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 				name,
 				this
 			);
-		}
-
-		protected override void OnDisable()
-		{
-			base.OnDisable();
-
-			UnregisterAll();
 		}
 	}
 
@@ -144,16 +138,13 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts
 			if (Draw(
 				    "value",
 				    "This is the current value/text for this token. When this changes, it will automatically update all localizations that use this token."
-			    ) ==
-			    true)
-			{
+			    ))
 				Each(
 					tgts,
 					t => t.Value = serializedObject.FindProperty(
 						"value"
 					).stringValue
 				);
-			}
 		}
 
 		[MenuItem(

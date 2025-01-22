@@ -15,24 +15,22 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 		// A helper warning label when the user puts the attribute above a non string type.
 		private const string m_InvalidTypeLabel = "Attribute invalid for type ";
 		private const float m_ButtonWidth = 80f;
-		private static int s_PPtrHash = "s_PPtrHash".GetHashCode();
+		private readonly static int s_PPtrHash = "s_PPtrHash".GetHashCode();
+		private static GUIContent m_MissingAssetLabel = new("Missing");
 		private string m_ActivePickerPropertyPath;
 		private int m_PickerControlID = -1;
-		private static GUIContent m_MissingAssetLabel = new GUIContent("Missing");
 
 		// A shared array of references to the objects we have loaded
-		private IDictionary<string, Object> m_References;
+		private readonly IDictionary<string, Object> m_References;
 
 		/// <summary>
-		/// Invoked when unity creates our drawer. 
+		///     Invoked when unity creates our drawer.
 		/// </summary>
-		public AssetPathDrawer()
-		{
+		public AssetPathDrawer() =>
 			m_References = new Dictionary<string, Object>();
-		}
 
 		/// <summary>
-		/// Invoked when we want to try our property. 
+		///     Invoked when we want to try our property.
 		/// </summary>
 		/// <param name="position">The position we have allocated on screen</param>
 		/// <param name="property">The field our attribute is over</param>
@@ -58,7 +56,7 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 				// Draw our content warning;
 				EditorGUI.HelpBox(
 					contentPosition,
-					m_InvalidTypeLabel + this.fieldInfo.FieldType.Name,
+					m_InvalidTypeLabel + fieldInfo.FieldType.Name,
 					MessageType.Error
 				);
 			}
@@ -66,57 +64,6 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 			{
 				HandleObjectReference(position, property, label);
 			}
-		}
-
-		/// <summary>
-		/// Due to the fact that ShowObjectPicker does not have a none generic version we
-		/// have to use reflection to create and invoke it.
-		/// </summary>
-		/// <param name="type"></param>
-		private void ShowObjectPicker(Type type, Rect position)
-		{
-			// Get the type
-			Type classType = typeof(EditorGUIUtility);
-			// Get the method
-			MethodInfo showObjectPickerMethod = classType.GetMethod(
-				"ShowObjectPicker",
-				BindingFlags.Public | BindingFlags.Static
-			);
-			// Make the generic version
-			MethodInfo genericObjectPickerMethod = showObjectPickerMethod.MakeGenericMethod(type);
-			// We have no starting target
-			Object target = null;
-			// We are not allowing scene objects 
-			bool allowSceneObjects = false;
-			// An empty filter
-			string searchFilter = string.Empty;
-			// Make a control ID
-			m_PickerControlID = GUIUtility.GetControlID(s_PPtrHash, FocusType.Passive, position);
-			// Save our property path
-			// Invoke it (We have to do this step since there is only a generic version for showing the asset picker.
-			genericObjectPickerMethod.Invoke(
-				null,
-				new object[]
-				{
-					target,
-					allowSceneObjects,
-					searchFilter,
-					m_PickerControlID
-				}
-			);
-		}
-
-		protected virtual SerializedProperty GetProperty(SerializedProperty rootProperty)
-		{
-			return rootProperty;
-		}
-
-		protected virtual Type ObjectType()
-		{
-			// Get our attribute
-			AssetPath.Attribute attribute = this.attribute as AssetPath.Attribute;
-			// Return back the type.
-			return attribute.type;
 		}
 
 		private void HandleObjectReference(Rect position, SerializedProperty property, GUIContent label)
@@ -131,10 +78,8 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 			//bool isMissing = false;
 			// Check if we have a key
 			if (m_References.ContainsKey(property.propertyPath))
-			{
 				// Get the value. 
 				propertyValue = m_References[property.propertyPath];
-			}
 
 			// Now if its null we try to load it
 			if (propertyValue == null && !string.IsNullOrEmpty(assetPath))
@@ -158,21 +103,65 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 				propertyValue = EditorGUI.ObjectField(position, label, propertyValue, objectType, false);
 			}
 
-			if (EditorGUI.EndChangeCheck())
-			{
-				OnSelectionMade(propertyValue, property);
-			}
+			if (EditorGUI.EndChangeCheck()) OnSelectionMade(propertyValue, property);
+		}
+
+		/// <summary>
+		///     Due to the fact that ShowObjectPicker does not have a none generic version we
+		///     have to use reflection to create and invoke it.
+		/// </summary>
+		/// <param name="type"></param>
+		private void ShowObjectPicker(Type type, Rect position)
+		{
+			// Get the type
+			Type classType = typeof(EditorGUIUtility);
+			// Get the method
+			MethodInfo showObjectPickerMethod = classType.GetMethod(
+				"ShowObjectPicker",
+				BindingFlags.Public | BindingFlags.Static
+			);
+			// Make the generic version
+			MethodInfo genericObjectPickerMethod = showObjectPickerMethod.MakeGenericMethod(type);
+			// We have no starting target
+			Object target = null;
+			// We are not allowing scene objects 
+			var allowSceneObjects = false;
+			// An empty filter
+			var searchFilter = string.Empty;
+			// Make a control ID
+			m_PickerControlID = GUIUtility.GetControlID(s_PPtrHash, FocusType.Passive, position);
+			// Save our property path
+			// Invoke it (We have to do this step since there is only a generic version for showing the asset picker.
+			genericObjectPickerMethod.Invoke(
+				null,
+				new object[]
+				{
+					target,
+					allowSceneObjects,
+					searchFilter,
+					m_PickerControlID
+				}
+			);
+		}
+
+		protected virtual SerializedProperty GetProperty(SerializedProperty rootProperty) =>
+			rootProperty;
+
+		protected virtual Type ObjectType()
+		{
+			// Get our attribute
+			var attribute = this.attribute as AssetPath.Attribute;
+			// Return back the type.
+			return attribute.type;
 		}
 
 		protected virtual void OnSelectionMade(Object newSelection, SerializedProperty property)
 		{
-			string assetPath = string.Empty;
+			var assetPath = string.Empty;
 
 			if (newSelection != null)
-			{
 				// Get our path
 				assetPath = AssetDatabase.GetAssetPath(newSelection);
-			}
 
 			// Save our value.
 			m_References[property.propertyPath] = newSelection;

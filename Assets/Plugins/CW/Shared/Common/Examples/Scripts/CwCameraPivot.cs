@@ -6,7 +6,10 @@ using UnityEngine;
 
 namespace Plugins.CW.Shared.Common.Examples.Scripts
 {
-	/// <summary>This component allows you to rotate the current GameObject using local Euler rotations, allowing you to create a typical FPS camera system, or orbital camera system.</summary>
+	/// <summary>
+	///     This component allows you to rotate the current GameObject using local Euler rotations, allowing you to create
+	///     a typical FPS camera system, or orbital camera system.
+	/// </summary>
 	[HelpURL(
 		CwShared.HelpUrlPrefix + "CwCameraPivot"
 	)]
@@ -15,33 +18,12 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 	)]
 	public class CwCameraPivot : MonoBehaviour
 	{
-		/// <summary>Is this component currently listening for inputs?</summary>
-		public bool Listen
-		{
-			set { listen = value; }
-			get { return listen; }
-		}
-
 		[SerializeField] private bool listen = true;
-
-		/// <summary>How quickly the position transitions from the current to the target value (-1 = instant).</summary>
-		public float Damping
-		{
-			set { damping = value; }
-			get { return damping; }
-		}
 
 		[SerializeField] private float damping = 10.0f;
 
-		/// <summary>The keys/fingers required to pitch down/up.</summary>
-		public CwInputManager.Axis PitchControls
-		{
-			set { pitchControls = value; }
-			get { return pitchControls; }
-		}
-
 		[SerializeField]
-		private CwInputManager.Axis pitchControls = new CwInputManager.Axis(
+		private CwInputManager.Axis pitchControls = new(
 			1,
 			true,
 			CwInputManager.AxisGesture.VerticalDrag,
@@ -53,15 +35,8 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 			45.0f
 		);
 
-		/// <summary>The keys/fingers required to yaw left/right.</summary>
-		public CwInputManager.Axis YawControls
-		{
-			set { yawControls = value; }
-			get { return yawControls; }
-		}
-
 		[SerializeField]
-		private CwInputManager.Axis yawControls = new CwInputManager.Axis(
+		private CwInputManager.Axis yawControls = new(
 			1,
 			true,
 			CwInputManager.AxisGesture.HorizontalDrag,
@@ -75,19 +50,44 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 
 		[NonSerialized] private Vector3 remainingDelta;
 
-		protected virtual void OnEnable()
+		/// <summary>Is this component currently listening for inputs?</summary>
+		public bool Listen
 		{
-			CwInputManager.EnsureThisComponentExists();
+			set => listen = value;
+			get => listen;
+		}
+
+		/// <summary>How quickly the position transitions from the current to the target value (-1 = instant).</summary>
+		public float Damping
+		{
+			set => damping = value;
+			get => damping;
+		}
+
+		/// <summary>The keys/fingers required to pitch down/up.</summary>
+		public CwInputManager.Axis PitchControls
+		{
+			set => pitchControls = value;
+			get => pitchControls;
+		}
+
+		/// <summary>The keys/fingers required to yaw left/right.</summary>
+		public CwInputManager.Axis YawControls
+		{
+			set => yawControls = value;
+			get => yawControls;
 		}
 
 		protected virtual void Update()
 		{
-			if (listen == true)
-			{
-				AddToDelta();
-			}
+			if (listen) AddToDelta();
 
 			DampenDelta();
+		}
+
+		protected virtual void OnEnable()
+		{
+			CwInputManager.EnsureThisComponentExists();
 		}
 
 		private void AddToDelta()
@@ -103,18 +103,18 @@ namespace Plugins.CW.Shared.Common.Examples.Scripts
 		private void DampenDelta()
 		{
 			// Dampen remaining delta
-			var factor = CwHelper.DampenFactor(
+			float factor = CwHelper.DampenFactor(
 				damping,
 				Time.deltaTime
 			);
-			var newDelta = Vector3.Lerp(
+			Vector3 newDelta = Vector3.Lerp(
 				remainingDelta,
 				Vector3.zero,
 				factor
 			);
 
 			// Rotate by difference
-			var euler = transform.localEulerAngles;
+			Vector3 euler = transform.localEulerAngles;
 
 			euler.x = -Mathf.DeltaAngle(
 				euler.x,

@@ -22,6 +22,21 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 		)]
 		public string FallbackText;
 
+		protected virtual void Awake()
+		{
+			// Should we set FallbackText?
+			if (string.IsNullOrEmpty(
+				    FallbackText
+			    ))
+			{
+				// Get the Text component attached to this GameObject
+				var text = GetComponent<Text>();
+
+				// Copy current text to fallback
+				FallbackText = text.text;
+			}
+		}
+
 		// This gets called every time the translation needs updating
 		public override void UpdateTranslation(LeanTranslation translation)
 		{
@@ -30,40 +45,20 @@ namespace Plugins.CW.LeanLocalization.Required.Scripts.Behaviours
 
 			// Use translation?
 			if (translation != null && translation.Data is string)
-			{
 				text.text = LeanTranslation.FormatText(
 					(string)translation.Data,
 					text.text,
 					this,
 					gameObject
 				);
-			}
 			// Use fallback?
 			else
-			{
 				text.text = LeanTranslation.FormatText(
 					FallbackText,
 					text.text,
 					this,
 					gameObject
 				);
-			}
-		}
-
-		protected virtual void Awake()
-		{
-			// Should we set FallbackText?
-			if (string.IsNullOrEmpty(
-				    FallbackText
-			    ) ==
-			    true)
-			{
-				// Get the Text component attached to this GameObject
-				var text = GetComponent<Text>();
-
-				// Copy current text to fallback
-				FallbackText = text.text;
-			}
 		}
 	}
 }
