@@ -38,8 +38,7 @@ namespace Sources.BusinessLogic
 			LeanLocalization.UpdateTranslations();
 		}
 
-		public void UpdateTranslations() =>
-			LeanLocalization.UpdateTranslations();
+		public void UpdateTranslations() => LeanLocalization.UpdateTranslations();
 
 		public string GetTranslationText(string phrase)
 		{
@@ -67,8 +66,8 @@ namespace Sources.BusinessLogic
 		{
 			if (_languages.Contains(
 				    language
-			    ) ==
-			    false)
+			    )
+			    == false)
 				throw new InvalidOperationException(
 					$"Language {language} is not existing"
 				);

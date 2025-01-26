@@ -1,12 +1,12 @@
 using System;
-using Sources.ControllersInterfaces;
-using Sources.PresentationInterfaces;
+using Sources.PresentationInterfaces.Common;
+using Sources.Utils.ParticleColorChanger.Scripts;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Sources.Presentation.SceneEntity
 {
-	public class ResourcePresentation : MonoBehaviour, ICollectable
+	public class ResourcePresentation : MonoBehaviour, IResourcePresentation
 	{
 		[SerializeField] private GameObject _view;
 
@@ -17,38 +17,41 @@ namespace Sources.Presentation.SceneEntity
 		[Range(0.6f, 0.8f)] [SerializeField] private float _minPitchRange = 0.6f;
 		[Range(0.6f, 0.8f)] [SerializeField] private float _maxPitchRange = 0.8f;
 		[Range(0.6f, 1)] [SerializeField] private float _soundVolume = 0.6f;
-		private IResourcesProgressPresenter _resourcesProgressPresenterProvider;
-
-		public int Score { get; private set; } = 1;
 
 		public GameObject View => _view;
 
 		public ParticleSystem Particle => _particle;
 
-		public AudioSource Sound => _sound;
+		public int ID { get; private set; }
 
-		public event Action Collected;
+		public event Action Collided;
 
-		public void HandleCollide(Collision collision)
+		public void Collect()
 		{
-			if (_resourcesProgressPresenterProvider.IsMaxScoreReached == false)
-				return;
-
-			if (collision.collider.name is not ("VacuumColliderBottom" or "VacuumColliderTop")) return;
-
-			_resourcesProgressPresenterProvider.TryAddSand(Score);
 			_view.SetActive(false);
 			_particle.Play();
 			_sound.Play();
-			Collected?.Invoke();
 		}
 
-		public void Construct(IResourcesProgressPresenter resourcesProgressPresenterProvider, int score)
+		public void HandleCollide(Collision collision)
 		{
-			if (score <= 0) throw new ArgumentOutOfRangeException(nameof(score));
+			if (collision.collider.name is not ("VacuumColliderBottom" or "VacuumColliderTop")) return;
 
-			Score = score;
-			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider;
+			Collided!.Invoke();
+		}
+
+		public void Construct(int id, Material material, Color materialColor)
+		{
+			var colorChanger = _particle.GetComponent<PS_ColorChanger>();
+
+			var particleSystemRenderer = _particle.GetComponent<ParticleSystem>().GetComponent<ParticleSystemRenderer>();
+
+			particleSystemRenderer.material = new Material(material) { color = materialColor };
+
+			colorChanger.newColor = materialColor;
+			colorChanger.ChangeColor();
+
+			ID = id;
 			_sound.pitch = Random.Range(_minPitchRange, _maxPitchRange);
 			_sound.volume = _soundVolume;
 		}

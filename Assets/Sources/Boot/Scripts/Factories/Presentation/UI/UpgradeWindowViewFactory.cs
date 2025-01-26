@@ -4,8 +4,7 @@ using Sources.BusinessLogic;
 using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.Services;
 using Sources.BusinessLogic.ServicesInterfaces;
-using Sources.ControllersInterfaces;
-using Sources.ControllersInterfaces.Services;
+using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;
@@ -17,77 +16,65 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 	public class UpgradeWindowViewFactory : IUpgradeWindowViewFactory
 	{
 		private readonly IAssetLoader _assetLoader;
-		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenter;
+		private readonly IUpdatablePersistentProgressService _persistentProgressService;
 		private readonly IPlayerModelRepository _playerModelRepository;
-		private readonly IPresentersContainerRepository _presentersContainerRepository;
 		private readonly IProgressEntityRepository _progressEntityRepository;
-		private readonly IResourcesProgressPresenter _resourceProgressPresenter;
+		private readonly IResourceModel _resourceModel;
 		private readonly ISaveLoader _saveLoader;
 		private readonly TranslatorService _translatorService;
-		private readonly IUpdatablePersistentProgressService _updatablePersistentProgressService;
-		private readonly IUpgradeWindowPresenter _upgradeWindowPresenter;
-
-		private List<UpgradeElementPrefabView> _upgradeElementsPrefabs;
 
 		private GameObject _upgradeWindowGameObject;
-		private IUpgradeWindowPresentation _upgradeWindowPresentation;
 
-		public UpgradeWindowViewFactory(IPresentersContainerRepository presentersContainerRepository,
+		public UpgradeWindowViewFactory(
 			IAssetLoader assetLoader,
-			IResourcesProgressPresenter resourceProgressPresenter,
-			IUpdatablePersistentProgressService updatablePersistentProgressService,
+			IUpdatablePersistentProgressService persistentProgressService,
 			TranslatorService translatorService,
-			IUpgradeWindowPresenter upgradeWindowPresenter,
-			IGameplayInterfacePresenter gameplayInterfacePresenter,
 			IProgressEntityRepository progressEntityRepository,
 			IPlayerModelRepository playerModelRepository,
-			ISaveLoader saveLoader)
+			ISaveLoader saveLoader,
+			IResourceModel resourceModel)
 		{
-			_presentersContainerRepository = presentersContainerRepository ??
-			                                 throw new ArgumentNullException(nameof(presentersContainerRepository));
 			_assetLoader
 				= assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
-			_resourceProgressPresenter = resourceProgressPresenter;
-			_updatablePersistentProgressService = updatablePersistentProgressService;
+			_persistentProgressService = persistentProgressService;
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
-			_upgradeWindowPresenter = upgradeWindowPresenter ?? throw new ArgumentNullException(nameof(upgradeWindowPresenter));
-			_gameplayInterfacePresenter =
-				gameplayInterfacePresenter ?? throw new ArgumentNullException(nameof(gameplayInterfacePresenter));
+
 			_progressEntityRepository =
 				progressEntityRepository ?? throw new ArgumentNullException(nameof(progressEntityRepository));
 			_playerModelRepository = playerModelRepository ?? throw new ArgumentNullException(nameof(playerModelRepository));
 			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
+			_resourceModel = resourceModel ?? throw new ArgumentNullException(nameof(resourceModel));
 		}
 
 		private string UIResourcesUpgradeWindow => ResourcesAssetPath.Scene.UIResources.UpgradeWindow;
-		private Transform UpgradeWindowContainerTransform => _upgradeWindowPresentation.ContainerTransform;
 
 		public IUpgradeWindowPresentation Create()
 		{
-			_upgradeWindowPresentation = _assetLoader
-				.InstantiateAndGetComponent<UpgradeWindowPresentation>(UIResourcesUpgradeWindow);
+			UpgradeWindowPresentation presentation = LoadPresentation();
+			Transform transform = presentation.ContainerTransform;
 
-			Localize();
+			Localize(presentation);
 
 			IEnumerable<IUpgradeElementPrefabView> upgradeElementPrefabViews = new ShopViewFactory(
-				_updatablePersistentProgressService,
+				_persistentProgressService,
 				_translatorService,
-				_upgradeWindowPresenter,
-				_resourceProgressPresenter,
-				_gameplayInterfacePresenter,
 				_progressEntityRepository,
 				_playerModelRepository,
 				_saveLoader,
 				_assetLoader,
-				_progressEntityRepository
-			).Create(UpgradeWindowContainerTransform, _upgradeWindowPresentation.AudioSource);
+				_progressEntityRepository,
+				_resourceModel
+			).Create(transform, presentation.AudioSource);
 
-			_upgradeWindowPresentation.Construct(_upgradeWindowPresenter);
 
-			return _upgradeWindowPresentation;
+
+			return presentation;
 		}
 
-		private void Localize() =>
-			_upgradeWindowPresentation.Phrases = _translatorService.GetLocalize(_upgradeWindowPresentation.Phrases);
+		private UpgradeWindowPresentation LoadPresentation() =>
+			_assetLoader.InstantiateAndGetComponent<UpgradeWindowPresentation>(UIResourcesUpgradeWindow);
+
+		private void Localize(UpgradeWindowPresentation presentation) =>
+			presentation.Phrases = _translatorService.GetLocalize(presentation.Phrases);
 	}
 }

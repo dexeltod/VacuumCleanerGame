@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.Scripting;
 
 #pragma warning disable 1591
-namespace Plugins.Demigiant.DOTween.Modules
+namespace DG.Tweening
 {
 	/// <summary>
 	///     Utility functions that deal with available Modules.

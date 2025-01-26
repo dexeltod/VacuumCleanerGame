@@ -15,6 +15,8 @@ using Sources.BusinessLogic.Scene;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.BusinessLogic.States.StateMachineInterfaces;
 using Sources.Controllers.Services;
+using Sources.ControllersInterfaces;
+using Sources.ControllersInterfaces.Services;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Leaderboard;
@@ -23,6 +25,7 @@ using Sources.Infrastructure.Services;
 using Sources.Infrastructure.Services.DomainServices;
 using Sources.InfrastructureInterfaces.Configs;
 using Sources.InfrastructureInterfaces.Configs.Scripts;
+using Sources.PresentationInterfaces.Common;
 using Sources.Utils;
 using UnityEngine;
 using VContainer;
@@ -126,7 +129,9 @@ namespace Sources.Boot.Scripts.DIRegisters
 
 			RegisterProgressEntityRepository();
 
-			_builder.Register<PresentersContainerRepository>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
+			_builder.Register<IRepository<IPresenter>, PresentersRepository>(Lifetime.Singleton).AsSelf();
+			_builder.Register<IRepository<IView>, ViewsRepository>(Lifetime.Singleton).AsSelf();
+
 			_builder.Register<GameStatesRepositoryInitializer>(Lifetime.Scoped).AsSelf();
 
 			_builder.Register(_ => new LeaderBoardRepository(GetLeaderboard()), Lifetime.Singleton).AsSelf()

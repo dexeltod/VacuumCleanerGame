@@ -23,25 +23,14 @@ namespace Sources.Presentation.Common
 				Presenter?.Disable();
 		}
 
-		private void OnDestroy() =>
-			DestroySelf();
+		private void OnDestroy() => DestroySelf();
 
-		public virtual void Construct(T presenter)
-		{
-			if (presenter == null)
-				throw new ArgumentNullException(nameof(presenter));
+		public virtual void Construct(T presenter) => Presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
 
-			Disable();
-			Presenter = presenter;
-			Enable();
-		}
-
-		public virtual void SetParent(Transform parent) =>
-			transform.SetParent(parent);
+		public virtual void SetParent(Transform parent) => transform.SetParent(parent);
 
 		public Transform Transform => transform;
 
-		protected virtual void DestroySelf() =>
-			Destroy(gameObject);
+		protected virtual void DestroySelf() => Destroy(gameObject);
 	}
 }

@@ -17,8 +17,7 @@ namespace Sources.BusinessLogic.Services
 		public GameFocusHandler(AudioMixer audioMixer, ApplicationQuitHandler applicationQuitHandler)
 		{
 			_audioMixer = audioMixer ?? throw new ArgumentNullException(nameof(audioMixer));
-			_applicationQuitHandler = applicationQuitHandler ??
-			                          throw new ArgumentNullException(nameof(applicationQuitHandler));
+			_applicationQuitHandler = applicationQuitHandler ?? throw new ArgumentNullException(nameof(applicationQuitHandler));
 		}
 
 		private string MasterVolume => ConstantNames.Sound.SoundMixerNames.MasterVolume;
@@ -62,7 +61,6 @@ namespace Sources.BusinessLogic.Services
 				_audioMixer.SetFloat(MasterVolume, 0f);
 		}
 
-		private void SetTimePause(bool isPaused) =>
-			Time.timeScale = isPaused ? 0f : 1f;
+		private void SetTimePause(bool isPaused) => Time.timeScale = isPaused ? 0f : 1f;
 	}
 }

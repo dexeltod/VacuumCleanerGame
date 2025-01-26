@@ -45,8 +45,7 @@ namespace Sources.Infrastructure.Services
 			succeededCallback?.Invoke();
 		}
 
-		public async UniTask ClearSaves() =>
-			await SaveLoaderImplementation.Save(_clearProgressFactory.Create());
+		public async UniTask ClearSaves() => await SaveLoaderImplementation.Save(_clearProgressFactory.Create());
 
 		public async UniTask<IGlobalProgress> LoadFromCloud()
 		{
@@ -55,14 +54,11 @@ namespace Sources.Infrastructure.Services
 			return await SaveLoaderImplementation.Load(() => IsCallbackReceived = true);
 		}
 
-		public void SaveToJson(string fileName, object data) =>
-			_jsonDataLoader.Save(fileName, data);
+		public void SaveToJson(string fileName, object data) => _jsonDataLoader.Save(fileName, data);
 
-		public string LoadFromJson(string fileName) =>
-			_jsonDataLoader.Load(fileName);
+		public string LoadFromJson(string fileName) => _jsonDataLoader.Load(fileName);
 
-		public T LoadFromJson<T>(string fileName) =>
-			_jsonDataLoader.Load<T>(fileName);
+		public T LoadFromJson<T>(string fileName) => _jsonDataLoader.Load<T>(fileName);
 
 		private async UniTask Save(IGlobalProgress provider)
 		{

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sources.BusinessLogic.Repository;
+using Sources.BusinessLogic.Services;
 using Sources.Controllers.Common;
-using Sources.Controllers.Shop;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
@@ -15,59 +16,46 @@ namespace Sources.Controllers
 	public class UpgradeElementPresenter : Presenter, IUpgradeElementPresenter
 	{
 		private readonly AudioSource _audioSource;
-		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenterProvider;
 		private readonly GameplayInterfaceSoundPlayer _gameplayInterfaceSoundPlayer;
 		private readonly IPersistentProgressService _persistentProgressServiceProvider;
 		private readonly IProgressEntityRepository _progressEntityRepository;
 		private readonly ISaveLoader _saveLoader;
 
-		private readonly ShopPurchaseController _shopPurchaseController;
-		private readonly Dictionary<int, IUpgradeElementChangeableView> _upgradeElementChangeableViews;
-		private readonly IUpgradeWindowPresenter _upgradeWindowPresenter;
+		private readonly IShopService _shopService;
+		private readonly IEnumerable<IUpgradeElementChangeableView> _upgradeElementChangeableViews;
 		private IReadOnlyList<IStatUpgradeEntityReadOnly> _entities;
 
 		public UpgradeElementPresenter(
-			Dictionary<int, IUpgradeElementChangeableView> panel,
+			IEnumerable<IUpgradeElementChangeableView> panel,
 			IPersistentProgressService persistentProgressServiceProvider,
-			IUpgradeWindowPresenter upgradeWindowPresenter,
-			IGameplayInterfacePresenter gameplayInterfacePresenterProvider,
 			IProgressEntityRepository progressEntityRepository,
 			ISaveLoader saveLoader,
-			IResourcesProgressPresenter resourcesProgressPresenterProvider,
-			IPlayerModelRepository playerModelRepositoryProvider,
 			AudioClip soundBuy,
 			AudioClip soundClose,
-			AudioSource audioSource
+			AudioSource audioSource,
+			IShopService shopService
 		)
 		{
 			_upgradeElementChangeableViews = panel ?? throw new ArgumentNullException(nameof(panel));
-			_persistentProgressServiceProvider = persistentProgressServiceProvider ??
-			                                     throw new ArgumentNullException(nameof(persistentProgressServiceProvider));
-			_upgradeWindowPresenter = upgradeWindowPresenter ??
-			                          throw new ArgumentNullException(nameof(upgradeWindowPresenter));
-			_gameplayInterfacePresenterProvider = gameplayInterfacePresenterProvider ??
-			                                      throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
-			_progressEntityRepository = progressEntityRepository ??
-			                            throw new ArgumentNullException(nameof(progressEntityRepository));
+			_persistentProgressServiceProvider = persistentProgressServiceProvider
+			                                     ?? throw new ArgumentNullException(nameof(persistentProgressServiceProvider));
+			_progressEntityRepository =
+				progressEntityRepository ?? throw new ArgumentNullException(nameof(progressEntityRepository));
 			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
 			_audioSource = audioSource ?? throw new ArgumentNullException(nameof(audioSource));
 
-			_shopPurchaseController = new ShopPurchaseController(
-				_progressEntityRepository,
-				resourcesProgressPresenterProvider,
-				playerModelRepositoryProvider
-			);
+			_shopService = shopService ?? throw new ArgumentNullException(nameof(shopService));
 
 			_gameplayInterfaceSoundPlayer = new GameplayInterfaceSoundPlayer(soundBuy, soundClose, audioSource);
 		}
 
 		private int Money =>
 			_persistentProgressServiceProvider
-				.GlobalProgress.ResourceModelReadOnly.SoftCurrency.Value;
+				.GlobalProgress.ResourceModel.SoftCurrency.ReadOnlyValue;
 
 		public async void Upgrade(int id)
 		{
-			if (_shopPurchaseController.TryAddOneProgressPoint(id) == false)
+			if (_shopService.TryAddOneProgressPoint(id) == false)
 				throw new InvalidOperationException("Failed to add progress point");
 
 			_gameplayInterfaceSoundPlayer.PlayBuySound();
@@ -80,12 +68,18 @@ namespace Sources.Controllers
 		{
 			_entities = _progressEntityRepository.GetEntities();
 
+			foreach (IUpgradeElementChangeableView value in _upgradeElementChangeableViews)
+				value.BuyButtonPressed += Upgrade;
+
 			foreach (IStatUpgradeEntityReadOnly entity in _entities)
 				entity.LevelProgress.Changed += LevelProgressChanged;
 		}
 
 		public override void Disable()
 		{
+			foreach (IUpgradeElementChangeableView value in _upgradeElementChangeableViews)
+				value.BuyButtonPressed -= Upgrade;
+
 			_entities = _progressEntityRepository.GetEntities();
 
 			foreach (IStatUpgradeEntityReadOnly entity in _entities)
@@ -98,13 +92,10 @@ namespace Sources.Controllers
 
 		private void SetView(int id)
 		{
-			IUpgradeElementChangeableView panel = _upgradeElementChangeableViews[id];
+			IUpgradeElementChangeableView panel = _upgradeElementChangeableViews.ElementAt(id);
 
 			panel.AddProgressPointColor();
 			panel.SetPriceText(_progressEntityRepository.GetPrice(id));
-
-			_upgradeWindowPresenter.SetMoney(Money);
-			_gameplayInterfacePresenterProvider.SetSoftCurrency(Money);
 		}
 	}
 }

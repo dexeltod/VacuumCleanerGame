@@ -41,7 +41,6 @@ namespace Sources.Controllers
 			Time.timeScale = 1;
 		}
 
-		private void OnRewarded() =>
-			OnClosed();
+		private void OnRewarded() => OnClosed();
 	}
 }

@@ -30,7 +30,9 @@ namespace Sources.Boot.Scripts.Factories
 			var configs = _assetLoader.LoadFromResources<UpgradesListConfig>(ShopItemsPath);
 
 			foreach (PlayerUpgradeShopConfig config in configs.ReadOnlyItems)
-				_entities.Add(new StatUpgradeEntity(new IntEntityValue(config.Id, config.Title, 0), config.Id));
+				_entities.Add(
+					new StatUpgradeEntity(new IntEntityValue(config.Id, config.Title, 0, config.MaxProgressCount), config.Id)
+				);
 
 			return new ShopModel(_entities);
 		}

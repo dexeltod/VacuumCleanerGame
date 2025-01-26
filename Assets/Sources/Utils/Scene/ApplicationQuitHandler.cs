@@ -5,11 +5,9 @@ namespace Sources.Utils.Scene
 {
 	public class ApplicationQuitHandler : MonoBehaviour
 	{
-		private void Awake() =>
-			DontDestroyOnLoad(this);
+		private void Awake() => DontDestroyOnLoad(this);
 
-		private void OnApplicationQuit() =>
-			ApplicationClosed?.Invoke();
+		private void OnApplicationQuit() => ApplicationClosed?.Invoke();
 
 		public event Action ApplicationClosed;
 	}

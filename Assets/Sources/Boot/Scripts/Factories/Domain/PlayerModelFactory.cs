@@ -44,7 +44,7 @@ namespace Sources.Boot.Scripts.Factories.Domain
 				startConfigs,
 				item => item.Id,
 				start => (int)start.Type,
-				(item, start) => new Stat(start.Stat, new IntEntityValue(item.Id, item.Title, 0), item.Id)
+				(item, start) => new Stat(start.Stat, new IntEntityValue(item.Id, item.Title, 0, item.MaxProgressCount), item.Id)
 			).ToList();
 		}
 	}

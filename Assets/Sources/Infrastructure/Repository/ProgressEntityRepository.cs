@@ -28,14 +28,11 @@ namespace Sources.Infrastructure.Repository
 			return _entities[id] ?? throw new ArgumentNullException($"{id} not found");
 		}
 
-		public IReadOnlyList<IStatUpgradeEntityReadOnly> GetEntities() =>
-			_entities.Values.ToList();
+		public IReadOnlyList<IStatUpgradeEntityReadOnly> GetEntities() => _entities.Values.ToList();
 
-		public IReadOnlyList<IUpgradeEntityConfig> GetConfigs() =>
-			_configs.Values.ToList();
+		public IReadOnlyList<IUpgradeEntityConfig> GetConfigs() => _configs.Values.ToList();
 
-		public IUpgradeEntityConfig GetConfig(int id) =>
-			_configs[id] ?? throw new ArgumentNullException($"{id} not found");
+		public IUpgradeEntityConfig GetConfig(int id) => _configs[id] ?? throw new ArgumentNullException($"{id} not found");
 
 		public int GetPrice(int id)
 		{
@@ -61,7 +58,6 @@ namespace Sources.Infrastructure.Repository
 			return config.Stats[_entities[id].Value];
 		}
 
-		public void AddOneLevel(int id) =>
-			(_entities[id] as IUpgradeEntity)!.AddOneLevel();
+		public void AddOneLevel(int id) => (_entities[id] as IUpgradeEntity)!.AddOneLevel();
 	}
 }

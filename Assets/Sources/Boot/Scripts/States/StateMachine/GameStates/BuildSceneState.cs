@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Plugins.Joystick_Pack.Scripts.Base;
 using Sources.Boot.Scripts.Factories.Player;
 using Sources.Boot.Scripts.Factories.Presentation;
 using Sources.Boot.Scripts.Factories.Presentation.Scene;
@@ -14,6 +16,7 @@ using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.BusinessLogic.ServicesInterfaces.Advertisement;
 using Sources.BusinessLogic.States;
 using Sources.Controllers;
+using Sources.Controllers.Services;
 using Sources.ControllersInterfaces;
 using Sources.ControllersInterfaces.Services;
 using Sources.DomainInterfaces;
@@ -21,6 +24,7 @@ using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Services;
 using Sources.Presentation.UI;
 using Sources.PresentationInterfaces;
+using Sources.PresentationInterfaces.Common;
 using Sources.PresentationInterfaces.Player;
 using Sources.PresentationInterfaces.Triggers;
 using Sources.Utils;
@@ -31,25 +35,24 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 {
 	public sealed class BuildSceneState : IBuildSceneState
 	{
-		private readonly IStateMachine _stateMachine;
-
-		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
-		private readonly IPersistentProgressService _persistentProgress;
-		private readonly IAssetLoader _assetLoader;
-		private readonly IInjectableAssetLoader _injectableAssetLoader;
-		private readonly ICoroutineRunner _coroutineRunner;
-		private readonly ISceneLoader _sceneLoader;
-		private readonly TranslatorService _translatorService;
-		private readonly IPresentersContainerRepository _presentersContainerRepository;
-		private readonly IPlayerModelRepository _playerModelRepository;
-		private readonly IProgressEntityRepository _progressEntityRepository;
-		private readonly ISaveLoader _saveLoader;
-		private readonly ILeaderBoardService _leaderBoardService;
 		private readonly IAdvertisement _advertisement;
+		private readonly IAssetLoader _assetLoader;
+		private readonly ICoroutineRunner _coroutineRunner;
+		private readonly IInjectableAssetLoader _injectableAssetLoader;
+		private readonly ILeaderBoardService _leaderBoardService;
 		private readonly ILevelConfigGetter _levelConfigGetter;
 		private readonly ILevelProgressFacade _levelProgressFacade;
+		private readonly IPersistentProgressService _persistentProgress;
+		private readonly IPlayerModelRepository _playerModelRepository;
+		private readonly IRepository<IPresenter> _presentersRepository;
+		private readonly IProgressEntityRepository _progressEntityRepository;
 
-		private GameObject _playerGameObject;
+		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
+		private readonly ISaveLoader _saveLoader;
+		private readonly ISceneLoader _sceneLoader;
+		private readonly IStateMachine _stateMachine;
+		private readonly TranslatorService _translatorService;
+		private readonly IRepository<IView> _viewsRepository;
 
 		[Inject]
 		public BuildSceneState(
@@ -67,11 +70,13 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 			ICoroutineRunner coroutineRunner,
 			ISceneLoader sceneLoader,
 			TranslatorService translatorService,
-			IPresentersContainerRepository presentersContainerRepository,
+			PresentersRepository presentersRepository,
+			ViewsRepository viewsRepository,
 			IPlayerModelRepository playerModelRepository,
 			IProgressEntityRepository progressEntityRepository,
 			ISaveLoader saveLoader,
-			ILeaderBoardService leaderBoardService
+			ILeaderBoardService leaderBoardService,
+			IAdvertisement advertisement
 
 			#endregion
 
@@ -102,13 +107,14 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 			_coroutineRunner = coroutineRunner ?? throw new ArgumentNullException(nameof(coroutineRunner));
 
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
-			_presentersContainerRepository = presentersContainerRepository ??
-			                                 throw new ArgumentNullException(nameof(presentersContainerRepository));
+			_presentersRepository = presentersRepository ?? throw new ArgumentNullException(nameof(presentersRepository));
+			_viewsRepository = viewsRepository ?? throw new ArgumentNullException(nameof(viewsRepository));
 			_playerModelRepository = playerModelRepository ?? throw new ArgumentNullException(nameof(playerModelRepository));
 			_progressEntityRepository =
 				progressEntityRepository ?? throw new ArgumentNullException(nameof(progressEntityRepository));
 			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
+			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 
 			#endregion
 		}
@@ -119,10 +125,14 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 		private GameObject SellTrigger => ResourcesPrefabs.Triggers.SellTrigger.gameObject;
 		private string UIResourcesUI => ResourcesAssetPath.Scene.UIResources.UI;
 
-		public async void Enter(ILevelConfig payload)
+		public async UniTask Enter(ILevelConfig payload)
 		{
-			await _sceneLoader.Load("Game");
+			Debug.Log("loading game scene");
+			await _sceneLoader.LoadAsync("Game");
+			Debug.Log("loaded");
+
 			Build();
+			Debug.Log("builded");
 
 			_stateMachine.Enter<GameLoopState>();
 		}
@@ -133,19 +143,28 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 
 		private void Build()
 		{
-			var gameplayInterfaceView = LoadGameplayInterfaceView();
+			SceneResourcesRepository sceneResourcesRepository = new();
 
-			IGameplayInterfacePresenter gameplayInterfacePresenter = CreateGameplayInterfacePresenter(levelChangerService);
+			ICollection<IResourcePresentation> rocks = InstantiateRocks(sceneResourcesRepository);
 
-			_playerGameObject = CreatePlayer(gameplayInterfacePresenter);
+			GameplayInterfaceView gameplayInterfaceView = LoadGameplayInterfaceView();
+			_viewsRepository.Add(gameplayInterfaceView);
 
-			var sendParticleView = _playerGameObject.GetComponentInChildren<ISandParticleView>();
+			IMonoPresenter player = CreatePlayer(gameplayInterfaceView.Joystick);
+			GameObject playerGameObject = player.GameObject;
 
-			FillMeshShader fillMeshShaderController = CreateFillMeshShaderController();
+			var sendParticleView = playerGameObject.GetComponentInChildren<ISandParticleView>();
+
+			FillMeshShader fillMeshShaderController = CreateFillMeshShaderController(playerGameObject);
+
+			var trigger = _assetLoader.Instantiate(SellTrigger).GetComponent<ITriggerSell>();
+
 			IResourcesProgressPresenter resourcesProgressPresenter = CreateResourcesProgressPresenter(
-				gameplayInterfaceView,
+				rocks,
 				fillMeshShaderController,
-				sendParticleView
+				sendParticleView,
+				trigger,
+				sceneResourcesRepository
 			);
 
 			LevelChangerService levelChangerService =
@@ -160,41 +179,43 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 					_persistentProgress
 				);
 
+			IGameplayInterfacePresenter gameplayInterfacePresenter =
+				CreateGameplayInterfacePresenter(gameplayInterfaceView, levelChangerService);
+
 			var shaderViewController = new DissolveShaderViewController(
-				_playerGameObject.GetComponent<IDissolveShaderView>(),
+				playerGameObject.GetComponent<IDissolveShaderView>(),
 				_coroutineRunner
 			);
 
-			_playerGameObject.GetComponent<IDissolveShaderView>().Construct(shaderViewController);
+			playerGameObject.GetComponent<IDissolveShaderView>().Construct(shaderViewController);
 
-			_presentersContainerRepository.AddRange(
+			_presentersRepository.AddRange(
 				new List<IPresenter>
 				{
 					gameplayInterfacePresenter,
 					shaderViewController,
-					resourcesProgressPresenter,
-					CreateUpgradeWindowPresenter(gameplayInterfacePresenter, resourcesProgressPresenter),
-					new AdvertisementPresenter(_advertisement)
+					CreateUpgradeWindowPresenter(gameplayInterfaceView),
+					new AdvertisementPresenter(_advertisement),
+					player,
+					resourcesProgressPresenter
 				}
 			);
-			CreateCamera();
-			InstantiateRocks(resourcesProgressPresenter);
+
+			CreateCamera(playerGameObject);
 		}
 
-		private GameplayInterfaceView LoadGameplayInterfaceView() =>
-			_assetLoader.Instantiate(UIResourcesUI).GetComponent<GameplayInterfaceView>();
+		private void CreateCamera(GameObject playerGameObject) =>
+			new CameraFactory(_assetLoader, playerGameObject, ResourcesPrefabs).Create();
 
-		private void CreateCamera() =>
-			new CameraFactory(_assetLoader, _playerGameObject, ResourcesPrefabs).Create();
+		private FillMeshShader CreateFillMeshShaderController(GameObject playerGameObject) =>
+			new FillAreaShaderControllerFactory(playerGameObject).Create();
 
-		private FillMeshShader CreateFillMeshShaderController() =>
-			new FillAreaShaderControllerFactory(_playerGameObject).Create();
-
-		private IGameplayInterfacePresenter CreateGameplayInterfacePresenter(LevelChangerService levelChangerService)
-		{
-			return new GameplayInterfacePresenterFactory(
+		private IGameplayInterfacePresenter CreateGameplayInterfacePresenter(
+			GameplayInterfaceView gameplayInterfaceView,
+			LevelChangerService levelChangerService) =>
+			new GameplayInterfacePresenterFactory(
+				gameplayInterfaceView,
 				_translatorService,
-				_assetLoader,
 				_persistentProgress,
 				levelChangerService,
 				_stateMachine,
@@ -202,50 +223,52 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 				_advertisement,
 				_playerModelRepository
 			).Create();
-		}
 
-		private GameObject CreatePlayer(IGameplayInterfacePresenter gameplayInterfacePresenter) =>
+		private IMonoPresenter CreatePlayer(Joystick joystick) =>
 			new PlayerFactory(
 				_injectableAssetLoader,
 				_playerModelRepository,
-				gameplayInterfacePresenter
+				joystick
 			).Create(SpawnPoint);
 
 		private IResourcesProgressPresenter CreateResourcesProgressPresenter(
-			IGameplayInterfacePresenter gameplayInterfacePresenter,
+			ICollection<IResourcePresentation> rocks,
 			FillMeshShader fillMeshShader,
-			ISandParticleView sendParticleView) =>
+			ISandParticleView sendParticleView,
+			ITriggerSell triggerSell,
+			SceneResourcesRepository sceneResourcesRepository) =>
 			new ResourcesProgressPresenterFactory(
-				gameplayInterfacePresenter,
 				_persistentProgress,
 				fillMeshShader,
 				sendParticleView,
 				_coroutineRunner,
 				_playerModelRepository,
-				_assetLoader.Instantiate(SellTrigger).GetComponent<ITriggerSell>()
+				triggerSell,
+				rocks,
+				sceneResourcesRepository
 			).Create();
 
-		private IUpgradeWindowPresenter CreateUpgradeWindowPresenter(IGameplayInterfacePresenter gameplayInterfacePresenter,
-			IResourcesProgressPresenter resourcesProgressPresenter) =>
+		private IUpgradeWindowPresenter CreateUpgradeWindowPresenter(IView gameplayInterface) =>
 			new UpgradeWindowPresenterFactory(
-				_presentersContainerRepository,
 				_assetLoader,
 				_progressSaveLoadDataService,
 				_persistentProgress,
-				gameplayInterfacePresenter,
-				resourcesProgressPresenter,
 				_translatorService,
 				_progressEntityRepository,
 				_playerModelRepository,
-				_saveLoader
+				_saveLoader,
+				gameplayInterface
 			).Create();
 
-		private void InstantiateRocks(IResourcesProgressPresenter resourcesProgressPresenter) =>
+		private ICollection<IResourcePresentation> InstantiateRocks(SceneResourcesRepository newSceneResourcesRepository) =>
 			new RockFactory(
 				_assetLoader,
 				_levelProgressFacade,
-				resourcesProgressPresenter,
-				_levelConfigGetter
+				_levelConfigGetter,
+				newSceneResourcesRepository
 			).Create();
+
+		private GameplayInterfaceView LoadGameplayInterfaceView() =>
+			_assetLoader.Instantiate(UIResourcesUI).GetComponent<GameplayInterfaceView>();
 	}
 }

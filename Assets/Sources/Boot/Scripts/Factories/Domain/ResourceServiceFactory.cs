@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Sources.Domain.Progress.ResourcesData;
+using Sources.Domain.Progress.Entities.Values;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Utils;
 
@@ -8,6 +8,8 @@ namespace Sources.Boot.Scripts.Factories.Domain
 {
 	public class ResourceServiceFactory
 	{
+		private const int MaxValue = 99999;
+
 		public Dictionary<int, IResource<int>> CreateIntCurrencies()
 		{
 			string[] names = Enum.GetNames(typeof(CurrencyResourceType));
@@ -19,7 +21,7 @@ namespace Sources.Boot.Scripts.Factories.Domain
 			{
 				var id = (int)values.GetValue(i);
 
-				dictionary.Add(id, new IntCurrency(id, names[i], 0));
+				dictionary.Add(id, new IntEntityValue(id, names[i], 0, MaxValue));
 			}
 
 			return dictionary;

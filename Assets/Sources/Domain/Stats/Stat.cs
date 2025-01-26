@@ -28,11 +28,9 @@ namespace Sources.Domain.Stats
 		public int Id => _id;
 		public event Action Changed;
 
-		public void Enable() =>
-			_currentLevel.Changed += OnLevelChanged;
+		public void Enable() => _currentLevel.Changed += OnLevelChanged;
 
-		public void Disable() =>
-			_currentLevel.Changed -= OnLevelChanged;
+		public void Disable() => _currentLevel.Changed -= OnLevelChanged;
 
 		public void Increase(float value)
 		{
@@ -54,8 +52,7 @@ namespace Sources.Domain.Stats
 			Changed?.Invoke();
 		}
 
-		public void SetDefault() =>
-			_value = _startValue;
+		public void SetDefault() => _value = _startValue;
 
 		public void Set(float value)
 		{

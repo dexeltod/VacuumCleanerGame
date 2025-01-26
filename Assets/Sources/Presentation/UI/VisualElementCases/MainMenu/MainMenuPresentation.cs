@@ -10,10 +10,8 @@ namespace Sources.Presentation.UI.VisualElementCases.MainMenu
 
 		private VisualElement _mainMenu;
 
-		public MainMenuPresentation(VisualElementGetter visualElementGetter) =>
-			_visualElementGetter = visualElementGetter;
+		public MainMenuPresentation(VisualElementGetter visualElementGetter) => _visualElementGetter = visualElementGetter;
 
-		public void Initialize() =>
-			_mainMenu = _visualElementGetter.GetFirst<VisualElement>(MainMenuName);
+		public void Initialize() => _mainMenu = _visualElementGetter.GetFirst<VisualElement>(MainMenuName);
 	}
 }

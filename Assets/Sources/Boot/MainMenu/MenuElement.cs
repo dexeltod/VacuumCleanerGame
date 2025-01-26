@@ -11,7 +11,8 @@ namespace Sources.Boot.MainMenu
 
 		protected readonly VisualElementSwitcher VisualElementController;
 
-		protected MenuElement(VisualElement thisElement,
+		protected MenuElement(
+			VisualElement thisElement,
 			VisualElementSwitcher visualElementSwitcher,
 			UIElementGetterFacade elementGetter)
 		{

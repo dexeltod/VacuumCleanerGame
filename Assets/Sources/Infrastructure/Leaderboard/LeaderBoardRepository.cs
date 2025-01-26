@@ -14,11 +14,9 @@ namespace Sources.Infrastructure.Leaderboard
 		public LeaderBoardRepository(IAbstractLeaderBoard leaderboard) =>
 			_leaderboard = leaderboard ?? throw new ArgumentNullException(nameof(leaderboard));
 
-		public async UniTask<Dictionary<string, int>> GetLeaders(int playerCount) =>
-			await _leaderboard.GetPlayers(playerCount);
+		public async UniTask<Dictionary<string, int>> GetLeaders(int playerCount) => await _leaderboard.GetPlayers(playerCount);
 
-		public async UniTask AddScore(int score) =>
-			await _leaderboard.AddScore(score);
+		public async UniTask AddScore(int score) => await _leaderboard.AddScore(score);
 
 		public async UniTask<Tuple<string, int>> GetLeader()
 		{

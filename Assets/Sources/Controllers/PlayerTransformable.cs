@@ -36,8 +36,7 @@ namespace Sources.Controllers
 			_rigidbody = rigidbody ?? throw new ArgumentNullException(nameof(rigidbody));
 		}
 
-		public void Update(float deltaTime) =>
-			Move(deltaTime);
+		public void Update(float deltaTime) => Move(deltaTime);
 
 		private void Move(float deltaTime)
 		{

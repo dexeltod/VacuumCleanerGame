@@ -28,7 +28,8 @@ namespace Sources.Boot.Scripts.Factories.Presenters
 		private readonly ISettingsView _settingsView;
 		private readonly IStateMachine _stateMachine;
 
-		public MainMenuPresenterFactory(IAssetLoader assetLoader,
+		public MainMenuPresenterFactory(
+			IAssetLoader assetLoader,
 			IMainMenuView mainMenu,
 			ILevelProgressFacade levelProgress,
 			IStateMachine stateMachine,
@@ -47,8 +48,8 @@ namespace Sources.Boot.Scripts.Factories.Presenters
 			_levelProgress = levelProgress ?? throw new ArgumentNullException(nameof(levelProgress));
 			_stateMachine = stateMachine ?? throw new ArgumentNullException(nameof(stateMachine));
 			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
-			_progressSaveLoadDataService = progressSaveLoadDataService ??
-			                               throw new ArgumentNullException(nameof(progressSaveLoadDataService));
+			_progressSaveLoadDataService = progressSaveLoadDataService
+			                               ?? throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 			_authorizationPresenter = authorizationPresenter ?? throw new ArgumentNullException(nameof(authorizationPresenter));
 			_leaderBoardView = leaderBoardView ?? throw new ArgumentNullException(nameof(leaderBoardView));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));

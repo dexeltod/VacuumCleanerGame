@@ -23,12 +23,10 @@ namespace Sources.Controllers
 		)
 		{
 			_dissolveShaderView = dissolveShaderView ?? throw new ArgumentNullException(nameof(dissolveShaderView));
-			_coroutineRunnerProvider = coroutineRunnerProvider ??
-			                           throw new ArgumentNullException(nameof(coroutineRunnerProvider));
+			_coroutineRunnerProvider = coroutineRunnerProvider ?? throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 		}
 
-		public void StartDissolving() =>
-			_coroutineRunnerProvider.Run(DissolvingRoutine());
+		public void StartDissolving() => _coroutineRunnerProvider.Run(DissolvingRoutine());
 
 		private IEnumerator DissolvingRoutine()
 		{

@@ -13,7 +13,6 @@ namespace Sources.Infrastructure.Services.DomainServices
 			{ "player5", 200 }
 		};
 
-		public Dictionary<string, int> GetTestLeaders() =>
-			_players;
+		public Dictionary<string, int> GetTestLeaders() => _players;
 	}
 }

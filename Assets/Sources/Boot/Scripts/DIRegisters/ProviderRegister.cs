@@ -17,8 +17,7 @@ namespace Sources.Boot.Scripts.DIRegisters
 	{
 		private readonly IContainerBuilder _builder;
 
-		public ProviderRegister(IContainerBuilder containerBuilder) =>
-			_builder = containerBuilder;
+		public ProviderRegister(IContainerBuilder containerBuilder) => _builder = containerBuilder;
 
 		public void Register()
 		{
@@ -45,12 +44,17 @@ namespace Sources.Boot.Scripts.DIRegisters
 
 			_builder.Register(
 				resolver => resolver.Resolve<IAssetLoader>()
-					.LoadFromResources<CoroutineRunner>(ResourcesAssetPath.GameObjects.CoroutineRunner),
+					.InstantiateAndGetComponent<CoroutineRunner>(ResourcesAssetPath.GameObjects.CoroutineRunner),
 				Lifetime.Singleton
 			).AsSelf().AsImplementedInterfaces();
 
 			_builder.Register(_ => new CloudPlayerDataServiceFactory().Create(), Lifetime.Singleton).AsSelf()
 				.AsImplementedInterfaces();
+
+			_builder.Register(
+				_ => RegisterAdvertisement(),
+				Lifetime.Singleton
+			);
 
 			_builder.Register(
 				resolver => new ResourcePathConfigServiceFactory(resolver.Resolve<IAssetLoader>()).Create(),

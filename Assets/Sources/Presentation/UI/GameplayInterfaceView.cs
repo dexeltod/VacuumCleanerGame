@@ -5,7 +5,6 @@ using DG.Tweening.Plugins.Options;
 using Plugins.Joystick_Pack.Scripts.Base;
 using Sources.ControllersInterfaces;
 using Sources.Domain.Interfaces;
-using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Frameworks.DOTween.Tweeners;
 using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
@@ -58,7 +57,6 @@ namespace Sources.Presentation.UI
 		[SerializeField]
 		private Joystick _joystick;
 
-		private int _cashScore;
 		private int _globalScore;
 		private TweenerCore<Vector3, Vector3, VectorOptions> _goToNextLevelButtonTween;
 		private TweenerCore<Vector3, Vector3, VectorOptions> _increaseSpeedButtonTween;
@@ -74,7 +72,71 @@ namespace Sources.Presentation.UI
 		public Image IncreaseSpeedButtonImage => _increaseSpeedButtonImage;
 		public Joystick Joystick => _joystick;
 
-		public void Construct(IGameplayInterfacePresenter gameplayInterfacePresenter,
+		public override void Enable()
+		{
+			gameObject.SetActive(true);
+
+			_goToNextLevelButtonTween ??= SetGoToNextLevelButtonTween();
+			_increaseSpeedButtonTween ??= SetIncreaseSpeedButtonTween();
+
+			SetActiveGlobalScores();
+		}
+
+		public override void Disable()
+		{
+			_goToNextLevelButtonTween!.Kill(true);
+			_increaseSpeedButtonTween!.Kill(true);
+			gameObject.SetActive(false);
+		}
+
+		public void SetActiveGoToNextLevelButton(bool isActive) => _goToNextLevelButton.gameObject.SetActive(isActive);
+
+		public void SetCashScore(int newScore)
+		{
+			SetScoreBarValue(newScore);
+			SetCashScoreText(newScore);
+		}
+
+		public void SetTotalResourceScore(int newScore)
+		{
+			if (newScore < 0)
+				throw new ArgumentOutOfRangeException(nameof(newScore));
+
+			_globalScore = newScore;
+
+			_globalScoreImage.fillAmount = NormalizeValue(
+				MaxNormalizeThreshold,
+				_globalScore,
+				_maxGlobalScore
+			);
+
+			_globalScoreText.SetText($"{_globalScore}");
+		}
+
+		public void SetMaxCashScore(int maxScore)
+		{
+			if (maxScore < 0)
+				throw new ArgumentOutOfRangeException(nameof(maxScore));
+
+			Debug.Log("SetMaxCashScore" + maxScore);
+			_maxCashScore = maxScore;
+			_maxGlobalScoreText.SetText(
+				$"{_maxCashScore}"
+			);
+		}
+
+		public void SetSoftCurrencyText(int newMoney)
+		{
+			if (newMoney < 0)
+				throw new ArgumentOutOfRangeException(nameof(newMoney));
+
+			_moneyText.SetText(newMoney.ToString());
+		}
+
+		public void FillSpeedButtonImage(float fillAmount) => _increaseSpeedButtonImage.fillAmount = fillAmount;
+
+		public void Construct(
+			IGameplayInterfacePresenter gameplayInterfacePresenter,
 			int cashScore,
 			int globalScore,
 			int maxCashScore,
@@ -93,22 +155,15 @@ namespace Sources.Presentation.UI
 				throw new ArgumentOutOfRangeException(nameof(cashScore));
 
 			if (maxGlobalScore < 0)
-				throw new ArgumentOutOfRangeException(
-					nameof(maxGlobalScore)
-				);
+				throw new ArgumentOutOfRangeException(nameof(maxGlobalScore));
 
 			base.Construct(gameplayInterfacePresenter);
 
-			_goToNextLevelButton.gameObject.SetActive(
-				isHalfScoreReached
-			);
+			_goToNextLevelButton.gameObject.SetActive(isHalfScoreReached);
 
-			_moneyText.SetText(
-				$"{moneyCount}"
-			);
+			_moneyText.SetText($"{moneyCount}");
 
 			_globalScore = globalScore;
-			_cashScore = cashScore;
 			_maxCashScore = maxCashScore;
 			_maxGlobalScore = maxGlobalScore;
 
@@ -118,87 +173,8 @@ namespace Sources.Presentation.UI
 			SetMaxGlobalScore(maxGlobalScore);
 		}
 
-		public override void Enable()
-		{
-			gameObject.SetActive(true);
-
-			_goToNextLevelButtonTween ??= SetGoToNextLevelButtonTween();
-			_increaseSpeedButtonTween ??= SetIncreaseSpeedButtonTween();
-
-			SetActiveGlobalScores();
-		}
-
 		private TweenerCore<Vector3, Vector3, VectorOptions> SetGoToNextLevelButtonTween() =>
 			CustomTweeners.StartPulseLocal(_goToNextLevelButton.transform, 1.15f);
-
-		public override void Disable()
-		{
-			_goToNextLevelButtonTween!.Kill(true);
-			_increaseSpeedButtonTween!.Kill(true);
-			gameObject.SetActive(false);
-		}
-
-		public void SetActiveGoToNextLevelButton(bool isActive) =>
-			_goToNextLevelButton.gameObject.SetActive(
-				isActive
-			);
-
-		public void SetCashScore(int newScore)
-		{
-			SetScoreBarValue(newScore);
-			SetCashScoreText(newScore);
-		}
-
-		public void SetTotalResourceScore(int newScore)
-		{
-			if (newScore < 0)
-				throw new ArgumentOutOfRangeException(
-					nameof(newScore)
-				);
-
-			_globalScore = newScore;
-
-			_globalScoreImage.fillAmount = NormalizeValue(
-				MaxNormalizeThreshold,
-				_globalScore,
-				_maxGlobalScore
-			);
-
-			_globalScoreText.SetText(
-				$"{_globalScore}"
-			);
-		}
-
-		public void SetMaxCashScore(int maxScore)
-		{
-			if (maxScore < 0)
-				throw new ArgumentOutOfRangeException(
-					nameof(maxScore)
-				);
-
-			Debug.Log(
-				"SetMaxCashScore" + maxScore
-			);
-			_maxCashScore = maxScore;
-			_maxGlobalScoreText.SetText(
-				$"{_maxCashScore}"
-			);
-		}
-
-		public void SetSoftCurrencyText(int newMoney)
-		{
-			if (newMoney < 0)
-				throw new ArgumentOutOfRangeException(
-					nameof(newMoney)
-				);
-
-			_moneyText.SetText(
-				newMoney.ToString()
-			);
-		}
-
-		public void FillSpeedButtonImage(float fillAmount) =>
-			_increaseSpeedButtonImage.fillAmount = fillAmount;
 
 		protected override void DestroySelf()
 		{
@@ -211,24 +187,16 @@ namespace Sources.Presentation.UI
 		public void SetMaxGlobalScore(int newMaxScore)
 		{
 			if (newMaxScore < 0)
-				throw new ArgumentOutOfRangeException(
-					nameof(newMaxScore)
-				);
+				throw new ArgumentOutOfRangeException(nameof(newMaxScore));
 
 			_maxGlobalScore = newMaxScore;
-			_maxGlobalScoreText.SetText(
-				$"{_maxGlobalScore}"
-			);
+			_maxGlobalScoreText.SetText($"{_maxGlobalScore}");
 		}
 
 		private void SetActiveGlobalScores()
 		{
-			_globalScoreText.gameObject.SetActive(
-				_isScoresViewed
-			);
-			_maxGlobalScoreText.gameObject.SetActive(
-				_isScoresViewed
-			);
+			_globalScoreText.gameObject.SetActive(_isScoresViewed);
+			_maxGlobalScoreText.gameObject.SetActive(_isScoresViewed);
 		}
 
 		private void SetScoreBarValue(int newScore)

@@ -8,6 +8,7 @@ using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.Services;
 using Sources.BusinessLogic.States;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
@@ -34,19 +35,20 @@ namespace Sources.Boot.Scripts
 		{
 			_progressFactory = progressFactory ?? throw new ArgumentNullException(nameof(progressFactory));
 			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
-			_stateMachine = stateMachineProvider ??
-			                throw new ArgumentNullException(nameof(stateMachineProvider));
+			_stateMachine = stateMachineProvider ?? throw new ArgumentNullException(nameof(stateMachineProvider));
 
 			_updatablePersistentProgressService =
 				updatablePersistentProgressService ?? throw new ArgumentNullException(nameof(updatablePersistentProgressService));
-			_gameStatesRepositoryInitializer = gameStatesRepositoryInitializer ??
-			                                   throw new ArgumentNullException(nameof(gameStatesRepositoryInitializer));
+			_gameStatesRepositoryInitializer = gameStatesRepositoryInitializer
+			                                   ?? throw new ArgumentNullException(nameof(gameStatesRepositoryInitializer));
 			_repository =
 				gameStateMachineRepository ?? throw new ArgumentNullException(nameof(gameStateMachineRepository));
 		}
 
 		public async UniTask StartAsync(CancellationToken cancellation)
 		{
+			Debug.Log("test");
+
 			_gameStatesRepositoryInitializer.Initialize(_repository);
 			await Initialize();
 

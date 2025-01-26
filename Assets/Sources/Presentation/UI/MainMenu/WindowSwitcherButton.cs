@@ -12,14 +12,11 @@ namespace Sources.Presentation.UI.MainMenu
 
 		private Button _button;
 
-		public void Awake() =>
-			_button = GetComponent<Button>();
+		public void Awake() => _button = GetComponent<Button>();
 
-		private void OnEnable() =>
-			_button.onClick.AddListener(OnSwitchWindow);
+		private void OnEnable() => _button.onClick.AddListener(OnSwitchWindow);
 
-		private void OnDisable() =>
-			_button.onClick.RemoveListener(OnSwitchWindow);
+		private void OnDisable() => _button.onClick.RemoveListener(OnSwitchWindow);
 
 		private void OnSwitchWindow()
 		{

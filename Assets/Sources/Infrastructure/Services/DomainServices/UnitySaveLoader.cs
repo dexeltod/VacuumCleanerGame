@@ -21,8 +21,7 @@ namespace Sources.Infrastructure.Services.DomainServices
 			ICloudSaveLoader unityCloudSaveLoaderLoader
 		)
 		{
-			_unityServicesOptions = unityServicesOptions ??
-			                        throw new ArgumentNullException(nameof(unityServicesOptions));
+			_unityServicesOptions = unityServicesOptions ?? throw new ArgumentNullException(nameof(unityServicesOptions));
 			_unityCloudSaveLoaderLoader
 				= unityCloudSaveLoaderLoader ?? throw new ArgumentNullException(nameof(unityCloudSaveLoaderLoader));
 		}
@@ -41,8 +40,7 @@ namespace Sources.Infrastructure.Services.DomainServices
 			return DeserializeJson(json);
 		}
 
-		public async UniTask Initialize() =>
-			await _unityServicesOptions.InitializeUnityServices();
+		public async UniTask Initialize() => await _unityServicesOptions.InitializeUnityServices();
 
 		private IGlobalProgress DeserializeJson(string jsonSave)
 		{

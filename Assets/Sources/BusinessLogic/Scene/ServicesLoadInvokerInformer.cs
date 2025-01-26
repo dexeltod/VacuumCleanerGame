@@ -4,8 +4,7 @@ namespace Sources.BusinessLogic.Scene
 {
 	public class ServicesLoadInvokerInformer : ISceneLoadInvoker, ISceneLoadInformer
 	{
-		public ServicesLoadInvokerInformer() =>
-			IsSceneLoaded = false;
+		public ServicesLoadInvokerInformer() => IsSceneLoaded = false;
 
 		public bool IsSceneLoaded { get; private set; }
 

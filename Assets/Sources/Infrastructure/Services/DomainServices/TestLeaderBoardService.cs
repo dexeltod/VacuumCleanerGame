@@ -9,8 +9,7 @@ namespace Sources.Infrastructure.Services.DomainServices
 	{
 		private readonly Dictionary<string, int> _leaders;
 
-		public TestLeaderBoardService() =>
-			_leaders = new LeadersPlug().GetTestLeaders();
+		public TestLeaderBoardService() => _leaders = new LeadersPlug().GetTestLeaders();
 
 		public async UniTask AddScore(int newScore)
 		{
@@ -18,13 +17,10 @@ namespace Sources.Infrastructure.Services.DomainServices
 			await UniTask.CompletedTask;
 		}
 
-		public UniTask Set(int score) =>
-			UniTask.CompletedTask;
+		public UniTask Set(int score) => UniTask.CompletedTask;
 
-		public async UniTask<Dictionary<string, int>> GetPlayers(int playersCount) =>
-			_leaders;
+		public async UniTask<Dictionary<string, int>> GetPlayers(int playersCount) => _leaders;
 
-		public async UniTask<Tuple<string, int>> GetPlayer() =>
-			new("player1", 1);
+		public async UniTask<Tuple<string, int>> GetPlayer() => new("player1", 1);
 	}
 }

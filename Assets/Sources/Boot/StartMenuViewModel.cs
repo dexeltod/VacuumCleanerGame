@@ -28,8 +28,7 @@ namespace Sources.Boot
 
 		private VisualElementSwitcher _visualElementSwitcher;
 
-		private void OnDestroy() =>
-			UnsubscribeFromButtons();
+		private void OnDestroy() => UnsubscribeFromButtons();
 
 		public void PostStart()
 		{
@@ -71,7 +70,6 @@ namespace Sources.Boot
 				button.clicked -= PlayButtonSound;
 		}
 
-		private void PlayButtonSound() =>
-			_buttonSound.Play();
+		private void PlayButtonSound() => _buttonSound.Play();
 	}
 }

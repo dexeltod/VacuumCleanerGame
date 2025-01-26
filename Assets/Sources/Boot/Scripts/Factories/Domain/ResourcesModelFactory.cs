@@ -1,6 +1,6 @@
 using System;
+using Sources.Domain.Progress.Entities.Values;
 using Sources.Domain.Progress.Player;
-using Sources.Domain.Progress.ResourcesData;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Utils;
 
@@ -18,16 +18,15 @@ namespace Sources.Boot.Scripts.Factories.Domain
 
 		public ResourceModel Create() =>
 			new(
-				GetResource((int)CurrencyResourceType.Soft) as IntCurrency,
-				GetResource((int)CurrencyResourceType.Hard) as IntCurrency,
-				GetResource((int)CurrencyResourceType.CashScore) as IntCurrency,
-				GetResource((int)CurrencyResourceType.GlobalScore) as IntCurrency,
+				GetResource((int)CurrencyResourceType.Soft),
+				GetResource((int)CurrencyResourceType.Hard),
+				GetResource((int)CurrencyResourceType.CashScore),
+				GetResource((int)CurrencyResourceType.GlobalScore),
 				StartScoreCount,
 				StartCurrencyCount,
 				StartScoreCount
 			);
 
-		private Resource<int> GetResource(int type) =>
-			_resourcesRepository.GetResource<int>(type) as Resource<int>;
+		private IntEntityValue GetResource(int type) => _resourcesRepository.GetResource<int>(type) as IntEntityValue;
 	}
 }

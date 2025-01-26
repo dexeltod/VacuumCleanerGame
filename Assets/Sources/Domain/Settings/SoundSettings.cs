@@ -9,8 +9,7 @@ namespace Sources.Domain.Settings
 	{
 		[SerializeField] private float _masterVolume;
 
-		public SoundSettings(float masterVolume) =>
-			_masterVolume = masterVolume;
+		public SoundSettings(float masterVolume) => _masterVolume = masterVolume;
 
 		public float MasterVolume => _masterVolume;
 

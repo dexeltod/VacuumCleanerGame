@@ -81,13 +81,8 @@ namespace Sources.Boot.Scripts.Factories
 		{
 			ValidatePath(path);
 
-			T @object = Object.Instantiate(
-				            Resources.Load<T>(path),
-				            position,
-				            Quaternion.identity
-			            ) ??
-			            throw new ArgumentNullException(path);
-
+			T @object = Object.Instantiate(Resources.Load<T>(path), position, Quaternion.identity)
+			            ?? throw new ArgumentNullException(path);
 			ValidateObject(@object);
 			_objectResolver.InjectGameObject(@object.gameObject);
 
@@ -119,6 +114,12 @@ namespace Sources.Boot.Scripts.Factories
 			_objectResolver.Inject(@object);
 			return @object;
 		}
+
+		public T InstantiateAndGetComponent<T>(GameObject gameObject, Transform transform) where T : Behaviour =>
+			throw new NotImplementedException();
+
+		public T InstantiateAndGetComponent<T>(GameObject gameObject, Vector3 position) where T : Behaviour =>
+			throw new NotImplementedException();
 
 		public GameObject Instantiate(string path, Vector3 position)
 		{

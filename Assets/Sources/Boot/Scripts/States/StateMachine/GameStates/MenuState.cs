@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using Sources.Boot.Scripts.Factories.Presentation.Authorization;
 using Sources.Boot.Scripts.Factories.Presentation.LeaderBoard;
 using Sources.Boot.Scripts.Factories.Presenters;
@@ -39,7 +40,8 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 		private IMainMenuView _mainMenuView;
 
 		[Inject]
-		public MenuState(ISceneLoader sceneLoader,
+		public MenuState(
+			ISceneLoader sceneLoader,
 			ILoadingCurtain loadingCurtain,
 			IAssetLoader assetLoader,
 			ILevelProgressFacade levelProgressFacade,
@@ -61,8 +63,8 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
-			_progressSaveLoadDataService = progressSaveLoadDataService ??
-			                               throw new ArgumentNullException(nameof(progressSaveLoadDataService));
+			_progressSaveLoadDataService = progressSaveLoadDataService
+			                               ?? throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 			_cloudServiceSdk = cloudServiceSdk ?? throw new ArgumentNullException(nameof(cloudServiceSdk));
 			_leaderBoardPlayersFactory =
@@ -80,9 +82,9 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 			_loadingCurtain.Show();
 		}
 
-		public async void Enter()
+		public async UniTask Enter()
 		{
-			await _sceneLoader.Load(ConstantNames.MenuScene);
+			await _sceneLoader.LoadAsync(ConstantNames.MenuScene);
 
 			_mainMenuView = new MainMenuFactory(_assetLoader, _translatorService).Create();
 			_focusHandler.Enable();

@@ -37,15 +37,14 @@ namespace Sources.Presentation.UI.Shop
 
 		private IUpgradeElementPresenter UpgradeElementPresenter => Presenter;
 
-		private void OnEnable() =>
-			_buttonBuy.onClick.AddListener(OnBuyButtonPressed);
+		private void OnEnable() => _buttonBuy.onClick.AddListener(OnBuyButtonPressed);
 
-		private void OnDisable() =>
-			_buttonBuy.onClick.RemoveListener(OnBuyButtonPressed);
+		private void OnDisable() => _buttonBuy.onClick.RemoveListener(OnBuyButtonPressed);
+
+		public event Action<int> BuyButtonPressed;
 
 		public void Construct(
 			Sprite icon,
-			IUpgradeElementPresenter presenter,
 			string title,
 			string description,
 			int id,
@@ -60,8 +59,6 @@ namespace Sources.Presentation.UI.Shop
 			_id = id;
 			if (_isInit)
 				throw new InvalidOperationException($"{name} view is already constructed");
-
-			base.Construct(presenter);
 
 			_boughtPoints = boughtPointsCount;
 
@@ -78,26 +75,38 @@ namespace Sources.Presentation.UI.Shop
 
 		public void AddProgressPointColor(int count = 1)
 		{
-			if (count <= 0)
+			IncreasePoints(count);
+
+			SetBoughtPoints();
+			SetNotBoughtPoints();
+		}
+
+		public void SetPriceText(int price) => _price.SetText(price.ToString());
+
+		private void IncreasePoints(int count)
+		{
+			if (count <= 0 || _boughtPoints + count > _maxPoints)
 				throw new ArgumentOutOfRangeException(nameof(count));
 
-			if (_boughtPoints + count > _maxPoints)
-				return;
-
 			_boughtPoints += count;
+		}
 
-			for (int i = StartIndex; i < _boughtPoints; i++)
-				_pointsColors[i].color = _boughtPointColor;
-
+		private void SetNotBoughtPoints()
+		{
 			for (int i = _boughtPoints; i < _maxPoints; i++)
 				_pointsColors[i].color = _notBoughtPointColor;
 		}
 
-		public void SetPriceText(int price) =>
-			_price.SetText(price.ToString());
+		private void SetBoughtPoints()
+		{
+			for (int i = StartIndex; i < _boughtPoints; i++)
+				_pointsColors[i].color = _boughtPointColor;
+		}
 
-		private void OnBuyButtonPressed() =>
-			UpgradeElementPresenter.Upgrade(_id);
+		private void OnBuyButtonPressed()
+		{
+			BuyButtonPressed!.Invoke(_id);
+		}
 
 		private void InstantiatePoints()
 		{
@@ -124,7 +133,6 @@ namespace Sources.Presentation.UI.Shop
 			_pointsColors.Add(image);
 		}
 
-		private Image GetImage(GameObject @object) =>
-			@object.GetComponent<Image>();
+		private Image GetImage(GameObject @object) => @object.GetComponent<Image>();
 	}
 }

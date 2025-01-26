@@ -6,7 +6,6 @@ namespace Sources.Presentation.UI.VisualElementCases.MainMenu.VisualElements
 	{
 		private readonly VisualElementGetter _visualElementGetter;
 
-		public MainMenuVisualElement(VisualElementGetter visualElementGetter) =>
-			_visualElementGetter = visualElementGetter;
+		public MainMenuVisualElement(VisualElementGetter visualElementGetter) => _visualElementGetter = visualElementGetter;
 	}
 }

@@ -1,10 +1,10 @@
 using System;
 using Sources.BusinessLogic.Interfaces;
+using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.Services;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.BusinessLogic.ServicesInterfaces.Advertisement;
 using Sources.BusinessLogic.States;
-using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using UnityEngine;
 
@@ -38,8 +38,8 @@ namespace Sources.Infrastructure.Services
 			_stateMachine = stateMachine ?? throw new ArgumentNullException(nameof(stateMachine));
 			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
 			_resourcesProgressPresenter = progressPresenter ?? throw new ArgumentNullException(nameof(progressPresenter));
-			_progressSaveLoadDataService = progressSaveLoadDataService ??
-			                               throw new ArgumentNullException(nameof(progressSaveLoadDataService));
+			_progressSaveLoadDataService = progressSaveLoadDataService
+			                               ?? throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 
 			_rewardService = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
@@ -52,8 +52,7 @@ namespace Sources.Infrastructure.Services
 
 		private int LevelNumber => _levelProgressFacade.CurrentLevel;
 
-		public void GoNextLevelWithReward() =>
-			_rewardService.ShowInterstitialAd(OnRewarded, OnRewarded, OnRewarded);
+		public void GoNextLevelWithReward() => _rewardService.ShowInterstitialAd(OnRewarded, OnRewarded, OnRewarded);
 
 		private void OnProcessEnded()
 		{

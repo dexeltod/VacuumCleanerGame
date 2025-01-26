@@ -9,8 +9,7 @@ namespace Sources.BusinessLogic
 	{
 		private readonly ILocalizationService _localizationService;
 
-		public TranslatorService(ILocalizationService localizationService) =>
-			_localizationService = localizationService;
+		public TranslatorService(ILocalizationService localizationService) => _localizationService = localizationService;
 
 		public string GetLocalize(string phrase)
 		{

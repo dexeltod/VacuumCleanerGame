@@ -20,8 +20,7 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 			return rootProperty.FindPropertyRelative("m_Path");
 		}
 
-		protected override Type ObjectType() =>
-			typeof(SceneAsset);
+		protected override Type ObjectType() => typeof(SceneAsset);
 
 		protected override void OnSelectionMade(Object newSelection, SerializedProperty property)
 		{

@@ -34,8 +34,7 @@ namespace Sources.Presentation.UI.Shop
 		public void Construct(IUpgradeWindowPresenter upgradeWindowPresentation, IUpgradeTriggerObserver upgradeTrigger)
 		{
 			_upgradeTrigger = upgradeTrigger ?? throw new ArgumentNullException(nameof(upgradeTrigger));
-			_presenter = upgradeWindowPresentation ??
-			             throw new ArgumentNullException(nameof(upgradeWindowPresentation));
+			_presenter = upgradeWindowPresentation ?? throw new ArgumentNullException(nameof(upgradeWindowPresentation));
 
 			_yes.onClick.AddListener(OnYes);
 			_no.onClick.AddListener(OnNo);
@@ -43,8 +42,7 @@ namespace Sources.Presentation.UI.Shop
 			_upgradeTrigger.TriggerEntered += OnEnter;
 		}
 
-		private void OnEnter(bool isActive) =>
-			_container.SetActive(isActive);
+		private void OnEnter(bool isActive) => _container.SetActive(isActive);
 
 		private void OnNo()
 		{
@@ -55,6 +53,7 @@ namespace Sources.Presentation.UI.Shop
 		private void OnYes()
 		{
 			_audioSource.Play();
+			_presenter.Enable();
 			_presenter.EnableWindow();
 			_container.SetActive(false);
 		}

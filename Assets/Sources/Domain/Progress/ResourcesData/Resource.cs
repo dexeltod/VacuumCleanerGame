@@ -7,10 +7,11 @@ namespace Sources.Domain.Progress.ResourcesData
 	[Serializable]
 	public abstract class Resource<T> : IResource<T>, IReadOnlyProgress<T>
 	{
-		[SerializeField] private T _value;
-		[SerializeField] private int _id;
+		[SerializeField] protected T _value;
+		[SerializeField] protected int _id;
+		[SerializeField] protected T _maxValue;
 
-		protected Resource(int id, string name, T value)
+		protected Resource(int id, string name, T value, T maxValue)
 		{
 			if (id < 0) throw new ArgumentOutOfRangeException(nameof(id));
 			if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(name));
@@ -18,25 +19,18 @@ namespace Sources.Domain.Progress.ResourcesData
 			Name = name;
 			_id = id;
 			_value = value;
-		}
-
-		public T Value
-		{
-			get => _value;
-			set
-			{
-				if (value != null) _value = value;
-			}
+			_maxValue = maxValue ?? throw new ArgumentNullException(nameof(maxValue));
 		}
 
 		public int Id => _id;
-		public string Name { get; }
-		public event Action Changed;
+		public T ReadOnlyValue => Value;
 
-		public void Set(T value)
-		{
-			_value = value ?? throw new ArgumentNullException(nameof(value));
-			Changed?.Invoke();
-		}
+		public string Name { get; }
+		public abstract event Action Changed;
+		public abstract event Action HalfReached;
+
+		public abstract T Value { get; set; }
+		public abstract T MaxValue { get; set; }
+		public T ReadOnlyMaxValue => MaxValue;
 	}
 }

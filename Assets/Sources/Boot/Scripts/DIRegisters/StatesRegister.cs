@@ -8,8 +8,7 @@ namespace Sources.Boot.Scripts.DIRegisters
 	{
 		private readonly IContainerBuilder _builder;
 
-		public StatesRegister(IContainerBuilder builder) =>
-			_builder = builder ?? throw new ArgumentNullException(nameof(builder));
+		public StatesRegister(IContainerBuilder builder) => _builder = builder ?? throw new ArgumentNullException(nameof(builder));
 
 		public void Register()
 		{

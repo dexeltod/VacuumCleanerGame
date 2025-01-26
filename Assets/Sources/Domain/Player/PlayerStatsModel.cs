@@ -13,8 +13,7 @@ namespace Sources.Domain.Player
 	{
 		[SerializeField] private List<Stat> _stats;
 
-		public PlayerStatsModel(List<Stat> intStats) =>
-			_stats = intStats ?? throw new ArgumentNullException(nameof(intStats));
+		public PlayerStatsModel(List<Stat> intStats) => _stats = intStats ?? throw new ArgumentNullException(nameof(intStats));
 
 		public IStatReadOnly Get(int id)
 		{

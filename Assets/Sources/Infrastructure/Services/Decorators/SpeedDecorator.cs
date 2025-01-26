@@ -28,8 +28,7 @@ namespace Sources.Infrastructure.Services.Decorators
 		{
 			if (time < 0) throw new ArgumentOutOfRangeException(nameof(time));
 
-			CoroutineRunner = coroutineRunnerProvider ??
-			                  throw new ArgumentNullException(nameof(coroutineRunnerProvider));
+			CoroutineRunner = coroutineRunnerProvider ?? throw new ArgumentNullException(nameof(coroutineRunnerProvider));
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 			_speed = speed ?? throw new ArgumentNullException(nameof(speed));
 
@@ -52,14 +51,11 @@ namespace Sources.Infrastructure.Services.Decorators
 			_speed.SetDefault();
 		}
 
-		public void Increase() =>
-			_advertisement.ShowInterstitialAd(OnClosed, OnRewarded);
+		public void Increase() => _advertisement.ShowInterstitialAd(OnClosed, OnRewarded);
 
-		private void OnClosed() =>
-			_speed.SetDefault();
+		private void OnClosed() => _speed.SetDefault();
 
-		private void OnRewarded() =>
-			CoroutineRunner.Run(StartSpeedRoutine());
+		private void OnRewarded() => CoroutineRunner.Run(StartSpeedRoutine());
 
 		private IEnumerator StartSpeedRoutine()
 		{

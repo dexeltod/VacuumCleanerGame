@@ -26,10 +26,8 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 			_chooseWindow.NoButton.onClick.AddListener(OnNoButtonClicked);
 		}
 
-		private void OnNoButtonClicked() =>
-			Presenter.SetChoice(false);
+		private void OnNoButtonClicked() => Presenter.SetChoice(false);
 
-		private void OnYesButtonClicked() =>
-			Presenter.SetChoice(true);
+		private void OnYesButtonClicked() => Presenter.SetChoice(true);
 	}
 }

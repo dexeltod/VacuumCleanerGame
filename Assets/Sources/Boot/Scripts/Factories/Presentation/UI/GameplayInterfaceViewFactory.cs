@@ -15,25 +15,22 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 	{
 		private const bool IsGlobalScoreViewed = false;
 
-		private readonly IGameplayInterfacePresenter _gameplayInterfacePresenter;
 		private readonly GameplayInterfaceView _gameplayInterfaceView;
 		private readonly IPlayerModelRepository _playerModelRepository;
+		private readonly IGameplayInterfacePresenter _presenter;
 		private readonly IResourceModelReadOnly _resourceModelReadOnly;
 		private readonly IStateMachine _stateMachineProvider;
 		private readonly TranslatorService _translatorService;
 
 		public GameplayInterfaceViewFactory(
-			IGameplayInterfacePresenter gameplayInterfacePresenterProvider,
+			IGameplayInterfacePresenter presenter,
 			IStateMachine stateMachineProvider,
 			TranslatorService translatorService,
 			IResourceModelReadOnly resourceModelReadOnly,
 			GameplayInterfaceView gameplayInterfaceView,
-			IPlayerModelRepository playerModelRepository
-		)
+			IPlayerModelRepository playerModelRepository)
 		{
-			_gameplayInterfacePresenter = gameplayInterfacePresenterProvider ??
-			                              throw new ArgumentNullException(nameof(gameplayInterfacePresenterProvider));
-
+			_presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
 			_stateMachineProvider = stateMachineProvider ?? throw new ArgumentNullException(nameof(stateMachineProvider));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 			_resourceModelReadOnly = resourceModelReadOnly ?? throw new ArgumentNullException(nameof(resourceModelReadOnly));
@@ -56,12 +53,12 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 				= _resourceModelReadOnly.CurrentTotalResources > _resourceModelReadOnly.CurrentTotalResources / 2;
 
 			_gameplayInterfaceView.Construct(
-				_gameplayInterfacePresenter,
-				_resourceModelReadOnly.CashScore.Value,
-				_resourceModelReadOnly.TotalAmount.Value,
+				_presenter,
+				_resourceModelReadOnly.CashScore.ReadOnlyValue,
+				_resourceModelReadOnly.TotalAmount.ReadOnlyValue,
 				(int)_playerModelRepository.Get(ProgressType.MaxCashScore).Value,
 				_resourceModelReadOnly.MaxTotalResourceCount,
-				_resourceModelReadOnly.SoftCurrency.Value,
+				_resourceModelReadOnly.SoftCurrency.ReadOnlyValue,
 				isHalfScoreReached,
 				IsGlobalScoreViewed
 			);

@@ -11,11 +11,9 @@ namespace Sources.Utils
 		private UQueryBuilder<VisualElement> _queryBuilder;
 		private UIDocument _uiDocument;
 
-		private void Awake() =>
-			_uiDocument = GetComponent<UIDocument>();
+		private void Awake() => _uiDocument = GetComponent<UIDocument>();
 
-		public T GetFirst<T>(string elementName) where T : VisualElement =>
-			_uiDocument.rootVisualElement.Q<T>(elementName);
+		public T GetFirst<T>(string elementName) where T : VisualElement => _uiDocument.rootVisualElement.Q<T>(elementName);
 
 		public T GetFirstUIElementQuery<T>(string elementName) where T : VisualElement =>
 			_uiDocument.rootVisualElement.Query<T>(elementName);

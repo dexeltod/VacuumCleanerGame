@@ -4,8 +4,7 @@ namespace Sources.Infrastructure.UI
 {
 	public class VisualElementSwitcher
 	{
-		public void Disable(VisualElement disabledElement) =>
-			disabledElement.style.display = DisplayStyle.None;
+		public void Disable(VisualElement disabledElement) => disabledElement.style.display = DisplayStyle.None;
 
 		public void Enter(VisualElement from, VisualElement to)
 		{

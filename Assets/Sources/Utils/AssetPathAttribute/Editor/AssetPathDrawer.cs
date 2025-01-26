@@ -17,17 +17,16 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 		private const float m_ButtonWidth = 80f;
 		private readonly static int s_PPtrHash = "s_PPtrHash".GetHashCode();
 		private static GUIContent m_MissingAssetLabel = new("Missing");
-		private string m_ActivePickerPropertyPath;
-		private int m_PickerControlID = -1;
 
 		// A shared array of references to the objects we have loaded
 		private readonly IDictionary<string, Object> m_References;
+		private string m_ActivePickerPropertyPath;
+		private int m_PickerControlID = -1;
 
 		/// <summary>
 		///     Invoked when unity creates our drawer.
 		/// </summary>
-		public AssetPathDrawer() =>
-			m_References = new Dictionary<string, Object>();
+		public AssetPathDrawer() => m_References = new Dictionary<string, Object>();
 
 		/// <summary>
 		///     Invoked when we want to try our property.
@@ -144,8 +143,7 @@ namespace Sources.Utils.AssetPathAttribute.Editor
 			);
 		}
 
-		protected virtual SerializedProperty GetProperty(SerializedProperty rootProperty) =>
-			rootProperty;
+		protected virtual SerializedProperty GetProperty(SerializedProperty rootProperty) => rootProperty;
 
 		protected virtual Type ObjectType()
 		{

@@ -16,10 +16,8 @@ namespace Sources.Controllers
 			_audioSource = audioSource ?? throw new ArgumentNullException(nameof(audioSource));
 		}
 
-		public void PlayBuySound() =>
-			_audioSource.PlayOneShot(_soundBuy);
+		public void PlayBuySound() => _audioSource.PlayOneShot(_soundBuy);
 
-		public void PlayCloseSound() =>
-			_audioSource.PlayOneShot(_soundClose);
+		public void PlayCloseSound() => _audioSource.PlayOneShot(_soundClose);
 	}
 }

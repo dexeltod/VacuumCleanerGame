@@ -17,7 +17,6 @@ namespace Sources.Boot.Scripts.Factories.Domain
 			_maxTotalResourcePoint = maxTotalResourcePoint;
 		}
 
-		public LevelProgress Create() =>
-			new(_firstLevel, _maxTotalResourcePoint);
+		public LevelProgress Create() => new(_firstLevel, _maxTotalResourcePoint);
 	}
 }

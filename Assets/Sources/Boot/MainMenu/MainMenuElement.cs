@@ -64,8 +64,7 @@ namespace Sources.Boot.MainMenu
 				_playButton.text = translation;
 		}
 
-		private void GetElementsToSwitch() =>
-			_levelsVisualElement = _uiElementGetter.GetFirst<VisualElement>(LevelsMenuElement);
+		private void GetElementsToSwitch() => _levelsVisualElement = _uiElementGetter.GetFirst<VisualElement>(LevelsMenuElement);
 
 		private void Initialize()
 		{
@@ -74,11 +73,9 @@ namespace Sources.Boot.MainMenu
 			SubscribeOnButtons();
 		}
 
-		private void OnExitGame() =>
-			Application.Quit();
+		private void OnExitGame() => Application.Quit();
 
-		private void OnOpenLevelsMenu() =>
-			_visualElementSwitcher.Enter(ThisElement, _levelsVisualElement);
+		private void OnOpenLevelsMenu() => _visualElementSwitcher.Enter(ThisElement, _levelsVisualElement);
 
 		private void OnPlay()
 		{
@@ -90,19 +87,14 @@ namespace Sources.Boot.MainMenu
 			throw new NotImplementedException();
 		}
 
-		private void OpenSettingsMenu() =>
-			_visualElementSwitcher.Enter(ThisElement, _settingsVisualElement);
+		private void OpenSettingsMenu() => _visualElementSwitcher.Enter(ThisElement, _settingsVisualElement);
 
-		private void ReleaseUnmanagedResources() =>
-			UnsubscribeFromButtons();
+		private void ReleaseUnmanagedResources() => UnsubscribeFromButtons();
 
-		private void SubscribeOnButtons() =>
-			_playButton.clicked += OnPlay;
+		private void SubscribeOnButtons() => _playButton.clicked += OnPlay;
 
-		private void UnsubscribeFromButtons() =>
-			_playButton.clicked -= OnPlay;
+		private void UnsubscribeFromButtons() => _playButton.clicked -= OnPlay;
 
-		~MainMenuElement() =>
-			ReleaseUnmanagedResources();
+		~MainMenuElement() => ReleaseUnmanagedResources();
 	}
 }

@@ -21,4 +21,4 @@ MonoBehaviour:
     _sandGround: {fileID: 0}
     _cameraConfiner: {fileID: 6997036408901680827, guid: fcc8d746ec535ae448d28008e8b27c29, type: 3}
   _triggers:
-    _sellTrigger: {fileID: 7684136800631526876, guid: 99a6c1a1ad6b10b4c92a7e5238e083d0, type: 3}
+    _sellTrigger: {fileID: 7684136800631526872, guid: 99a6c1a1ad6b10b4c92a7e5238e083d0, type: 3}

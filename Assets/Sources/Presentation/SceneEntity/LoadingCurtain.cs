@@ -10,11 +10,9 @@ namespace Sources.Presentation.SceneEntity
 		[SerializeField] private CanvasGroup _curtain;
 		[SerializeField] private TextMeshProUGUI _infoText;
 
-		private void Awake() =>
-			DontDestroyOnLoad(gameObject);
+		private void Awake() => DontDestroyOnLoad(gameObject);
 
-		public void SetText(string empty) =>
-			_infoText.text = empty;
+		public void SetText(string empty) => _infoText.text = empty;
 
 		public void Show()
 		{
@@ -28,8 +26,7 @@ namespace Sources.Presentation.SceneEntity
 			_curtain.alpha = 0;
 		}
 
-		public void HideSlowly() =>
-			StartCoroutine(StartHiding());
+		public void HideSlowly() => StartCoroutine(StartHiding());
 
 		private IEnumerator StartHiding()
 		{

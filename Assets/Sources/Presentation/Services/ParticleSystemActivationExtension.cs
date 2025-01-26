@@ -6,23 +6,20 @@ namespace Sources.Presentation.Services
 {
 	public class ParticleSystemActivationExtension : MonoBehaviour
 	{
-		private ICollectable _collectable;
+		private ICollideable _collideable;
 		private ParticleSystem _particleSystem;
 
-		private void OnDisable() =>
-			_collectable.Collected -= OnCollected;
+		private void OnDisable() => _collideable.Collided -= OnCollided;
 
-		private void OnDestroy() =>
-			_collectable.Collected -= OnCollected;
+		private void OnDestroy() => _collideable.Collided -= OnCollided;
 
-		public void Construct(ParticleSystem particles, ICollectable collectable)
+		public void Construct(ParticleSystem particles, ICollideable collideable)
 		{
-			_collectable = collectable ?? throw new ArgumentNullException(nameof(collectable));
+			_collideable = collideable ?? throw new ArgumentNullException(nameof(collideable));
 			_particleSystem = particles ? particles : throw new ArgumentNullException(nameof(particles));
-			_collectable.Collected += OnCollected;
+			_collideable.Collided += OnCollided;
 		}
 
-		private void OnCollected() =>
-			_particleSystem.Stop();
+		private void OnCollided() => _particleSystem.Stop();
 	}
 }

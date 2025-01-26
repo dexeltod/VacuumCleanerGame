@@ -12,8 +12,7 @@ namespace Sources.Infrastructure.Services
 
 		private readonly InitializationOptions _options;
 
-		public UnityServicesOptions(InitializationOptions options) =>
-			_options = options;
+		public UnityServicesOptions(InitializationOptions options) => _options = options;
 
 		public async UniTask InitializeUnityServices()
 		{

@@ -68,7 +68,6 @@ namespace Sources.Presentation.UI.Shop
 			enabled = false;
 		}
 
-		public void SetActiveYesNoButtons(bool isActive) =>
-			_activator.Container.SetActive(isActive);
+		public void SetActiveYesNoButtons(bool isActive) => _activator.Container.SetActive(isActive);
 	}
 }

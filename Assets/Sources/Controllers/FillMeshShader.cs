@@ -28,7 +28,6 @@ namespace Sources.Controllers
 			_renderer.material.SetFloat(FillAreaShaderPropertyId, normalized);
 		}
 
-		private float Normalize(float originalValue, float min, float max) =>
-			(originalValue - min) / (max - min);
+		private float Normalize(float originalValue, float min, float max) => (originalValue - min) / (max - min);
 	}
 }

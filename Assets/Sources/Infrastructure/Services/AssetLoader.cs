@@ -64,8 +64,8 @@ namespace Sources.Infrastructure.Services
 				            Resources.Load<T>(path),
 				            position,
 				            Quaternion.identity
-			            ) ??
-			            throw new ArgumentNullException(path);
+			            )
+			            ?? throw new ArgumentNullException(path);
 
 			CheckPathException(path, @object);
 			return @object;
@@ -77,6 +77,20 @@ namespace Sources.Infrastructure.Services
 			CheckPathException(path, @object);
 
 			return @object;
+		}
+
+		public T InstantiateAndGetComponent<T>(GameObject gameObject, Vector3 position) where T : Behaviour
+		{
+			var component = Object.Instantiate(gameObject, position, Quaternion.identity).GetComponent<T>();
+
+			return component;
+		}
+
+		public T InstantiateAndGetComponent<T>(GameObject gameObject, Transform transform) where T : Behaviour
+		{
+			var component = Object.Instantiate(gameObject, transform).GetComponent<T>();
+
+			return component;
 		}
 
 		public GameObject Instantiate(string path, Vector3 position)

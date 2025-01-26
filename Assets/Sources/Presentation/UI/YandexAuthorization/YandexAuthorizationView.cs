@@ -28,10 +28,8 @@ namespace Sources.Presentation.UI.YandexAuthorization
 			_noButton.onClick.RemoveListener(OnNoButtonClicked);
 		}
 
-		private void OnNoButtonClicked() =>
-			AuthorizationPresenter.SetChoice(false);
+		private void OnNoButtonClicked() => AuthorizationPresenter.SetChoice(false);
 
-		private void OnYesButtonClicked() =>
-			AuthorizationPresenter.SetChoice(true);
+		private void OnYesButtonClicked() => AuthorizationPresenter.SetChoice(true);
 	}
 }

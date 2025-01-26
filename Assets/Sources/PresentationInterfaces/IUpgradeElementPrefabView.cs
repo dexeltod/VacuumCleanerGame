@@ -9,7 +9,6 @@ namespace Sources.PresentationInterfaces
 	{
 		void Construct(
 			Sprite icon,
-			IUpgradeElementPresenter presenter,
 			string title,
 			string description,
 			int id,

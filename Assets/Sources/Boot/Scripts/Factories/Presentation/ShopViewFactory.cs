@@ -9,12 +9,12 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.DomainInterfaces.Models.Shop.Upgrades;
+using Sources.Infrastructure.Repository;
 using Sources.InfrastructureInterfaces.Configs;
 using Sources.Presentation.UI.Shop;
 using Sources.PresentationInterfaces;
 using Sources.Utils;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Sources.Boot.Scripts.Factories.Presentation
 {
@@ -24,90 +24,56 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 		private readonly IProgressEntityRepository _entityRepository;
 		private readonly IGameplayInterfacePresenter _gameplayInterfaceProvider;
 		private readonly IPersistentProgressService _persistentProgressServiceProvider;
-		private readonly IPlayerModelRepository _playerModelRepositoryProvider;
+		private readonly IPlayerModelRepository _playerModelRepository;
 		private readonly IProgressEntityRepository _progressEntityRepository;
-		private readonly IResourcesProgressPresenter _resourcesProgressPresenterProvider;
+		private readonly IResourceModel _resourceModel;
 		private readonly ISaveLoader _saveLoaderProvider;
 		private readonly TranslatorService _translatorService;
-		private readonly IUpgradeWindowPresenter _upgradeWindowPresenterProvider;
 
 		public ShopViewFactory(
 			IPersistentProgressService persistentProgressService,
 			TranslatorService translatorService,
-			IUpgradeWindowPresenter upgradeWindowPresenterProvider,
-			IResourcesProgressPresenter resourcesProgressPresenterProvider,
-			IGameplayInterfacePresenter gameplayInterfaceProvider,
 			IProgressEntityRepository progressEntityRepository,
 			IPlayerModelRepository playerModelRepositoryProvider,
 			ISaveLoader saveLoaderProvider,
 			IAssetLoader assetLoader,
-			IProgressEntityRepository entityRepository
+			IProgressEntityRepository entityRepository,
+			IResourceModel resourceModel
 		)
 		{
-			_upgradeWindowPresenterProvider = upgradeWindowPresenterProvider ??
-			                                  throw new ArgumentNullException(nameof(upgradeWindowPresenterProvider));
-			_resourcesProgressPresenterProvider = resourcesProgressPresenterProvider ??
-			                                      throw new ArgumentNullException(nameof(resourcesProgressPresenterProvider));
-			_gameplayInterfaceProvider = gameplayInterfaceProvider ??
-			                             throw new ArgumentNullException(nameof(gameplayInterfaceProvider));
-			_progressEntityRepository = progressEntityRepository ??
-			                            throw new ArgumentNullException(nameof(progressEntityRepository));
-			_playerModelRepositoryProvider = playerModelRepositoryProvider ??
-			                                 throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
+			_progressEntityRepository =
+				progressEntityRepository ?? throw new ArgumentNullException(nameof(progressEntityRepository));
+			_playerModelRepository = playerModelRepositoryProvider
+			                         ?? throw new ArgumentNullException(nameof(playerModelRepositoryProvider));
 			_saveLoaderProvider = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
 			_assetLoader = assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 			_entityRepository = entityRepository ?? throw new ArgumentNullException(nameof(entityRepository));
-			_persistentProgressServiceProvider = persistentProgressService ??
-			                                     throw new ArgumentNullException(nameof(persistentProgressService));
+			_resourceModel = resourceModel;
+			_persistentProgressServiceProvider =
+				persistentProgressService ?? throw new ArgumentNullException(nameof(persistentProgressService));
 			_translatorService = translatorService ?? throw new ArgumentNullException(nameof(translatorService));
 		}
 
-		public IEnumerable<IUpgradeElementPrefabView> Create(Transform transform, AudioSource audioSource) =>
-			Instantiate(transform, audioSource);
-
-		private UpgradeElementPresenter CreateUpgradeElementPresenter(AudioSource audioSource,
-			IReadOnlyList<IUpgradeEntityConfig> configs) =>
-			new(
-				configs.ToDictionary(
-					elem => elem.Id,
-					elem2 => (IUpgradeElementChangeableView)elem2.PrefabView.GetComponent<UpgradeElementPrefabView>()
-				),
-				_persistentProgressServiceProvider,
-				_upgradeWindowPresenterProvider,
-				_gameplayInterfaceProvider,
-				_progressEntityRepository,
-				_saveLoaderProvider,
-				_resourcesProgressPresenterProvider,
-				_playerModelRepositoryProvider,
-				_assetLoader.LoadFromResources<AudioClip>(ResourcesAssetPath.SoundNames.SoundBuy),
-				_assetLoader.LoadFromResources<AudioClip>(ResourcesAssetPath.SoundNames.SoundClose),
-				audioSource
-			);
-
-		private IEnumerable<IUpgradeElementPrefabView> Instantiate(
-			Component transform,
-			AudioSource audioSource
-		)
+		public IEnumerable<IUpgradeElementPrefabView> Create(Transform transform, AudioSource audioSource)
 		{
 			IReadOnlyList<IUpgradeEntityConfig> configs = _entityRepository.GetConfigs();
 			IReadOnlyList<IStatUpgradeEntityReadOnly> entities = _entityRepository.GetEntities();
 
-			UpgradeElementPresenter presenter = CreateUpgradeElementPresenter(audioSource, configs);
+			Dictionary<int, UpgradeElementPrefabView> a = configs.ToDictionary(
+				elem => elem.Id,
+				elem2 => elem2.PrefabView.GetComponent<UpgradeElementPrefabView>()
+			);
 
-			return configs.Join(
+			IEnumerable<UpgradeElementPrefabView> views = configs.Join(
 				entities,
 				elem => elem.Id,
 				elem2 => elem2.ConfigId,
 				(elem, elem2) =>
 				{
-					var view = (IUpgradeElementPrefabView)Object.Instantiate(
-						elem.PrefabView.GetComponent<UpgradeElementPrefabView>(),
-						transform.transform
-					);
+					var view = _assetLoader.InstantiateAndGetComponent<UpgradeElementPrefabView>(elem.PrefabView, transform);
 
 					view.Construct(
 						elem.Icon,
-						presenter,
 						Localize(elem.Title),
 						Localize(elem.Description),
 						elem.Id,
@@ -119,9 +85,25 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 					return view;
 				}
 			);
+
+			UpgradeElementPresenter presenter = CreateUpgradeElementPresenter(audioSource, views);
+			return views;
 		}
 
-		private string Localize(string phrase) =>
-			_translatorService.GetLocalize(phrase);
+		private UpgradeElementPresenter CreateUpgradeElementPresenter(
+			AudioSource audioSource,
+			IEnumerable<IUpgradeElementChangeableView> views) =>
+			new(
+				views,
+				_persistentProgressServiceProvider,
+				_progressEntityRepository,
+				_saveLoaderProvider,
+				_assetLoader.LoadFromResources<AudioClip>(ResourcesAssetPath.SoundNames.SoundBuy),
+				_assetLoader.LoadFromResources<AudioClip>(ResourcesAssetPath.SoundNames.SoundClose),
+				audioSource,
+				new ShopService(_progressEntityRepository, _playerModelRepository, _resourceModel)
+			);
+
+		private string Localize(string phrase) => _translatorService.GetLocalize(phrase);
 	}
 }

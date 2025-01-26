@@ -24,7 +24,6 @@ namespace Sources.Domain.Progress
 		public IReadOnlyProgress<int> LevelProgress => _currentLevel;
 		public int Value => _currentLevel.Value;
 
-		public void AddOneLevel() =>
-			_currentLevel.Set(_currentLevel.Value + 1);
+		public void AddOneLevel() => _currentLevel.Value = _currentLevel.Value + 1;
 	}
 }

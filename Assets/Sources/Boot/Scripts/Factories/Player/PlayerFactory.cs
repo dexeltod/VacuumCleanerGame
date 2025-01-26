@@ -4,6 +4,7 @@ using Sources.BusinessLogic.Interfaces.Factory;
 using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Controllers;
+using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
 using Sources.Utils;
 using Sources.Utils.Enums;
@@ -15,7 +16,7 @@ namespace Sources.Boot.Scripts.Factories.Player
 	{
 		private readonly AnimationHasher _hasher;
 		private readonly IInjectableAssetLoader _injectableAssetLoader;
-		private readonly IGameplayInterfacePresenter _interfaceProvider;
+		private readonly Joystick _joystick;
 		private readonly IPlayerModelRepository _modelRepository;
 		private Animator _animator;
 		private Rigidbody _body;
@@ -25,26 +26,20 @@ namespace Sources.Boot.Scripts.Factories.Player
 		public PlayerFactory(
 			IInjectableAssetLoader injectableAssetLoader,
 			IPlayerModelRepository modelRepository,
-			IGameplayInterfacePresenter gameplayInterfacePresenter
+			Joystick joystick
 		)
 		{
 			_injectableAssetLoader = injectableAssetLoader ?? throw new ArgumentNullException(nameof(injectableAssetLoader));
 			_modelRepository = modelRepository ?? throw new ArgumentNullException(nameof(modelRepository));
-			_interfaceProvider = gameplayInterfacePresenter ?? throw new ArgumentNullException(nameof(gameplayInterfacePresenter));
+			_joystick = joystick ?? throw new ArgumentNullException(nameof(joystick));
 		}
 
-		private Joystick ImplementationJoystick => _interfaceProvider.Joystick;
-
-		public GameObject Create(GameObject spawnPoint)
+		public IMonoPresenter Create(GameObject spawnPoint)
 		{
 			if (spawnPoint == null)
 				throw new ArgumentNullException(nameof(spawnPoint));
 
-			Joystick joystick = ImplementationJoystick
-				? ImplementationJoystick
-				: throw new ArgumentNullException(nameof(ImplementationJoystick));
-
-			IMonoPresenter playerBodyComponentPresenter = GetPlayerBodyComponent(spawnPoint);
+			PlayerPresenter playerBodyComponentPresenter = GetPlayerBodyComponent(spawnPoint);
 
 			_character = playerBodyComponentPresenter.GameObject;
 			_body = _character.GetComponent<Rigidbody>();
@@ -52,7 +47,7 @@ namespace Sources.Boot.Scripts.Factories.Player
 
 			PlayerTransformable playerTransformable = new(
 				_character.transform,
-				joystick,
+				_joystick,
 				_modelRepository.Get((int)ProgressType.Speed),
 				_body
 			);
@@ -63,23 +58,25 @@ namespace Sources.Boot.Scripts.Factories.Player
 				new AnimationHasher()
 			);
 
-			return _character;
+			return playerBodyComponentPresenter;
 		}
 
-		private IMonoPresenter GetPlayerBodyComponent(GameObject spawnPoint) =>
-			_injectableAssetLoader.InstantiateAndGetComponent<MonoPresenter>(
+		private PlayerPresenter GetPlayerBodyComponent(GameObject spawnPoint) =>
+			_injectableAssetLoader.InstantiateAndGetComponent<PlayerBody>(
 				ResourcesAssetPath.Scene.Player,
 				spawnPoint.transform.position
 			);
 
-		private void SetPresenter(IMonoPresenter playerBodyComponentPresenter,
+		private void SetPresenter(
+			PlayerPresenter playerBodyComponentPresenter,
 			PlayerTransformable playerTransformable,
 			AnimationHasher animationHasher)
 		{
 			playerBodyComponentPresenter.Initialize(
 				playerTransformable,
 				_animator,
-				animationHasher
+				animationHasher,
+				playerBodyComponentPresenter.GetComponent<Rigidbody>()
 			);
 			playerBodyComponentPresenter.GameObject.SetActive(true);
 		}

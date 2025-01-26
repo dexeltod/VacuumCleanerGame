@@ -18,16 +18,13 @@ namespace Sources.Infrastructure.Services
 
 		private ILevelProgress LevelProgress => _progressService.GlobalProgress.LevelProgress;
 
-		private IResourceModel ResourceModel =>
-			_progressService.GlobalProgress.ResourceModelReadOnly;
+		private IResourceModel ResourceModel => _progressService.GlobalProgress.ResourceModel;
 
-		private IResourceModelReadOnly ResourceModelReadOnly =>
-			_progressService.GlobalProgress.ResourceModelReadOnly;
+		private IResourceModelReadOnly ResourceModelReadOnly => _progressService.GlobalProgress.ResourceModel;
 
 		public int CurrentLevel => _progressService.GlobalProgress.LevelProgress.CurrentLevel;
 
-		public int MaxTotalResourceCount =>
-			_progressService.GlobalProgress.ResourceModelReadOnly.MaxTotalResourceCount;
+		public int MaxTotalResourceCount => _progressService.GlobalProgress.ResourceModel.MaxTotalResourceCount;
 
 		public void SetNextLevel()
 		{

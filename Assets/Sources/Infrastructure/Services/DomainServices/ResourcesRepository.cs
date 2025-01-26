@@ -9,13 +9,10 @@ namespace Sources.Infrastructure.Services.DomainServices
 		private readonly Dictionary<int, IResource<float>> _floatResources;
 		private readonly Dictionary<int, IResource<int>> _intResources;
 
-		public ResourcesRepository(
-			Dictionary<int, IResource<int>> intResources
-		) =>
-			_intResources = intResources;
+		public ResourcesRepository(Dictionary<int, IResource<int>> intResources) =>
+			_intResources = intResources ?? throw new ArgumentNullException(nameof(intResources));
 
-		public IResource<T> GetResource<T>(int id) =>
-			FindResource<T>(id);
+		public IResource<T> GetResource<T>(int id) => FindResource<T>(id);
 
 		public void Set<T>(int id, T value)
 		{
@@ -24,7 +21,7 @@ namespace Sources.Infrastructure.Services.DomainServices
 			if (value.Equals(resource) == false)
 				throw new ArgumentException($"Resource count is not {typeof(T)}");
 
-			resource.Set(value);
+			resource.Value = value;
 		}
 
 		private IResource<T> FindResource<T>(int id)
@@ -32,7 +29,8 @@ namespace Sources.Infrastructure.Services.DomainServices
 			SeeContaining(id);
 
 			if (typeof(T) == typeof(float))
-				return (IResource<T>)_floatResources[id];
+				if (_floatResources != null)
+					return (IResource<T>)_floatResources[id];
 
 			if (typeof(T) == typeof(int))
 				return (IResource<T>)_intResources[id];

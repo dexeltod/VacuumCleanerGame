@@ -13,13 +13,10 @@ namespace Sources.Infrastructure.Repository
 		public PlayerModelRepository(IPlayerStatsModel playerStatsModel) =>
 			_playerStatsModel = playerStatsModel ?? throw new ArgumentNullException(nameof(playerStatsModel));
 
-		public IStatReadOnly Get(ProgressType type) =>
-			_playerStatsModel.Get((int)type);
+		public IStatReadOnly Get(ProgressType type) => _playerStatsModel.Get((int)type);
 
-		public IStatReadOnly Get(int id) =>
-			_playerStatsModel.Get(id);
+		public IStatReadOnly Get(int id) => _playerStatsModel.Get(id);
 
-		public void Set(ProgressType type, float value) =>
-			_playerStatsModel.Set((int)type, value);
+		public void Set(ProgressType type, float value) => _playerStatsModel.Set((int)type, value);
 	}
 }

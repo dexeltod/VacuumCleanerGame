@@ -3,14 +3,15 @@ using UnityEngine;
 
 namespace Sources.ControllersInterfaces
 {
-	public interface IMonoPresenter
+	public interface IMonoPresenter : IPresenter
 	{
 		GameObject GameObject { get; }
 
 		void Initialize(
 			ITransformable model,
 			Animator animator,
-			AnimationHasher animationHasher
+			AnimationHasher animationHasher,
+			Rigidbody body
 		);
 	}
 }

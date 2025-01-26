@@ -8,8 +8,7 @@ namespace Sources.Infrastructure.Services
 	{
 		private bool _isAuthorized;
 
-		public UniTask<IPlayerAccount> GetPlayerAccount() =>
-			new(null);
+		public UniTask<IPlayerAccount> GetPlayerAccount() => new(null);
 
 		public void SetStatusInitialized()
 		{
@@ -17,8 +16,7 @@ namespace Sources.Infrastructure.Services
 
 		public bool IsAuthorized => CheckAuthorization();
 
-		public UniTask<string> GetPlayerLanguage() =>
-			new("ru");
+		public UniTask<string> GetPlayerLanguage() => new("ru");
 
 		public UniTask Authorize()
 		{
@@ -26,7 +24,6 @@ namespace Sources.Infrastructure.Services
 			return UniTask.CompletedTask;
 		}
 
-		private bool CheckAuthorization() =>
-			_isAuthorized;
+		private bool CheckAuthorization() => _isAuthorized;
 	}
 }

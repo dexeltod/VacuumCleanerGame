@@ -1,7 +1,9 @@
 namespace Sources.DomainInterfaces.DomainServicesInterfaces
 {
-	public interface IResource<in T>
+	public interface IResource<T>
 	{
-		void Set(T value);
+		T Value { get; set; }
+		T MaxValue { get; set; }
+		T ReadOnlyMaxValue { get; }
 	}
 }

@@ -28,8 +28,8 @@ namespace Sources.Boot.Scripts.Factories.Progress
 			IPlayerModelRepository playerModelRepositoryProvider
 		)
 		{
-			_progressSaveLoadDataService = progressSaveLoadDataService ??
-			                               throw new ArgumentNullException(nameof(progressSaveLoadDataService));
+			_progressSaveLoadDataService = progressSaveLoadDataService
+			                               ?? throw new ArgumentNullException(nameof(progressSaveLoadDataService));
 			_saveLoader = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
 			_clearProgressFactory = clearProgressFactory ?? throw new ArgumentNullException(nameof(clearProgressFactory));
 		}

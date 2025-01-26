@@ -31,7 +31,8 @@ namespace Sources.Controllers.MainMenu
 
 		private bool _leaderboardInitialized;
 
-		public MainMenuPresenter(IStateMachine stateMachine,
+		public MainMenuPresenter(
+			IStateMachine stateMachine,
 			IMainMenuView mainMenu,
 			ILevelProgressFacade levelProgress,
 			ILevelConfigGetter levelConfigGetter,
@@ -48,15 +49,14 @@ namespace Sources.Controllers.MainMenu
 			_levelProgress = levelProgress ?? throw new ArgumentNullException(nameof(levelProgress));
 			_stateMachine = stateMachine ?? throw new ArgumentNullException(nameof(stateMachine));
 			_levelConfigGetter = levelConfigGetter ?? throw new ArgumentNullException(nameof(levelConfigGetter));
-			_progressSaveLoadDataService = progressSaveLoadDataService ??
-			                               throw new ArgumentNullException(nameof(progressSaveLoadDataService));
-			_authorizationPresenter = authorizationPresenter ??
-			                          throw new ArgumentNullException(nameof(authorizationPresenter));
+			_progressSaveLoadDataService = progressSaveLoadDataService
+			                               ?? throw new ArgumentNullException(nameof(progressSaveLoadDataService));
+			_authorizationPresenter = authorizationPresenter ?? throw new ArgumentNullException(nameof(authorizationPresenter));
 			_leaderBoardView = leaderBoardView ?? throw new ArgumentNullException(nameof(leaderBoardView));
 			_leaderBoardService = leaderBoardService ?? throw new ArgumentNullException(nameof(leaderBoardService));
 			_settingsView = settingsView ?? throw new ArgumentNullException(nameof(settingsView));
-			_leaderBoardPlayersFactory = leaderBoardPlayersFactory ??
-			                             throw new ArgumentNullException(nameof(leaderBoardPlayersFactory));
+			_leaderBoardPlayersFactory =
+				leaderBoardPlayersFactory ?? throw new ArgumentNullException(nameof(leaderBoardPlayersFactory));
 			_soundSettings = soundSettings ?? throw new ArgumentNullException(nameof(soundSettings));
 
 			_settingsPresenter = new SettingsPresenter(mixer, soundSettings);
@@ -100,18 +100,15 @@ namespace Sources.Controllers.MainMenu
 			_mainMenuView.Disable();
 		}
 #if DEV
-		private async void OnAddLeader() =>
-			await _leaderBoardService.AddScore(200);
+		private async void OnAddLeader() => await _leaderBoardService.AddScore(200);
 #endif
 
-		private async void OnDeleteSaves() =>
-			await _progressSaveLoadDataService.ClearSaves();
+		private async void OnDeleteSaves() => await _progressSaveLoadDataService.ClearSaves();
 
 		private void OnPlay() =>
 			_stateMachine.Enter<IBuildSceneState, ILevelConfig>(_levelConfigGetter.GetOrDefault(CurrentNumber));
 
-		private void OnSettings() =>
-			_settingsView.Enable();
+		private void OnSettings() => _settingsView.Enable();
 
 		private void OnShowLeaderBoard()
 		{
@@ -135,7 +132,6 @@ namespace Sources.Controllers.MainMenu
 			_leaderBoardView.Enable();
 		}
 
-		private void OnSoundChanged(float masterVolume) =>
-			_settingsPresenter.SetSoundVolume(masterVolume);
+		private void OnSoundChanged(float masterVolume) => _settingsPresenter.SetSoundVolume(masterVolume);
 	}
 }

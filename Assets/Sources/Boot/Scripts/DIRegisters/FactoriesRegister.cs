@@ -16,7 +16,6 @@ namespace Sources.Boot.Scripts.DIRegisters
 		{
 			_builder.Register<ShopModelFactory>(Lifetime.Scoped).AsImplementedInterfaces().AsSelf();
 			_builder.Register<LeaderBoardPlayersFactory>(Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
-			_builder.Register<CoroutineRunnerFactory>(Lifetime.Scoped);
 		}
 	}
 }

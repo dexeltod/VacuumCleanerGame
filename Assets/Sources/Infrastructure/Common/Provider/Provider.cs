@@ -61,8 +61,7 @@ namespace Sources.Infrastructure.Common.Provider
 			return _implementation;
 		}
 
-		public virtual TImplementation Register(TImplementation instance) =>
-			_implementation = instance;
+		public virtual TImplementation Register(TImplementation instance) => _implementation = instance;
 
 		#endregion
 	}

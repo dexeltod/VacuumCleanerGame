@@ -1,6 +1,9 @@
 using System;
+using Cysharp.Threading.Tasks;
+using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.BusinessLogic.States.StateMachineInterfaces;
+using Sources.Controllers;
 using Sources.ControllersInterfaces;
 using Sources.ControllersInterfaces.Services;
 using Sources.DomainInterfaces;
@@ -16,7 +19,7 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 		private readonly IDissolveShaderViewController _dissolveShaderViewController;
 
 		private readonly IPersistentProgressService _persistentProgressService;
-		private readonly IPresentersContainerRepository _presentersContainerRepository;
+		private readonly IRepository<IPresenter> _presentersRepository;
 #if YANDEX_CODE
 #endif
 
@@ -27,42 +30,54 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 			ILoadingCurtain loadingCurtain,
 			ILocalizationService localizationService,
 			IPersistentProgressService persistentProgressService,
-			IPresentersContainerRepository presentersContainerRepository
+			IRepository<IPresenter> presentersRepository
 		)
 		{
 			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 
 			_persistentProgressService =
 				persistentProgressService ?? throw new ArgumentNullException(nameof(persistentProgressService));
-			_presentersContainerRepository = presentersContainerRepository ??
-			                                 throw new ArgumentNullException(nameof(presentersContainerRepository));
+			_presentersRepository = presentersRepository ?? throw new ArgumentNullException(nameof(presentersRepository));
 
 			_loadingCurtain = loadingCurtain ?? throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
-		public void Enter()
+		public async UniTask Enter()
 		{
-			SetMoreMoney();
-
 			_localizationService.UpdateTranslations();
 
-			_presentersContainerRepository.EnableAll();
+			EnablePresenters();
 
 			_loadingCurtain.HideSlowly();
-			_dissolveShaderViewController.StartDissolving();
+
+			_presentersRepository.Get<DissolveShaderViewController>().StartDissolving();
+#if DEV
+			SetMoreMoney();
+#endif
+		}
+
+		private void EnablePresenters()
+		{
+			_presentersRepository.EnableMany(
+				new[]
+				{
+					typeof(UpgradeWindowPresenter)
+				}
+			);
 		}
 
 		public void Exit()
 		{
-			_presentersContainerRepository.DisableAll();
+			_presentersRepository.DisableAll();
 		}
 
+#if DEV
 		private void SetMoreMoney()
 		{
-#if DEV
-
-			_persistentProgressService.GlobalProgress.ResourceModelReadOnly!.AddMoney(999999);
-#endif
+			_persistentProgressService.GlobalProgress.ResourceModel!.SetMoney(
+				_persistentProgressService.GlobalProgress.ResourceModel.SoftCurrency.ReadOnlyMaxValue
+			);
 		}
+#endif
 	}
 }

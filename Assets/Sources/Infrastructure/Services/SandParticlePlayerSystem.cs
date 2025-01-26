@@ -28,8 +28,7 @@ namespace Sources.Infrastructure.Services
 			_waitForSeconds = new WaitForSeconds(playTime);
 		}
 
-		public void Play() =>
-			_coroutineRunner.Run(PlayParticleSystem());
+		public void Play() => _coroutineRunner.Run(PlayParticleSystem());
 
 		private IEnumerator PlayParticleSystem()
 		{

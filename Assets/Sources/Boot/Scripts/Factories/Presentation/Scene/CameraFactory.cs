@@ -22,8 +22,8 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 			_assetLoader
 				= assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 			_player = playerFactory ? playerFactory : throw new ArgumentNullException(nameof(playerFactory));
-			_assetPathNameConfigProvider = assetPathNameConfigProvider ??
-			                               throw new ArgumentNullException(nameof(assetPathNameConfigProvider));
+			_assetPathNameConfigProvider = assetPathNameConfigProvider
+			                               ?? throw new ArgumentNullException(nameof(assetPathNameConfigProvider));
 		}
 
 		private GameObject CustomCameraConfiner => _assetPathNameConfigProvider.SceneGameObjects.CameraConfiner;

@@ -21,7 +21,8 @@ namespace Sources.Presentation.Common
 				TextPhrases = textPhrases;
 		}
 
-		public void Construct(RectTransform rectTransform,
+		public void Construct(
+			RectTransform rectTransform,
 			T presenter = default,
 			ITextPhrases textPhrases = null)
 		{

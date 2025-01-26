@@ -10,8 +10,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 	{
 		private readonly IAssetLoader _loader;
 
-		public LoadingCurtainFactory(IAssetLoader loader) =>
-			_loader = loader ?? throw new ArgumentNullException(nameof(loader));
+		public LoadingCurtainFactory(IAssetLoader loader) => _loader = loader ?? throw new ArgumentNullException(nameof(loader));
 
 		public ILoadingCurtain Create() =>
 			_loader.InstantiateAndGetComponent<LoadingCurtain>(ResourcesAssetPath.Scene.UIResources.LoadingCurtain);

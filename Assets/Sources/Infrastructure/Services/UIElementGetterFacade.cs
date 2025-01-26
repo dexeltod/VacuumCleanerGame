@@ -11,8 +11,7 @@ namespace Sources.Infrastructure.Services
 
 		private UQueryBuilder<VisualElement> _queryBuilder;
 
-		public T GetFirst<T>(string elementName) where T : VisualElement =>
-			_uiDocument.rootVisualElement.Q<T>(elementName);
+		public T GetFirst<T>(string elementName) where T : VisualElement => _uiDocument.rootVisualElement.Q<T>(elementName);
 
 		public T GetFirstUIElementQuery<T>(string elementName) where T : VisualElement =>
 			_uiDocument.rootVisualElement.Query<T>(elementName);

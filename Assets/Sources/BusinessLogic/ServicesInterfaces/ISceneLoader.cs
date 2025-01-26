@@ -4,6 +4,7 @@ namespace Sources.BusinessLogic.ServicesInterfaces
 {
 	public interface ISceneLoader
 	{
-		UniTask Load(string nextScene);
+		void Load(string nextScene);
+		UniTask LoadAsync(string nextScene);
 	}
 }

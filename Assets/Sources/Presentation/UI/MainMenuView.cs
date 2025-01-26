@@ -34,8 +34,7 @@ namespace Sources.Presentation.UI
 
 		public TextPhrasesList Translator => _translator;
 
-		public void OnDestroy() =>
-			_playButtonTween.Kill();
+		public void OnDestroy() => _playButtonTween.Kill();
 
 		public Button PlayButton => _playButton;
 		public Button DeleteSavesButton => _deleteSavesButton;
@@ -45,8 +44,7 @@ namespace Sources.Presentation.UI
 		public GameObject LeaderBoardView => _leaderBoardView;
 		public Button AddLeadersButton => _addLeadersButton;
 
-		public ISettingsView GetSettingsView() =>
-			GetComponent<ISettingsView>();
+		public ISettingsView GetSettingsView() => GetComponent<ISettingsView>();
 
 		public override void Enable()
 		{
@@ -55,10 +53,8 @@ namespace Sources.Presentation.UI
 			);
 		}
 
-		public override void Disable() =>
-			_playButtonTween.Kill();
+		public override void Disable() => _playButtonTween.Kill();
 
-		private void OnExit() =>
-			Application.Quit();
+		private void OnExit() => Application.Quit();
 	}
 }

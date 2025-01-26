@@ -21,11 +21,9 @@ namespace Sources.Controllers
 			_stateMachine = stateMachine ?? throw new ArgumentNullException(nameof(stateMachine));
 		}
 
-		public void Dispose() =>
-			Disable();
+		public void Dispose() => Disable();
 
-		public void GoToMainMenu() =>
-			_stateMachine.Enter<IMenuState>();
+		public void GoToMainMenu() => _stateMachine.Enter<IMenuState>();
 
 		public override void Enable()
 		{
