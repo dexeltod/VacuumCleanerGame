@@ -5,7 +5,6 @@ using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.BusinessLogic.States.StateMachineInterfaces;
 using Sources.Controllers;
 using Sources.ControllersInterfaces;
-using Sources.ControllersInterfaces.Services;
 using Sources.DomainInterfaces;
 using Sources.PresentationInterfaces;
 using VContainer;
@@ -19,7 +18,7 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 		private readonly IDissolveShaderViewController _dissolveShaderViewController;
 
 		private readonly IPersistentProgressService _persistentProgressService;
-		private readonly IRepository<IPresenter> _presentersRepository;
+		private readonly IActiveRepository<IPresenter> _presentersRepository;
 #if YANDEX_CODE
 #endif
 
@@ -30,7 +29,7 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 			ILoadingCurtain loadingCurtain,
 			ILocalizationService localizationService,
 			IPersistentProgressService persistentProgressService,
-			IRepository<IPresenter> presentersRepository
+			IActiveRepository<IPresenter> presentersRepository
 		)
 		{
 			_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
@@ -42,7 +41,7 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 			_loadingCurtain = loadingCurtain ?? throw new ArgumentNullException(nameof(loadingCurtain));
 		}
 
-		public async UniTask Enter()
+		public UniTask Enter()
 		{
 			_localizationService.UpdateTranslations();
 
@@ -54,6 +53,8 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 #if DEV
 			SetMoreMoney();
 #endif
+
+			return UniTask.CompletedTask;
 		}
 
 		private void EnablePresenters()

@@ -39,7 +39,7 @@ namespace Sources.Boot.Scripts.Factories.Player
 			if (spawnPoint == null)
 				throw new ArgumentNullException(nameof(spawnPoint));
 
-			PlayerPresenter playerBodyComponentPresenter = GetPlayerBodyComponent(spawnPoint);
+			PlayerBody playerBodyComponentPresenter = GetPlayerBodyComponent(spawnPoint);
 
 			_character = playerBodyComponentPresenter.GameObject;
 			_body = _character.GetComponent<Rigidbody>();
@@ -48,7 +48,7 @@ namespace Sources.Boot.Scripts.Factories.Player
 			PlayerTransformable playerTransformable = new(
 				_character.transform,
 				_joystick,
-				_modelRepository.Get((int)ProgressType.Speed),
+				_modelRepository.Get(ProgressType.Speed),
 				_body
 			);
 
@@ -61,7 +61,7 @@ namespace Sources.Boot.Scripts.Factories.Player
 			return playerBodyComponentPresenter;
 		}
 
-		private PlayerPresenter GetPlayerBodyComponent(GameObject spawnPoint) =>
+		private PlayerBody GetPlayerBodyComponent(GameObject spawnPoint) =>
 			_injectableAssetLoader.InstantiateAndGetComponent<PlayerBody>(
 				ResourcesAssetPath.Scene.Player,
 				spawnPoint.transform.position

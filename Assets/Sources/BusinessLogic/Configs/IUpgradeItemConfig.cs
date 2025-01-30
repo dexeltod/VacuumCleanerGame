@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Sources.InfrastructureInterfaces.Configs
+namespace Sources.BusinessLogic.Configs
 {
 	public interface IUpgradeItemConfig
 	{

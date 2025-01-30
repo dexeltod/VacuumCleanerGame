@@ -20,7 +20,7 @@ namespace Sources.Infrastructure.CoroutineRunner
 			StopCoroutine(coroutine);
 		}
 
-		Coroutine ICoroutineRunner.Run(string methodName) => StartCoroutine(methodName);
+		public Coroutine Run(string methodName) => StartCoroutine(methodName);
 
 		public Coroutine Run(IEnumerator enumerator) => enumerator != null ? StartCoroutine(enumerator) : null;
 	}

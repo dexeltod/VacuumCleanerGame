@@ -5,6 +5,7 @@ using Sources.Domain.Progress;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Utils.AssetPaths;
+using VContainer;
 
 namespace Sources.Boot.Scripts.Factories.Domain
 {
@@ -12,32 +13,26 @@ namespace Sources.Boot.Scripts.Factories.Domain
 	{
 		private readonly IAssetLoader _assetLoader;
 		private readonly IResourcesRepository _resourcesRepository;
-		private readonly ShopModelFactory _shopModelFactory;
 
+		[Inject]
 		public InitialProgressFactory(
 			IResourcesRepository resourcesRepository,
-			IAssetLoader assetLoader,
-			ShopModelFactory shopModelFactory
+			IAssetLoader assetLoader
 		)
 		{
 			_resourcesRepository = resourcesRepository ?? throw new ArgumentNullException(nameof(resourcesRepository));
 			_assetLoader = assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
-			_shopModelFactory = shopModelFactory ?? throw new ArgumentNullException(nameof(shopModelFactory));
 		}
 
-		public IGlobalProgress Create()
-		{
-			ShopModel shopModelFactory = _shopModelFactory.LoadList();
-
-			return new GlobalProgress(
+		public IGlobalProgress Create() =>
+			new GlobalProgress(
 				new ResourcesModelFactory(_resourcesRepository).Create(),
 				new LevelProgressFactory(
 					1,
 					GameConfig.DefaultMaxTotalResource
 				).Create(),
-				shopModelFactory,
-				new PlayerModelFactory(_assetLoader, shopModelFactory).Create()
+				new ShopModelFactory(_assetLoader).LoadList(),
+				new PlayerModelFactory(_assetLoader, new ShopModelFactory(_assetLoader).LoadList()).Create()
 			);
-		}
 	}
 }

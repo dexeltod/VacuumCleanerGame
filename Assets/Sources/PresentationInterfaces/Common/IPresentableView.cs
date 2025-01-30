@@ -10,4 +10,12 @@ namespace Sources.PresentationInterfaces.Common
 
 		void SetParent(Transform parent);
 	}
+
+	public interface IPresentableView : IView
+	{
+		Transform Transform { get; }
+		void Construct(IPresenter presenter);
+
+		void SetParent(Transform parent);
+	}
 }

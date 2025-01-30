@@ -4,11 +4,10 @@ using Sources.Domain.Progress.ResourcesData;
 namespace Sources.Domain.Progress.Entities.Values
 {
 	[Serializable]
-	public class IntEntityValue : Resource<int>
+	public class IntEntity : Resource<int>
 	{
-		public IntEntityValue(int id, string name, int count, int maxValue) : base(id, name, count, maxValue)
-		{
-		}
+		public IntEntity(int id, string name, int count, int maxValue) : base(id, name, count, maxValue) =>
+			IsTotalScoreReached = count > maxValue / 2;
 
 		public override int Value
 		{
@@ -24,7 +23,7 @@ namespace Sources.Domain.Progress.Entities.Values
 
 		private int Set(int value)
 		{
-			if (value < 0 || value > ReadOnlyMaxValue + 1) throw new ArgumentOutOfRangeException(nameof(value));
+			if (value < 0 || value > ReadOnlyMaxValue) throw new ArgumentOutOfRangeException(nameof(value));
 
 			_value = value;
 			Changed?.Invoke();

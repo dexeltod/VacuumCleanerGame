@@ -30,18 +30,26 @@ namespace Sources.Presentation.UI.Shop
 		private readonly List<Image> _pointsColors = new();
 
 		private int _boughtPoints;
-		private int _id;
 
 		private bool _isInit;
 		private int _maxPoints;
-
-		private IUpgradeElementPresenter UpgradeElementPresenter => Presenter;
+		public int ID { get; private set; }
 
 		private void OnEnable() => _buttonBuy.onClick.AddListener(OnBuyButtonPressed);
 
 		private void OnDisable() => _buttonBuy.onClick.RemoveListener(OnBuyButtonPressed);
 
 		public event Action<int> BuyButtonPressed;
+
+		public void AddProgressPointColor(int count = 1)
+		{
+			IncreasePoints(count);
+
+			SetBoughtPoints();
+			SetNotBoughtPoints();
+		}
+
+		public void SetPriceText(int price) => _price.SetText(price.ToString());
 
 		public void Construct(
 			Sprite icon,
@@ -56,7 +64,7 @@ namespace Sources.Presentation.UI.Shop
 			if (maxPoints < 0) throw new ArgumentOutOfRangeException(nameof(maxPoints));
 
 			_maxPoints = maxPoints;
-			_id = id;
+			ID = id;
 			if (_isInit)
 				throw new InvalidOperationException($"{name} view is already constructed");
 
@@ -72,16 +80,6 @@ namespace Sources.Presentation.UI.Shop
 
 			_isInit = true;
 		}
-
-		public void AddProgressPointColor(int count = 1)
-		{
-			IncreasePoints(count);
-
-			SetBoughtPoints();
-			SetNotBoughtPoints();
-		}
-
-		public void SetPriceText(int price) => _price.SetText(price.ToString());
 
 		private void IncreasePoints(int count)
 		{
@@ -103,10 +101,7 @@ namespace Sources.Presentation.UI.Shop
 				_pointsColors[i].color = _boughtPointColor;
 		}
 
-		private void OnBuyButtonPressed()
-		{
-			BuyButtonPressed!.Invoke(_id);
-		}
+		private void OnBuyButtonPressed() => BuyButtonPressed!.Invoke(ID);
 
 		private void InstantiatePoints()
 		{

@@ -1,5 +1,3 @@
-using System;
-
 namespace Sources.DomainInterfaces
 {
 	public interface IResourceModel : IResourceModelReadOnly
@@ -12,6 +10,5 @@ namespace Sources.DomainInterfaces
 		void SetMoney(int value);
 		bool TryAddScore(int newCashScore);
 		bool TryDecreaseMoney(int newValue);
-		event Action HalfScoreReached;
 	}
 }

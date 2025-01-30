@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sources.ControllersInterfaces.Services;
 using Sources.DomainInterfaces.Entities;
 
 namespace Sources.BusinessLogic.Repository
@@ -25,16 +24,6 @@ namespace Sources.BusinessLogic.Repository
 			throw new NotImplementedException();
 		}
 
-		public void DisableAll()
-		{
-			throw new NotImplementedException();
-		}
-
-		public void EnableMany()
-		{
-			throw new NotImplementedException();
-		}
-
 		public TI Get<TI>() where TI : ISceneResourceEntity => throw new NotImplementedException();
 
 		public void Remove(ISceneResourceEntity value)
@@ -52,17 +41,27 @@ namespace Sources.BusinessLogic.Repository
 			throw new NotImplementedException();
 		}
 
+		public void DisableAll()
+		{
+			throw new NotImplementedException();
+		}
+
 		public void Enable<TI>()
 		{
 			throw new NotImplementedException();
 		}
 
-		public void EnableMany(IEnumerable<ISceneResourceEntity> exclude)
+		public void EnableMany()
 		{
 			throw new NotImplementedException();
 		}
 
-		public void EnableMany(Type[] exclude)
+		public void EnableMany(IEnumerable<ISceneResourceEntity> excluded)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void EnableMany(Type[] excluded)
 		{
 			throw new NotImplementedException();
 		}

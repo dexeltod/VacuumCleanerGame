@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Sources.BusinessLogic.Interfaces.Factory;
-using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.Services;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
@@ -21,11 +20,8 @@ namespace Sources.Boot.Scripts.Factories.Progress
 		[Inject]
 		public ProgressFactory(
 			IProgressSaveLoadDataService progressSaveLoadDataService,
-			IPersistentProgressService persistentProgressServiceProvider,
 			ISaveLoader saveLoaderProvider,
-			IClearProgressFactory clearProgressFactory,
-			IProgressEntityRepository progressEntityRepositoryProvider,
-			IPlayerModelRepository playerModelRepositoryProvider
+			IClearProgressFactory clearProgressFactory
 		)
 		{
 			_progressSaveLoadDataService = progressSaveLoadDataService

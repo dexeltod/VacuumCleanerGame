@@ -9,12 +9,12 @@ namespace Sources.Domain.Stats
 	public sealed class Stat : IStat
 	{
 		[SerializeField] private float _startValue;
-		[SerializeField] private IntEntityValue _currentLevel;
+		[SerializeField] private IntEntity _currentLevel;
 
 		[SerializeField] private float _value;
 		[SerializeField] private int _id;
 
-		public Stat(float startValue, IntEntityValue currentLevel, int id)
+		public Stat(float startValue, IntEntity currentLevel, int id)
 		{
 			if (startValue < 0) throw new ArgumentOutOfRangeException(nameof(startValue));
 

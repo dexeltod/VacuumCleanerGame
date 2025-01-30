@@ -1,10 +1,11 @@
 using System;
+using Sources.BusinessLogic.Configs;
 using UnityEngine;
 
-namespace Sources.InfrastructureInterfaces.Configs
+namespace Sources.Infrastructure.Configs
 {
 	[Serializable]
-	public class PlayerUpgradeShopConfig : ProgressItemConfig, IUpgradeEntityConfig
+	public class PlayerUpgradeShopViewConfig : ProgressItemConfig, IUpgradeEntityViewConfig
 	{
 		[SerializeField] private GameObject _upgradeElementPrefabView;
 

@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sources.BusinessLogic.Interfaces;
 using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Domain.Entities;
 using Sources.DomainInterfaces;
 using Sources.Presentation.SceneEntity;
-using Sources.Presentation.Services;
+using Sources.PresentationInterfaces;
 using Sources.PresentationInterfaces.Common;
 using Sources.Utils;
 using UnityEngine;
@@ -42,7 +43,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 
 		private string ResourceSpawnPosition => ResourcesAssetPath.GameObjects.ResourceSpawnPosition;
 
-		public ICollection<IResourcePresentation> Create()
+		public Dictionary<int, IResourcePresentation> Create()
 		{
 			_totalResource = 0;
 
@@ -74,7 +75,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 				hardCurrencySpawnIndex
 			);
 
-			return _minedResources;
+			return _minedResources.ToDictionary(elem => elem.ID, elem => elem);
 		}
 
 		private void AddHardResourceParticle(IHardMinedResource hardConfig, ResourcePresentation hardResource)
@@ -148,30 +149,30 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 		)
 		{
 			for (var i = 0; i < areaSize; i++)
-			for (var j = 0; j < areaSize; j++)
-			{
-				if (_totalResource > _levelProgressFacade.MaxTotalResourceCount)
-					break;
+				for (var j = 0; j < areaSize; j++)
+				{
+					if (_totalResource > _levelProgressFacade.MaxTotalResourceCount)
+						break;
 
-				if (_totalResource >= hardResourceSpawnIndex && hardResourceCount > 0)
-					hardResourceCount = SpawnHardResource(
-						hardVariants,
-						resourceSpawnPosition,
-						levelConfig,
-						hardResourceCount,
-						i,
-						j
-					);
-				else
-					SpawnSoftCurrency(
-						softResourcesVariantsCount,
-						softVariants,
-						resourceSpawnPosition,
-						levelConfig,
-						i,
-						j
-					);
-			}
+					if (_totalResource >= hardResourceSpawnIndex && hardResourceCount > 0)
+						hardResourceCount = SpawnHardResource(
+							hardVariants,
+							resourceSpawnPosition,
+							levelConfig,
+							hardResourceCount,
+							i,
+							j
+						);
+					else
+						SpawnSoftCurrency(
+							softResourcesVariantsCount,
+							softVariants,
+							resourceSpawnPosition,
+							levelConfig,
+							i,
+							j
+						);
+				}
 		}
 
 		private void SetMaterial(ResourcePresentation resourceObject, IMinedResource config)
@@ -262,5 +263,24 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 
 			_minedResources.Add(resourceObject);
 		}
+	}
+
+	public class ParticleSystemActivationExtension : MonoBehaviour
+	{
+		private ICollideable _collideable;
+		private ParticleSystem _particleSystem;
+
+		private void OnDisable() => _collideable.Collided -= OnCollided;
+
+		private void OnDestroy() => _collideable.Collided -= OnCollided;
+
+		public void Construct(ParticleSystem particles, ICollideable collideable)
+		{
+			_collideable = collideable ?? throw new ArgumentNullException(nameof(collideable));
+			_particleSystem = particles ? particles : throw new ArgumentNullException(nameof(particles));
+			_collideable.Collided += OnCollided;
+		}
+
+		private void OnCollided(int value) => _particleSystem.Stop();
 	}
 }

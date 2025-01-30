@@ -7,11 +7,6 @@ namespace Sources.Presentation.Triggers
 {
 	public class TriggerSell : MonoBehaviour, ITriggerSell
 	{
-		private void Awake()
-		{
-			Debug.Log("test1");
-		}
-
 		private void OnTriggerEnter(Collider other)
 		{
 			if (!other.TryGetComponent(out IPlayer _)) return;

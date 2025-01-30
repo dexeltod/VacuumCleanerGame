@@ -7,7 +7,7 @@ using Sources.Domain.Player;
 using Sources.Domain.Progress;
 using Sources.Domain.Progress.Entities.Values;
 using Sources.Domain.Stats;
-using Sources.InfrastructureInterfaces.Configs;
+using Sources.Infrastructure.Configs;
 using Sources.Utils;
 
 namespace Sources.Boot.Scripts.Factories.Domain
@@ -36,16 +36,18 @@ namespace Sources.Boot.Scripts.Factories.Domain
 			);
 
 		private List<Stat> InitStats(
-			IReadOnlyCollection<PlayerUpgradeShopConfig> items,
+			IReadOnlyCollection<PlayerUpgradeShopViewConfig> items,
 			IReadOnlyCollection<StartStatConfig> startConfigs
 		)
 		{
-			return items.Join(
+			List<Stat> result = items.Join(
 				startConfigs,
 				item => item.Id,
-				start => (int)start.Type,
-				(item, start) => new Stat(start.Stat, new IntEntityValue(item.Id, item.Title, 0, item.MaxProgressCount), item.Id)
+				start => start.Id,
+				(item, start) => new Stat(start.Stat, new IntEntity(item.Id, item.Title, 0, item.MaxProgressCount), item.Id)
 			).ToList();
+
+			return result;
 		}
 	}
 }

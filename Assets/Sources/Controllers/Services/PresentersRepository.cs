@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sources.BusinessLogic.Repository;
 using Sources.ControllersInterfaces;
-using Sources.ControllersInterfaces.Services;
 
 namespace Sources.Controllers.Services
 {
-	public class PresentersRepository : IRepository<IPresenter>
+	public class PresentersRepository : IActiveRepository<IPresenter>
 	{
 		private readonly Dictionary<Type, IPresenter> _presenters = new();
 
@@ -37,30 +37,45 @@ namespace Sources.Controllers.Services
 
 		public void RemoveAll() => _presenters.Clear();
 
+		public void Disable<T>()
+		{
+			if (!_presenters.TryGetValue(typeof(T), out IPresenter presenter)) throw new ArgumentNullException(nameof(T));
+
+			presenter.Disable();
+		}
+
+		public void DisableAll()
+		{
+			foreach (IPresenter presenter in _presenters.Values) presenter.Disable();
+		}
+
+		public void Enable<T>()
+		{
+			if (!_presenters.TryGetValue(typeof(T), out IPresenter presenter)) throw new ArgumentNullException(nameof(T));
+
+			presenter.Enable();
+		}
+
 		public void EnableMany()
 		{
 			foreach (IPresenter presenter in _presenters.Values) presenter.Enable();
 		}
 
-		public void EnableMany(Type[] exclude)
+		public void EnableMany(Type[] excluded)
 		{
-			if (exclude == null) throw new ArgumentNullException(nameof(exclude));
+			if (excluded == null) throw new ArgumentNullException(nameof(excluded));
 
 			foreach (IPresenter value in _presenters.Values)
 			{
-				if (exclude.Contains(value.GetType()))
-				{
-					value.Disable();
-					continue;
-				}
+				if (excluded.Contains(value.GetType())) continue;
 
 				value.Enable();
 			}
 		}
 
-		public void EnableMany(IEnumerable<IPresenter> exclude)
+		public void EnableMany(IEnumerable<IPresenter> excluded)
 		{
-			if (exclude == null) throw new ArgumentNullException(nameof(exclude));
+			if (excluded == null) throw new ArgumentNullException(nameof(excluded));
 
 			IEnumerable<IPresenter> presenters = _presenters.Values.Select(
 				presenter =>
@@ -72,25 +87,6 @@ namespace Sources.Controllers.Services
 
 			foreach (IPresenter presenter in presenters)
 				presenter.Enable();
-		}
-
-		public void Enable<T>()
-		{
-			if (!_presenters.TryGetValue(typeof(T), out IPresenter presenter)) throw new ArgumentNullException(nameof(T));
-
-			presenter.Enable();
-		}
-
-		public void Disable<T>()
-		{
-			if (!_presenters.TryGetValue(typeof(T), out IPresenter presenter)) throw new ArgumentNullException(nameof(T));
-
-			presenter.Disable();
-		}
-
-		public void DisableAll()
-		{
-			foreach (IPresenter presenter in _presenters.Values) presenter.Disable();
 		}
 	}
 }

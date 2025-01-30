@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.Services;
 using Sources.DomainInterfaces;
@@ -46,7 +47,7 @@ namespace Sources.Infrastructure.Repository
 
 		private bool CanAddOneProgressPoint(int id)
 		{
-			int count = _progressRepository.GetConfig(id).Stats.Count;
+			int count = _progressRepository.GetConfig(id).Items.Count();
 			int value = _progressRepository.GetEntity(id).Value;
 
 			Debug.Log(_progressRepository.GetEntity(id).LevelProgress.ReadOnlyValue);

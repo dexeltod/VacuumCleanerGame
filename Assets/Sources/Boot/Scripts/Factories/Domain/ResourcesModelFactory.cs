@@ -8,25 +8,22 @@ namespace Sources.Boot.Scripts.Factories.Domain
 {
 	public class ResourcesModelFactory
 	{
-		private const int StartCurrencyCount = 0;
-		private const int StartScoreCount = 0;
-
 		private readonly IResourcesRepository _resourcesRepository;
 
 		public ResourcesModelFactory(IResourcesRepository resourcesRepository) =>
 			_resourcesRepository = resourcesRepository ?? throw new ArgumentNullException(nameof(resourcesRepository));
 
-		public ResourceModel Create() =>
-			new(
-				GetResource((int)CurrencyResourceType.Soft),
-				GetResource((int)CurrencyResourceType.Hard),
-				GetResource((int)CurrencyResourceType.CashScore),
-				GetResource((int)CurrencyResourceType.GlobalScore),
-				StartScoreCount,
-				StartCurrencyCount,
-				StartScoreCount
+		public ResourceModel Create()
+		{
+			var resource = new ResourceModel(
+				GetResource(StaticIdRepository.GetByEnum(ResourceType.Soft)),
+				GetResource(StaticIdRepository.GetByEnum(ResourceType.Hard)),
+				GetResource(StaticIdRepository.GetByEnum(ResourceType.CashScore)),
+				GetResource(StaticIdRepository.GetByEnum(ResourceType.GlobalScore))
 			);
+			return resource;
+		}
 
-		private IntEntityValue GetResource(int type) => _resourcesRepository.GetResource<int>(type) as IntEntityValue;
+		private IntEntity GetResource(int type) => _resourcesRepository.GetResource<int>(type) as IntEntity;
 	}
 }

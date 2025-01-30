@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sources.ControllersInterfaces.Services;
+using Sources.BusinessLogic.Repository;
 using Sources.PresentationInterfaces.Common;
 
 namespace Sources.Controllers.Services
@@ -37,18 +37,37 @@ namespace Sources.Controllers.Services
 
 		public void RemoveAll() => _views.Clear();
 
+		public void Disable<T>()
+		{
+			if (!_views.TryGetValue(typeof(T), out IView view)) throw new ArgumentNullException(nameof(T));
+
+			view.Disable();
+		}
+
+		public void DisableAll()
+		{
+			foreach (IView view in _views.Values) view.Disable();
+		}
+
+		public void Enable<T>()
+		{
+			if (!_views.TryGetValue(typeof(T), out IView view)) throw new ArgumentNullException(nameof(T));
+
+			view.Enable();
+		}
+
 		public void EnableMany()
 		{
 			foreach (IView view in _views.Values) view.Enable();
 		}
 
-		public void EnableMany(Type[] exclude)
+		public void EnableMany(Type[] excluded)
 		{
-			if (exclude == null) throw new ArgumentNullException(nameof(exclude));
+			if (excluded == null) throw new ArgumentNullException(nameof(excluded));
 
 			foreach (IView value in _views.Values)
 			{
-				if (exclude.Contains(value.GetType()))
+				if (excluded.Contains(value.GetType()))
 				{
 					value.Disable();
 					continue;
@@ -58,9 +77,9 @@ namespace Sources.Controllers.Services
 			}
 		}
 
-		public void EnableMany(IEnumerable<IView> exclude)
+		public void EnableMany(IEnumerable<IView> excluded)
 		{
-			if (exclude == null) throw new ArgumentNullException(nameof(exclude));
+			if (excluded == null) throw new ArgumentNullException(nameof(excluded));
 
 			IEnumerable<IView> views = _views.Values.Select(
 				view =>
@@ -72,25 +91,6 @@ namespace Sources.Controllers.Services
 
 			foreach (IView view in views)
 				view.Enable();
-		}
-
-		public void Enable<T>()
-		{
-			if (!_views.TryGetValue(typeof(T), out IView view)) throw new ArgumentNullException(nameof(T));
-
-			view.Enable();
-		}
-
-		public void Disable<T>()
-		{
-			if (!_views.TryGetValue(typeof(T), out IView view)) throw new ArgumentNullException(nameof(T));
-
-			view.Disable();
-		}
-
-		public void DisableAll()
-		{
-			foreach (IView view in _views.Values) view.Disable();
 		}
 	}
 }

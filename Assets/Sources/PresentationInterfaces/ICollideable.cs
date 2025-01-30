@@ -4,6 +4,6 @@ namespace Sources.PresentationInterfaces
 {
 	public interface ICollideable
 	{
-		event Action Collided;
+		event Action<int> Collided;
 	}
 }

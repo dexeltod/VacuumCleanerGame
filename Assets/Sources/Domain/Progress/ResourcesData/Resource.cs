@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Sources.Domain.Progress.ResourcesData
 {
 	[Serializable]
-	public abstract class Resource<T> : IResource<T>, IReadOnlyProgress<T>
+	public abstract class Resource<T> : IResource<T>
 	{
 		[SerializeField] protected T _value;
 		[SerializeField] protected int _id;
@@ -21,6 +21,8 @@ namespace Sources.Domain.Progress.ResourcesData
 			_value = value;
 			_maxValue = maxValue ?? throw new ArgumentNullException(nameof(maxValue));
 		}
+
+		public bool IsTotalScoreReached { get; protected set; }
 
 		public int Id => _id;
 		public T ReadOnlyValue => Value;

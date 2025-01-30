@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Sources.BusinessLogic.Providers;
 using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.Services;
 using Sources.Controllers.Common;
@@ -9,7 +8,6 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.DomainInterfaces.Entities;
-using Sources.PresentationInterfaces;
 using Sources.PresentationInterfaces.Common;
 using Sources.PresentationInterfaces.Triggers;
 using Sources.Utils;
@@ -21,11 +19,9 @@ namespace Sources.Controllers
 	{
 		private readonly ICoroutineRunner _coroutineRunner;
 		private readonly IFillMeshShader _fillMeshShader;
-		private readonly IGameplayInterfaceView _gameplayInterfacePresenter;
 		private readonly IResourceModel _resourceData;
 		private readonly IResourceModelReadOnly _resourceReadOnly;
-		private readonly ICollection<IResourcePresentation> _rocks;
-		private readonly ISandContainerViewProvider _sandContainerView;
+		private readonly Dictionary<int, IResourcePresentation> _rocks;
 		private readonly ISandParticlePlayerSystem _sandParticlePlayerSystem;
 		private readonly SceneResourcesRepository _sceneResourcesRepository;
 		private readonly IStatReadOnly _statReadOnly;
@@ -34,6 +30,7 @@ namespace Sources.Controllers
 		private Coroutine _coroutine;
 
 		private int _increasedDelta;
+		private bool _isSelling;
 
 		private int _lastCashScore;
 
@@ -45,7 +42,7 @@ namespace Sources.Controllers
 			IStatReadOnly maxCashScore,
 			ITriggerSell triggerSell,
 			ICoroutineRunner coroutineRunner,
-			ICollection<IResourcePresentation> rocks,
+			Dictionary<int, IResourcePresentation> rocks,
 			SceneResourcesRepository sceneResourcesRepository)
 		{
 			_resourceReadOnly = resourceReadOnly ?? throw new ArgumentNullException(nameof(resourceReadOnly));
@@ -71,9 +68,9 @@ namespace Sources.Controllers
 
 		public override void Enable()
 		{
-			foreach (IResourcePresentation presentation in _rocks) presentation.Collided += () => OnResourceCollided(presentation);
+			foreach (IResourcePresentation presentation in _rocks.Values)
+				presentation.Collided += OnResourceCollided;
 
-			_resourceReadOnly.TotalAmount.HalfReached += OnHalfScoreReached;
 			_triggerSell.OnTriggerStayed += OnTriggerStay;
 			SetEnableSand();
 		}
@@ -86,52 +83,37 @@ namespace Sources.Controllers
 
 		public override void Disable()
 		{
-			foreach (IResourcePresentation presentation in _rocks) presentation.Collided -= () => OnResourceCollided(presentation);
+			foreach (IResourcePresentation presentation in _rocks.Values)
+				presentation.Collided -= OnResourceCollided;
 
 			_triggerSell.OnTriggerStayed -= OnTriggerStay;
 			SetEnableSand();
 		}
 
-		public bool TryDecreaseMoney(int count)
-		{
-			if (_resourceReadOnly.SoftCurrency.ReadOnlyValue - count < 0)
-				throw new ArgumentOutOfRangeException($"{SoftCurrency} less than zero");
-
-			bool result = _resourceData.TryDecreaseMoney(count);
-
-			if (result == false)
-				throw new ArgumentOutOfRangeException(
-					$"Not enough money: {_resourceReadOnly.SoftCurrency.ReadOnlyValue}. Count: {count}"
-				);
-
-			return true;
-		}
-
 		private bool IsHalfScoreReached() =>
 			_resourceReadOnly.CurrentTotalResources >= Mathf.CeilToInt(_resourceReadOnly.MaxTotalResourceCount / 2f);
 
-		private void OnHalfScoreReached()
-		{
-			if (IsHalfGlobalScore)
-				_gameplayInterfacePresenter.SetActiveGoToNextLevelButton(true);
-		}
-
-		private void OnResourceCollided(IResourcePresentation resourcePresentation)
+		private void OnResourceCollided(int id)
 		{
 			if (_resourceReadOnly.CashScore.ReadOnlyValue >= _resourceReadOnly.CashScore.ReadOnlyMaxValue)
 				return;
 
-			int value = _sceneResourcesRepository.Get(resourcePresentation.ID).Value;
+			IResourcePresentation rock = _rocks[id];
+			ISceneResourceEntity sceneResourceEntity = _sceneResourcesRepository.Get(rock.ID);
 
-			if (_resourceData.TryAddScore(value))
-				resourcePresentation.Collect();
+			if (_resourceData.TryAddScore(sceneResourceEntity.Value))
+				rock.Collect();
 		}
 
-		private void OnTriggerStay(bool obj)
+		private void OnTriggerStay(bool isStay)
 		{
-			if (obj == false)
-				if (_coroutine != null)
-					_coroutineRunner.StopCoroutineRunning(_coroutine);
+			_isSelling = isStay;
+
+			if (isStay == false && _coroutine != null)
+			{
+				_coroutineRunner.StopCoroutineRunning(_coroutine);
+				_coroutine = null;
+			}
 
 			if (_coroutine != null)
 				return;
@@ -167,8 +149,11 @@ namespace Sources.Controllers
 
 		private IEnumerator SellRoutine()
 		{
-			Sell();
-			return null;
+			while (_isSelling)
+			{
+				Sell();
+				yield return null;
+			}
 		}
 
 		private void SetEnableSand() =>
@@ -180,8 +165,6 @@ namespace Sources.Controllers
 
 		private void SetView()
 		{
-			_gameplayInterfacePresenter.SetTotalResourceScore(_resourceReadOnly.TotalAmount.ReadOnlyValue);
-			_gameplayInterfacePresenter.SetCashScore(_resourceReadOnly.CashScore.ReadOnlyValue);
 			_fillMeshShader.FillArea(CurrentScore, 0, _statReadOnly.Value);
 		}
 	}

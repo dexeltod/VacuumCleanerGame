@@ -24,9 +24,28 @@ namespace Sources.Infrastructure.Services.DomainServices
 			resource.Value = value;
 		}
 
+		public void Add<T>(int id, IResource<T> resource) where T : IResource<T>
+		{
+			if (typeof(T) == typeof(float)) _floatResources?.Add(id, resource as IResource<float>);
+
+			if (typeof(T) == typeof(int)) _intResources?.Add(id, resource as IResource<int>);
+
+			throw new InvalidOperationException("Unknown resource type");
+		}
+
+		public void SetMax<T>(int id, T value)
+		{
+			IResource<T> resource = FindResource<T>(id);
+
+			if (value.Equals(resource) == false)
+				throw new ArgumentException($"Resource count is not {typeof(T)}");
+
+			resource.MaxValue = value;
+		}
+
 		private IResource<T> FindResource<T>(int id)
 		{
-			SeeContaining(id);
+			SeeContaining<T>(id);
 
 			if (typeof(T) == typeof(float))
 				if (_floatResources != null)
@@ -38,10 +57,10 @@ namespace Sources.Infrastructure.Services.DomainServices
 			throw new InvalidOperationException("Unknown resource type");
 		}
 
-		private void SeeContaining(int type)
+		private void SeeContaining<T>(int id)
 		{
-			if (_intResources.ContainsKey(type) == false)
-				throw new ArgumentException($"Resource {type} does not exist in current context");
+			if (_intResources.ContainsKey(id) == false)
+				throw new ArgumentException($"Resource {id} with id {typeof(T)} does not exist in current context");
 		}
 	}
 }

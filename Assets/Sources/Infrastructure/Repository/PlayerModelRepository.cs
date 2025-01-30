@@ -2,6 +2,7 @@ using System;
 using Sources.BusinessLogic.Repository;
 using Sources.DomainInterfaces.Entities;
 using Sources.DomainInterfaces.Models;
+using Sources.Utils;
 using Sources.Utils.Enums;
 
 namespace Sources.Infrastructure.Repository
@@ -13,7 +14,7 @@ namespace Sources.Infrastructure.Repository
 		public PlayerModelRepository(IPlayerStatsModel playerStatsModel) =>
 			_playerStatsModel = playerStatsModel ?? throw new ArgumentNullException(nameof(playerStatsModel));
 
-		public IStatReadOnly Get(ProgressType type) => _playerStatsModel.Get((int)type);
+		public IStatReadOnly Get(ProgressType type) => _playerStatsModel.Get(StaticIdRepository.GetByEnum(type));
 
 		public IStatReadOnly Get(int id) => _playerStatsModel.Get(id);
 

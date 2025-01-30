@@ -18,7 +18,6 @@ using Sources.BusinessLogic.States;
 using Sources.Controllers;
 using Sources.Controllers.Services;
 using Sources.ControllersInterfaces;
-using Sources.ControllersInterfaces.Services;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Services;
@@ -127,12 +126,9 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 
 		public async UniTask Enter(ILevelConfig payload)
 		{
-			Debug.Log("loading game scene");
 			await _sceneLoader.LoadAsync("Game");
-			Debug.Log("loaded");
 
 			Build();
-			Debug.Log("builded");
 
 			_stateMachine.Enter<GameLoopState>();
 		}
@@ -145,7 +141,7 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 		{
 			SceneResourcesRepository sceneResourcesRepository = new();
 
-			ICollection<IResourcePresentation> rocks = InstantiateRocks(sceneResourcesRepository);
+			Dictionary<int, IResourcePresentation> rocks = InstantiateRocks(sceneResourcesRepository);
 
 			GameplayInterfaceView gameplayInterfaceView = LoadGameplayInterfaceView();
 			_viewsRepository.Add(gameplayInterfaceView);
@@ -232,7 +228,7 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 			).Create(SpawnPoint);
 
 		private IResourcesProgressPresenter CreateResourcesProgressPresenter(
-			ICollection<IResourcePresentation> rocks,
+			Dictionary<int, IResourcePresentation> rocks,
 			FillMeshShader fillMeshShader,
 			ISandParticleView sendParticleView,
 			ITriggerSell triggerSell,
@@ -251,16 +247,16 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 		private IUpgradeWindowPresenter CreateUpgradeWindowPresenter(IView gameplayInterface) =>
 			new UpgradeWindowPresenterFactory(
 				_assetLoader,
-				_progressSaveLoadDataService,
 				_persistentProgress,
 				_translatorService,
 				_progressEntityRepository,
 				_playerModelRepository,
 				_saveLoader,
-				gameplayInterface
+				gameplayInterface,
+				_persistentProgress.GlobalProgress.ResourceModel
 			).Create();
 
-		private ICollection<IResourcePresentation> InstantiateRocks(SceneResourcesRepository newSceneResourcesRepository) =>
+		private Dictionary<int, IResourcePresentation> InstantiateRocks(SceneResourcesRepository newSceneResourcesRepository) =>
 			new RockFactory(
 				_assetLoader,
 				_levelProgressFacade,

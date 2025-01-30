@@ -8,6 +8,7 @@ namespace Sources.DomainInterfaces.DomainServicesInterfaces
 		T ReadOnlyValue { get; }
 		T ReadOnlyMaxValue { get; }
 		string Name { get; }
+		bool IsTotalScoreReached { get; }
 		event Action Changed;
 		event Action HalfReached;
 	}

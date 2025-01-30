@@ -13,7 +13,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 {
 	public class GameplayInterfaceViewFactory
 	{
-		private const bool IsGlobalScoreViewed = false;
+		private const bool IsGlobalScoreViewed = true;
 
 		private readonly GameplayInterfaceView _gameplayInterfaceView;
 		private readonly IPlayerModelRepository _playerModelRepository;

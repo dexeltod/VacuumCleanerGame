@@ -19,7 +19,7 @@ namespace Sources.Boot.Scripts.Factories.Presenters
 		private readonly IFillMeshShader _fillMeshShaderProvider;
 		private readonly IPersistentProgressService _persistentProgressService;
 		private readonly IPlayerModelRepository _playerModelRepositoryProvider;
-		private readonly ICollection<IResourcePresentation> _rocks;
+		private readonly Dictionary<int, IResourcePresentation> _rocks;
 		private readonly ISandParticleView _sandParticleView;
 		private readonly SceneResourcesRepository _sceneResourcesRepository;
 		private readonly ITriggerSell _triggerSell;
@@ -31,7 +31,7 @@ namespace Sources.Boot.Scripts.Factories.Presenters
 			ICoroutineRunner coroutineRunnerProvider,
 			IPlayerModelRepository playerModelRepositoryProvider,
 			ITriggerSell triggerSell,
-			ICollection<IResourcePresentation> rocks,
+			Dictionary<int, IResourcePresentation> rocks,
 			SceneResourcesRepository sceneResourcesRepository)
 		{
 			_persistentProgressService =

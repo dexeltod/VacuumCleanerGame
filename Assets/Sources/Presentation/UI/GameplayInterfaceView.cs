@@ -118,7 +118,6 @@ namespace Sources.Presentation.UI
 			if (maxScore < 0)
 				throw new ArgumentOutOfRangeException(nameof(maxScore));
 
-			Debug.Log("SetMaxCashScore" + maxScore);
 			_maxCashScore = maxScore;
 			_maxGlobalScoreText.SetText(
 				$"{_maxCashScore}"

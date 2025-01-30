@@ -8,22 +8,20 @@ using Sources.Boot.Scripts.Factories.StateMachine;
 using Sources.Boot.Scripts.States.StateMachine.Common;
 using Sources.Boot.Scripts.UpgradeEntitiesConfigs;
 using Sources.BusinessLogic;
+using Sources.BusinessLogic.Configs;
 using Sources.BusinessLogic.Interfaces;
 using Sources.BusinessLogic.Interfaces.Factory;
 using Sources.BusinessLogic.Repository;
-using Sources.BusinessLogic.Scene;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.BusinessLogic.States.StateMachineInterfaces;
 using Sources.Controllers.Services;
 using Sources.ControllersInterfaces;
-using Sources.ControllersInterfaces.Services;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Leaderboard;
 using Sources.Infrastructure.Repository;
 using Sources.Infrastructure.Services;
 using Sources.Infrastructure.Services.DomainServices;
-using Sources.InfrastructureInterfaces.Configs;
 using Sources.InfrastructureInterfaces.Configs.Scripts;
 using Sources.PresentationInterfaces.Common;
 using Sources.Utils;
@@ -111,8 +109,6 @@ namespace Sources.Boot.Scripts.DIRegisters
 			_builder.Register(_ => new SaveLoaderFactory().Create(), Lifetime.Singleton)
 				.AsImplementedInterfaces().AsSelf();
 
-			CreateSceneLoadServices();
-
 			#endregion
 
 			#region InitializeProgressServices
@@ -129,7 +125,7 @@ namespace Sources.Boot.Scripts.DIRegisters
 
 			RegisterProgressEntityRepository();
 
-			_builder.Register<IRepository<IPresenter>, PresentersRepository>(Lifetime.Singleton).AsSelf();
+			_builder.Register<IActiveRepository<IPresenter>, PresentersRepository>(Lifetime.Singleton).AsSelf();
 			_builder.Register<IRepository<IView>, ViewsRepository>(Lifetime.Singleton).AsSelf();
 
 			_builder.Register<GameStatesRepositoryInitializer>(Lifetime.Scoped).AsSelf();
@@ -138,7 +134,13 @@ namespace Sources.Boot.Scripts.DIRegisters
 				.AsImplementedInterfaces();
 
 			_builder.Register(
-				_ => new ResourcesRepository(new ResourceServiceFactory().CreateIntCurrencies()),
+				resolver => new ResourcesRepository(
+					new ResourceServiceFactory(
+						resolver.Resolve<IAssetLoader>().LoadFromResources<UpgradesListConfig>(
+							ResourcesAssetPath.Configs.ShopItems
+						)
+					).CreateIntCurrencies()
+				),
 				Lifetime.Singleton
 			).AsImplementedInterfaces().AsSelf();
 
@@ -146,18 +148,6 @@ namespace Sources.Boot.Scripts.DIRegisters
 
 			_builder.RegisterEntryPointExceptionHandler(
 				exception => Debug.LogError(exception.Message)
-			);
-		}
-
-		private void CreateSceneLoadServices()
-		{
-			var servicesLoadInvokerInformer = new ServicesLoadInvokerInformer();
-
-			_builder.RegisterInstance<ISceneLoadInformer>(
-				servicesLoadInvokerInformer
-			);
-			_builder.RegisterInstance<ISceneLoadInvoker>(
-				servicesLoadInvokerInformer
 			);
 		}
 
@@ -193,7 +183,7 @@ namespace Sources.Boot.Scripts.DIRegisters
 						resolver
 							.Resolve<IAssetLoader>()
 							.LoadFromResources<UpgradesListConfig>(ResourcesAssetPath.Configs.ShopItems).ReadOnlyItems
-							.ToDictionary(elem => elem.Id, elem => (IUpgradeEntityConfig)elem)
+							.ToDictionary(elem => elem.Id, elem => (IUpgradeEntityViewConfig)elem)
 					);
 				},
 				Lifetime.Singleton

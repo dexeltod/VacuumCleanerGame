@@ -19,10 +19,8 @@ namespace Sources.Domain.Player
 		{
 			if (id < 0) throw new ArgumentOutOfRangeException(nameof(id));
 
-			Stat stat = _stats.First(elem => elem.Id == id);
-
-			if (stat == null)
-				throw new ArgumentOutOfRangeException(nameof(id), $"stat with id {id} not found");
+			Stat stat = _stats.FirstOrDefault(elem => elem.Id == id)
+			            ?? throw new ArgumentException($"stat with id {id} is not exist");
 
 			return stat;
 		}

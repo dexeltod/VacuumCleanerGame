@@ -20,11 +20,9 @@ namespace Sources.Presentation.SceneEntity
 
 		public GameObject View => _view;
 
-		public ParticleSystem Particle => _particle;
-
 		public int ID { get; private set; }
 
-		public event Action Collided;
+		public event Action<int> Collided;
 
 		public void Collect()
 		{
@@ -37,11 +35,13 @@ namespace Sources.Presentation.SceneEntity
 		{
 			if (collision.collider.name is not ("VacuumColliderBottom" or "VacuumColliderTop")) return;
 
-			Collided!.Invoke();
+			Collided!.Invoke(ID);
 		}
 
 		public void Construct(int id, Material material, Color materialColor)
 		{
+			if (id < 0) throw new ArgumentOutOfRangeException(nameof(id));
+
 			var colorChanger = _particle.GetComponent<PS_ColorChanger>();
 
 			var particleSystemRenderer = _particle.GetComponent<ParticleSystem>().GetComponent<ParticleSystemRenderer>();

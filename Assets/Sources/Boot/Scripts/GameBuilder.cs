@@ -7,6 +7,7 @@ using Sources.BusinessLogic.Interfaces.Factory;
 using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.Services;
 using Sources.BusinessLogic.States;
+using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using UnityEngine;
 using VContainer;
@@ -61,7 +62,9 @@ namespace Sources.Boot.Scripts
 		{
 			await _saveLoader.Initialize();
 
-			_updatablePersistentProgressService.Update(await _progressFactory.Create());
+			IGlobalProgress progress = await _progressFactory.Create();
+
+			_updatablePersistentProgressService.Update(progress);
 		}
 	}
 }

@@ -10,9 +10,9 @@ namespace Sources.Domain.Progress
 	public class StatUpgradeEntity : IUpgradeEntity, IStatUpgradeEntityReadOnly
 	{
 		[SerializeField] private int _configId;
-		[SerializeField] private IntEntityValue _currentLevel;
+		[SerializeField] private IntEntity _currentLevel;
 
-		public StatUpgradeEntity(IntEntityValue currentLevel, int configId)
+		public StatUpgradeEntity(IntEntity currentLevel, int configId)
 		{
 			if (configId < 0) throw new ArgumentOutOfRangeException(nameof(configId));
 
@@ -24,6 +24,6 @@ namespace Sources.Domain.Progress
 		public IReadOnlyProgress<int> LevelProgress => _currentLevel;
 		public int Value => _currentLevel.Value;
 
-		public void AddOneLevel() => _currentLevel.Value = _currentLevel.Value + 1;
+		public void AddOneLevel() => _currentLevel.Value += 1;
 	}
 }

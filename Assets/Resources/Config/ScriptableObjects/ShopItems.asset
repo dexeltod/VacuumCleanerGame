@@ -13,37 +13,38 @@ MonoBehaviour:
   m_Name: ShopItems
   m_EditorClassIdentifier: 
   _items:
-  - _prices: 2c0100009001000020030000b004000040060000d007000060090000b80b0000a00f0000
-    _stats:
-    - 300
-    - 350
-    - 400
-    - 450
-    - 500
-    - 550
-    - 600
-    - 620
-    - 650
+  - _items:
+    - _price: 0
+      _progress: 200
+    - _price: 300
+      _progress: 300
+    - _price: 500
+      _progress: 500
+    - _price: 800
+      _progress: 800
+    - _price: 1000
+      _progress: 1000
+    - _price: 2000
+      _progress: 2000
     _title: ScoreCash
     _description: ScoreCashDescription
     _type: 1
     _isModifiable: 0
     _upgradeElementPrefabView: {fileID: 3425884432820441465, guid: 7853f2ed101517b408328c84fcbaa5f4, type: 3}
     _icon: {fileID: 21300000, guid: 6b62d05057d633044b3dc427188695a5, type: 3}
-  - _prices: 2c01000090010000f401000058020000bc0200002003000084030000e80300004c040000d0070000b80b0000a00f0000
-    _stats:
-    - 4.2
-    - 4.87
-    - 5.33
-    - 5.78
-    - 6.54
-    - 6.87
-    - 7.5
-    - 7.77
-    - 8.8
-    - 9.1
-    - 9.5
-    - 9.8
+  - _items:
+    - _price: 0
+      _progress: 3
+    - _price: 360
+      _progress: 4
+    - _price: 1000
+      _progress: 5
+    - _price: 1500
+      _progress: 6
+    - _price: 2000
+      _progress: 7
+    - _price: 3000
+      _progress: 8
     _title: Speed
     _description: SpeedDescription
     _type: 0

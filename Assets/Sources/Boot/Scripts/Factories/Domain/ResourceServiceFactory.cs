@@ -1,30 +1,103 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Sources.Boot.Scripts.UpgradeEntitiesConfigs;
+using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Domain.Progress.Entities.Values;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.Infrastructure.Configs;
 using Sources.Utils;
+using Sources.Utils.Enums;
 
 namespace Sources.Boot.Scripts.Factories.Domain
 {
 	public class ResourceServiceFactory
 	{
-		private const int MaxValue = 99999;
+		private readonly IReadOnlyCollection<PlayerUpgradeShopViewConfig> _config;
+		private readonly IAssetLoader _loader;
+
+		private Dictionary<int, IResource<int>> _resources = new();
+
+		public ResourceServiceFactory(UpgradesListConfig config)
+		{
+			if (config == null) throw new ArgumentNullException(nameof(config));
+
+			_config = config.ReadOnlyItems;
+		}
 
 		public Dictionary<int, IResource<int>> CreateIntCurrencies()
 		{
-			string[] names = Enum.GetNames(typeof(CurrencyResourceType));
-			Array values = Enum.GetValues(typeof(CurrencyResourceType));
+			_resources = _config.ToDictionary<PlayerUpgradeShopViewConfig, int, IResource<int>>(
+				config => config.Id,
+				config => new IntEntity(
+					config.Id,
+					Enum.GetName(config.Type.GetType(), config.Type),
+					config.StartProgress,
+					config.MaxProgress
+				)
+			);
 
-			var dictionary = new Dictionary<int, IResource<int>>();
+			AddSoft();
+			AddGlobalScore();
+			AddResourceByEnum(ResourceType.Hard);
+			AddResourceByEnum(ResourceType.CashScore);
 
-			for (var i = 0; i < names.Length; i++)
-			{
-				var id = (int)values.GetValue(i);
+			return _resources;
+		}
 
-				dictionary.Add(id, new IntEntityValue(id, names[i], 0, MaxValue));
-			}
+		private void AddGlobalScore()
+		{
+			var globalScore = new IntEntity(
+				StaticIdRepository.GetOrAddByEnum(ResourceType.GlobalScore),
+				Enum.GetName(ResourceType.GlobalScore.GetType(), ResourceType.GlobalScore),
+				0,
+				int.MaxValue
+			);
 
-			return dictionary;
+			_resources.Add(globalScore.Id, globalScore);
+		}
+
+		private void AddResourceByEnum(Enum value)
+		{
+			var entity = new IntEntity(
+				StaticIdRepository.GetOrAddByEnum(value),
+				Enum.GetName(value.GetType(), value),
+				0,
+				int.MaxValue
+			);
+
+			_resources.Add(entity.Id, entity);
+		}
+
+		private void AddSoft()
+		{
+			PlayerUpgradeShopViewConfig cashScore =
+				GetCashScoreConfig();
+
+			var soft = new IntEntity(
+				StaticIdRepository.GetOrAddByEnum(ResourceType.Soft),
+				cashScore.Title,
+				cashScore.StartProgress,
+				int.MaxValue
+			);
+
+			_resources.Add(soft.Id, soft);
+		}
+
+		private IResource<int> CreateResource(PlayerUpgradeShopViewConfig cash) =>
+			new IntEntity(
+				cash.Id,
+				cash.Title,
+				(int)cash.Items.ElementAt(0).Progress,
+				(int)cash.Items.ElementAt(cash.Items.Count() - 1).Progress
+			);
+
+		private PlayerUpgradeShopViewConfig GetCashScoreConfig()
+		{
+			return _config.FirstOrDefault(elem => elem.Type == ProgressType.MaxCashScore)
+			       ?? throw new ArgumentNullException(
+				       "_config.FirstOrDefault(elem => elem.Type == (ProgressType)ResourceType.CashScore)"
+			       );
 		}
 	}
 }

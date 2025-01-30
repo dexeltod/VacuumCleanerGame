@@ -1,6 +1,6 @@
 namespace Sources.Utils
 {
-	public enum CurrencyResourceType
+	public enum ResourceType
 	{
 		Soft = 1,
 		Hard,

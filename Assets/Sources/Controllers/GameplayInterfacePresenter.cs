@@ -57,9 +57,12 @@ namespace Sources.Controllers
 
 		public override void Enable()
 		{
+			if (_totalScore.IsTotalScoreReached) _gameplayInterfaceView.GoToNextLevelButton.gameObject.SetActive(true);
+
 			_maxCashScore.Changed += OnMaxCashScoreChanged;
 			_softCurrency.Changed += OnSoftCuSetCurrencyChanged;
 			_cashScore.Changed += OnCashScoreChanged;
+			_totalScore.Changed += OnTotalScoreChanged;
 			_totalScore.HalfReached += OnHalfScoreReached;
 
 			_speedDecorator.Enable();
@@ -107,6 +110,11 @@ namespace Sources.Controllers
 		private void OnSoftCuSetCurrencyChanged()
 		{
 			_gameplayInterfaceView.SetSoftCurrencyText(_softCurrency.ReadOnlyValue);
+		}
+
+		private void OnTotalScoreChanged()
+		{
+			_gameplayInterfaceView.SetTotalResourceScore(_totalScore.ReadOnlyValue);
 		}
 
 		private IEnumerator StartViewCooldownSpeedRoutine(float time)

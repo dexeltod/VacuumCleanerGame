@@ -85,7 +85,26 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 		public async UniTask Enter()
 		{
 			await _sceneLoader.LoadAsync(ConstantNames.MenuScene);
+			OnSceneLoaded();
+		}
 
+		private IAuthorizationPresenter CreateAuthorizationPresenter() =>
+			new AuthorizationFactory(
+				_assetLoader,
+				_cloudServiceSdk,
+				_translatorService
+			).Create(_mainMenuView);
+
+		private void EnablePresenters()
+		{
+			_mainMenuPresenter.Enable();
+			_authorizationPresenter.Enable();
+		}
+
+		private void InitializeMainMenuPresenter() => _mainMenuView.Construct(_mainMenuPresenter);
+
+		private void OnSceneLoaded()
+		{
 			_mainMenuView = new MainMenuFactory(_assetLoader, _translatorService).Create();
 			_focusHandler.Enable();
 
@@ -113,24 +132,6 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 			InitializeMainMenuPresenter();
 			_loadingCurtain.HideSlowly();
 			EnablePresenters();
-		}
-
-		private IAuthorizationPresenter CreateAuthorizationPresenter() =>
-			new AuthorizationFactory(
-				_assetLoader,
-				_cloudServiceSdk,
-				_translatorService
-			).Create(_mainMenuView);
-
-		private void EnablePresenters()
-		{
-			_mainMenuPresenter.Enable();
-			_authorizationPresenter.Enable();
-		}
-
-		private void InitializeMainMenuPresenter()
-		{
-			_mainMenuView.Construct(_mainMenuPresenter);
 		}
 	}
 }

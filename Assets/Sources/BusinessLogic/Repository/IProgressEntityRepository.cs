@@ -1,14 +1,14 @@
 using System.Collections.Generic;
+using Sources.BusinessLogic.Configs;
 using Sources.DomainInterfaces.Models.Shop.Upgrades;
-using Sources.InfrastructureInterfaces.Configs;
 
 namespace Sources.BusinessLogic.Repository
 {
 	public interface IProgressEntityRepository
 	{
 		void AddOneLevel(int id);
-		IUpgradeEntityConfig GetConfig(int id);
-		IReadOnlyList<IUpgradeEntityConfig> GetConfigs();
+		IUpgradeEntityViewConfig GetConfig(int id);
+		IReadOnlyList<IUpgradeEntityViewConfig> GetConfigs();
 		IReadOnlyList<IStatUpgradeEntityReadOnly> GetEntities();
 		IStatUpgradeEntityReadOnly GetEntity(int id);
 		int GetPrice(int id);

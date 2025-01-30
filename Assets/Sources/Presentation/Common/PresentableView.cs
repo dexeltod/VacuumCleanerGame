@@ -33,4 +33,33 @@ namespace Sources.Presentation.Common
 
 		protected virtual void DestroySelf() => Destroy(gameObject);
 	}
+
+	public abstract class PresentableView : View, IPresentableView
+	{
+		private bool _isEnabled;
+		protected IPresenter Presenter { get; set; }
+
+		private void OnEnable()
+		{
+			if (!_isEnabled)
+				Presenter?.Enable();
+		}
+
+		private void OnDisable()
+		{
+			if (_isEnabled)
+				Presenter?.Disable();
+		}
+
+		private void OnDestroy() => DestroySelf();
+
+		public virtual void Construct(IPresenter presenter) =>
+			Presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
+
+		public virtual void SetParent(Transform parent) => transform.SetParent(parent);
+
+		public Transform Transform => transform;
+
+		protected virtual void DestroySelf() => Destroy(gameObject);
+	}
 }
