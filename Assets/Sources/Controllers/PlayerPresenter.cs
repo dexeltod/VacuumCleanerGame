@@ -54,14 +54,14 @@ namespace Sources.Controllers
 		public void Disable()
 		{
 			_transformable.Looked -= OnLookAt;
-			_transformable.Moved -= OnMoved;
+			_transformable.FixedMoved -= OnMoved;
 			_transformable.Destroying -= OnDestroying;
 		}
 
 		public void Enable()
 		{
 			_transformable.Looked += OnLookAt;
-			_transformable.Moved += OnMoved;
+			_transformable.FixedMoved += OnMoved;
 			_transformable.Destroying += OnDestroying;
 		}
 
@@ -74,7 +74,7 @@ namespace Sources.Controllers
 			_isMove = direction != Vector3.zero;
 		}
 
-		private void OnMoved(Vector3 newPosition) => transform.position = newPosition;
+		private void OnMoved(Vector3 newPosition) => _body.position = newPosition;
 
 		private void OnDestroying() => Destroy(gameObject);
 	}

@@ -18,6 +18,7 @@ namespace Sources.Controllers.Common
 		public Vector3 LookDirection { get; private set; }
 
 		public event Action<Vector3> Moved;
+		public event Action<Vector3> FixedMoved;
 		public event Action<Vector3> Looked;
 		public event Action Destroying;
 
@@ -35,7 +36,7 @@ namespace Sources.Controllers.Common
 		protected void MoveTo(Vector3 position)
 		{
 			_rigidbody.position = position;
-			Moved?.Invoke(position);
+			FixedMoved?.Invoke(position);
 		}
 	}
 }

@@ -34,17 +34,17 @@ MonoBehaviour:
     _icon: {fileID: 21300000, guid: 6b62d05057d633044b3dc427188695a5, type: 3}
   - _items:
     - _price: 0
-      _progress: 3
+      _progress: 10
     - _price: 360
-      _progress: 4
+      _progress: 15.28
     - _price: 1000
-      _progress: 5
+      _progress: 18.84
     - _price: 1500
-      _progress: 6
+      _progress: 24.35
     - _price: 2000
-      _progress: 7
+      _progress: 27.08
     - _price: 3000
-      _progress: 8
+      _progress: 35.47
     _title: Speed
     _description: SpeedDescription
     _type: 0

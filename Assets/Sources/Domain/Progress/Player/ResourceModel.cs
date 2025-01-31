@@ -12,7 +12,9 @@ namespace Sources.Domain.Progress.Player
 	{
 		private const int OnePoint = 1;
 
+#if UNITY_EDITOR && DEV
 		private const int MultiplyFactor = 1;
+#endif
 
 		[SerializeField] private IntEntity _softCurrency;
 		[SerializeField] private IntEntity _hardCurrency;
@@ -72,12 +74,11 @@ namespace Sources.Domain.Progress.Player
 
 		public bool TryAddScore(int newCashScore)
 		{
-			if (CurrentCashScore + newCashScore >= _cashScore.ReadOnlyMaxValue)
+			if (CurrentCashScore + newCashScore > _cashScore.ReadOnlyMaxValue)
 				return false;
 
-#if UNITY_EDITOR && DEV
 			newCashScore *= MultiplyFactor;
-#endif
+
 			if (newCashScore <= 0) throw new ArgumentOutOfRangeException(nameof(newCashScore));
 
 			CurrentCashScore += newCashScore;

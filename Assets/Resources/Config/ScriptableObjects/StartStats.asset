@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StartStats
   m_EditorClassIdentifier: 
   _stat:
-  - _stat: 3
+  - _stat: 10
     _type: 0
   - _stat: 200
     _type: 1

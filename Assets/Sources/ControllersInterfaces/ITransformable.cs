@@ -9,6 +9,7 @@ namespace Sources.ControllersInterfaces
 		Vector3 LookDirection { get; }
 		void Destroy();
 		event Action<Vector3> Moved;
+		event Action<Vector3> FixedMoved;
 		event Action<Vector3> Looked;
 		event Action Destroying;
 	}

@@ -13,6 +13,8 @@ namespace Sources.Boot.Scripts.Factories.Domain
 {
 	public class ResourceServiceFactory
 	{
+		private const int MaxValue = int.MaxValue - 1000;
+
 		private readonly IReadOnlyCollection<PlayerUpgradeShopViewConfig> _config;
 		private readonly IAssetLoader _loader;
 
@@ -37,21 +39,30 @@ namespace Sources.Boot.Scripts.Factories.Domain
 				)
 			);
 
-			AddSoft();
-			AddGlobalScore();
+			AddResourceByEnum(ResourceType.Soft);
 			AddResourceByEnum(ResourceType.Hard);
-			AddResourceByEnum(ResourceType.CashScore);
+			AddCashScore();
+			AddGlobalScore();
 
 			return _resources;
+		}
+
+		private void AddCashScore()
+		{
+			PlayerUpgradeShopViewConfig cash = GetCashScoreConfig();
+			_resources.Add(
+				CreateIdByEnum(ResourceType.CashScore),
+				new IntEntity(cash.Id, cash.Title, 0, cash.StartProgress)
+			);
 		}
 
 		private void AddGlobalScore()
 		{
 			var globalScore = new IntEntity(
-				StaticIdRepository.GetOrAddByEnum(ResourceType.GlobalScore),
+				CreateIdByEnum(ResourceType.GlobalScore),
 				Enum.GetName(ResourceType.GlobalScore.GetType(), ResourceType.GlobalScore),
 				0,
-				int.MaxValue
+				MaxValue
 			);
 
 			_resources.Add(globalScore.Id, globalScore);
@@ -63,34 +74,13 @@ namespace Sources.Boot.Scripts.Factories.Domain
 				StaticIdRepository.GetOrAddByEnum(value),
 				Enum.GetName(value.GetType(), value),
 				0,
-				int.MaxValue
+				MaxValue
 			);
 
 			_resources.Add(entity.Id, entity);
 		}
 
-		private void AddSoft()
-		{
-			PlayerUpgradeShopViewConfig cashScore =
-				GetCashScoreConfig();
-
-			var soft = new IntEntity(
-				StaticIdRepository.GetOrAddByEnum(ResourceType.Soft),
-				cashScore.Title,
-				cashScore.StartProgress,
-				int.MaxValue
-			);
-
-			_resources.Add(soft.Id, soft);
-		}
-
-		private IResource<int> CreateResource(PlayerUpgradeShopViewConfig cash) =>
-			new IntEntity(
-				cash.Id,
-				cash.Title,
-				(int)cash.Items.ElementAt(0).Progress,
-				(int)cash.Items.ElementAt(cash.Items.Count() - 1).Progress
-			);
+		private static int CreateIdByEnum(Enum value) => StaticIdRepository.GetOrAddByEnum(value);
 
 		private PlayerUpgradeShopViewConfig GetCashScoreConfig()
 		{
