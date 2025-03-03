@@ -6,6 +6,7 @@ using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.BusinessLogic.ServicesInterfaces.Advertisement;
 using Sources.BusinessLogic.States;
 using Sources.DomainInterfaces;
+using Sources.InfrastructureInterfaces.Configs.Scripts.Level;
 using UnityEngine;
 
 namespace Sources.Infrastructure.Services
@@ -68,11 +69,11 @@ namespace Sources.Infrastructure.Services
 
 			await _progressSaveLoadDataService.SaveToCloud();
 
-			ILevelConfig levelConfig = _levelConfigGetter.GetOrDefault(LevelNumber);
+			LevelConfig levelConfig = _levelConfigGetter.GetOrDefault(LevelNumber);
 
 			OnProcessEnded();
 
-			_stateMachine.Enter<IBuildSceneState, ILevelConfig>(levelConfig);
+			_stateMachine.Enter<IBuildSceneState, LevelConfig>(levelConfig);
 		}
 	}
 }

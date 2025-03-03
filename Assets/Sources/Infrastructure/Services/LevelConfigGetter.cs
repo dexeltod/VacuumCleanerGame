@@ -17,7 +17,7 @@ namespace Sources.Infrastructure.Services
 		public LevelConfigGetter(IAssetLoader assetLoader) =>
 			_assetLoader = assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 
-		public ILevelConfig GetOrDefault(int levelNumber)
+		public LevelConfig GetOrDefault(int levelNumber)
 		{
 			if (_levelConfigs == null)
 				_levelConfigs = _assetLoader.LoadFromResources<LevelsConfig>(ResourcesAssetPath.Configs.LevelsConfig);

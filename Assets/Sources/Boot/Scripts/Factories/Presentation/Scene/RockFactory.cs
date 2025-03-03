@@ -6,6 +6,7 @@ using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Domain.Entities;
 using Sources.DomainInterfaces;
+using Sources.InfrastructureInterfaces.Configs.Scripts.Level;
 using Sources.Presentation.SceneEntity;
 using Sources.PresentationInterfaces;
 using Sources.PresentationInterfaces.Common;
@@ -47,7 +48,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 		{
 			_totalResource = 0;
 
-			ILevelConfig levelConfig = _levelConfigGetter.GetOrDefault(_levelProgressFacade.CurrentLevel);
+			LevelConfig levelConfig = _levelConfigGetter.GetOrDefault(_levelProgressFacade.CurrentLevel);
 
 			Debug.Log("rocks" + _levelProgressFacade.MaxTotalResourceCount);
 
@@ -95,13 +96,13 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 
 		private float GetRandomAngle() => Random.Range(0, 360);
 
-		private ResourcePresentation GetResourcePresentation(ILevelConfig levelConfig, int randomRockIndex) =>
+		private ResourcePresentation GetResourcePresentation(LevelConfig levelConfig, int randomRockIndex) =>
 			levelConfig
 				.SoftMinedResource[randomRockIndex]
 				.Prefab.GetComponent<ResourcePresentation>()
 			?? throw new ArgumentNullException("ResourcePresentation is null");
 
-		private Dictionary<int, IHardMinedResource> InitHardResources(ILevelConfig levelConfig)
+		private Dictionary<int, IHardMinedResource> InitHardResources(LevelConfig levelConfig)
 		{
 			var resources = new Dictionary<int, IHardMinedResource>(levelConfig.HardMinedResource.Count);
 
@@ -114,7 +115,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 			return resources;
 		}
 
-		private Dictionary<int, ISoftMinedResource> InitSoftResources(ILevelConfig levelConfig)
+		private Dictionary<int, ISoftMinedResource> InitSoftResources(LevelConfig levelConfig)
 		{
 			var resources = new Dictionary<int, ISoftMinedResource>(levelConfig.SoftMinedResource.Count);
 
@@ -145,7 +146,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 			Dictionary<int, ISoftMinedResource> softVariants,
 			Dictionary<int, IHardMinedResource> hardVariants,
 			GameObject resourceSpawnPosition,
-			ILevelConfig levelConfig,
+			LevelConfig levelConfig,
 			int hardResourceCount,
 			int hardResourceSpawnIndex
 		)
@@ -209,7 +210,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 		private int SpawnHardResource(
 			Dictionary<int, IHardMinedResource> hardVariants,
 			GameObject resourceSpawnPosition,
-			ILevelConfig levelConfig,
+			LevelConfig levelConfig,
 			int hardResourceCount,
 			int x,
 			int z
@@ -244,7 +245,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 			int softResourcesVariantsCount,
 			IReadOnlyDictionary<int, ISoftMinedResource> softVariants,
 			GameObject resourceSpawnPosition,
-			ILevelConfig levelConfig,
+			LevelConfig levelConfig,
 			int i,
 			int j
 		)

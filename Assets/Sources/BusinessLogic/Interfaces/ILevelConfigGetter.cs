@@ -1,9 +1,10 @@
 using Sources.DomainInterfaces;
+using Sources.InfrastructureInterfaces.Configs.Scripts.Level;
 
 namespace Sources.BusinessLogic.Interfaces
 {
 	public interface ILevelConfigGetter
 	{
-		ILevelConfig GetOrDefault(int levelNumber);
+		LevelConfig GetOrDefault(int levelNumber);
 	}
 }

@@ -15,9 +15,7 @@ namespace Sources.InfrastructureInterfaces.Configs.Scripts.Level
 			if (level - 1 < 0)
 				throw new ArgumentOutOfRangeException($"Level {level} not found");
 
-			return level - 1 >= _levels.Count
-				? _levels.Last()
-				: _levels[level - 1];
+			return level - 1 >= _levels.Count ? _levels.Last() : _levels[level - 1];
 		}
 	}
 }

@@ -23,6 +23,7 @@ using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.DomainInterfaces.ViewEntities;
 using Sources.Infrastructure.Services;
+using Sources.InfrastructureInterfaces.Configs.Scripts.Level;
 using Sources.Presentation.UI;
 using Sources.PresentationInterfaces;
 using Sources.PresentationInterfaces.Common;
@@ -126,7 +127,7 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 		private GameObject SellTrigger => ResourcesPrefabs.Triggers.SellTrigger.gameObject;
 		private string UIResourcesUI => ResourcesAssetPath.Scene.UIResources.UI;
 
-		public async UniTask Enter(ILevelConfig payload)
+		public async UniTask Enter(LevelConfig payload)
 		{
 			await _sceneLoader.LoadAsync("Game");
 

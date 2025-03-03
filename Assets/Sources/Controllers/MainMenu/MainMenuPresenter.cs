@@ -8,6 +8,7 @@ using Sources.Controllers.Common;
 using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.Entities;
+using Sources.InfrastructureInterfaces.Configs.Scripts.Level;
 using Sources.PresentationInterfaces;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -106,7 +107,7 @@ namespace Sources.Controllers.MainMenu
 		private async void OnDeleteSaves() => await _progressSaveLoadDataService.ClearSaves();
 
 		private void OnPlay() =>
-			_stateMachine.Enter<IBuildSceneState, ILevelConfig>(_levelConfigGetter.GetOrDefault(CurrentNumber));
+			_stateMachine.Enter<IBuildSceneState, LevelConfig>(_levelConfigGetter.GetOrDefault(CurrentNumber));
 
 		private void OnSettings() => _settingsView.Enable();
 
