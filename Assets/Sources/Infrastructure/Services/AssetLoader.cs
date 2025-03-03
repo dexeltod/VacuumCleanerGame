@@ -79,6 +79,13 @@ namespace Sources.Infrastructure.Services
 			return @object;
 		}
 
+		public T InstantiateAndGetComponent<T>(GameObject gameObject, Vector3 position, Quaternion quaternion)
+		{
+			var component = Object.Instantiate(gameObject, position, quaternion).GetComponent<T>();
+
+			return component;
+		}
+
 		public T InstantiateAndGetComponent<T>(GameObject gameObject, Vector3 position) where T : Behaviour
 		{
 			var component = Object.Instantiate(gameObject, position, Quaternion.identity).GetComponent<T>();

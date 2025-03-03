@@ -9,6 +9,9 @@ namespace Sources.InfrastructureInterfaces.Configs.Scripts.Level
 	public class LevelsConfig : ScriptableObject
 	{
 		[SerializeField] private List<LevelConfig> _levels;
+		[SerializeField] private ParticleSystem _hardEffect;
+
+		public ParticleSystem HardEffectParticle => _hardEffect;
 
 		public LevelConfig GetOrDefault(int level)
 		{

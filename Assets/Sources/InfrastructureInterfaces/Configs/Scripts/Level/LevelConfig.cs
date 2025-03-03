@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Sources.DomainInterfaces;
-using Sources.InfrastructureInterfaces.Configs.Scripts.Level.LevelResource;
 using UnityEngine;
 
 namespace Sources.InfrastructureInterfaces.Configs.Scripts.Level
@@ -9,27 +7,25 @@ namespace Sources.InfrastructureInterfaces.Configs.Scripts.Level
 	[Serializable]
 	public class LevelConfig
 	{
-		[SerializeField] private List<SoftMinedResource> _softResourcePrefab;
-		[SerializeField] private List<HardMinedResource> _hardResourcesPrefab;
+		[SerializeField] private ResourcesConfig _resourcesConfig;
+		[SerializeField] private int _hardResourceCount;
 
-		[SerializeField] private List<ResourceConfig> _resourceConfigs;
-
-		public IReadOnlyList<ISoftMinedResource> SoftMinedResource => _softResourcePrefab;
-		public IReadOnlyList<IHardMinedResource> HardMinedResource => _hardResourcesPrefab;
-
-		public IReadOnlyList<ResourceConfig> ResourceConfigs => _resourceConfigs;
+		public ResourcesConfig ResourcesConfig => _resourcesConfig;
+		public int PrefabsCount => _resourcesConfig.Prefabs.Count;
+		public int HardResourceCount => _hardResourceCount;
 	}
 
 	[Serializable]
-	public class ResourceConfig
+	public class ResourcesConfig
 	{
 		[SerializeField] private List<GameObject> _prefabs;
 
 		[SerializeField] private List<ScoreColor> _color;
-		[SerializeField] private bool _isUniqueResource = false;
+		[SerializeField] private bool _isUniqueResource;
 
 		public bool IsUniqueResource => _isUniqueResource;
 		public List<ScoreColor> ScoreColor => _color;
+		public List<GameObject> Prefabs => _prefabs;
 	}
 
 	[Serializable]

@@ -14,23 +14,9 @@ namespace Sources.Presentation.Common
 		private IViewEntity _viewEntity;
 		protected T Presenter { get; set; }
 
-		private void OnEnable()
-		{
-		}
+		protected virtual void OnDestroy() => DestroySelf();
 
-		private void OnDisable()
-		{
-		}
-
-		protected virtual void OnDestroy()
-		{
-			DestroySelf();
-		}
-
-		public virtual void Construct(T presenter)
-		{
-			Presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
-		}
+		public virtual void Construct(T presenter) => Presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
 
 		public virtual void SetParent(Transform parent) => transform.SetParent(parent);
 

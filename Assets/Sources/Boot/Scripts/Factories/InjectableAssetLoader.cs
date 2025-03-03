@@ -115,6 +115,11 @@ namespace Sources.Boot.Scripts.Factories
 			return @object;
 		}
 
+		public T InstantiateAndGetComponent<T>(GameObject gameObject, Vector3 position, Quaternion quaternion)
+		{
+			throw new NotImplementedException();
+        }
+
 		public T InstantiateAndGetComponent<T>(GameObject gameObject, Transform transform) where T : Behaviour =>
 			throw new NotImplementedException();
 

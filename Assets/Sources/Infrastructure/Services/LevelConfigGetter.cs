@@ -1,7 +1,6 @@
 using System;
 using Sources.BusinessLogic.Interfaces;
 using Sources.BusinessLogic.ServicesInterfaces;
-using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Configs.Scripts.Level;
 using Sources.Utils;
 using VContainer;
@@ -23,6 +22,14 @@ namespace Sources.Infrastructure.Services
 				_levelConfigs = _assetLoader.LoadFromResources<LevelsConfig>(ResourcesAssetPath.Configs.LevelsConfig);
 
 			return _levelConfigs.GetOrDefault(levelNumber);
+		}
+
+		public LevelsConfig GetOrDefault()
+		{
+			if (_levelConfigs == null)
+				_levelConfigs = _assetLoader.LoadFromResources<LevelsConfig>(ResourcesAssetPath.Configs.LevelsConfig);
+
+			return _levelConfigs;
 		}
 	}
 }

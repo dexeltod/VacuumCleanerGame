@@ -5,10 +5,8 @@ using Sources.BusinessLogic.Interfaces;
 using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Domain.Entities;
-using Sources.DomainInterfaces;
 using Sources.InfrastructureInterfaces.Configs.Scripts.Level;
 using Sources.Presentation.SceneEntity;
-using Sources.PresentationInterfaces;
 using Sources.PresentationInterfaces.Common;
 using Sources.Utils;
 using UnityEngine;
@@ -26,7 +24,9 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 		private readonly ILevelProgressFacade _levelProgressFacade;
 		private readonly ICollection<IResourcePresentation> _minedResources = new List<IResourcePresentation>();
 		private readonly SceneResourcesRepository _sceneResourcesRepository;
-		private int _totalResource;
+
+		private int _currentResourceId;
+		private ParticleSystem _hardEffect;
 
 		public RockFactory(
 			IAssetLoader assetLoader,
@@ -46,105 +46,86 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 
 		public Dictionary<int, IResourcePresentation> Create()
 		{
-			_totalResource = 0;
-
-			LevelConfig levelConfig = _levelConfigGetter.GetOrDefault(_levelProgressFacade.CurrentLevel);
-
 			Debug.Log("rocks" + _levelProgressFacade.MaxTotalResourceCount);
 
-			var rocksObject = new GameObject("RockResource");
+			_currentResourceId = 0;
 
-			int hardCurrencySpawnIndex = Random.Range(0, _levelProgressFacade.MaxTotalResourceCount);
-			int areaSize = Mathf.CeilToInt(Mathf.Sqrt(_levelProgressFacade.MaxTotalResourceCount));
+			LevelConfig levelConfig = _levelConfigGetter.GetOrDefault(_levelProgressFacade.CurrentLevel);
+			_hardEffect = _levelConfigGetter.GetOrDefault().HardEffectParticle;
 
-			int hardResourceCount = Mathf.CeilToInt(_levelProgressFacade.MaxTotalResourceCount / 100f);
+			var resourceSceneObject = new GameObject("resource - ");
 
-			Dictionary<int, ISoftMinedResource> softResources = InitSoftResources(levelConfig);
-			Dictionary<int, IHardMinedResource> hardVariants = InitHardResources(levelConfig);
+			// Dictionary<int, ResourcesConfig> hardVariants = InitHardResource(levelConfig);
 
 			GameObject resourceSpawnPosition = _assetLoader.Instantiate(ResourceSpawnPosition);
-			resourceSpawnPosition.transform.SetParent(rocksObject.transform);
+			resourceSpawnPosition.transform.SetParent(resourceSceneObject.transform);
 
 			InstantiateResources(
-				levelConfig.SoftMinedResource.Count,
-				areaSize,
-				softResources,
-				hardVariants,
+				levelConfig.PrefabsCount,
+				Mathf.CeilToInt(Mathf.Sqrt(_levelProgressFacade.MaxTotalResourceCount)),
+				InitSoftResources(levelConfig),
 				resourceSpawnPosition,
 				levelConfig,
-				hardResourceCount,
-				hardCurrencySpawnIndex
+				Mathf.CeilToInt(_levelProgressFacade.MaxTotalResourceCount / 100f),
+				Random.Range(0, _levelProgressFacade.MaxTotalResourceCount)
 			);
 
 			return _minedResources.ToDictionary(elem => elem.ID, elem => elem);
 		}
 
-		private void AddHardResourceParticle(IHardMinedResource hardConfig, ResourcePresentation hardResource)
+		private void AddHardResourceParticle(ResourcePresentation hardResource)
 		{
-			ParticleSystem particleSystem = Object.Instantiate(
-				hardConfig.HardResourceEffect,
-				hardResource.transform.position,
-				Quaternion.identity
-			);
+			ParticleSystem particleSystem = Object.Instantiate(_hardEffect, hardResource.transform.position, Quaternion.identity);
 
-			var activationExtension
-				= hardResource.gameObject.AddComponent<ParticleSystemActivationExtension>();
-
+			var activationExtension = hardResource.gameObject.AddComponent<ParticleSystemActivationExtension>();
 			activationExtension.Construct(particleSystem, hardResource);
+
 			particleSystem.Play();
 		}
 
 		private float GetRandomAngle() => Random.Range(0, 360);
 
-		private ResourcePresentation GetResourcePresentation(LevelConfig levelConfig, int randomRockIndex) =>
-			levelConfig
-				.SoftMinedResource[randomRockIndex]
-				.Prefab.GetComponent<ResourcePresentation>()
+		private GameObject GetResourcePresentation(LevelConfig levelConfig, int resource) =>
+			levelConfig.ResourcesConfig.Prefabs[resource]
 			?? throw new ArgumentNullException("ResourcePresentation is null");
 
-		private Dictionary<int, IHardMinedResource> InitHardResources(LevelConfig levelConfig)
+		private IReadOnlyCollection<ResourcesConfig> InitHardResource(LevelConfig levelConfig)
 		{
-			var resources = new Dictionary<int, IHardMinedResource>(levelConfig.HardMinedResource.Count);
+			var hardVariants = new List<GameObject>();
 
-			for (var i = 0; i < levelConfig.HardMinedResource.Count; i++)
-			{
-				IHardMinedResource resource = levelConfig.HardMinedResource[i];
-				resources.Add(i, resource);
-			}
+			for (var i = 0; i < levelConfig.HardResourceCount; i++)
+				hardVariants.Add(levelConfig.ResourcesConfig.Prefabs[Random.Range(0, levelConfig.PrefabsCount)]);
 
-			return resources;
+			return hardVariants;
 		}
 
-		private Dictionary<int, ISoftMinedResource> InitSoftResources(LevelConfig levelConfig)
+		private Dictionary<int, ResourcesConfig> InitSoftResources(LevelConfig levelConfig)
 		{
-			var resources = new Dictionary<int, ISoftMinedResource>(levelConfig.SoftMinedResource.Count);
+			var resourcesConfigs = new Dictionary<int, ResourcesConfig>(levelConfig.ResourcesConfig.Prefabs.Count);
 
-			for (var i = 0; i < levelConfig.SoftMinedResource.Count; i++)
+			for (var i = 0; i < levelConfig.ResourcesConfig.Prefabs.Count; i++)
 			{
-				ISoftMinedResource resource = levelConfig.SoftMinedResource[i];
-				resources.Add(i, resource);
+				GameObject resources = levelConfig.ResourcesConfig.Prefabs[i];
+				resourcesConfigs.Add(i, resources);
 			}
 
-			return resources;
+			return resourcesConfigs;
 		}
 
 		private ResourcePresentation InstantiateAndSetPosition(
-			ResourcePresentation resourcePresentation,
+			GameObject resourcePresentation,
 			Vector3 rockPosition
 		) =>
-			Object
-				.Instantiate(
-					resourcePresentation,
-					rockPosition,
-					new Quaternion(GetRandomAngle(), GetRandomAngle(), GetRandomAngle(), 1)
-				)
-				.GetComponent<ResourcePresentation>();
+			_assetLoader.InstantiateAndGetComponent<ResourcePresentation>(
+				resourcePresentation,
+				rockPosition,
+				new Quaternion(GetRandomAngle(), GetRandomAngle(), GetRandomAngle(), 1)
+			);
 
 		private void InstantiateResources(
 			int softResourcesVariantsCount,
 			int areaSize,
-			Dictionary<int, ISoftMinedResource> softVariants,
-			Dictionary<int, IHardMinedResource> hardVariants,
+			Dictionary<int, ResourcesConfig> softVariants,
 			GameObject resourceSpawnPosition,
 			LevelConfig levelConfig,
 			int hardResourceCount,
@@ -154,10 +135,13 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 			for (var i = 0; i < areaSize; i++)
 				for (var j = 0; j < areaSize; j++)
 				{
-					if (_totalResource > _levelProgressFacade.MaxTotalResourceCount)
+					if (_currentResourceId > _levelProgressFacade.MaxTotalResourceCount)
 						break;
 
-					if (_totalResource >= hardResourceSpawnIndex && hardResourceCount > 0)
+					if (_currentResourceId >= hardResourceSpawnIndex && hardResourceCount > 0)
+					{
+						AddHardResourceParticle();
+
 						hardResourceCount = SpawnHardResource(
 							hardVariants,
 							resourceSpawnPosition,
@@ -166,7 +150,9 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 							i,
 							j
 						);
+					}
 					else
+					{
 						SpawnSoftCurrency(
 							softResourcesVariantsCount,
 							softVariants,
@@ -175,10 +161,11 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 							i,
 							j
 						);
+					}
 				}
 		}
 
-		private void SetMaterial(ResourcePresentation resourceObject, IMinedResource config)
+		private void SetMaterial(ResourcePresentation resourceObject, ResourcesConfig config)
 		{
 			var renderer = resourceObject.View.GetComponent<MeshRenderer>();
 
@@ -190,60 +177,26 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 			int i,
 			int j,
 			float offsetPosition,
-			ResourcePresentation resourcePresentation) =>
+			GameObject resourcePresentation) =>
 			new Vector3(i + offsetPosition, resourcePresentation.transform.position.y, j + offsetPosition)
 			+ resourceSpawnPosition.transform.position;
 
 		private void SetViewAndData(
 			GameObject resourceSpawnPosition,
 			ResourcePresentation resource,
-			IMinedResource resourceConfig
+			ResourcesConfig resourcesConfig
 		)
 		{
-			SetMaterial(resource, resourceConfig);
+			SetMaterial(resource, resourcesConfig);
 
-			_sceneResourcesRepository.Add(new SceneResourceEntity(_totalResource, resourceConfig.Score));
-			resource.Construct(_totalResource, resourceConfig.Material, resourceConfig.Material.color);
+			_sceneResourcesRepository.Add(new SceneResourceEntity(_currentResourceId, resourcesConfig.Score));
+			resource.Construct(_currentResourceId, resourcesConfig.Material, resourcesConfig.Material.color);
 			resource.transform.SetParent(resourceSpawnPosition.transform);
-		}
-
-		private int SpawnHardResource(
-			Dictionary<int, IHardMinedResource> hardVariants,
-			GameObject resourceSpawnPosition,
-			LevelConfig levelConfig,
-			int hardResourceCount,
-			int x,
-			int z
-		)
-		{
-			int index = Random.Range(0, hardVariants.Count);
-			IHardMinedResource hardConfig = hardVariants[index];
-
-			var resourcePresentation = levelConfig
-				.HardMinedResource[index]
-				.Prefab
-				.GetComponent<ResourcePresentation>();
-
-			Vector3 position
-				= new Vector3(x + Offset, resourcePresentation.transform.position.y, z + Offset)
-				  + resourceSpawnPosition.transform.position;
-
-			ResourcePresentation hardResource = InstantiateAndSetPosition(resourcePresentation, position);
-
-			hardResourceCount--;
-			_totalResource++;
-
-			SetViewAndData(resourceSpawnPosition, hardResource, hardConfig);
-			AddHardResourceParticle(hardConfig, hardResource);
-
-			_minedResources.Add(hardResource);
-
-			return hardResourceCount;
 		}
 
 		private void SpawnSoftCurrency(
 			int softResourcesVariantsCount,
-			IReadOnlyDictionary<int, ISoftMinedResource> softVariants,
+			IReadOnlyCollection<ResourcesConfig> softVariants,
 			GameObject resourceSpawnPosition,
 			LevelConfig levelConfig,
 			int i,
@@ -252,40 +205,84 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 		{
 			int randomRockIndex = Random.Range(0, softResourcesVariantsCount);
 
-			ResourcePresentation resourcePresentation = GetResourcePresentation(levelConfig, randomRockIndex);
+			GameObject resourcePresentation = GetResourcePresentation(levelConfig, randomRockIndex);
 
-			IMinedResource config = softVariants[randomRockIndex];
+			_currentResourceId++;
 
-			_totalResource++;
+			ResourcePresentation resourceObject = InstantiateAndSetPosition(
+				resourcePresentation,
+				SetTransformPosition(resourceSpawnPosition, i, j, randomRockIndex * Offset, resourcePresentation)
+			);
 
-			float offsetPosition = randomRockIndex * Offset;
-
-			Vector3 position = SetTransformPosition(resourceSpawnPosition, i, j, offsetPosition, resourcePresentation);
-
-			ResourcePresentation resourceObject = InstantiateAndSetPosition(resourcePresentation, position);
-
-			SetViewAndData(resourceSpawnPosition, resourceObject, config);
+			SetViewAndData(resourceSpawnPosition, resourceObject, softVariants.ElementAt(randomRockIndex));
 
 			_minedResources.Add(resourceObject);
 		}
-	}
 
-	public class ParticleSystemActivationExtension : MonoBehaviour
-	{
-		private ICollideable _collideable;
-		private ParticleSystem _particleSystem;
+		// private int SpawnHardResource(
 
-		private void OnDisable() => _collideable.Collided -= OnCollided;
+		// 	Dictionary<int, IHardMinedResource> hardVariants,
 
-		private void OnDestroy() => _collideable.Collided -= OnCollided;
+		// 	GameObject resourceSpawnPosition,
 
-		public void Construct(ParticleSystem particles, ICollideable collideable)
-		{
-			_collideable = collideable ?? throw new ArgumentNullException(nameof(collideable));
-			_particleSystem = particles ? particles : throw new ArgumentNullException(nameof(particles));
-			_collideable.Collided += OnCollided;
-		}
+		// 	LevelConfig levelConfig,
 
-		private void OnCollided(int value) => _particleSystem.Stop();
+		// 	int hardResourceCount,
+
+		// 	int x,
+
+		// 	int z
+
+		// )
+
+		// {
+
+		// 	int index = Random.Range(0, hardVariants.Count);
+
+		// 	IHardMinedResource hardConfig = hardVariants[index];
+
+		//
+
+		// 	var resourcePresentation = levelConfig
+
+		// 		.HardMinedResource[index]
+
+		// 		.Prefab
+
+		// 		.GetComponent<ResourcePresentation>();
+
+		//
+
+		// 	Vector3 position
+
+		// 		= new Vector3(x + Offset, resourcePresentation.transform.position.y, z + Offset)
+
+		// 		  + resourceSpawnPosition.transform.position;
+
+		//
+
+		// 	ResourcePresentation hardResource = InstantiateAndSetPosition(resourcePresentation, position);
+
+		//
+
+		// 	hardResourceCount--;
+
+		// 	_totalResource++;
+
+		//
+
+		// 	SetViewAndData(resourceSpawnPosition, hardResource, hardConfig);
+
+		// 	AddHardResourceParticle(hardConfig, hardResource);
+
+		//
+
+		// 	_minedResources.Add(hardResource);
+
+		//
+
+		// 	return hardResourceCount;
+
+		// }
 	}
 }

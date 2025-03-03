@@ -17,5 +17,6 @@ namespace Sources.BusinessLogic.ServicesInterfaces
 		T InstantiateAndGetComponent<T>(GameObject gameObject, Vector3 position) where T : Behaviour;
 		T LoadComponent<T>(string path);
 		T LoadFromResources<T>(string path) where T : Object;
+		T InstantiateAndGetComponent<T>(GameObject gameObject, Vector3 position, Quaternion quaternion);
 	}
 }
