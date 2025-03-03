@@ -46,8 +46,8 @@ namespace DG.Tweening
 				}
 
 				float colorDuration = i == len - 1
-					? duration -
-					  s.Duration(
+					? duration
+					  - s.Duration(
 						  false
 					  ) // Verifies that total duration is correct
 					: duration * (i == 0 ? c.time : c.time - colors[i - 1].time);
@@ -95,8 +95,8 @@ namespace DG.Tweening
 				}
 
 				float colorDuration = i == len - 1
-					? duration -
-					  s.Duration(
+					? duration
+					  - s.Duration(
 						  false
 					  ) // Verifies that total duration is correct
 					: duration * (i == 0 ? c.time : c.time - colors[i - 1].time);
@@ -515,8 +515,7 @@ namespace DG.Tweening
 		{
 			private readonly Tween t;
 
-			public WaitForCompletion(Tween tween) =>
-				t = tween;
+			public WaitForCompletion(Tween tween) => t = tween;
 
 			public override bool keepWaiting => t.active && !t.IsComplete();
 		}
@@ -525,8 +524,7 @@ namespace DG.Tweening
 		{
 			private readonly Tween t;
 
-			public WaitForRewind(Tween tween) =>
-				t = tween;
+			public WaitForRewind(Tween tween) => t = tween;
 
 			public override bool keepWaiting => t.active && (!t.playedOnce || t.position * (t.CompletedLoops() + 1) > 0);
 		}
@@ -535,8 +533,7 @@ namespace DG.Tweening
 		{
 			private readonly Tween t;
 
-			public WaitForKill(Tween tween) =>
-				t = tween;
+			public WaitForKill(Tween tween) => t = tween;
 
 			public override bool keepWaiting => t.active;
 		}
@@ -575,8 +572,7 @@ namespace DG.Tweening
 		{
 			private readonly Tween t;
 
-			public WaitForStart(Tween tween) =>
-				t = tween;
+			public WaitForStart(Tween tween) => t = tween;
 
 			public override bool keepWaiting => t.active && !t.playedOnce;
 		}

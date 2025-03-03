@@ -7,7 +7,7 @@ namespace UI.UI.GUI.UI_pack.Scripts
 	{
 		public Image TargetImage;
 
-		// Update is called once per frame
+		// FixedUpdate is called once per frame
 		private void Update()
 		{
 			float amount = TargetImage.fillAmount * 100;

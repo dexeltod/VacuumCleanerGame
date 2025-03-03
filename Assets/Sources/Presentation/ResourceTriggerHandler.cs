@@ -10,6 +10,9 @@ namespace Sources.Presentation
 		[SerializeField]
 		private ResourcePresentation _presentation;
 
-		private void OnCollisionEnter(Collision other) => _presentation.HandleCollide(other);
+		private void OnTriggerEnter(Collider other)
+		{
+			if (_presentation != null) _presentation.HandleCollide(other);
+		}
 	}
 }

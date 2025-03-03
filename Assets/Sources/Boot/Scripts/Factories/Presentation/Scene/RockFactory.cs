@@ -131,11 +131,13 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 			ResourcePresentation resourcePresentation,
 			Vector3 rockPosition
 		) =>
-			Object.Instantiate(
-				resourcePresentation,
-				rockPosition,
-				new Quaternion(GetRandomAngle(), GetRandomAngle(), GetRandomAngle(), 1)
-			).GetComponent<ResourcePresentation>();
+			Object
+				.Instantiate(
+					resourcePresentation,
+					rockPosition,
+					new Quaternion(GetRandomAngle(), GetRandomAngle(), GetRandomAngle(), 1)
+				)
+				.GetComponent<ResourcePresentation>();
 
 		private void InstantiateResources(
 			int softResourcesVariantsCount,
@@ -216,7 +218,9 @@ namespace Sources.Boot.Scripts.Factories.Presentation.Scene
 			int index = Random.Range(0, hardVariants.Count);
 			IHardMinedResource hardConfig = hardVariants[index];
 
-			var resourcePresentation = levelConfig.HardMinedResource[index].Prefab
+			var resourcePresentation = levelConfig
+				.HardMinedResource[index]
+				.Prefab
 				.GetComponent<ResourcePresentation>();
 
 			Vector3 position

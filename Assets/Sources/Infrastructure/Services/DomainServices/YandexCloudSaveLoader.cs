@@ -49,8 +49,6 @@ namespace Sources.Infrastructure.Services.DomainServices
 			PlayerAccount.SetCloudSaveData("{}", () => isCallbackReceived = true);
 
 			await UniTask.WaitWhile(() => isCallbackReceived == false);
-
-			Debug.Log("DATA DELETED");
 		}
 	}
 }

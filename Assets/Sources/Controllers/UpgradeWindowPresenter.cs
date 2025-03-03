@@ -7,6 +7,7 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.DomainInterfaces.Models.Shop.Upgrades;
+using Sources.DomainInterfaces.ViewEntities;
 using Sources.PresentationInterfaces;
 using Sources.PresentationInterfaces.Common;
 
@@ -15,7 +16,7 @@ namespace Sources.Controllers
 	public class UpgradeWindowPresenter : Presenter, IDisposable, IUpgradeWindowPresenter
 	{
 		private readonly IReadOnlyList<IStatUpgradeEntityReadOnly> _entities;
-		private readonly IView _gameplayInterfaceStatus;
+		private readonly IView _gameplayInterface;
 		private readonly IPersistentProgressService _persistentProgressServiceProvider;
 
 		private readonly Dictionary<IStatUpgradeEntityReadOnly, Action> _progressChangeHandlers = new();
@@ -25,6 +26,7 @@ namespace Sources.Controllers
 		private readonly IShopService _shopService;
 		private readonly IReadOnlyProgress<int> _softCurrency;
 		private readonly Dictionary<int, IUpgradeElementPrefabView> _upgradeElementPrefab;
+		private readonly IViewEntity _upgradeWindowEntity;
 		private readonly IUpgradeWindowPresentation _upgradeWindowPresentation;
 
 		private bool _isCanSave;
@@ -38,11 +40,12 @@ namespace Sources.Controllers
 			IProgressEntityRepository progressEntityRepository,
 			ISaveLoader saveLoader,
 			IShopService shopService,
-			IReadOnlyList<IStatUpgradeEntityReadOnly> entities)
+			IReadOnlyList<IStatUpgradeEntityReadOnly> entities,
+			IViewEntity upgradeWindowEntity) : base(upgradeWindowEntity)
 		{
 			_upgradeWindowPresentation =
 				upgradeWindowPresentation ?? throw new ArgumentNullException(nameof(upgradeWindowPresentation));
-			_gameplayInterfaceStatus = gameplayInterfaceStatus ?? throw new ArgumentNullException(nameof(gameplayInterfaceStatus));
+			_gameplayInterface = gameplayInterfaceStatus ?? throw new ArgumentNullException(nameof(gameplayInterfaceStatus));
 			_softCurrency = softCurrency ?? throw new ArgumentNullException(nameof(softCurrency));
 			_upgradeElementPrefab = upgradeElementChangeableViews
 			                        ?? throw new ArgumentNullException(nameof(upgradeElementChangeableViews));
@@ -53,6 +56,7 @@ namespace Sources.Controllers
 			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
 			_shopService = shopService ?? throw new ArgumentNullException(nameof(shopService));
 			_entities = entities ?? throw new ArgumentNullException(nameof(entities));
+			_upgradeWindowEntity = upgradeWindowEntity ?? throw new ArgumentNullException(nameof(upgradeWindowEntity));
 		}
 
 		private int SoftCurrencyReadOnlyValue => _softCurrency.ReadOnlyValue;
@@ -61,26 +65,20 @@ namespace Sources.Controllers
 
 		public override void Enable()
 		{
+			base.Enable();
+			_upgradeWindowPresentation.Enable();
+			_upgradeWindowPresentation.UpgradeWindowMain.SetActive(true);
+
 			Subscribe();
 
 			_upgradeWindowPresentation.SetMoney(SoftCurrencyReadOnlyValue);
-
-			_gameplayInterfaceStatus.Disable();
 		}
 
 		public override void Disable()
 		{
+			base.Disable();
 			Unsubscribe();
-
-			_gameplayInterfaceStatus.Enable();
-		}
-
-		public void SetMoney(int money) => _upgradeWindowPresentation.SetMoney(money);
-
-		public void EnableWindow()
-		{
-			_upgradeWindowPresentation.SetMoney(SoftCurrencyReadOnlyValue);
-			_upgradeWindowPresentation.UpgradeWindowMain.SetActive(true);
+			_upgradeWindowPresentation.UpgradeWindowMain.SetActive(false);
 		}
 
 		private void LevelProgressChanged(IStatUpgradeEntityReadOnly entityReadOnly)
@@ -88,18 +86,11 @@ namespace Sources.Controllers
 			SetView(entityReadOnly.ConfigId);
 		}
 
-		private async void OnClose()
+		private void OnClose()
 		{
-			_gameplayInterfaceStatus.Enable();
-			_upgradeWindowPresentation.AudioSource.Play();
-			_upgradeWindowPresentation.UpgradeWindowMain.SetActive(false);
+			_upgradeWindowPresentation.AudioClose.Play();
 
-			if (_isCanSave == false)
-				return;
-
-			_isCanSave = false;
-
-			await _progressSaveLoadService.SaveToCloud(() => _isCanSave = true);
+			_upgradeWindowEntity.SetActive(false);
 			Disable();
 		}
 
@@ -150,8 +141,6 @@ namespace Sources.Controllers
 
 			UnsubscribeOnProgressChange();
 
-			_progressChangeHandlers.Clear();
-
 			_softCurrency.Changed -= OnSoftCurrencyChanged;
 			_upgradeWindowPresentation.CloseMenuButton.onClick.RemoveListener(OnClose);
 		}
@@ -161,6 +150,8 @@ namespace Sources.Controllers
 			foreach (IStatUpgradeEntityReadOnly entity in _entities)
 				if (_progressChangeHandlers.TryGetValue(entity, out Action handler))
 					entity.LevelProgress.Changed -= handler;
+
+			_progressChangeHandlers.Clear();
 		}
 
 		private async void Upgrade(int id)

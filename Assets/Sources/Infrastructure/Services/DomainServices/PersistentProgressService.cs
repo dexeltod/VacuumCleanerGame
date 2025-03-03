@@ -6,8 +6,8 @@ namespace Sources.Infrastructure.Services.DomainServices
 {
 	public class PersistentProgressService : IUpdatablePersistentProgressService
 	{
-		public PersistentProgressService(IGlobalProgress globalProgress) =>
-			GlobalProgress = globalProgress ?? throw new ArgumentNullException(nameof(globalProgress));
+		public PersistentProgressService(IGlobalProgress progress) =>
+			GlobalProgress = progress ?? throw new ArgumentNullException(nameof(progress));
 
 		public IGlobalProgress GlobalProgress { get; private set; }
 

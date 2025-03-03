@@ -82,6 +82,12 @@ namespace Sources.Presentation.UI
 			SetActiveGlobalScores();
 		}
 
+		protected override void OnDestroy()
+		{
+			base.OnDestroy();
+			Disable();
+		}
+
 		public override void Disable()
 		{
 			_goToNextLevelButtonTween!.Kill(true);

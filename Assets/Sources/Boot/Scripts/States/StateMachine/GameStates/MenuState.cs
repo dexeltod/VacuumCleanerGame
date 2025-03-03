@@ -31,6 +31,7 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 		private readonly ILoadingCurtain _loadingCurtain;
 		private readonly ILocalizationService _localizationService;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
+		private readonly IPersistentProgressService _progressService;
 		private readonly ISceneLoader _sceneLoader;
 		private readonly IStateMachine _stateMachine;
 		private readonly TranslatorService _translatorService;
@@ -54,7 +55,8 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 			ICloudServiceSdk cloudServiceSdk,
 			ILeaderBoardPlayersFactory leaderBoardPlayersFactory,
 			IStateMachine stateMachine,
-			GameFocusHandler focusHandler)
+			GameFocusHandler focusHandler,
+			IPersistentProgressService progressService)
 		{
 			_sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
 			_loadingCurtain = loadingCurtain ?? throw new ArgumentNullException(nameof(loadingCurtain));
@@ -72,6 +74,7 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 
 			_stateMachine = stateMachine ?? throw new ArgumentNullException(nameof(stateMachine));
 			_focusHandler = focusHandler ?? throw new ArgumentNullException(nameof(focusHandler));
+			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
 		}
 
 		public void Exit()
@@ -126,7 +129,8 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 				_mainMenuView.LeaderBoardView.GetComponent<ILeaderBoardView>(),
 				_leaderBoardService,
 				_leaderBoardPlayersFactory,
-				_mainMenuView.GetSettingsView()
+				_mainMenuView.GetSettingsView(),
+				_progressService.GlobalProgress.SoundSettings
 			).Create();
 
 			InitializeMainMenuPresenter();

@@ -19,7 +19,14 @@ namespace Sources.Controllers.Services
 			_presenters.Add(value.GetType(), value);
 		}
 
-		public T Get<T>() where T : IPresenter => (T)_presenters.GetValueOrDefault(typeof(T));
+		public T Get<T>() where T : IPresenter
+		{
+			var presenter = (T)_presenters.GetValueOrDefault(typeof(T));
+
+			if (presenter == null) throw new InvalidOperationException($"No presenter of type {typeof(T)} registered.");
+
+			return presenter;
+		}
 
 		public void AddRange(IEnumerable<IPresenter> values)
 		{
@@ -35,7 +42,11 @@ namespace Sources.Controllers.Services
 			_presenters.Remove(value.GetType());
 		}
 
-		public void RemoveAll() => _presenters.Clear();
+		public void RemoveAll()
+		{
+			if (_presenters.Count > 0)
+				_presenters.Clear();
+		}
 
 		public void Disable<T>()
 		{

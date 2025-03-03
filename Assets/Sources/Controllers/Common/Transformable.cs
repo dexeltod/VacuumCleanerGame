@@ -6,11 +6,11 @@ namespace Sources.Controllers.Common
 {
 	public abstract class Transformable : ITransformable
 	{
-		private readonly Rigidbody _rigidbody;
+		private readonly Rigidbody _body;
 
-		protected Transformable(Transform transform, Rigidbody rigidbody)
+		protected Transformable(Transform transform, Rigidbody body)
 		{
-			_rigidbody = rigidbody;
+			_body = body;
 			Transform = transform;
 		}
 
@@ -35,7 +35,6 @@ namespace Sources.Controllers.Common
 
 		protected void MoveTo(Vector3 position)
 		{
-			_rigidbody.position = position;
 			FixedMoved?.Invoke(position);
 		}
 	}

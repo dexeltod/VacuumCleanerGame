@@ -43,13 +43,15 @@ namespace Sources.Boot.Scripts.Factories.Player
 
 			_character = playerBodyComponentPresenter.GameObject;
 			_body = _character.GetComponent<Rigidbody>();
+			var collider = _character.GetComponent<BoxCollider>();
 			_animator = _character.GetComponentInChildren<Animator>();
 
 			PlayerTransformable playerTransformable = new(
 				_character.transform,
 				_joystick,
 				_modelRepository.Get(ProgressType.Speed),
-				_body
+				_body,
+				collider
 			);
 
 			SetPresenter(
@@ -58,6 +60,7 @@ namespace Sources.Boot.Scripts.Factories.Player
 				new AnimationHasher()
 			);
 
+			playerBodyComponentPresenter.gameObject.SetActive(true);
 			return playerBodyComponentPresenter;
 		}
 

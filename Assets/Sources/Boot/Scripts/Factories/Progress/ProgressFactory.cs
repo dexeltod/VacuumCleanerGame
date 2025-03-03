@@ -4,30 +4,24 @@ using Cysharp.Threading.Tasks;
 using Sources.BusinessLogic.Interfaces.Factory;
 using Sources.BusinessLogic.Services;
 using Sources.DomainInterfaces;
-using Sources.DomainInterfaces.DomainServicesInterfaces;
-using UnityEngine;
 using VContainer;
 
 namespace Sources.Boot.Scripts.Factories.Progress
 {
 	public class ProgressFactory : IProgressFactory
 	{
-		private readonly IClearProgressFactory _clearProgressFactory;
+		private readonly IProgressCleaner _progressCleaner;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
-
-		private readonly ISaveLoader _saveLoader;
 
 		[Inject]
 		public ProgressFactory(
 			IProgressSaveLoadDataService progressSaveLoadDataService,
-			ISaveLoader saveLoaderProvider,
-			IClearProgressFactory clearProgressFactory
+			IProgressCleaner progressCleaner
 		)
 		{
 			_progressSaveLoadDataService = progressSaveLoadDataService
 			                               ?? throw new ArgumentNullException(nameof(progressSaveLoadDataService));
-			_saveLoader = saveLoaderProvider ?? throw new ArgumentNullException(nameof(saveLoaderProvider));
-			_clearProgressFactory = clearProgressFactory ?? throw new ArgumentNullException(nameof(clearProgressFactory));
+			_progressCleaner = progressCleaner ?? throw new ArgumentNullException(nameof(progressCleaner));
 		}
 
 		public async Task<IGlobalProgress> Create()
@@ -36,24 +30,20 @@ namespace Sources.Boot.Scripts.Factories.Progress
 
 			cloudSaves = await CreatNewIfNull(cloudSaves);
 
+			cloudSaves.ResourceModel.SetMaxTotalResource(cloudSaves.LevelProgress.MaxTotalResourceCount);
+
 			return cloudSaves;
 		}
 
 		private async UniTask<IGlobalProgress> CreatNewIfNull(IGlobalProgress loadedProgress)
 		{
-			Debug.Log($"Loaded progress is {loadedProgress}");
-
 			if (loadedProgress != null && loadedProgress.Validate())
-			{
-				Debug.Log("Loaded progress is valid");
 				return loadedProgress;
-			}
 
-			Debug.Log("New progress creating");
+			loadedProgress = _progressCleaner.CreateClear();
 
-			loadedProgress = _clearProgressFactory.Create();
+			await _progressSaveLoadDataService.SaveToCloud();
 
-			await _saveLoader.Save(loadedProgress);
 			return loadedProgress;
 		}
 	}

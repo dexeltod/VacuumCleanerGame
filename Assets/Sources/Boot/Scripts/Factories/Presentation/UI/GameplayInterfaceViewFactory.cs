@@ -50,7 +50,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 			);
 
 			bool isHalfScoreReached
-				= _resourceModelReadOnly.CurrentTotalResources > _resourceModelReadOnly.CurrentTotalResources / 2;
+				= _resourceModelReadOnly.CurrentTotalResources > _resourceModelReadOnly.TotalAmount.ReadOnlyValue / 2;
 
 			_gameplayInterfaceView.Construct(
 				_presenter,

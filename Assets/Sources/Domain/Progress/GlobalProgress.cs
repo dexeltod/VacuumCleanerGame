@@ -1,11 +1,12 @@
 using System;
 using Sources.Domain.Player;
 using Sources.Domain.Progress.Player;
+using Sources.Domain.Settings;
 using Sources.DomainInterfaces;
+using Sources.DomainInterfaces.Entities;
 using Sources.DomainInterfaces.Models;
 using Sources.DomainInterfaces.Models.Shop;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Sources.Domain.Progress
 {
@@ -13,19 +14,17 @@ namespace Sources.Domain.Progress
 	public class GlobalProgress : IGlobalProgress
 	{
 		[SerializeField] private ResourceModel _resource;
-
 		[SerializeField] private LevelProgress _levelProgress;
 		[SerializeField] private ShopModel _shopModel;
-
-		[FormerlySerializedAs("_playerModel")]
-		[SerializeField]
-		private PlayerStatsModel _playerStatsModel;
+		[SerializeField] private SoundSettings _soundSettings;
+		[SerializeField] private PlayerStatsModel _playerStatsModel;
 
 		public GlobalProgress(
 			ResourceModel resourceModel,
 			LevelProgress levelProgress,
 			ShopModel shopModel,
-			PlayerStatsModel playerStatsModel
+			PlayerStatsModel playerStatsModel,
+			SoundSettings soundSettings
 		)
 		{
 			_resource = resourceModel ?? throw new ArgumentNullException(nameof(resourceModel));
@@ -37,6 +36,7 @@ namespace Sources.Domain.Progress
 			if (shopModel.ProgressEntities == null)
 				throw new ArgumentNullException(nameof(shopModel.ProgressEntities));
 
+			_soundSettings = soundSettings ?? throw new ArgumentNullException(nameof(soundSettings));
 			_playerStatsModel = playerStatsModel ?? throw new ArgumentNullException(nameof(playerStatsModel));
 		}
 
@@ -44,6 +44,7 @@ namespace Sources.Domain.Progress
 		public IResourceModel ResourceModel => _resource;
 		public IShopModel ShopModel => _shopModel;
 		public IPlayerStatsModel PlayerStatsModel => _playerStatsModel;
+		public ISoundSettings SoundSettings => _soundSettings;
 
 		public bool Validate() =>
 			_resource != null

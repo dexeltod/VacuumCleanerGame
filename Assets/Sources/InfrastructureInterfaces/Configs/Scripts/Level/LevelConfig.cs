@@ -12,6 +12,7 @@ namespace Sources.InfrastructureInterfaces.Configs.Scripts.Level
 		[SerializeField] private List<SoftMinedResource> _softResourcePrefab;
 		[SerializeField] private List<HardMinedResource> _hardResourcesPrefab;
 
+
 		public IReadOnlyList<ISoftMinedResource> SoftMinedResource => _softResourcePrefab;
 		public IReadOnlyList<IHardMinedResource> HardMinedResource => _hardResourcesPrefab;
 	}

@@ -5,6 +5,7 @@ using Sources.Presentation.Common;
 using Sources.PresentationInterfaces;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Sources.Presentation.UI.Shop
@@ -26,6 +27,10 @@ namespace Sources.Presentation.UI.Shop
 		[SerializeField] private Button _buttonBuy;
 		[SerializeField] private TextMeshProUGUI _description;
 		[SerializeField] private TextMeshProUGUI _price;
+
+		[FormerlySerializedAs("_audioBuy")]
+		[SerializeField]
+		private AudioSource _audioSourceBuy;
 
 		private readonly List<Image> _pointsColors = new();
 
@@ -58,8 +63,8 @@ namespace Sources.Presentation.UI.Shop
 			int id,
 			int boughtPointsCount,
 			int price,
-			int maxPoints
-		)
+			int maxPoints,
+			AudioSource sound)
 		{
 			if (maxPoints < 0) throw new ArgumentOutOfRangeException(nameof(maxPoints));
 
@@ -78,6 +83,8 @@ namespace Sources.Presentation.UI.Shop
 
 			InstantiatePoints();
 
+			_audioSourceBuy.clip = sound.clip;
+
 			_isInit = true;
 		}
 
@@ -87,6 +94,7 @@ namespace Sources.Presentation.UI.Shop
 				throw new ArgumentOutOfRangeException(nameof(count));
 
 			_boughtPoints += count;
+			_audioSourceBuy.Play();
 		}
 
 		private void SetNotBoughtPoints()

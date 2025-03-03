@@ -5,7 +5,6 @@ using Sources.BusinessLogic.Services;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.Infrastructure.Services.DomainServices;
-using UnityEngine;
 using VContainer;
 
 namespace Sources.Infrastructure.Services
@@ -14,9 +13,10 @@ namespace Sources.Infrastructure.Services
 	public class ProgressSaveLoadDataService : IProgressSaveLoadDataService
 	{
 		private readonly BinaryDataSaveLoader _binaryDataSaveLoader;
-		private readonly IClearProgressFactory _clearProgressFactory;
 		private readonly JsonDataSaveLoader _jsonDataLoader;
+		private readonly IProgressCleaner _progressCleaner;
 		private readonly IPersistentProgressService _progressService;
+		private readonly ISaveLoader _saveLoaderImplementation;
 
 		private IGlobalProgress _globalProgress;
 
@@ -25,17 +25,15 @@ namespace Sources.Infrastructure.Services
 			ISaveLoader saveLoader,
 			IPersistentProgressService progressService,
 			IInitialProgressFactory initialProgressFactory,
-			IClearProgressFactory clearProgressFactory
+			IProgressCleaner progressCleaner
 		)
 		{
-			SaveLoaderImplementation = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
+			_saveLoaderImplementation = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
 			_progressService = progressService ?? throw new ArgumentNullException(nameof(progressService));
-			_clearProgressFactory = clearProgressFactory ?? throw new ArgumentNullException(nameof(clearProgressFactory));
+			_progressCleaner = progressCleaner ?? throw new ArgumentNullException(nameof(progressCleaner));
 
 			_jsonDataLoader = new JsonDataSaveLoader();
 		}
-
-		private ISaveLoader SaveLoaderImplementation { get; }
 
 		public bool IsCallbackReceived { get; private set; }
 
@@ -45,14 +43,9 @@ namespace Sources.Infrastructure.Services
 			succeededCallback?.Invoke();
 		}
 
-		public async UniTask ClearSaves() => await SaveLoaderImplementation.Save(_clearProgressFactory.Create());
+		public async UniTask ClearSaves() => await _saveLoaderImplementation.Save(_progressCleaner.CreateClear());
 
-		public async UniTask<IGlobalProgress> LoadFromCloud()
-		{
-			Debug.Log("LoadFromCloud");
-			IsCallbackReceived = false;
-			return await SaveLoaderImplementation.Load(() => IsCallbackReceived = true);
-		}
+		public async UniTask<IGlobalProgress> LoadFromCloud() => await _saveLoaderImplementation.Load();
 
 		public void SaveToJson(string fileName, object data) => _jsonDataLoader.Save(fileName, data);
 
@@ -63,7 +56,7 @@ namespace Sources.Infrastructure.Services
 		private async UniTask Save(IGlobalProgress provider)
 		{
 			IsCallbackReceived = false;
-			await SaveLoaderImplementation.Save(provider, () => IsCallbackReceived = true);
+			await _saveLoaderImplementation.Save(provider, () => IsCallbackReceived = true);
 		}
 	}
 }

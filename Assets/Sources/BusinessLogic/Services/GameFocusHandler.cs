@@ -1,5 +1,7 @@
 using System;
 using Agava.WebUtility;
+using Sources.DomainInterfaces;
+using Sources.DomainInterfaces.Entities;
 using Sources.Utils.ConstantNames;
 using Sources.Utils.Scene;
 using UnityEngine;
@@ -11,11 +13,19 @@ namespace Sources.BusinessLogic.Services
 	{
 		private readonly ApplicationQuitHandler _applicationQuitHandler;
 		private readonly AudioMixer _audioMixer;
+		private readonly ISoundSettings _settings;
 
 		private bool _isEnabled;
 
-		public GameFocusHandler(AudioMixer audioMixer, ApplicationQuitHandler applicationQuitHandler)
+		public GameFocusHandler(
+			IPersistentProgressService settings,
+			AudioMixer audioMixer,
+			ApplicationQuitHandler applicationQuitHandler)
 		{
+			if (settings == null) throw new ArgumentNullException(nameof(settings));
+
+			_settings = settings.GlobalProgress.SoundSettings;
+
 			_audioMixer = audioMixer ?? throw new ArgumentNullException(nameof(audioMixer));
 			_applicationQuitHandler = applicationQuitHandler ?? throw new ArgumentNullException(nameof(applicationQuitHandler));
 		}
@@ -56,9 +66,15 @@ namespace Sources.BusinessLogic.Services
 		private void SetMute(bool isMute)
 		{
 			if (isMute)
-				_audioMixer.SetFloat(MasterVolume, -80f);
+			{
+				_settings.SetMasterVolume(-80f);
+				_audioMixer.SetFloat(MasterVolume, _settings.Entity.Value);
+			}
 			else
+			{
+				_settings.Unmute();
 				_audioMixer.SetFloat(MasterVolume, 0f);
+			}
 		}
 
 		private void SetTimePause(bool isPaused) => Time.timeScale = isPaused ? 0f : 1f;

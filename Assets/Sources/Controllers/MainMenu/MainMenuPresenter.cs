@@ -82,7 +82,7 @@ namespace Sources.Controllers.MainMenu
 			_mainMenuView.Enable();
 			_settingsView.MasterVolumeSlider.onValueChanged.AddListener(OnSoundChanged);
 
-			_settingsView.MasterVolumeSlider.value = _soundSettings.MasterVolume;
+			_settingsView.MasterVolumeSlider.value = _soundSettings.Value;
 		}
 
 		public override void Disable()

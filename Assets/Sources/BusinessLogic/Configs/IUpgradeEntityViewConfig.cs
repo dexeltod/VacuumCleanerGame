@@ -6,5 +6,6 @@ namespace Sources.BusinessLogic.Configs
 	{
 		Sprite Icon { get; }
 		GameObject PrefabView { get; }
+		AudioSource Sound { get; }
 	}
 }

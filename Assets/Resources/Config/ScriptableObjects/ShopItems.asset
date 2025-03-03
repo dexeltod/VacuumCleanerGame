@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _items:
   - _items:
-    - _price: 0
+    - _price: 200
       _progress: 200
     - _price: 300
       _progress: 300
@@ -30,11 +30,36 @@ MonoBehaviour:
     _description: ScoreCashDescription
     _type: 1
     _isModifiable: 0
+    _priceCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0.9034179
+        outSlope: 0.9034179
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 7.602063
+        value: 6.86784
+        inSlope: 0.9034179
+        outSlope: 0.9034179
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     _upgradeElementPrefabView: {fileID: 3425884432820441465, guid: 7853f2ed101517b408328c84fcbaa5f4, type: 3}
     _icon: {fileID: 21300000, guid: 6b62d05057d633044b3dc427188695a5, type: 3}
+    _sound: {fileID: 533334650948180813, guid: a8d5685df3500e34e8c64056c2883e91, type: 3}
   - _items:
     - _price: 0
-      _progress: 10
+      _progress: 0.1
     - _price: 360
       _progress: 15.28
     - _price: 1000
@@ -49,5 +74,12 @@ MonoBehaviour:
     _description: SpeedDescription
     _type: 0
     _isModifiable: 1
+    _priceCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     _upgradeElementPrefabView: {fileID: 3425884432820441465, guid: 7853f2ed101517b408328c84fcbaa5f4, type: 3}
     _icon: {fileID: -398169452, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+    _sound: {fileID: 533334650948180813, guid: a8d5685df3500e34e8c64056c2883e91, type: 3}

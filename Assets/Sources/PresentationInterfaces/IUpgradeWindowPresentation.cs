@@ -12,10 +12,10 @@ namespace Sources.PresentationInterfaces
 		List<string> Phrases { get; set; }
 		Button CloseMenuButton { get; }
 		GameObject UpgradeWindowMain { get; }
-		AudioSource AudioSource { get; }
+		AudioSource AudioClose { get; }
 
-		void Construct(IUpgradeWindowPresenter presenter, int money, IUpgradeWindowActivator activator);
-		void SetActiveYesNoButtons(bool isActive);
+		void Construct(IUpgradeWindowPresenter presenter, int money);
+
 		void SetMoney(int money);
 	}
 }

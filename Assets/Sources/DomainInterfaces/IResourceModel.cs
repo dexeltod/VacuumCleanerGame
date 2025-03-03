@@ -7,6 +7,7 @@ namespace Sources.DomainInterfaces
 		void ClearAllScores();
 		void ClearTotalResources();
 		void DecreaseCashScore(int newValue);
+		void SetMaxTotalResource(int amount);
 		void SetMoney(int value);
 		bool TryAddScore(int newCashScore);
 		bool TryDecreaseMoney(int newValue);

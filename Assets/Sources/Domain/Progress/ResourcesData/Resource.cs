@@ -28,11 +28,11 @@ namespace Sources.Domain.Progress.ResourcesData
 		public T ReadOnlyValue => Value;
 
 		public string Name { get; }
-		public abstract event Action Changed;
-		public abstract event Action HalfReached;
 
 		public abstract T Value { get; set; }
 		public abstract T MaxValue { get; set; }
 		public T ReadOnlyMaxValue => MaxValue;
+		public abstract event Action Changed;
+		public abstract event Action HalfReached;
 	}
 }

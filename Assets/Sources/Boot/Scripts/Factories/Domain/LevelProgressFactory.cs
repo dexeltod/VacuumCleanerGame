@@ -1,4 +1,3 @@
-using System;
 using Sources.Domain.Progress;
 
 namespace Sources.Boot.Scripts.Factories.Domain
@@ -8,11 +7,8 @@ namespace Sources.Boot.Scripts.Factories.Domain
 		private readonly int _firstLevel;
 		private readonly int _maxTotalResourcePoint;
 
-		public LevelProgressFactory(int firstLevel, int maxTotalResourcePoint)
+		public LevelProgressFactory(int maxTotalResourcePoint, int firstLevel = 1)
 		{
-			if (maxTotalResourcePoint < 0) throw new ArgumentOutOfRangeException(nameof(maxTotalResourcePoint));
-			if (firstLevel < 0) throw new ArgumentOutOfRangeException(nameof(firstLevel));
-
 			_firstLevel = firstLevel;
 			_maxTotalResourcePoint = maxTotalResourcePoint;
 		}

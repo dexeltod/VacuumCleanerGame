@@ -12,12 +12,13 @@ namespace Sources.Infrastructure.Configs
 	public class ProgressItemConfig
 	{
 		[SerializeField] private List<ShopProgressConfig> _items;
-
 		[SerializeField] private string _title;
 		[SerializeField] private string _description;
 
 		[SerializeField] private ProgressType _type;
 		[SerializeField] private bool _isModifiable;
+
+		[SerializeField] private AnimationCurve _priceCurve;
 
 		public IEnumerable<IShopProgress> Items => _items;
 

@@ -18,8 +18,10 @@ using Sources.BusinessLogic.States;
 using Sources.Controllers;
 using Sources.Controllers.Services;
 using Sources.ControllersInterfaces;
+using Sources.Domain.ViewEntity;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
+using Sources.DomainInterfaces.ViewEntities;
 using Sources.Infrastructure.Services;
 using Sources.Presentation.UI;
 using Sources.PresentationInterfaces;
@@ -139,6 +141,9 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 
 		private void Build()
 		{
+			ViewEntity gameplayInterfaceEntity = new();
+			ViewEntity upgradeWindowEntity = new();
+
 			SceneResourcesRepository sceneResourcesRepository = new();
 
 			Dictionary<int, IResourcePresentation> rocks = InstantiateRocks(sceneResourcesRepository);
@@ -176,7 +181,7 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 				);
 
 			IGameplayInterfacePresenter gameplayInterfacePresenter =
-				CreateGameplayInterfacePresenter(gameplayInterfaceView, levelChangerService);
+				CreateGameplayInterfacePresenter(gameplayInterfaceView, levelChangerService, upgradeWindowEntity);
 
 			var shaderViewController = new DissolveShaderViewController(
 				playerGameObject.GetComponent<IDissolveShaderView>(),
@@ -185,12 +190,13 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 
 			playerGameObject.GetComponent<IDissolveShaderView>().Construct(shaderViewController);
 
+			_presentersRepository.RemoveAll();
 			_presentersRepository.AddRange(
 				new List<IPresenter>
 				{
 					gameplayInterfacePresenter,
 					shaderViewController,
-					CreateUpgradeWindowPresenter(gameplayInterfaceView),
+					CreateUpgradeWindowPresenter(gameplayInterfaceView, upgradeWindowEntity),
 					new AdvertisementPresenter(_advertisement),
 					player,
 					resourcesProgressPresenter
@@ -208,7 +214,8 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 
 		private IGameplayInterfacePresenter CreateGameplayInterfacePresenter(
 			GameplayInterfaceView gameplayInterfaceView,
-			LevelChangerService levelChangerService) =>
+			LevelChangerService levelChangerService,
+			IViewEntity upgradeWindowEntity) =>
 			new GameplayInterfacePresenterFactory(
 				gameplayInterfaceView,
 				_translatorService,
@@ -217,7 +224,8 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 				_stateMachine,
 				_coroutineRunner,
 				_advertisement,
-				_playerModelRepository
+				_playerModelRepository,
+				upgradeWindowEntity
 			).Create();
 
 		private IMonoPresenter CreatePlayer(Joystick joystick) =>
@@ -244,7 +252,7 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 				sceneResourcesRepository
 			).Create();
 
-		private IUpgradeWindowPresenter CreateUpgradeWindowPresenter(IView gameplayInterface) =>
+		private IUpgradeWindowPresenter CreateUpgradeWindowPresenter(IView gameplayInterface, ViewEntity upgradeWindowEntity) =>
 			new UpgradeWindowPresenterFactory(
 				_assetLoader,
 				_persistentProgress,
@@ -253,7 +261,8 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 				_playerModelRepository,
 				_saveLoader,
 				gameplayInterface,
-				_persistentProgress.GlobalProgress.ResourceModel
+				_persistentProgress.GlobalProgress.ResourceModel,
+				upgradeWindowEntity
 			).Create();
 
 		private Dictionary<int, IResourcePresentation> InstantiateRocks(SceneResourcesRepository newSceneResourcesRepository) =>

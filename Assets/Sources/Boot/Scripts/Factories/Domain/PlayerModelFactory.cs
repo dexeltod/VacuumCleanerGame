@@ -40,12 +40,14 @@ namespace Sources.Boot.Scripts.Factories.Domain
 			IReadOnlyCollection<StartStatConfig> startConfigs
 		)
 		{
-			List<Stat> result = items.Join(
-				startConfigs,
-				item => item.Id,
-				start => start.Id,
-				(item, start) => new Stat(start.Stat, new IntEntity(item.Id, item.Title, 0, item.MaxProgressCount), item.Id)
-			).ToList();
+			List<Stat> result = items
+				.Join(
+					startConfigs,
+					item => item.Id,
+					start => start.Id,
+					(item, start) => new Stat(start.Stat, new FloatEntity(item.Id, item.Title, 0, item.MaxProgressCount), item.Id)
+				)
+				.ToList();
 
 			return result;
 		}

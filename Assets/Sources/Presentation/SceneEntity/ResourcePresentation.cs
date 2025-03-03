@@ -1,5 +1,6 @@
 using System;
 using Sources.PresentationInterfaces.Common;
+using Sources.Utils;
 using Sources.Utils.ParticleColorChanger.Scripts;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -31,11 +32,10 @@ namespace Sources.Presentation.SceneEntity
 			_sound.Play();
 		}
 
-		public void HandleCollide(Collision collision)
+		public void HandleCollide(Collider collided)
 		{
-			if (collision.collider.name is not ("VacuumColliderBottom" or "VacuumColliderTop")) return;
-
-			Collided!.Invoke(ID);
+			if (LayerService.GetNameByType(LayerType.Player) == LayerMask.LayerToName(collided.gameObject.layer))
+				Collided!.Invoke(ID);
 		}
 
 		public void Construct(int id, Material material, Color materialColor)

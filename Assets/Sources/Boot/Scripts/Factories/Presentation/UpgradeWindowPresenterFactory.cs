@@ -8,6 +8,7 @@ using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Controllers;
 using Sources.ControllersInterfaces;
+using Sources.Domain.ViewEntity;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.DomainInterfaces.Models.Shop.Upgrades;
@@ -30,6 +31,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 		private readonly IResourceModel _resourceModel;
 		private readonly ISaveLoader _saveLoader;
 		private readonly TranslatorService _translatorService;
+		private readonly ViewEntity _upgradeWindowEntity;
 		private readonly IUpgradeWindowPresenter _upgradeWindowPresenter;
 
 		public UpgradeWindowPresenterFactory(
@@ -40,8 +42,8 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 			IPlayerModelRepository playerModelRepository,
 			ISaveLoader saveLoader,
 			IView gameplayInterface,
-			IResourceModel resourceModel
-		)
+			IResourceModel resourceModel,
+			ViewEntity upgradeWindowEntity)
 		{
 			_assetLoader
 				= assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
@@ -54,6 +56,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 			_saveLoader = saveLoader ?? throw new ArgumentNullException(nameof(saveLoader));
 			_gameplayInterface = gameplayInterface ?? throw new ArgumentNullException(nameof(gameplayInterface));
 			_resourceModel = resourceModel ?? throw new ArgumentNullException(nameof(resourceModel));
+			_upgradeWindowEntity = upgradeWindowEntity ?? throw new ArgumentNullException(nameof(upgradeWindowEntity));
 		}
 
 		private IResourceModelReadOnly ResourceModelReadOnly => _persistentProgressService.GlobalProgress.ResourceModel;
@@ -90,12 +93,13 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 					_playerModelRepository,
 					_persistentProgressService.GlobalProgress.ResourceModel
 				),
-				_entityRepository.GetEntities()
+				_entityRepository.GetEntities(),
+				_upgradeWindowEntity
 			);
 
 			UpgradeWindowActivator enabler = ConstructUpgradeWindowActivator(presenter, upgradeTrigger);
 
-			presentation.Construct(presenter, SoftCurrencyCount, enabler);
+			presentation.Construct(presenter, SoftCurrencyCount);
 			presentation.UpgradeWindowMain.SetActive(false);
 
 			return presenter;
@@ -118,30 +122,33 @@ namespace Sources.Boot.Scripts.Factories.Presentation
 			IReadOnlyList<IStatUpgradeEntityReadOnly> entities,
 			UpgradeWindowPresentation presentation)
 		{
-			UpgradeElementPrefabView[] views = configs.Join(
-				entities,
-				elem => elem.Id,
-				elem2 => elem2.ConfigId,
-				(elem, elem2) =>
-				{
-					var view = _assetLoader.InstantiateAndGetComponent<UpgradeElementPrefabView>(
-						elem.PrefabView,
-						presentation.ContainerTransform
-					);
+			UpgradeElementPrefabView[] views = configs
+				.Join(
+					entities,
+					elem => elem.Id,
+					elem2 => elem2.ConfigId,
+					(viewConfig, statConfig) =>
+					{
+						var view = _assetLoader.InstantiateAndGetComponent<UpgradeElementPrefabView>(
+							viewConfig.PrefabView,
+							presentation.ContainerTransform
+						);
 
-					view.Construct(
-						elem.Icon,
-						Localize(elem.Title),
-						Localize(elem.Description),
-						elem.Id,
-						elem2.Value,
-						_entityRepository.GetPrice(elem.Id),
-						elem.MaxProgressCount
-					);
+						view.Construct(
+							viewConfig.Icon,
+							Localize(viewConfig.Title),
+							Localize(viewConfig.Description),
+							viewConfig.Id,
+							statConfig.Value,
+							_entityRepository.GetPrice(viewConfig.Id),
+							viewConfig.MaxProgressCount,
+							viewConfig.Sound
+						);
 
-					return view;
-				}
-			).ToArray();
+						return view;
+					}
+				)
+				.ToArray();
 
 			return views.ToDictionary(elem => elem.ID, elem2 => (IUpgradeElementPrefabView)elem2);
 		}

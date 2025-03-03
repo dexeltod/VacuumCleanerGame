@@ -33,12 +33,7 @@ namespace Sources.Infrastructure.Services.DomainServices
 			await _unityCloudSaveLoaderLoader.Save(json);
 		}
 
-		public async UniTask<IGlobalProgress> Load(Action callback)
-		{
-			string json = await _unityCloudSaveLoaderLoader.Load();
-			callback.Invoke();
-			return DeserializeJson(json);
-		}
+		public async UniTask<IGlobalProgress> Load() => DeserializeJson(await _unityCloudSaveLoaderLoader.Load());
 
 		public async UniTask Initialize() => await _unityServicesOptions.InitializeUnityServices();
 

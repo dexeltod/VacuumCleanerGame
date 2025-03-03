@@ -13,6 +13,7 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.DomainInterfaces.Entities;
+using Sources.DomainInterfaces.ViewEntities;
 using Sources.Infrastructure.Services.Decorators;
 using Sources.Presentation;
 using Sources.Presentation.UI;
@@ -37,6 +38,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 		private readonly IResourcesProgressPresenter _resourceProgressProgressPresenter;
 		private readonly IStateMachine _stateMachine;
 		private readonly TranslatorService _translatorService;
+		private readonly IViewEvent _upgradeWindowViewEvent;
 
 		public GameplayInterfacePresenterFactory(
 			GameplayInterfaceView gameplayInterfaceView,
@@ -46,7 +48,8 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 			IStateMachine stateMachine,
 			ICoroutineRunner coroutineRunner,
 			IAdvertisement advertisement,
-			IPlayerModelRepository playerModelRepository)
+			IPlayerModelRepository playerModelRepository,
+			IViewEvent upgradeWindowViewEvent)
 
 		{
 			_gameplayInterfaceView = gameplayInterfaceView ?? throw new ArgumentNullException(nameof(gameplayInterfaceView));
@@ -60,6 +63,7 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 			_coroutineRunner = coroutineRunner ?? throw new ArgumentNullException(nameof(coroutineRunner));
 			_advertisement = advertisement ?? throw new ArgumentNullException(nameof(advertisement));
 			_playerModelRepository = playerModelRepository ?? throw new ArgumentNullException(nameof(playerModelRepository));
+			_upgradeWindowViewEvent = upgradeWindowViewEvent ?? throw new ArgumentNullException(nameof(upgradeWindowViewEvent));
 		}
 
 		private string UIResourcesUI => ResourcesAssetPath.Scene.UIResources.UI;
@@ -106,7 +110,8 @@ namespace Sources.Boot.Scripts.Factories.Presentation.UI
 				_coroutineRunner,
 				_playerModelRepository.Get(ProgressType.MaxCashScore),
 				ResourceModelReadOnly.TotalAmount,
-				ResourceModelReadOnly.SoftCurrency
+				ResourceModelReadOnly.SoftCurrency,
+				_upgradeWindowViewEvent
 			);
 
 		private SpeedDecorator CreateSpeedDecorator() =>

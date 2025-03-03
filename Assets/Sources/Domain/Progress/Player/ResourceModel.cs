@@ -43,7 +43,7 @@ namespace Sources.Domain.Progress.Player
 		public IReadOnlyProgress<int> TotalAmount => _totalAmount;
 		public IReadOnlyProgress<int> HardCurrency => _hardCurrency;
 
-		public int MaxTotalResourceCount => _maxTotalResourceModifier + GameConfig.DefaultMaxTotalResource;
+		public int MaxTotalResourceCount => _maxTotalResourceModifier + LevelSandConfig.DefaultMaxTotalResource;
 
 		public int CurrentCashScore
 		{
@@ -74,17 +74,16 @@ namespace Sources.Domain.Progress.Player
 
 		public bool TryAddScore(int newCashScore)
 		{
-			if (CurrentCashScore + newCashScore > _cashScore.ReadOnlyMaxValue)
+			if (_cashScore.Value + newCashScore > _cashScore.ReadOnlyMaxValue)
 				return false;
 
 			newCashScore *= MultiplyFactor;
 
 			if (newCashScore <= 0) throw new ArgumentOutOfRangeException(nameof(newCashScore));
 
-			CurrentCashScore += newCashScore;
-			CurrentTotalResources += OnePoint;
+			_cashScore.Value += newCashScore;
+			_totalAmount.Value += OnePoint;
 
-			_cashScore.Value = CurrentCashScore;
 			return true;
 		}
 
@@ -93,6 +92,13 @@ namespace Sources.Domain.Progress.Player
 			if (newAmount <= 0) throw new ArgumentOutOfRangeException(nameof(newAmount));
 
 			_maxTotalResourceModifier += newAmount;
+		}
+
+		public void SetMaxTotalResource(int amount)
+		{
+			if (amount < 0) throw new ArgumentOutOfRangeException(nameof(amount));
+
+			_totalAmount.MaxValue = amount;
 		}
 
 		public void DecreaseCashScore(int newValue)

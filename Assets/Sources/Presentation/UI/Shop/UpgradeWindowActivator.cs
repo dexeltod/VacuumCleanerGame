@@ -18,6 +18,7 @@ namespace Sources.Presentation.UI.Shop
 		[SerializeField] private Button _no;
 		[SerializeField] private GameObject _container;
 		[SerializeField] private AudioSource _audioSource;
+
 		private IUpgradeWindowPresenter _presenter;
 		private IUpgradeTriggerObserver _upgradeTrigger;
 
@@ -53,8 +54,8 @@ namespace Sources.Presentation.UI.Shop
 		private void OnYes()
 		{
 			_audioSource.Play();
+
 			_presenter.Enable();
-			_presenter.EnableWindow();
 			_container.SetActive(false);
 		}
 	}

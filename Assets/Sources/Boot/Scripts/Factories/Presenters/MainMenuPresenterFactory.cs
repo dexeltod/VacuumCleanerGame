@@ -5,11 +5,10 @@ using Sources.BusinessLogic.Services;
 using Sources.BusinessLogic.ServicesInterfaces;
 using Sources.Controllers.MainMenu;
 using Sources.ControllersInterfaces;
-using Sources.Domain.Settings;
 using Sources.DomainInterfaces;
+using Sources.DomainInterfaces.Entities;
 using Sources.PresentationInterfaces;
 using Sources.Utils;
-using UnityEngine;
 using UnityEngine.Audio;
 
 namespace Sources.Boot.Scripts.Factories.Presenters
@@ -26,6 +25,7 @@ namespace Sources.Boot.Scripts.Factories.Presenters
 		private readonly IMainMenuView _mainMenu;
 		private readonly IProgressSaveLoadDataService _progressSaveLoadDataService;
 		private readonly ISettingsView _settingsView;
+		private readonly ISoundSettings _soundSettings;
 		private readonly IStateMachine _stateMachine;
 
 		public MainMenuPresenterFactory(
@@ -39,9 +39,11 @@ namespace Sources.Boot.Scripts.Factories.Presenters
 			ILeaderBoardView leaderBoardView,
 			ILeaderBoardService leaderBoardService,
 			ILeaderBoardPlayersFactory leaderBoardPlayersFactory,
-			ISettingsView settingsView)
+			ISettingsView settingsView,
+			ISoundSettings soundSettings)
 		{
 			if (assetLoader == null) throw new ArgumentNullException(nameof(assetLoader));
+			if (soundSettings == null) throw new ArgumentNullException(nameof(soundSettings));
 
 			_assetLoader = assetLoader ?? throw new ArgumentNullException(nameof(assetLoader));
 			_mainMenu = mainMenu ?? throw new ArgumentNullException(nameof(mainMenu));
@@ -56,13 +58,13 @@ namespace Sources.Boot.Scripts.Factories.Presenters
 			_leaderBoardPlayersFactory =
 				leaderBoardPlayersFactory ?? throw new ArgumentNullException(nameof(leaderBoardPlayersFactory));
 			_settingsView = settingsView ?? throw new ArgumentNullException(nameof(settingsView));
+			_soundSettings = soundSettings ?? throw new ArgumentNullException(nameof(soundSettings));
 		}
 
 		public IMainMenuPresenter Create()
 		{
 			var mixer = _assetLoader.LoadFromResources<AudioMixer>(ResourcesAssetPath.GameObjects.AudioMixer);
 
-			var soundSettings = new SoundSettings(PlayerPrefs.GetFloat(SettingsPlayerPrefsNames.MasterVolumeName));
 			return new MainMenuPresenter(
 				_stateMachine,
 				_mainMenu,
@@ -75,7 +77,7 @@ namespace Sources.Boot.Scripts.Factories.Presenters
 				_settingsView,
 				mixer,
 				_leaderBoardPlayersFactory,
-				soundSettings
+				_soundSettings
 			);
 		}
 	}

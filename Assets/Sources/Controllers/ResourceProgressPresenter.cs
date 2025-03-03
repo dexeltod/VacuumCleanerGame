@@ -12,6 +12,7 @@ using Sources.PresentationInterfaces.Common;
 using Sources.PresentationInterfaces.Triggers;
 using Sources.Utils;
 using UnityEngine;
+using static UnityEngine.Mathf;
 
 namespace Sources.Controllers
 {
@@ -91,7 +92,7 @@ namespace Sources.Controllers
 		}
 
 		private bool IsHalfScoreReached() =>
-			_resourceReadOnly.CurrentTotalResources >= Mathf.CeilToInt(_resourceReadOnly.MaxTotalResourceCount / 2f);
+			_resourceReadOnly.CurrentTotalResources >= CeilToInt(_resourceReadOnly.MaxTotalResourceCount / 2f);
 
 		private void OnResourceCollided(int id)
 		{

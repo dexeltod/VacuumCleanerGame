@@ -25,7 +25,8 @@ namespace DG.Tweening
 		/// </summary>
 		/// <param name="endValue">The end value to reach (0 to 1)</param>
 		/// <param name="duration">The duration of the tween</param>
-		public static TweenerCore<float, float, FloatOptions> DOFade(this AudioSource target,
+		public static TweenerCore<float, float, FloatOptions> DOFade(
+			this AudioSource target,
 			float endValue,
 			float duration)
 		{
@@ -49,7 +50,8 @@ namespace DG.Tweening
 		/// </summary>
 		/// <param name="endValue">The end value to reach</param>
 		/// <param name="duration">The duration of the tween</param>
-		public static TweenerCore<float, float, FloatOptions> DOPitch(this AudioSource target,
+		public static TweenerCore<float, float, FloatOptions> DOPitch(
+			this AudioSource target,
 			float endValue,
 			float duration)
 		{
@@ -78,7 +80,8 @@ namespace DG.Tweening
 		/// <param name="floatName">Name given to the exposed float to set</param>
 		/// <param name="endValue">The end value to reach</param>
 		/// <param name="duration">The duration of the tween</param>
-		public static TweenerCore<float, float, FloatOptions> DOSetFloat(this AudioMixer target,
+		public static TweenerCore<float, float, FloatOptions> DOSetFloat(
+			this AudioMixer target,
 			string floatName,
 			float endValue,
 			float duration)

@@ -57,10 +57,12 @@ namespace Sources.Boot.Scripts.Factories.Presentation.LeaderBoard
 				Transform containerTransform = leaderBoardView.Container;
 				GameObject playerPanelGameObject = leaderBoardView.PlayerPanel.GameObject;
 
-				var panel = _assetLoader.Instantiate(
-					playerPanelGameObject,
-					containerTransform
-				).GetComponent<LeaderBoardPlayerPanelBehaviour>();
+				var panel = _assetLoader
+					.Instantiate(
+						playerPanelGameObject,
+						containerTransform
+					)
+					.GetComponent<LeaderBoardPlayerPanelBehaviour>();
 
 				if (string.IsNullOrWhiteSpace(name))
 				{

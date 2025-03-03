@@ -43,11 +43,11 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 
 		public UniTask Enter()
 		{
+			_loadingCurtain.HideSlowly();
+
 			_localizationService.UpdateTranslations();
 
 			EnablePresenters();
-
-			_loadingCurtain.HideSlowly();
 
 			_presentersRepository.Get<DissolveShaderViewController>().StartDissolving();
 #if DEV
@@ -69,6 +69,7 @@ namespace Sources.Boot.Scripts.States.StateMachine.GameStates
 
 		public void Exit()
 		{
+			_loadingCurtain.Show();
 			_presentersRepository.DisableAll();
 		}
 

@@ -24,11 +24,9 @@ namespace Sources.Presentation.UI.Shop
 		[SerializeField] private GameObject _upgradeWindowMain;
 		[SerializeField] private AudioSource _audio;
 
-		private IUpgradeWindowActivator _activator;
-
 		public Button CloseMenuButton => _closeMenuButton;
 		public GameObject UpgradeWindowMain => _upgradeWindowMain;
-		public AudioSource AudioSource => _audio;
+		public AudioSource AudioClose => _audio;
 
 		public Transform ContainerTransform => _content.transform;
 
@@ -38,12 +36,11 @@ namespace Sources.Presentation.UI.Shop
 			set => _phrasesList.Phrases = value;
 		}
 
-		public void Construct(IUpgradeWindowPresenter presenter, int money, IUpgradeWindowActivator activator)
+		public void Construct(IUpgradeWindowPresenter presenter, int money)
 		{
 			if (presenter == null) throw new ArgumentNullException(nameof(presenter));
 			if (money < 0) throw new ArgumentOutOfRangeException(nameof(money));
 
-			_activator = activator ?? throw new ArgumentNullException(nameof(activator));
 			_money.SetText(money.ToString());
 
 			base.Construct(presenter);
@@ -58,16 +55,12 @@ namespace Sources.Presentation.UI.Shop
 
 		public override void Enable()
 		{
-			base.Enable();
 			enabled = true;
 		}
 
 		public override void Disable()
 		{
-			base.Disable();
 			enabled = false;
 		}
-
-		public void SetActiveYesNoButtons(bool isActive) => _activator.Container.SetActive(isActive);
 	}
 }

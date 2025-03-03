@@ -19,7 +19,7 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 	public class UIParticleSystem : MaskableGraphic
 	{
 		[Tooltip(
-			"Having this enabled run the system in LateUpdate rather than in Update making it faster but less precise (more clunky)"
+			"Having this enabled run the system in LateUpdate rather than in FixedUpdate making it faster but less precise (more clunky)"
 		)]
 		public bool fixedTime = true;
 
@@ -69,8 +69,8 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 				);
 				SetAllDirty();
 
-				if (currentMaterial != null && currentTexture != currentMaterial.mainTexture ||
-				    material != null && currentMaterial != null && material.shader != currentMaterial.shader)
+				if (currentMaterial != null && currentTexture != currentMaterial.mainTexture
+				    || material != null && currentMaterial != null && material.shader != currentMaterial.shader)
 				{
 					pSystem = null;
 					Initialize();
@@ -96,8 +96,8 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 					);
 					SetAllDirty();
 
-					if (currentMaterial != null && currentTexture != currentMaterial.mainTexture ||
-					    material != null && currentMaterial != null && material.shader != currentMaterial.shader)
+					if (currentMaterial != null && currentTexture != currentMaterial.mainTexture
+					    || material != null && currentMaterial != null && material.shader != currentMaterial.shader)
 					{
 						pSystem = null;
 						Initialize();
@@ -156,8 +156,8 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 
 				currentMaterial = material;
 
-				if (currentMaterial &&
-				    currentMaterial.HasProperty(
+				if (currentMaterial
+				    && currentMaterial.HasProperty(
 					    "_MainTex"
 				    ))
 				{
@@ -259,8 +259,8 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 				);
 				float size = particle.GetCurrentSize(
 					             pSystem
-				             ) *
-				             0.5f;
+				             )
+				             * 0.5f;
 
 				// apply scale
 #if UNITY_5_5_OR_NEWER
@@ -288,8 +288,8 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 							1 - particle.remainingLifetime / particle.startLifetime
 						);
 					else if (textureSheetAnimation.frameOverTime.constant > 0)
-						frameProgress = textureSheetAnimation.frameOverTime.constant -
-						                particle.remainingLifetime / particle.startLifetime;
+						frameProgress = textureSheetAnimation.frameOverTime.constant
+						                - particle.remainingLifetime / particle.startLifetime;
 #else
                     float frameProgress = 1 - (particle.lifetime / particle.startLifetime);
 #endif
@@ -324,11 +324,11 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 					frame %= textureSheetAnimationFrames;
 
 					particleUV.x = frame % textureSheetAnimation.numTilesX * textureSheetAnimationFrameSize.x;
-					particleUV.y = 1.0f -
-					               Mathf.FloorToInt(
+					particleUV.y = 1.0f
+					               - Mathf.FloorToInt(
 						               frame / textureSheetAnimation.numTilesX
-					               ) *
-					               textureSheetAnimationFrameSize.y;
+					               )
+					               * textureSheetAnimationFrameSize.y;
 					particleUV.z = particleUV.x + textureSheetAnimationFrameSize.x;
 					particleUV.w = particleUV.y + textureSheetAnimationFrameSize.y;
 				}
@@ -447,8 +447,8 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 							                Mathf.Sin(
 								                rotation
 							                )
-						                ) *
-						                size;
+						                )
+						                * size;
 						Vector2 up = new Vector2(
 							             Mathf.Cos(
 								             rotation90
@@ -456,8 +456,8 @@ namespace UI.UI.GUI.HyperCasualAssets.GUI_Kit_Casual_Game.Extensions.UIParticle
 							             Mathf.Sin(
 								             rotation90
 							             )
-						             ) *
-						             size;
+						             )
+						             * size;
 
 						_quad[0].position = position - right - up;
 						_quad[1].position = position - right + up;

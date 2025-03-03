@@ -933,7 +933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea65d0d2f2eb4f50895652aaec672ccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _phrases: {fileID: 4310842572931284773}
+  _phrasesList: {fileID: 4310842572931284773}
   _content: {fileID: 8019734606496950766}
   _money: {fileID: 4005788355521801726}
   _closeMenuButton: {fileID: 6720603335193613160}

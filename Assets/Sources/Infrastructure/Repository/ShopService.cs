@@ -4,7 +4,6 @@ using Sources.BusinessLogic.Repository;
 using Sources.BusinessLogic.Services;
 using Sources.DomainInterfaces;
 using Sources.Utils.Enums;
-using UnityEngine;
 
 namespace Sources.Infrastructure.Repository
 {
@@ -50,9 +49,6 @@ namespace Sources.Infrastructure.Repository
 			int count = _progressRepository.GetConfig(id).Items.Count();
 			int value = _progressRepository.GetEntity(id).Value;
 
-			Debug.Log(_progressRepository.GetEntity(id).LevelProgress.ReadOnlyValue);
-
-			Debug.Log($"value <= count: {value < count}");
 			return value < count;
 		}
 	}

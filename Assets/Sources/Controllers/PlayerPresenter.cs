@@ -25,8 +25,12 @@ namespace Sources.Controllers
 
 		private void Update()
 		{
-			_updatable?.Update(Time.deltaTime);
 			_animator.Play(_isMove ? _animationHasher.Run : _animationHasher.Idle);
+		}
+
+		private void FixedUpdate()
+		{
+			_updatable?.FixedUpdate();
 		}
 
 		public GameObject GameObject => gameObject;
@@ -74,7 +78,10 @@ namespace Sources.Controllers
 			_isMove = direction != Vector3.zero;
 		}
 
-		private void OnMoved(Vector3 newPosition) => _body.position = newPosition;
+		private void OnMoved(Vector3 newPosition)
+		{
+			_body.MovePosition(newPosition);
+		}
 
 		private void OnDestroying() => Destroy(gameObject);
 	}

@@ -6,6 +6,8 @@ namespace Sources.Domain.Progress.Entities.Values
 	[Serializable]
 	public class IntEntity : Resource<int>
 	{
+		private bool _isHalfScoreReached;
+
 		public IntEntity(int id, string name, int count, int maxValue) : base(id, name, count, maxValue) =>
 			IsTotalScoreReached = count > maxValue / 2;
 
@@ -21,6 +23,9 @@ namespace Sources.Domain.Progress.Entities.Values
 			set => SetMax(value);
 		}
 
+		public override event Action Changed;
+		public override event Action HalfReached;
+
 		private int Set(int value)
 		{
 			if (value < 0 || value > ReadOnlyMaxValue) throw new ArgumentOutOfRangeException(nameof(value));
@@ -30,8 +35,10 @@ namespace Sources.Domain.Progress.Entities.Values
 
 			Math.Clamp(_value, 0, MaxValue);
 
-			if (_value > ReadOnlyMaxValue / 2)
-				HalfReached?.Invoke();
+			if (_value <= ReadOnlyMaxValue / 2 || _isHalfScoreReached) return value;
+
+			_isHalfScoreReached = true;
+			HalfReached?.Invoke();
 
 			return value;
 		}
@@ -43,8 +50,5 @@ namespace Sources.Domain.Progress.Entities.Values
 			Changed?.Invoke();
 			_maxValue = value;
 		}
-
-		public override event Action Changed;
-		public override event Action HalfReached;
 	}
 }

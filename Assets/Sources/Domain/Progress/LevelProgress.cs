@@ -27,5 +27,17 @@ namespace Sources.Domain.Progress
 			Debug.Log("LevelProgress: " + _currentLevel);
 			_maxTotalResourceCount += maxPointDelta;
 		}
+
+		public void AddMaxPoint(int delta)
+		{
+			if (delta < 0) throw new ArgumentOutOfRangeException(nameof(delta));
+
+			_maxTotalResourceCount += delta;
+		}
+
+		public void IncreaseLevel()
+		{
+			_currentLevel++;
+		}
 	}
 }

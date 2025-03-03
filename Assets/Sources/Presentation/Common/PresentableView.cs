@@ -1,5 +1,6 @@
 using System;
 using Sources.ControllersInterfaces;
+using Sources.DomainInterfaces.ViewEntities;
 using Sources.Presentation.UI;
 using Sources.PresentationInterfaces.Common;
 using UnityEngine;
@@ -9,56 +10,34 @@ namespace Sources.Presentation.Common
 	public abstract class PresentableView<T> : View, IPresentableView<T> where T : class, IPresenter
 	{
 		private bool _isEnabled;
+
+		private IViewEntity _viewEntity;
 		protected T Presenter { get; set; }
 
 		private void OnEnable()
 		{
-			if (!_isEnabled)
-				Presenter?.Enable();
 		}
 
 		private void OnDisable()
 		{
-			if (_isEnabled)
-				Presenter?.Disable();
 		}
 
-		private void OnDestroy() => DestroySelf();
-
-		public virtual void Construct(T presenter) => Presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
-
-		public virtual void SetParent(Transform parent) => transform.SetParent(parent);
-
-		public Transform Transform => transform;
-
-		protected virtual void DestroySelf() => Destroy(gameObject);
-	}
-
-	public abstract class PresentableView : View, IPresentableView
-	{
-		private bool _isEnabled;
-		protected IPresenter Presenter { get; set; }
-
-		private void OnEnable()
+		protected virtual void OnDestroy()
 		{
-			if (!_isEnabled)
-				Presenter?.Enable();
+			DestroySelf();
 		}
 
-		private void OnDisable()
+		public virtual void Construct(T presenter)
 		{
-			if (_isEnabled)
-				Presenter?.Disable();
-		}
-
-		private void OnDestroy() => DestroySelf();
-
-		public virtual void Construct(IPresenter presenter) =>
 			Presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));
+		}
 
 		public virtual void SetParent(Transform parent) => transform.SetParent(parent);
 
 		public Transform Transform => transform;
+
+		public override event Action Enabled;
+		public override event Action Disabled;
 
 		protected virtual void DestroySelf() => Destroy(gameObject);
 	}

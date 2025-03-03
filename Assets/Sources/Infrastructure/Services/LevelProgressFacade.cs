@@ -10,6 +10,7 @@ namespace Sources.Infrastructure.Services
 		private const int OnePoint = 1;
 		private const int MaxScoreDelta = 50;
 		private const int MaxScore = 500;
+
 		private readonly IPersistentProgressService _progressService;
 
 		[Inject]

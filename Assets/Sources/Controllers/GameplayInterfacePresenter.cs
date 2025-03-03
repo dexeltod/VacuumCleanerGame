@@ -6,6 +6,7 @@ using Sources.ControllersInterfaces;
 using Sources.DomainInterfaces;
 using Sources.DomainInterfaces.DomainServicesInterfaces;
 using Sources.DomainInterfaces.Entities;
+using Sources.DomainInterfaces.ViewEntities;
 using Sources.PresentationInterfaces;
 using Sources.Utils;
 using UnityEngine;
@@ -24,6 +25,7 @@ namespace Sources.Controllers
 		private readonly float _speedCooldown;
 		private readonly ISpeedDecorator _speedDecorator;
 		private readonly IReadOnlyProgress<int> _totalScore;
+		private readonly IViewEvent _upgradeWindowEntity;
 
 		public GameplayInterfacePresenter(
 			IGameplayInterfaceView gameplayInterfaceView,
@@ -34,11 +36,13 @@ namespace Sources.Controllers
 			ICoroutineRunner coroutineRunnerProvider,
 			IStatReadOnly maxCashScore,
 			IReadOnlyProgress<int> totalScore,
-			IReadOnlyProgress<int> softCurrency)
+			IReadOnlyProgress<int> softCurrency,
+			IViewEvent upgradeWindowEntity)
 		{
 			_maxCashScore = maxCashScore ?? throw new ArgumentNullException(nameof(maxCashScore));
 			_totalScore = totalScore ?? throw new ArgumentNullException(nameof(totalScore));
 			_softCurrency = softCurrency ?? throw new ArgumentNullException(nameof(softCurrency));
+			_upgradeWindowEntity = upgradeWindowEntity ?? throw new ArgumentNullException(nameof(upgradeWindowEntity));
 			_levelChangerService = levelChangerService ?? throw new ArgumentNullException(nameof(levelChangerService));
 			_gameplayInterfaceView = gameplayInterfaceView ?? throw new ArgumentNullException(nameof(gameplayInterfaceView));
 			_speedDecorator = speedDecorator ?? throw new ArgumentNullException(nameof(speedDecorator));
@@ -53,17 +57,18 @@ namespace Sources.Controllers
 
 		private Button GoToNextLevelButton => _gameplayInterfaceView.GoToNextLevelButton;
 
-		public void OnGoToNextLevel() => _levelChangerService.GoNextLevelWithReward();
-
 		public override void Enable()
 		{
 			if (_totalScore.IsTotalScoreReached) _gameplayInterfaceView.GoToNextLevelButton.gameObject.SetActive(true);
+
+			_upgradeWindowEntity.Enabled += OnUpgradeWindowEntityEnabled;
+			_upgradeWindowEntity.Enabled += OnUpgradeWindowEntityDisabled;
 
 			_maxCashScore.Changed += OnMaxCashScoreChanged;
 			_softCurrency.Changed += OnSoftCuSetCurrencyChanged;
 			_cashScore.Changed += OnCashScoreChanged;
 			_totalScore.Changed += OnTotalScoreChanged;
-			_totalScore.HalfReached += OnHalfScoreReached;
+			_totalScore.HalfReached += OnEnableGoToNextLevelButton;
 
 			_speedDecorator.Enable();
 
@@ -79,8 +84,8 @@ namespace Sources.Controllers
 			_cashScore.Changed -= OnCashScoreChanged;
 			_maxCashScore.Changed -= OnMaxCashScoreChanged;
 			_softCurrency.Changed -= OnSoftCuSetCurrencyChanged;
-			_totalScore.HalfReached -= OnHalfScoreReached;
-
+			_totalScore.HalfReached -= OnEnableGoToNextLevelButton;
+			_totalScore.Changed -= OnTotalScoreChanged;
 			_speedDecorator.Disable();
 
 			IncreaseSpeedButton.onClick.RemoveListener(OnIncreaseSpeed);
@@ -103,7 +108,12 @@ namespace Sources.Controllers
 			_gameplayInterfaceView.SetCashScore(_cashScore.ReadOnlyValue);
 		}
 
-		private void OnHalfScoreReached() => _gameplayInterfaceView.SetActiveGoToNextLevelButton(true);
+		private void OnEnableGoToNextLevelButton()
+		{
+			_gameplayInterfaceView.SetActiveGoToNextLevelButton(true);
+		}
+
+		private void OnGoToNextLevel() => _levelChangerService.GoNextLevelWithReward();
 
 		private void OnMaxCashScoreChanged() => _gameplayInterfaceView.SetMaxCashScore((int)_maxCashScore.Value);
 
@@ -115,6 +125,16 @@ namespace Sources.Controllers
 		private void OnTotalScoreChanged()
 		{
 			_gameplayInterfaceView.SetTotalResourceScore(_totalScore.ReadOnlyValue);
+		}
+
+		private void OnUpgradeWindowEntityDisabled()
+		{
+			_gameplayInterfaceView.Enable();
+		}
+
+		private void OnUpgradeWindowEntityEnabled()
+		{
+			_gameplayInterfaceView.Disable();
 		}
 
 		private IEnumerator StartViewCooldownSpeedRoutine(float time)
